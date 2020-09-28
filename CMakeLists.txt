@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LockVOX_client LANGUAGES CXX)
+project(LockVox LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -24,29 +24,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
-
-set(TS_FILES LockVOX_client_fr_FR.ts)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 if(ANDROID)
-  add_library(LockVOX_client SHARED
+  add_library(LockVox SHARED
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    ${TS_FILES}
+    server.cpp
+    server.h
   )
 else()
-  add_executable(LockVOX_client
+  add_executable(LockVox
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    ${TS_FILES}
+    server.cpp
+    server.h
   )
 endif()
 
-target_link_libraries(LockVOX_client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+target_link_libraries(LockVox PRIVATE Qt5::Widgets)
