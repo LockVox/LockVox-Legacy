@@ -19,12 +19,18 @@ SOURCES += \
     cchannel.cpp \
     cclient.cpp \
     main.cpp \
-    cserver.cpp
+    cserver.cpp \
+    cdatabase.cpp \
+    cmessage.cpp \
+    qma.cpp
 
 HEADERS += \
     cchannel.h \
     cclient.h \
-    cserver.h
+    cserver.h \
+    cdatabase.h \
+    cmessage.h \
+    qma.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
