@@ -19,12 +19,16 @@ SOURCES += \
     cchannel.cpp \
     cclient.cpp \
     main.cpp \
-    cserver.cpp
+    cserver.cpp \
+    cdatabase.cpp \
+    qma.cpp
 
 HEADERS += \
     cchannel.h \
     cclient.h \
-    cserver.h
+    cserver.h \
+    cdatabase.h \
+    qma.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,7 +38,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     lockvox.qmodel
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
+unix|win32: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
 else:unix: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
 
 INCLUDEPATH += $$PWD/libs/Qxmpp
