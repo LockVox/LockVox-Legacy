@@ -39,3 +39,8 @@ else:unix: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
 
 INCLUDEPATH += $$PWD/libs/Qxmpp
 DEPENDPATH += $$PWD/libs/Qxmpp
+
+unix|win32: LIBS += -L$$PWD/libs/Zrtpcpp/ -lzrtpcppcore
+
+INCLUDEPATH += $$PWD/libs/Zrtpcpp
+DEPENDPATH += $$PWD/libs/Zrtpcpp
