@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    quit_btn = new QPushButton("quit");
+    m_server = NULL;
+
 }
 
 MainWindow::~MainWindow()
