@@ -1,17 +1,13 @@
-#include "cserver.h"
+#include "qma.h"
 
 #include <QApplication>
+
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CServer s;
-    QList<CClient * > qC;
-    QList<CMessage * > qM;
+    MainWindow w;
+    w.show();
 
-
-
-
-    //s.show();
     return a.exec();
 }
