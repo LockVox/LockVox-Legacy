@@ -3,20 +3,17 @@
 
 #include "cclient.h"
 #include "cmessage.h"
-#include "cserver.h"
+
 
 
 #include <QObject>
 #include <QtWidgets>
 
+#include "cserver.h"
 
-class CServer;
-class CClient;
 
-class CChannel : public QWidget
+class CChannel
 {
-    Q_OBJECT
-
     public:
         CChannel();
         CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
@@ -29,7 +26,6 @@ class CChannel : public QWidget
         QList<CMessage *> get_message();
         QString get_name();
         int get_id();
-        int get_process();
         int get_maxUsers();
         int get_nbClients();
 
@@ -38,6 +34,7 @@ class CChannel : public QWidget
         void set_message(QList<CMessage*>message);
         void set_name(QString name);
         void set_id(int id);
+
         void set_maxUsers(int maxUsers);
         void set_nbClients(int nb);
       //Méthodes

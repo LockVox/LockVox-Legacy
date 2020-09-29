@@ -17,6 +17,7 @@ CChannel::CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, 
     m_messages = msg;
     m_name = name;
     m_id = id;
+
 }
 
 QList<CClient *> CChannel::get_clients()
@@ -92,7 +93,7 @@ void CChannel::cExtractFromDataStream(QDataStream & ds)
     ds >> maxUsers >> id >> nbClients;
 
     ds >> name ;
-    ds.device()->seek(32); //Pos max name
+
 
     this->set_name(name);
     this->set_nbClients(nbClients);
@@ -100,5 +101,14 @@ void CChannel::cExtractFromDataStream(QDataStream & ds)
     this->set_id(id);
 }
 
+
+void loadMessage()
+{
+    //BDD request - fill list of messages
+
+    //select id, date, data from message where channel = id
+
+
+}
 
 

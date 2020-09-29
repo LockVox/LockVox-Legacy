@@ -18,11 +18,6 @@ CClient::CClient( QTcpSocket * soc){
     m_soc = soc;
 }
 
-CClient::~CClient()
-{
-
-}
-
 QString CClient::get_pseudo()
 {
     return m_pseudo;
@@ -57,13 +52,11 @@ void CClient::set_idChannel(int id){
 void  CClient::cInsertToDataStream(QDataStream & ds)
 {
 
-    qDebug() << "pseudo size : " << get_pseudo().length() << Qt::endl;
+    qDebug() << "pseudo size : " << get_pseudo().length() <<" pseudo : "<< get_pseudo()<< Qt::endl;
 
     ds << get_pseudo(); //16 - MAX 16 charactere
-
-    ds.device()->seek(32); //Pos max name
-    ds << get_idChannel();   //
-
+    ds.device()->seek(32);
+    ds << get_idChannel();
 
     qDebug() << " ds : " << ds << Qt::endl;
 
@@ -75,11 +68,12 @@ void CClient::cExtractFromDataStream(QDataStream & ds)
     QString pseudo;
     int id;
 
+    ds >> pseudo;
+    ds.device()->seek(32);
+    ds >> id ;
 
-    ds >> pseudo ;
-    ds.device()->seek(32); //Pos max name
-    ds >> id;
 
+    qDebug() << "DS Extract result - \n id : " << id << "\npseudo : " << pseudo <<Qt::endl;
     this->set_pseudo(pseudo);
     this->set_idChannel(id);
 }

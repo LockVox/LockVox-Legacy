@@ -6,17 +6,14 @@
 
 #include "cchannel.h"
 
-
-
-class CClient : public QWidget
+class CClient
 {
-    Q_OBJECT
     public:
         CClient();
         CClient(QString name, QTcpSocket * soc, int id);
         CClient(QTcpSocket * soc);
 
-        ~CClient();
+        ~CClient() {};
 
 
         //Getters

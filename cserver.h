@@ -8,7 +8,6 @@
 
 
 #include "cchannel.h"
-#include "cclient.h"
 
 class CClient;
 class CChannel;
@@ -19,6 +18,15 @@ class CServer : public QWidget
 
     public:
         CServer();
+        void envoyerATous(const QString &message);
+        void sendToChannel(const QString &message, int id_channel);
+        void sendToClient(const QString &message,CClient * client);
+
+
+        void sendToAll(QByteArray out);
+
+
+
 
 
         //Création d'un channel grâce à un nouveau process -
@@ -27,68 +35,43 @@ class CServer : public QWidget
 
 
 
-        int addChannel(CChannel * tmp);
+        void addChannel(CChannel * tmp);
         int DelChannel(CChannel * tmp);
         int DelChannel(int id);
 
 
         QList<CChannel*> m_channels;
+        QList<CClient *> m_clients;
 
 
+        void FillDataStreamFromServer(QDataStream & ds);
         void FillDataStreamFromClient(QDataStream & ds);
         void FillDataStreamFromChannel(QDataStream & ds);
 
 
-
-
         void FillClientFromDataStream(QDataStream & ds);
         void FillChannelFromDataStream(QDataStream & ds);
+        void FillServerFromDataStream(QDataStream & ds);
 
         void SendObjectsToClient();
         void receiveData();
 
-
-
-        //Getters
-        QTcpSocket * get_socket();
-
-
-
-        //Setters
-
-        void set_socket(QTcpSocket* soc);
-
-
-
     private slots:
 
-        void nouvelleConnexion();           //Add client to the server - default no channel
-        void donneesRecues();               //get data
+        void nouvelleConnexion();           //Add client to the server - default no channel           //get data
         void deconnexionClient();           //Disconnecting client - del client from channel list - del client
-
-        void connect();
-        void disconnect();
-
-        void errorTcpSocket(QAbstractSocket::SocketError error);
-
 
     private:
         QLabel *etatServeur;                //State of the server
-
-        QTcpSocket * m_socket;
-
         QPushButton *boutonQuitter;
 
-
+        QTcpServer *serveur;
+        QList<QTcpSocket *> clients;        //A suppr plus tard ( m_clients remplace clients)
         quint16 tailleMessage;
 
 
                 //List of channels
-        QList<CClient *> m_clients;         //List of client
-
-
-
-
+                //List of client
 
 };
 
