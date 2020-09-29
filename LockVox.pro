@@ -50,3 +50,6 @@ unix|win32: LIBS += -L$$PWD/libs/Zrtpcpp/ -lzrtpcppcore
 
 INCLUDEPATH += $$PWD/libs/Zrtpcpp
 DEPENDPATH += $$PWD/libs/Zrtpcpp
+
+RESOURCES += \
+    ressources/ressources.qrc
