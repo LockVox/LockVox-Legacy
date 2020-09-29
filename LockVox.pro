@@ -33,3 +33,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     lockvox.qmodel
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/Qxmpp/ -lqxmppd
+else:unix: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
+
+INCLUDEPATH += $$PWD/libs/Qxmpp
+DEPENDPATH += $$PWD/libs/Qxmpp
