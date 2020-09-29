@@ -19,15 +19,6 @@ class CServer : public QWidget
 
     public:
         CServer();
-        void envoyerATous(const QString &message);
-        void sendToChannel(const QString &message, int id_channel);
-        void sendToClient(const QString &message,CClient * client);
-
-
-        void sendToAll(QByteArray out);
-
-
-
 
 
         //Création d'un channel grâce à un nouveau process -
@@ -75,7 +66,10 @@ class CServer : public QWidget
         void donneesRecues();               //get data
         void deconnexionClient();           //Disconnecting client - del client from channel list - del client
 
+        void connect();
+        void disconnect();
 
+        void errorTcpSocket(QAbstractSocket::SocketError error);
 
 
     private:
@@ -85,7 +79,7 @@ class CServer : public QWidget
 
         QPushButton *boutonQuitter;
 
-        QList<QTcpSocket *> clients;        //A suppr plus tard ( m_clients remplace clients)
+
         quint16 tailleMessage;
 
 

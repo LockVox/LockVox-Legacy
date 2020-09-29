@@ -2,7 +2,11 @@
 
 CServer::CServer()
 {
+    m_socket = new QTcpSocket(this);
 
+    connect(m_socket,SIGNAL(readyRead()), this , SLOT(receiveData()));
+    connect(m_socket,SIGNAL(connected()), this , SLOT(connect()));
+    connect(m_socket,SIGNAL(disconnected()), this , SLOT(disconnect()));
     tailleMessage = 0;
 }
 
@@ -28,70 +32,6 @@ void CServer::deconnexionClient()
 
     //send msg to everybody to say someone disconnect (id client)
 
-}
-
-void CServer::sendToChannel(const QString &message, int id_channel)
-{
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    //preparation of the packet
-    out << (quint16) 0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16) (packet.size() - sizeof(quint16));
-
-    //send msg to all client of the channel
-    for( int i = 0; i < m_channels[id_channel]->get_clients().size(); i++)
-    {
-        m_channels[id_channel]->get_clients()[i]->get_socket()->write(packet);
-    }
-}
-
-
-void CServer::sendToClient(const QString &message, CClient * client)
-{
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    //preparation of the packet
-    out << (quint16) 0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16) (packet.size() - sizeof(quint16));
-
-    //send msg to the client
-    client->get_socket()->write(packet);
-}
-
-
-//To delete later
-void CServer::envoyerATous(const QString &message)
-{
-    // Préparation du paquet
-    QByteArray paquet;
-    QDataStream out(&paquet, QIODevice::WriteOnly);
-
-    out << (quint16) 0; // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-    out << message; // On ajoute le message à la suite
-    out.device()->seek(0); // On se replace au début du paquet
-    out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
-
-
-    // Envoi du paquet préparé à tous les clients connectés au serveur
-    for (int i = 0; i < clients.size(); i++)
-    {
-        clients[i]->write(paquet);
-    }
-}
-
-
-void CServer::sendToAll(QByteArray out)
-{
-    foreach(CClient * client, m_clients)
-    {
-        client->get_socket()->write(out);
-    }
 }
 
 
@@ -161,44 +101,6 @@ void CServer::FillChannelFromDataStream(QDataStream & ds)
         }
 }
 
-
-void CServer::SendObjectsToClient()
-{
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    //First - Send Server Object -
-                                  //Flag 1 - Send Server
-
-
-
-
-
-
-
-    //Second - Send Channels
-    out << "2";                                 //Flag 2 - Send Channel
-    FillChannelFromDataStream(out);
-    //test -
-    qDebug() << "Packet : " << packet;
-    qDebug() << "Data Stream : " << out;
-
-    sendToAll(packet);
-
-    packet.clear();
-     qDebug() << "Clean Packet : " << packet;
-
-    //Third - Send clients
-
-     out << 3;                                   //Flag  3 - Send Client
-     FillClientFromDataStream(out);
-     //test -
-     qDebug() << "Packet : " << packet;
-     qDebug() << "Data Stream : " << out;
-
-     sendToAll(packet);
-     packet.clear();
-}
 
 void CServer::receiveData(){
 
