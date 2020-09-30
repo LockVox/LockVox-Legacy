@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
 
 CONFIG += c++11 console
 
@@ -40,7 +40,8 @@ FORMS += mainwindow.ui \
     register_interface.ui
 
 DISTFILES += \
-    lockvox.qmodel
+    lockvox.qmodel \
+    ressources/translation/LockVox_en_US.ts
 
 unix|win32: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
 else:unix: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
@@ -55,3 +56,7 @@ DEPENDPATH += $$PWD/libs/Zrtpcpp
 
 RESOURCES += \
     ressources/ressources.qrc
+
+TRANSLATIONS += \
+    ressources/translation/LockVox_fr_FR.ts \
+    ressources/translation/LockVox_en_US.ts

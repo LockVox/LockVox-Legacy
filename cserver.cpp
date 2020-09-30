@@ -31,6 +31,18 @@ CServer::CServer()
     tailleMessage = 0;
 }
 
+CDatabase * CServer::get_database(){
+    return m_db;
+}
+
+void CServer::set_database(CDatabase * db){
+    m_db = db;
+}
+
+
+
+
+
 void CServer::nouvelleConnexion()
 {
 
