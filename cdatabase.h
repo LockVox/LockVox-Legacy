@@ -22,7 +22,7 @@ private slots:
 
 
 private:
-    QSqlDatabase* m_db;
+    QSqlDatabase m_db;
 
 };
 

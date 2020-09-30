@@ -59,7 +59,6 @@ void  CClient::cInsertToDataStream(QDataStream & ds)
     ds << get_idChannel();
 
     qDebug() << " ds : " << ds << Qt::endl;
-
 }
 
 void CClient::cExtractFromDataStream(QDataStream & ds)

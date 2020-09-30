@@ -8,6 +8,7 @@
 
 
 #include "cchannel.h"
+#include "cdatabase.h"
 
 class CClient;
 class CChannel;
@@ -18,12 +19,33 @@ class CServer : public QWidget
 
     public:
         CServer();
+
+
+        //Getters
+        CDatabase * get_database();
+
+
+
+
+        //Setters
+        void set_database(CDatabase * db);
+
+
+
+
+
+
+
+
+
         void envoyerATous(const QString &message);
         void sendToChannel(const QString &message, int id_channel);
         void sendToClient(const QString &message,CClient * client);
 
 
         void sendToAll(QByteArray out);
+
+
 
 
 
@@ -69,6 +91,7 @@ class CServer : public QWidget
         QList<QTcpSocket *> clients;        //A suppr plus tard ( m_clients remplace clients)
         quint16 tailleMessage;
 
+        CDatabase * m_db;
 
                 //List of channels
                 //List of client
