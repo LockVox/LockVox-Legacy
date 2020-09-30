@@ -35,7 +35,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-FORMS += mainwindow.ui
+FORMS += mainwindow.ui \
+    login_interface.ui \
+    register_interface.ui
 
 DISTFILES += \
     lockvox.qmodel

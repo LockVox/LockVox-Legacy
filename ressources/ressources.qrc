@@ -1,5 +1,9 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-  <file>./pictures/icon.png</file>
-</qresource>
+<RCC>
+  <qresource>
+    <file>pictures/lock_vox_logo_miniature_proto.png</file>
+    <file>pictures/lock_vox_logo_miniature2.png</file>
+    <file>pictures/lock_vox_logo1.png</file>
+    <file>pictures/lock_vox_logo2.png</file>
+    <file>./pictures/icon.png</file>
+  </qresource>
 </RCC>
