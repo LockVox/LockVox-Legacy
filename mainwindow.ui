@@ -30,7 +30,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../ressources/lock_vox_ressource.qrc">:/icons/icons/lock_vox_logo1.png</pixmap>
+     <pixmap>:/icons/icons/lock_vox_logo1.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -503,7 +503,7 @@
      <string>lost your password, click to retrieve it</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -518,7 +518,7 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="topMargin">
           <number>0</number>
@@ -565,6 +565,9 @@
                <property name="text">
                 <string>Password</string>
                </property>
+               <property name="textFormat">
+                <enum>Qt::AutoText</enum>
+               </property>
               </widget>
              </item>
              <item>
@@ -601,8 +604,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources>
-  <include location="../ressources/lock_vox_ressource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -5,7 +5,15 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication Main(argc, argv);
+
+    QString locale = QLocale::system().name().section('_', 0, 0);
+
+    QTranslator translator;
+    translator.load(QString("LockVox_") + locale);
+    Main.installTranslator(&translator);
+
+
     MainWindow w;
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
@@ -24,5 +32,5 @@ int main(int argc, char *argv[])
 
 
     server->set_database(new CDatabase());
-    return a.exec();
+    return Main.exec();
 }

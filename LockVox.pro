@@ -38,7 +38,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 FORMS += mainwindow.ui
 
 DISTFILES += \
-    lockvox.qmodel
+    lockvox.qmodel \
+    ressources/translation/LockVox_en_US.ts
 
 unix|win32: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
 else:unix: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
@@ -53,3 +54,7 @@ DEPENDPATH += $$PWD/libs/Zrtpcpp
 
 RESOURCES += \
     ressources/ressources.qrc
+
+TRANSLATIONS += \
+    ressources/translation/LockVox_fr_FR.ts \
+    ressources/translation/LockVox_en_US.ts
