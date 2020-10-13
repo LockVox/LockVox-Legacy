@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QtWidgets>
+#include <QVariant>
 
 #include "cserver.h"
 
@@ -17,6 +18,7 @@ class CChannel
     public:
         CChannel();
         CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
+        CChannel(const CChannel & copy);
         ~CChannel() {};
 
 
@@ -25,6 +27,7 @@ class CChannel
         QList<CClient *> get_clients();
         QList<CMessage *> get_message();
         QString get_name();
+        CChannel* get_this();
         int get_id();
         int get_maxUsers();
         int get_nbClients();
@@ -44,6 +47,8 @@ class CChannel
         void cInsertToDataStream(QDataStream & ds);
         void cExtractFromDataStream(QDataStream & ds);
 
+         static void initCChannelSystem();
+
     private slots:
 
 
@@ -61,7 +66,13 @@ class CChannel
         int m_maxUsers;
         int m_id;
 
-
+        friend QDataStream & operator << (QDataStream & out, const CChannel & channel);
+        friend QDataStream & operator >> (QDataStream & in, CChannel & channel);
 };
+
+
+Q_DECLARE_METATYPE(CChannel)
+QDataStream & operator << (QDataStream & out, const CChannel & channel);
+QDataStream & operator >> (QDataStream & in, CChannel & channel);
 
 #endif // CCHANNEL_H

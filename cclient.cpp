@@ -4,6 +4,15 @@ CClient::CClient()
 {
     m_pseudo = "";
     m_soc = NULL;
+    m_idChannel = 0;
+}
+
+
+CClient::CClient( const CClient & copy)
+{
+    m_pseudo = copy.m_pseudo;
+    m_idChannel = copy.m_idChannel;
+    m_soc = copy.m_soc;
 }
 
 CClient::CClient(QString pseudo, QTcpSocket * soc, int id)
@@ -17,6 +26,9 @@ CClient::CClient(QString pseudo, QTcpSocket * soc, int id)
 CClient::CClient( QTcpSocket * soc){
     m_soc = soc;
 }
+
+
+
 
 QString CClient::get_pseudo()
 {
@@ -48,34 +60,27 @@ void CClient::set_idChannel(int id){
 }
 
 
+void CClient::initCClientSystem(){
 
-void  CClient::cInsertToDataStream(QDataStream & ds)
-{
-
-    qDebug() << "pseudo size : " << get_pseudo().length() <<" pseudo : "<< get_pseudo()<< Qt::endl;
-
-    ds << get_pseudo(); //16 - MAX 16 charactere
-    ds.device()->seek(32);
-    ds << get_idChannel();
-
-    qDebug() << " ds : " << ds << Qt::endl;
+    qRegisterMetaTypeStreamOperators<CClient>("CClient"); //Define operator
+    qRegisterMetaTypeStreamOperators<QList<CClient>>("QList<CClient>"); //Define operator
+    qMetaTypeId<QList<CClient>>();                                 //Test validity of cclient class
+    qMetaTypeId<CClient>();
 }
 
-void CClient::cExtractFromDataStream(QDataStream & ds)
-{
-
-    QString pseudo;
-    int id;
-
-    ds >> pseudo;
-    ds.device()->seek(32);
-    ds >> id ;
-
-
-    qDebug() << "DS Extract result - \n id : " << id << "\npseudo : " << pseudo <<Qt::endl;
-    this->set_pseudo(pseudo);
-    this->set_idChannel(id);
+QDataStream & operator << (QDataStream & out, const CClient & client){
+    out << client.m_pseudo
+        << client.m_idChannel;
+    return out;
 }
+
+QDataStream & operator >> (QDataStream & in, CClient & client){
+    in >> client.m_pseudo;
+    in >> client.m_idChannel;
+
+    return in;
+}
+
 
 
 

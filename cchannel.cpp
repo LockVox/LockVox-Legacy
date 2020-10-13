@@ -11,6 +11,13 @@ CChannel::CChannel()
 
 }
 
+CChannel::CChannel(const CChannel & copy){
+    m_name = copy.m_name;
+    m_nbClients = copy.m_nbClients;
+    m_maxUsers = copy.m_maxUsers;
+    m_id = copy.m_id;
+}
+
 CChannel::CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id)
 {
     m_clients = clients;
@@ -19,6 +26,7 @@ CChannel::CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, 
     m_id = id;
 
 }
+
 
 QList<CClient *> CChannel::get_clients()
 {
@@ -67,39 +75,37 @@ void CChannel::set_nbClients(int nb){
     m_nbClients = nb;
 }
 
-
-void  CChannel::cInsertToDataStream(QDataStream & ds)
+QDataStream & operator << (QDataStream & out, const CChannel & channel)
 {
-
-    qDebug() << "Name size : " << get_name().length() << Qt::endl;
-
-    ds << get_name(); //16 - MAX 16 charactere
-
-    ds.device()->seek(32); //Pos max name
-    ds << get_maxUsers();   //
-    ds << get_id();
-    ds << get_nbClients();
-
-    qDebug() << " ds : " << ds << Qt::endl;
+    out << channel.m_name
+            << channel.m_nbClients
+              << channel.m_maxUsers
+                <<channel.m_id;
+    return out;
 }
 
-void CChannel::cExtractFromDataStream(QDataStream & ds)
+QDataStream & operator >> (QDataStream & in, CChannel & channel)
 {
+    in >> channel.m_name;
+    in >> channel.m_nbClients;
+    in >> channel.m_maxUsers;
+    in >> channel.m_id;
 
-    QString name;
-    int nbClients;
-    int maxUsers;
-    int id;
-    ds >> maxUsers >> id >> nbClients;
-
-    ds >> name ;
-
-
-    this->set_name(name);
-    this->set_nbClients(nbClients);
-    this->set_maxUsers(maxUsers);
-    this->set_id(id);
+    return in;
 }
+
+
+
+void CChannel::initCChannelSystem(){
+
+    qRegisterMetaTypeStreamOperators<CChannel>("CChannel"); //Define operator
+    qRegisterMetaTypeStreamOperators<QList<CChannel>>("lCChannel"); //Define operator
+
+    qMetaTypeId<CChannel>();
+    qMetaTypeId<QList<CChannel>>();
+    //Test validity of cclient class
+}
+
 
 
 void loadMessage()
