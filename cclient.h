@@ -3,17 +3,20 @@
 
 #include <QObject>
 #include <QtNetwork>
+#include <QVariant>
 
 #include "cchannel.h"
 
 class CClient
 {
     public:
-        CClient();
-        CClient(QString name, QTcpSocket * soc, int id);
+        CClient();                                          //Constructeur par défault
+        CClient(const CClient & copy);                      //Constrcteur par copie
+        CClient(QString name, QTcpSocket * soc, int id);    //Constructeur perso
         CClient(QTcpSocket * soc);
 
-        ~CClient() {};
+        ~CClient() {};                                      //Destructeur
+
 
 
         //Getters
@@ -26,8 +29,12 @@ class CClient
         void set_socket(QTcpSocket * soc);
         void set_idChannel(int id);
 
-        void cInsertToDataStream(QDataStream & ds);
-        void cExtractFromDataStream(QDataStream & ds);
+
+
+        static void initCClientSystem();
+
+
+
 
 
     private slots:
@@ -40,6 +47,19 @@ class CClient
 
         int m_idChannel;
 
+        friend QDataStream & operator << (QDataStream & out, const CClient & value);
+        friend QDataStream & operator >> (QDataStream & in, CClient & value);
 };
+
+
+Q_DECLARE_METATYPE(CClient)
+QDataStream & operator << (QDataStream & out, const CClient & client);
+QDataStream & operator >> (QDataStream & in, CClient & client);
+
+
+
+
+
+
 
 #endif // CCLIENT_H

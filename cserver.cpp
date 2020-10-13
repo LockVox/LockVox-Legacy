@@ -1,5 +1,6 @@
 #include "cserver.h"
 
+#include <QDebug>
 CServer::CServer()
 {
     // Création et disposition des widgets de la fenêtre
@@ -31,16 +32,69 @@ CServer::CServer()
     tailleMessage = 0;
 }
 
+//Getters
 CDatabase * CServer::get_database(){
     return m_db;
 }
 
+QList<CChannel *> CServer::get_channelList(){
+    return m_channels;
+}
+
+QList<CClient *> CServer::get_clientList(){
+    return m_clients;
+}
+
+QList<CChannel> CServer::get_staticChannelList(){
+    QList<CChannel> list;
+    foreach(CChannel *c, m_channels)
+        list.append(*c);
+    return list;
+}
+
+QList<CClient> CServer::get_staticClientList(){
+    QList<CClient> list;
+    foreach(CClient *c, m_clients)
+        list.append(*c);
+    return list;
+}
+
+QTcpSocket * CServer::get_socket(){
+    return m_socket;
+}
+
+
+//Setters
 void CServer::set_database(CDatabase * db){
     m_db = db;
 }
 
+void CServer::set_clients(QList<CClient> clients){
+    foreach(CClient c, clients)
+    {
+        m_clients.append(&c);
 
+    }
+}
 
+void CServer::set_channels(QList<CChannel> channels){
+    this->get_channelList().clear();
+    foreach(CChannel c, channels)
+    {
+        m_channels.append(&c);
+    }
+}
+
+void CServer::set_socket(QTcpSocket* soc){
+    m_socket  = soc;
+}
+
+void CServer::freeChannels(){
+    foreach(CChannel * c, m_channels)
+    {
+       free(c);
+    }
+}
 
 
 void CServer::nouvelleConnexion()
@@ -50,15 +104,11 @@ void CServer::nouvelleConnexion()
     CClient * newClient = new CClient();
     newClient->set_socket(serveur->nextPendingConnection());
 
-
-
-    //Implemente information exchange - client must send a pseudo, etc
-
+    this->get_clientList().append(newClient);
 
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(receiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 }
-
 
 void CServer::deconnexionClient()
 
@@ -133,83 +183,22 @@ void CServer::envoyerATous(const QString &message)
     }
 }
 
-
 void CServer::sendToAll(QByteArray out)
 {
-    foreach(CClient * client, m_clients)
+    if(m_clients.isEmpty() == true)
     {
-        client->get_socket()->write(out);
+        qDebug() << "there is no client ! ";
+    }
+    else{
+        foreach(CClient * client, m_clients)
+            {
+                client->get_socket()->write(out);
+            }
     }
 }
-
-
-
 
 void CServer::addChannel(CChannel * tmp){
     m_channels.push_back(tmp);
-}
-
-
-void CServer::FillDataStreamFromClient(QDataStream & ds){
-
-
-    int size = m_clients.size();
-
-    ds << size;
-    for( int i = 0 ; i < size; i++)
-    {
-        m_clients[i]->cInsertToDataStream(ds);
-    }
-
-
-}
-
-void CServer::FillDataStreamFromChannel(QDataStream & ds){
-
-    int size = m_channels.size();
-
-    ds << size;
-    for( int i= 0 ; i < size; i++)
-    {
-        m_clients[i]->cInsertToDataStream(ds);
-    }
-}
-
-
-
-
-
-#define PSEUDO_SIZE 32
-
-void CServer::FillClientFromDataStream(QDataStream & ds)
-{
-
-        int size;
-
-        ds >> size;
-
-
-        for(int i = 0; i < size; i++)
-        {
-            m_clients[i]->cExtractFromDataStream(ds);          // Extracting datastream to fill client i
-            ds.device()->seek(i*(PSEUDO_SIZE+1));              //Move cursor to next client
-        }
-}
-
-
-void CServer::FillChannelFromDataStream(QDataStream & ds)
-{
-
-        int size;
-
-        ds >> size;
-
-
-        for(int i = 0; i < size; i++)
-        {
-            m_channels[i]->cExtractFromDataStream(ds);      //Extract ds into channel i
-            ds.device()->seek(i*(PSEUDO_SIZE+1));           //Move cursor to next channel
-        }
 }
 
 
@@ -223,7 +212,7 @@ void CServer::SendObjectsToClient()
     QDataStream out(&packet, QIODevice::WriteOnly);
 
     //First - Send Server Object -
-                                //Flag 1 - Send Server
+    //Flag 1 - Send Server
 
 
 
@@ -233,7 +222,7 @@ void CServer::SendObjectsToClient()
 
     //Second - Send Channels
     out << "2";                                 //Flag 2 - Send Channel
-    FillChannelFromDataStream(out);
+    this->ChannelsToDatastream(out);
     //test -
     qDebug() << "Packet : " << packet;
     qDebug() << "Data Stream : " << out;
@@ -246,18 +235,124 @@ void CServer::SendObjectsToClient()
     //Third - Send clients
 
     out << 3;                                   //Flag 3 - Send Client
-     FillClientFromDataStream(out);
-     //test -
-     qDebug() << "Packet : " << packet;
-     qDebug() << "Data Stream : " << out;
+    ClientsToDatastream(out);
+    //test -
+    qDebug() << "Packet : " << packet;
+    qDebug() << "Data Stream : " << out;
 
-     sendToAll(packet);
-     packet.clear();
+    sendToAll(packet);
+    packet.clear();
 }
 
+void CServer::sReceiveData(){
+
+    /*
+    QDataStream in(get_socket());
+
+    int flag = -1;
+    if(tailleMessage == 0)
+    {
+        if(get_socket()->bytesAvailable() < (int)sizeof(quint16)){
+            return;
+        }
+        in >> flag;
+        qDebug() << "Flag found : " << flag << Qt::endl;
+        switch(flag){
+
+            case 1:
+                    //Not implement yet - send CServer object
+                break;
+
+            case 2:
+                 this->data(in);
+                break;
+            case 3:
+                 FillClientFromDataStream(in);
+                break;
+            default:
+                qDebug() << "Flag not found - \n";
+                return;
+            break;
+        }
+        //No more bytes ready for reading
+        if(get_socket()->bytesAvailable() < tailleMessage){
+            return;
+        }
+        tailleMessage = 0;
+    }
+*/
+}
+
+void CServer::cReceiveData(){}
 
 
+void CServer::ClientsToDatastream(QDataStream & ds)
+{
+    QVariant serialize = QVariant::fromValue(get_staticClientList());
+    QVariantList list;
+    QSequentialIterable it = serialize.value<QSequentialIterable>();
 
+    if(serialize.canConvert(QVariant::List) == true)
+    {
+        for(const QVariant &c : it)
+            list << c;
+        ds << serialize;
+    }
+    else{
+        qDebug() << "Error - unable to convert QVariant into QVariant List" << Qt::endl;
+    }
+
+
+}
+
+void CServer::ChannelsToDatastream(QDataStream & ds){
+    QVariant serialize = QVariant::fromValue(get_staticChannelList());                            //Set channel's list in QVariant
+    QVariantList list;
+    QSequentialIterable it = serialize.value<QSequentialIterable>();                        //Set iterable
+
+    if(serialize.canConvert(QVariant::List) == true)                                        //if convertable
+    {
+        for(const QVariant &c : it)                                                         //Put a member of the list in QVariantList
+            list << c;
+        ds << serialize;
+    }
+    else{
+        qDebug() << "Error - unable to convert QVariant into QVariant List" << Qt::endl;
+    }
+
+}
+
+void CServer::DatastreamToChannels(QDataStream & ds){
+
+    QList<CChannel>deserializeList;
+    QVariant in;
+    ds >> in;
+    foreach(QVariant c, in.value<QVariantList>())
+        deserializeList << c.value<CChannel>();
+    foreach(CChannel c, deserializeList)
+     {
+        qDebug() << "This is here";
+        qDebug() << "Set channel -\nName :" << c.get_name() << "\nID : " <<c.get_id() << "\nMax users: " << c.get_maxUsers() << "\nNb Users : " << c.get_nbClients() << Qt::endl;
+    }
+    this->set_channels(deserializeList);
+}
+
+void CServer::DatastreamToClients(QDataStream & ds){
+
+
+    QList<CClient>deserializeList;
+    QVariant in;
+    ds >> in;
+    foreach(QVariant c, in.value<QVariantList>())
+    {
+
+        deserializeList << c.value<CClient>();
+    }
+
+    this->set_clients(deserializeList);
+
+
+}
 
 
 
