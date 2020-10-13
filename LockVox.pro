@@ -52,11 +52,30 @@ TRANSLATIONS += \
     ressources/translation/LockVox_fr_FR.ts \
     ressources/translation/LockVox_en_US.ts
 
+win32: LIBS += -L$$PWD/libs/QXmpp/win32/ -lqxmpp
 
-unix|win32: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
+INCLUDEPATH += $$PWD/libs/QXmpp/win32 \
+    $$PWD/libs/QXmpp/win32/base \
+    $$PWD/libs/QXmpp/win32/client \
+    $$PWD/libs/QXmpp/win32/server
 
-INCLUDEPATH += $$PWD/libs/Qxmpp
-DEPENDPATH += $$PWD/libs/Qxmpp
+DEPENDPATH += $$PWD/libs/QXmpp/win32
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/Qxmpp/qxmpp.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/libs/Qxmpp/qxmpp.a/
+unix:!macx: LIBS += -L$$PWD/libs/QXmpp/unix/ -llibqxmpp
+
+INCLUDEPATH += $$PWD/libs/QXmpp/unix \
+    $$PWD/libs/QXmpp/unix/base \
+    $$PWD/libs/QXmpp/unix/client \
+    $$PWD/libs/QXmpp/unix/server
+
+DEPENDPATH += $$PWD/libs/QXmpp/unix
+
+win32: LIBS += -L$$PWD/libs/srtp2/win32/ -lsrtp2
+
+INCLUDEPATH += $$PWD/libs/srtp2/win32
+DEPENDPATH += $$PWD/libs/srtp2/win32
+
+unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
+
+INCLUDEPATH += $$PWD/libs/srtp2/unix
+DEPENDPATH += $$PWD/libs/srtp2/unix
