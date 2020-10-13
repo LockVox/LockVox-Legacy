@@ -21,14 +21,16 @@ SOURCES += \
     main.cpp \
     cserver.cpp \
     cdatabase.cpp \
-    qma.cpp
+    qma.cpp \
+    qxmpp_server.cpp
 
 HEADERS += \
     cchannel.h \
     cclient.h \
     cserver.h \
     cdatabase.h \
-    qma.h
+    qma.h \
+    qxmpp_server.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -49,3 +51,12 @@ RESOURCES += \
 TRANSLATIONS += \
     ressources/translation/LockVox_fr_FR.ts \
     ressources/translation/LockVox_en_US.ts
+
+
+unix|win32: LIBS += -L$$PWD/libs/Qxmpp/ -lqxmpp
+
+INCLUDEPATH += $$PWD/libs/Qxmpp
+DEPENDPATH += $$PWD/libs/Qxmpp
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/Qxmpp/qxmpp.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/libs/Qxmpp/qxmpp.a/
