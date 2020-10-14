@@ -1,6 +1,7 @@
+#Pesonnal configuration of Qt
 LockVox.pro.user
 LockVox.pro.user.*
+
+#Compiled autosave for ui
 *.autosave
-LockVox.pro.user
-LockVox.pro.user
-LockVox.pro.user
+
