@@ -1,4 +1,4 @@
-#include "cchannel.h"
+#include "src/includes/cchannel.h"
 
 CChannel::CChannel()
 {

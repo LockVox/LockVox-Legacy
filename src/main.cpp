@@ -1,4 +1,4 @@
-#include "qma.h"
+#include "src/includes/qma.h"
 
 #include <QApplication>
 #include <iostream>

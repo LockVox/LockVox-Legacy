@@ -1,4 +1,4 @@
-#include "qxmpp_server.h"
+#include "src/includes/qxmpp_server.h"
 
 #define USERNAME "lockvox"
 #define PASSWORD "azerty"

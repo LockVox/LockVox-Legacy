@@ -1,4 +1,4 @@
-#include "cserver.h"
+#include "src/includes/cserver.h"
 
 #include <QDebug>
 CServer::CServer()

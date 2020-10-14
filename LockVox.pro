@@ -16,33 +16,37 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    cchannel.cpp \
-    cclient.cpp \
-    main.cpp \
-    cserver.cpp \
-    cdatabase.cpp \
-    qma.cpp \
-    qxmpp_server.cpp
+    src/cchannel.cpp \
+    src/cclient.cpp \
+    src/main.cpp \
+    src/cserver.cpp \
+    src/cdatabase.cpp \
+    src/qma.cpp \
+    src/qxmpp_server.cpp
 
 HEADERS += \
-    cchannel.h \
-    cclient.h \
-    cserver.h \
-    cdatabase.h \
-    qma.h \
-    qxmpp_server.h
+    src/includes/cchannel.h \
+    src/includes/cclient.h \
+    src/includes/cserver.h \
+    src/includes/cdatabase.h \
+    src/includes/qma.h \
+    src/includes/qxmpp_server.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-FORMS += mainwindow.ui \
-    login_interface.ui \
-    register_interface.ui
+INCLUDEPATH += $$PWD/src \
+    $$PWD/src/include \
+    $$PWD/src/ui
+
+FORMS += src/ui/mainwindow.ui \
+    src/ui/login_interface.ui \
+    src/ui/register_interface.ui
 
 DISTFILES += \
-    lockvox.qmodel \
+    ressources/qmodel/lockvox.qmodel \
     ressources/translation/LockVox_en_US.ts
 
 RESOURCES += \
@@ -61,7 +65,7 @@ INCLUDEPATH += $$PWD/libs/QXmpp/win32 \
 
 DEPENDPATH += $$PWD/libs/QXmpp/win32
 
-unix:!macx: LIBS += -L$$PWD/libs/QXmpp/unix/ -llibqxmpp
+unix:!macx: LIBS += -L$$PWD/libs/QXmpp/unix/ -lqxmpp
 
 INCLUDEPATH += $$PWD/libs/QXmpp/unix \
     $$PWD/libs/QXmpp/unix/base \
