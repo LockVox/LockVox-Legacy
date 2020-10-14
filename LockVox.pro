@@ -34,9 +34,9 @@ HEADERS += \
     src/includes/cdatabase.h \
     src/includes/qma.h \
     src/includes/qxmpp_server.h \
-    src/clickablelabel.h \
-    src/login_interface_v2.h \
-    src/register_interface_v2.h
+    src/includes/clickablelabel.h \
+    src/includes/login_interface_v2.h \
+    src/includes/register_interface_v2.h
 
 
 # Default rules for deployment.
@@ -59,7 +59,8 @@ DISTFILES += \
     ressources/translation/LockVox_en_US.ts
 
 RESOURCES += \
-    ressources/ressources.qrc
+    ressources/ressources.qrc \
+    src/ui/ui.qrc
 
 TRANSLATIONS += \
     ressources/translation/LockVox_fr_FR.ts \

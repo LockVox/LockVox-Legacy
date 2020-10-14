@@ -200,7 +200,7 @@ QLineEdit:hover{
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="ressources/ressources.qrc">:/pictures/lock_vox_logo1.png</pixmap>
+      <pixmap resource="../../ressources/ressources.qrc">:/pictures/lock_vox_logo1.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -285,7 +285,7 @@ QLabel:hover{
   </widget>
  </widget>
  <resources>
-  <include location="ressources/ressources.qrc"/>
+  <include location="../../ressources/ressources.qrc"/>
  </resources>
  <connections/>
 </ui>

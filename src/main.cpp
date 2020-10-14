@@ -1,4 +1,5 @@
 #include "src/includes/qma.h"
+#include "src/includes/login_interface_v2.h"
 
 #include <QApplication>
 #include <iostream>
@@ -14,13 +15,17 @@ int main(int argc, char *argv[])
     Main.installTranslator(&translator);
 
 
-    MainWindow w;
+    /*MainWindow w;
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
-    w.show();
+    w.show();*/
 
+    login_interface_V2 login_interface;
+    login_interface.setWindowTitle("LockVox");
+    login_interface.setWindowIcon(QIcon(":/pictures/icon.png"));
+    login_interface.show();
 
-    CServer * server = new CServer();
+    /* CServer * server = new CServer();
 
     CClient::initCClientSystem();
     CChannel::initCChannelSystem();
@@ -55,12 +60,7 @@ int main(int argc, char *argv[])
     while(1){
         server->SendObjectsToClient();
         QThread::sleep(2);
-    }
-
-
-
-
-
+    }*/
 
 /*
     qDebug() << "Start serialization" << Qt::endl;
@@ -133,10 +133,8 @@ int main(int argc, char *argv[])
 
     //}*/
 
+    //server->set_database(new CDatabase());
 
-
-
-    server->set_database(new CDatabase());
     return Main.exec();
 }
 
