@@ -22,7 +22,10 @@ SOURCES += \
     src/cserver.cpp \
     src/cdatabase.cpp \
     src/qma.cpp \
-    src/qxmpp_server.cpp
+    src/qxmpp_server.cpp \
+    src/clickablelabel.cpp \
+    src/login_interface_v2.cpp \
+    src/register_interface_v2.cpp
 
 HEADERS += \
     src/includes/cchannel.h \
@@ -30,7 +33,11 @@ HEADERS += \
     src/includes/cserver.h \
     src/includes/cdatabase.h \
     src/includes/qma.h \
-    src/includes/qxmpp_server.h
+    src/includes/qxmpp_server.h \
+    src/clickablelabel.h \
+    src/login_interface_v2.h \
+    src/register_interface_v2.h
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -43,7 +50,9 @@ INCLUDEPATH += $$PWD/src \
 
 FORMS += src/ui/mainwindow.ui \
     src/ui/login_interface.ui \
-    src/ui/register_interface.ui
+    src/ui/register_interface.ui \
+    src/ui/login_interface_v2.ui \
+    src/ui/register_interface_v2.ui
 
 DISTFILES += \
     ressources/qmodel/lockvox.qmodel \
