@@ -1,5 +1,4 @@
 #include "src/includes/qma.h"
-#include "src/includes/login_interface_v2.h"
 
 #include <QApplication>
 #include <iostream>
@@ -19,11 +18,6 @@ int main(int argc, char *argv[])
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
     w.show();*/
-
-    login_interface_V2 login_interface;
-    login_interface.setWindowTitle("LockVox");
-    login_interface.setWindowIcon(QIcon(":/pictures/icon.png"));
-    login_interface.show();
 
     /* CServer * server = new CServer();
 
