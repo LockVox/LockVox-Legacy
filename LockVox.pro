@@ -85,3 +85,16 @@ unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
 
 INCLUDEPATH += $$PWD/libs/srtp2/unix
 DEPENDPATH += $$PWD/libs/srtp2/unix
+
+win32: LIBS += -L$$PWD/libs/protobuf/ -llibprotobuf
+
+INCLUDEPATH += $$PWD/libs/protobuf \
+    $$PWD/libs/protobuf/google\protobuf \
+    $$PWD/libs/protobuf/google/protobuf/util \
+    $$PWD/libs/protobuf/google/protobuf/util/internal \
+    $$PWD/libs/protobuf/google/protobuf/testing \
+    $$PWD/libs/protobuf/google/protobuf/stubs \
+    $$PWD/libs/protobuf/google/protobuf/io \
+    $$PWD/libs/protobuf/google/protobuf/compiler
+
+DEPENDPATH += $$PWD/libs/protobuf
