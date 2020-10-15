@@ -21,7 +21,6 @@ SOURCES += \
     src/main.cpp \
     src/cserver.cpp \
     src/cdatabase.cpp \
-    src/qma.cpp \
     src/qxmpp_server.cpp
 
 HEADERS += \
@@ -42,7 +41,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/include \
     $$PWD/src/ui
 
-FORMS += src/ui/mainwindow.ui \
+FORMS += \
     src/ui/login_interface.ui \
     src/ui/register_interface.ui
 
