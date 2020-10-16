@@ -1,0 +1,12 @@
+#ifndef QT_QTJSONSERIALIZER_MODULE_H
+#define QT_QTJSONSERIALIZER_MODULE_H
+#include <QtJsonSerializer/QtJsonSerializerDepends>
+#include "cborserializer.h"
+#include "exception.h"
+#include "jsonserializer.h"
+#include "metawriters.h"
+#include "serializerbase.h"
+#include "typeconverter.h"
+#include "typeextractors.h"
+#include "qtjsonserializerversion.h"
+#endif

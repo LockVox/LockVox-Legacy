@@ -98,3 +98,20 @@ INCLUDEPATH += $$PWD/libs/protobuf \
     $$PWD/libs/protobuf/google/protobuf/compiler
 
 DEPENDPATH += $$PWD/libs/protobuf
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/QtJsonSerializer/win32/ -lQt5JsonSerializer
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/QtJsonSerializer/win32/ -lQt5JsonSerializerd
+
+INCLUDEPATH += $$PWD/libs/QtJsonSerializer/win32 \
+    $$PWD/libs/QtJsonSerializer/include/QtJsonSerializer \
+    $$PWD/libs/QtJsonSerializer/include/QtJsonSerializer/4.0.3/QtJsonSerializer/private
+
+DEPENDPATH += $$PWD/libs/QtJsonSerializer/win32
+
+unix:!macx: LIBS += -L$$PWD/libs/QtJsonSerializer/unix/ -lQt5JsonSerializer
+
+INCLUDEPATH += $$PWD/libs/QtJsonSerializer/unix \
+    $$PWD/libs/QtJsonSerializer/include/QtJsonSerializer \
+    $$PWD/libs/QtJsonSerializer/include/QtJsonSerializer/4.0.3/QtJsonSerializer/private
+
+DEPENDPATH += $$PWD/libs/QtJsonSerializer/unix
