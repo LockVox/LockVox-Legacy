@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/ClassType.pb.cc \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/main.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     src/qxmpp_server.cpp
 
 HEADERS += \
+    src/ClassType.pb.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cserver.h \

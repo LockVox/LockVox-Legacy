@@ -11,6 +11,7 @@
 #include <QVariant>
 
 #include "cserver.h"
+#include "ClassType.pb.h"
 
 
 class CChannel
@@ -66,13 +67,13 @@ class CChannel
         int m_maxUsers;
         int m_id;
 
-        friend QDataStream & operator << (QDataStream & out, const CChannel & channel);
-        friend QDataStream & operator >> (QDataStream & in, CChannel & channel);
+
+        ClassType::Channel * p_channel;
+
 };
 
 
 Q_DECLARE_METATYPE(CChannel)
-QDataStream & operator << (QDataStream & out, const CChannel & channel);
-QDataStream & operator >> (QDataStream & in, CChannel & channel);
+
 
 #endif // CCHANNEL_H
