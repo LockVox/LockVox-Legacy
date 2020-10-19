@@ -1,79 +1,62 @@
 #ifndef CCHANNEL_H
 #define CCHANNEL_H
 
-#include "cclient.h"
-#include "cmessage.h"
+#include <QJsonObject>
+#include "src/includes/cclient.h"
 
-
-
-#include <QObject>
-#include <QtWidgets>
-#include <QVariant>
-
-#include "cserver.h"
-#include "ClassType.pb.h"
-
+class CMessage;
+class CClient;
 
 class CChannel
 {
-    public:
-        CChannel();
-        CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
-        CChannel(const CChannel & copy);
-        ~CChannel() {};
 
 
+public:
 
-      //Getters
-        QList<CClient *> get_clients();
-        QList<CMessage *> get_message();
-        QString get_name();
-        CChannel* get_this();
-        int get_id();
-        int get_maxUsers();
-        int get_nbClients();
+    CChannel();
 
-      //Setters
-        void set_clients(QList<CClient*> clients);
-        void set_message(QList<CMessage*>message);
-        void set_name(QString name);
-        void set_id(int id);
+    CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
+    CChannel(const CChannel & copy);
+    ~CChannel() {};
 
-        void set_maxUsers(int maxUsers);
-        void set_nbClients(int nb);
-      //Méthodes
+  //Getters
+    QList<CClient *> get_clients();
+    QList<CMessage *> get_message();
+    QString get_name();
+    CChannel* get_this();
+    int get_id();
+    int get_maxUsers();
+    int get_nbClients();
 
+  //Setters
+    void set_clients(QList<CClient*> clients);
+    void set_message(QList<CMessage*>message);
+    void set_name(QString name);
+    void set_id(int id);
+    void set_maxUsers(int maxUsers);
+    void set_nbClients(int nb);
+    void set_all(CChannel * c);
 
-        void loadMessage();
-        void cInsertToDataStream(QDataStream & ds);
-        void cExtractFromDataStream(QDataStream & ds);
+    //Optionnal
+    QByteArray serialize();
+    void deserialize(QByteArray & in);
 
-         static void initCChannelSystem();
-
-    private slots:
-
-
-
-
-
-
-    private:
-
-        QList<CClient*> m_clients;
-        QList<CMessage*> m_messages;
-
-        QString m_name;
-        int m_nbClients;
-        int m_maxUsers;
-        int m_id;
+    //Serialize | Deserialize
+    QJsonObject serializeToObj();
+    void deserialize(QJsonObject json_obj);
 
 
-        ClassType::Channel * p_channel;
+signals:
 
+
+private:
+    QList<CClient*> m_clients;
+    QList<CMessage*> m_messages;
+
+    QString m_name;
+    int m_nbClients;
+    int m_maxUsers;
+    int m_id;
 };
-
-
-Q_DECLARE_METATYPE(CChannel)
-
 
 #endif // CCHANNEL_H

@@ -1,7 +1,6 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
-
 CONFIG += c++11 console
 
 # The following define makes your compiler emit warnings if you use
@@ -16,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/ClassType.pb.cc \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/main.cpp \
@@ -26,7 +24,6 @@ SOURCES += \
     src/qxmpp_server.cpp
 
 HEADERS += \
-    src/ClassType.pb.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cserver.h \
@@ -86,17 +83,5 @@ DEPENDPATH += $$PWD/libs/srtp2/win32
 unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
 
 INCLUDEPATH += $$PWD/libs/srtp2/unix
-DEPENDPATH += $$PWD/libs/srtp2/unix
+DEPENDPATH += $$PWD/libs/srtp2/unixs
 
-win32: LIBS += -L$$PWD/libs/protobuf/ -llibprotobuf
-
-INCLUDEPATH += $$PWD/libs/protobuf \
-    $$PWD/libs/protobuf/google\protobuf \
-    $$PWD/libs/protobuf/google/protobuf/util \
-    $$PWD/libs/protobuf/google/protobuf/util/internal \
-    $$PWD/libs/protobuf/google/protobuf/testing \
-    $$PWD/libs/protobuf/google/protobuf/stubs \
-    $$PWD/libs/protobuf/google/protobuf/io \
-    $$PWD/libs/protobuf/google/protobuf/compiler
-
-DEPENDPATH += $$PWD/libs/protobuf

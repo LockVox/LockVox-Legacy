@@ -31,7 +31,14 @@ class CClient
 
 
 
-        static void initCClientSystem();
+        //Optionnal
+        QByteArray serialize();
+        void deserialize(QByteArray & in);
+
+        //Serialize | Deserialize
+        QJsonObject serializeToObj();
+        void deserialize(QJsonObject json_obj);
+
 
 
 
