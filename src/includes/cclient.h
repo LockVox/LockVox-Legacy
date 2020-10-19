@@ -12,7 +12,7 @@ class CClient
     public:
         CClient();                                          //Constructeur par défault
         CClient(const CClient & copy);                      //Constrcteur par copie
-        CClient(int id, QString name, QTcpSocket * soc, int idChannel);    //Constructeur perso
+        CClient(QString name, QTcpSocket * soc, int id);    //Constructeur perso
         CClient(QTcpSocket * soc);
 
         ~CClient() {};                                      //Destructeur
@@ -23,17 +23,11 @@ class CClient
         QString get_pseudo();
         QTcpSocket * get_socket();
         int get_idChannel();
-        int get_id();
-
-
 
         //Setters
         void set_pseudo(QString pseudo);
         void set_socket(QTcpSocket * soc);
         void set_idChannel(int id);
-        void set_id(int id);
-        void set_all(CClient *c);
-
 
 
 
@@ -57,11 +51,20 @@ class CClient
         QString m_pseudo;
         QTcpSocket * m_soc;
 
-        int m_id;
+
         int m_idChannel;
 
-
+        friend QDataStream & operator << (QDataStream & out, const CClient & value);
+        friend QDataStream & operator >> (QDataStream & in, CClient & value);
 };
+
+
+Q_DECLARE_METATYPE(CClient)
+QDataStream & operator << (QDataStream & out, const CClient & client);
+QDataStream & operator >> (QDataStream & in, CClient & client);
+
+
+
 
 
 

@@ -75,7 +75,6 @@ class CServer : public QWidget
 
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
-        void Deserialize(QByteArray in);
 
         QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
         QByteArray SerializeClients();                                      //Serialize clients into json document then byte array
@@ -83,12 +82,8 @@ class CServer : public QWidget
         void DeserializeChannels(QByteArray in);                            //Deserialize channels from byte array
         void DeserializeClient(QByteArray in);                              //Deserialize clients from byte array
 
-        void deserializeChannel(QJsonArray & json_array);
-        void deserializeClients(QJsonArray & json_array);
-
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
-
 
 
         //Création d'un channel grâce à un nouveau process -
