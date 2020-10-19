@@ -3,6 +3,9 @@
 #include <QApplication>
 #include <iostream>
 
+
+#define PROTOBUF_USE_DDLS
+
 int main(int argc, char *argv[])
 {
     QApplication Main(argc, argv);
@@ -14,17 +17,17 @@ int main(int argc, char *argv[])
     Main.installTranslator(&translator);
 
 
+
     /*MainWindow w;
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
     w.show();*/
 
-    /* CServer * server = new CServer();
+    CServer * server = new CServer();
 
-    CClient::initCClientSystem();
-    CChannel::initCChannelSystem();
 
-    CClient *client = new CClient("taga", NULL, 5);
+    CClient *client = new CClient(5,"taga", NULL, 5);
+    server->addClient(client);
 
     CChannel *channel = new CChannel();
     CChannel *channel2 = new CChannel();
@@ -49,12 +52,16 @@ int main(int argc, char *argv[])
     server->addChannel(channel);
     server->addChannel(channel2);
     server->addChannel(channel3);
-    server->get_clientList().append(client);
 
-    while(1){
-        server->SendObjectsToClient();
-        QThread::sleep(2);
-    }*/
+
+
+    /*
+    QByteArray out = server->SerializeChannels();
+    qDebug() << "packet :" <<out << Qt::endl;
+
+    QByteArray in;
+    server->DeserializeChannels(in);
+*/
 
 /*
     qDebug() << "Start serialization" << Qt::endl;

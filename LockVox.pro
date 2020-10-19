@@ -1,7 +1,6 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
-
 CONFIG += c++11 console
 
 # The following define makes your compiler emit warnings if you use
@@ -21,6 +20,7 @@ SOURCES += \
     src/main.cpp \
     src/cserver.cpp \
     src/cdatabase.cpp \
+    src/qma.cpp \
     src/qxmpp_server.cpp
 
 HEADERS += \
@@ -41,7 +41,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/include \
     $$PWD/src/ui
 
-FORMS += \
+FORMS += src/ui/mainwindow.ui \
     src/ui/login_interface.ui \
     src/ui/register_interface.ui
 
@@ -83,17 +83,5 @@ DEPENDPATH += $$PWD/libs/srtp2/win32
 unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
 
 INCLUDEPATH += $$PWD/libs/srtp2/unix
-DEPENDPATH += $$PWD/libs/srtp2/unix
+DEPENDPATH += $$PWD/libs/srtp2/unixs
 
-win32: LIBS += -L$$PWD/libs/protobuf/ -llibprotobuf
-
-INCLUDEPATH += $$PWD/libs/protobuf \
-    $$PWD/libs/protobuf/google\protobuf \
-    $$PWD/libs/protobuf/google/protobuf/util \
-    $$PWD/libs/protobuf/google/protobuf/util/internal \
-    $$PWD/libs/protobuf/google/protobuf/testing \
-    $$PWD/libs/protobuf/google/protobuf/stubs \
-    $$PWD/libs/protobuf/google/protobuf/io \
-    $$PWD/libs/protobuf/google/protobuf/compiler
-
-DEPENDPATH += $$PWD/libs/protobuf
