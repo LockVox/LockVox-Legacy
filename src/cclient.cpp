@@ -15,12 +15,11 @@ CClient::CClient( const CClient & copy)
     m_soc = copy.m_soc;
 }
 
-CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel)
+CClient::CClient(QString pseudo, QTcpSocket * soc, int id)
 {
-    m_id = id;
     m_pseudo = pseudo;
     m_soc = soc;
-    m_idChannel = idChannel;
+    m_idChannel = id;
 
 }
 
@@ -50,6 +49,11 @@ int CClient::get_id(){
 }
 
 
+
+void CClient::set_id(int id){
+    m_id = id;
+}
+
 void CClient::set_pseudo(QString pseudo)
 {
     m_pseudo = pseudo;
@@ -64,15 +68,13 @@ void CClient::set_idChannel(int id){
     m_idChannel = id;
 }
 
-void CClient::set_id(int id){
-    m_id = id;
-}
 
 void CClient::set_all(CClient *c){
     this->set_id(c->get_id());
     this->set_pseudo(c->get_pseudo());
     this->set_idChannel(c->get_idChannel());
 }
+
 
 //Optionnal
 QByteArray CClient::serialize(){

@@ -72,7 +72,6 @@ class CServer : public QWidget
         int whichClient(QTcpSocket * soc);
 
 
-
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
         void Deserialize(QByteArray in);
@@ -88,7 +87,6 @@ class CServer : public QWidget
 
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
-
 
 
         //Création d'un channel grâce à un nouveau process -
