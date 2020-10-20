@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
     CServer * server = new CServer();
 
 
-    CClient *client = new CClient("taga", NULL, 5);
+    CClient *client = new CClient(5,"taga", NULL, 5);
+    server->addClient(client);
 
     CChannel *channel = new CChannel();
     CChannel *channel2 = new CChannel();

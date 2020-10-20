@@ -98,18 +98,18 @@ void CServer::nouvelleConnexion()
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(sReceiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 
-
-
+    qDebug() << "New client";
     ///////////////////////////////////////////////////////////////////////////////////////
 
     QByteArray out = this->Serialize();
-    sendToAll(out);
 
+    QThread::sleep(5);
+    sendToAll(out);
+    qDebug() << "packet send";
     ///////////////////////////////////////////////////////////////////////////////////////
 }
 
 void CServer::deconnexionClient()
-
 {
     //Looking for sender -
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
@@ -181,8 +181,10 @@ void CServer::envoyerATous(const QString &message)
     }
 }
 
+
 void CServer::sendToAll(QByteArray out)
 {
+
     if(m_clients.isEmpty() == true)
     {
         qDebug() << "there is no client ! ";
@@ -190,7 +192,12 @@ void CServer::sendToAll(QByteArray out)
     else{
         foreach(CClient * client, m_clients)
             {
+                qDebug() << out;
                 client->get_socket()->write(out);
+                client->get_socket()->flush();
+
+                qDebug() << "oula3";
+                qDebug() << "packet send to " << client->get_pseudo();
             }
     }
 }
@@ -199,6 +206,9 @@ void CServer::addChannel(CChannel * tmp){
     m_channels.push_back(tmp);
 }
 
+void CServer::addClient(CClient * client){
+    m_clients.push_back(client);
+}
 
 //param : none
 //Send CServer, CChannel and CClient to clients.
@@ -281,11 +291,11 @@ QByteArray CServer::Serialize(){
     foreach(CChannel * c, get_channelList()){
         cArray.append(c->serializeToObj());
     }
-    foreach(CClient * c, get_clientList()){
-       sArray.append(c->serializeToObj());
-    }
+    //foreach(CClient * c, get_clientList()){
+       // sArray.append(c->serializeToObj());
+    //}
     obj["channels"] = cArray;
-    obj["clients"] = sArray;
+    //obj["clients"] = sArray;
 
 
 
