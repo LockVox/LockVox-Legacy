@@ -22,7 +22,8 @@ SOURCES += \
     src/cserver.cpp \
     src/cdatabase.cpp \
     src/qma.cpp \
-    src/qxmpp_server.cpp
+    src/qxmpp_server.cpp \
+    src/lockvoxmainwindow.cpp
 
 HEADERS += \
     lockvoxmainwindow.h \
@@ -31,7 +32,9 @@ HEADERS += \
     src/includes/cserver.h \
     src/includes/cdatabase.h \
     src/includes/qma.h \
-    src/includes/qxmpp_server.h
+    src/includes/qxmpp_server.h \
+    src/includes/lockvoxmainwindow.h
+
 
 
 # Default rules for deployment.
@@ -46,7 +49,8 @@ INCLUDEPATH += $$PWD/src \
 FORMS += src/ui/mainwindow.ui \
     lockvoxmainwindow.ui \
     src/ui/login_interface.ui \
-    src/ui/register_interface.ui
+    src/ui/register_interface.ui \
+    src/ui/lockvoxmainwindow.ui
 
 DISTFILES += \
     ressources/qmodel/lockvox.qmodel \

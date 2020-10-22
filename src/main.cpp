@@ -1,4 +1,5 @@
 #include "src/includes/qma.h"
+#include "src/includes/lock
 
 #include <QApplication>
 #include <iostream>
@@ -18,10 +19,10 @@ int main(int argc, char *argv[])
 
 
 
-    /*MainWindow w;
+    MainWindow w;
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
-    w.show();*/
+    w.show();
 
     CServer * server = new CServer();
 
