@@ -1,4 +1,4 @@
-#include "lockvoxmainwindow.h"
+#include "src/includes/lockvoxmainwindow.h"
 #include "ui_lockvoxmainwindow.h"
 
 LockVoxMainWindow::LockVoxMainWindow(QWidget *parent) :

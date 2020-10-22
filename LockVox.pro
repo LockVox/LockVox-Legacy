@@ -15,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    lockvoxmainwindow.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/main.cpp \
@@ -26,7 +25,6 @@ SOURCES += \
     src/lockvoxmainwindow.cpp
 
 HEADERS += \
-    lockvoxmainwindow.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cserver.h \
@@ -47,7 +45,6 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/ui
 
 FORMS += src/ui/mainwindow.ui \
-    lockvoxmainwindow.ui \
     src/ui/login_interface.ui \
     src/ui/register_interface.ui \
     src/ui/lockvoxmainwindow.ui

@@ -1,5 +1,5 @@
 #include "src/includes/qma.h"
-#include "src/includes/lock
+#include "src/includes/lockvoxmainwindow.h"
 
 #include <QApplication>
 #include <iostream>
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
 
 
-    MainWindow w;
+    LockVoxMainWindow w;
     w.setWindowTitle("LockVox");
     w.setWindowIcon(QIcon(":/pictures/icon.png"));
     w.show();
