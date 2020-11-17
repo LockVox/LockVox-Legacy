@@ -19,7 +19,7 @@ SOURCES += \
     src/cdatabase.cpp \
     src/cpacket.cpp \
     src/cserver.cpp \
-    src/qxmpp_server.cpp \
+    Server/qxmpp_server.cpp \
     Server/main.cpp \
     Server/mainwindow.cpp
 
@@ -32,7 +32,7 @@ HEADERS += \
     src/includes/cdatabase.h \
     src/includes/cpacket.h \
     src/includes/cserver.h \
-    src/includes/qxmpp_server.h
+    Server/qxmpp_server.h
 
 
 FORMS += \
