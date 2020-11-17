@@ -1,4 +1,4 @@
-#include "cpacket.h"
+#include "/src/includes/cpacket.h"
 
 CPacket::CPacket()
 {
@@ -192,8 +192,11 @@ CClient CPacket::DeserializeClient(QJsonArray  in)
 {
     QList<CClient *> clients;
     foreach(const QJsonValue & value, in)
+    {
         QJsonObject obj = value.toObject();
-        CClient* newClient = new CClient();
+        CClient* newClient = new CClient(obj["id"], NULL, obj["name"]);
+        clients.push_back(newClient);
+    }
 }
 CChannel CPacket::DeserializeChannel(QJsonArray  array)
 {
@@ -201,7 +204,7 @@ CChannel CPacket::DeserializeChannel(QJsonArray  array)
     foreach( const QJsonValue & value, array){
 
         //Convert it to an json object then to a channel
-        QJsonObject obj = (CChannel)value.toObject();
+        QJsonObject obj = (CChannel)value.toObject(value);
         CChannel * newChannel = new CChannel(obj);
         //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
 

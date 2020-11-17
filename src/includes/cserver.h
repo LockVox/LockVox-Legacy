@@ -90,7 +90,6 @@ class CServer : public QWidget
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-
         //Création d'un channel grâce à un nouveau process -
         void create_process();
         void del_process();
@@ -100,7 +99,7 @@ class CServer : public QWidget
 
         void nouvelleConnexion();                                           //Add client to the server - default no channel           //get data
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
-        void sReceiveData();                                                //Server receive data
+        void sReceiveData(CClient sender, QByteArray data);                                         //Server receive data
 
     private:
 
@@ -109,7 +108,7 @@ class CServer : public QWidget
         QPushButton *boutonQuitter;
 
         QTcpServer *serveur;
-        QList<QTcpSocket *> clients;                                        //A suppr plus tard ( m_clients remplace clients)
+        QMap<QTcpSocket *, CClient> clients;                                        //A suppr plus tard ( m_clients remplace clients)
         quint16 tailleMessage;
 
         QList<CChannel*> m_channels;                                        //List of channels

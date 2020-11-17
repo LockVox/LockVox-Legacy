@@ -283,10 +283,123 @@ void CServer::sReceiveData(){
 */
 }
 
-void CServer::cReceiveData(){
 
+//Comment récupérer les données ??
+void CServer::sReceiveData(CClient sender, QByteArray data){
+    sender.set_pseudo("abc");
+    data = {0};
+    switch (data.at(0)) {
+        case 0: //SERV
+        switch (data.at(1))
+        {
+            case 0:
+                //SERV CONNECT
+                //SEND INFO SERVER
+                break;
+            case 1:
+                //SERV DISCONNECT
+                //Update online users
+                break;
+            case 2:
+                //PSEUDO UPDATE
+                //Update en ram
+                break;
+            case 3:
+                //BIO UPDATE
+                //Comme au dessus
+            case 4:
+                //BAN USER
+                break;
+            case 5:
+                //BAN IP
+                //Rajouter système de gestion du temps
+            case 6:
+                //Kick user
+                //
+                break;
+        default:
+            qDebug() << "Error invalid action" << Qt::endl;
+        }
+        break;
 
-
+        case 1: //CHAN
+        switch (data.at(1))
+        {
+        case 0:
+            //CONNECT CHAN
+            break;
+        case 1:
+            //DISCONNECT CHAN
+            break;
+        case 2:
+            //Envoi message
+            //BDD + envoi à tlm
+            break;
+        case 3:
+            //Modif message
+            break;
+        case 4:
+            //Del message
+            break;
+        case 5:
+            //Create chan voc
+            break;
+        case 6:
+            //Delete chan voc
+            break;
+        case 7:
+            //Rename chan voc
+            break;
+        case 8:
+            //Modif max user (voc)
+            break;
+        case 9:
+            //kick user voc
+            break;
+        case 10:
+            //Mute user voc (server side)
+            break;
+        case 11:
+            //Create chan text
+            break;
+        case 12:
+            //Delete cahn text
+            break;
+        case 13:
+            //Rename chan text
+            break;
+        default:
+            qDebug() << "Error invalid action" << Qt::endl;
+        }
+        break;
+        case 2: //USER
+        switch (data.at(1))
+        {
+        case 0:
+            //Mute (user side)
+            break;
+        case 1:
+            //Add friend
+            break;
+        case 2:
+            //Del friend
+            break;
+        case 3:
+            //Send msg to friend
+            break;
+        case 4:
+            //Modif pseudo (update bdd)
+            break;
+        case 5:
+            //Change right
+            break;
+        default:
+            qDebug() << "Error invalid action" << Qt::endl;
+        }
+        break;
+        default:
+            qDebug() << "Error invalid type" << Qt::endl;
+    }
 }
 
 

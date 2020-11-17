@@ -1,52 +1,51 @@
-#ifndef CROLE_H
-#define CROLE_H
+#ifndef CCLIENT_H
+#define CCLIENT_H
 
-#include <QString>
-#include <QList>
-#include <QDebug>
+#include <QObject>
+#include <QtNetwork>
 
-class crole
+#include "cchannel.h"
+#include "crole.h"
+
+class CClient : public CChannel
 {
-public:
-    crole();
-    crole(crole* p_father);
+    public:
+        //Constructors
+        CClient();
+        CClient(QString name, QTcpSocket * soc, int id);
+        CClient(QTcpSocket * soc);
 
-    //Parent+enfants
-    void AddFather(crole* p_father);
-    void AddChild(crole* p_child);
-    void DelChild(QString p_name);
-    void DelChild(int p_id);
-
-    //Getter+Setter
-    void SetWrite(bool v);
-    void SetSpeak(bool v);
-    void SetKick(bool v);
-    void SetDelete(bool v);
-    void SetSee(bool v);
-    void SetMute(bool v);
-
-    bool GetWrite();
-    bool GetSpeak();
-    bool GetKick();
-    bool GetDelete();
-    bool GetSee();
-    bool GetMute();
+        ~CClient();
 
 
-private:
-    int m_id;                   //ID du role
-    QString m_name;             //Nom du role
-    crole* m_father;            //Le parent du role
-    QList<crole*> m_childrens;  //Les enfants du role
-    /*Chaque bool correspond à un droit associé au groupe*/
-    bool m_write;
-    bool m_speak;
-    bool m_kick;
-    bool m_delete;
-    bool m_see;
-    bool m_mute;
+        //Getters
+        QString get_pseudo();
+        QTcpSocket * get_socket();
+        int get_idChannel();
 
-    void SetId();
+        //Setters
+        void set_pseudo(QString pseudo);
+        void set_socket(QTcpSocket * soc);
+        void set_idChannel(int id);
+
+        void cInsertToDataStream(QDataStream & ds);
+        void cExtractFromDataStream(QDataStream & ds);
+
+
+
+
+
+
+
+    private slots:
+
+    private:
+       int m_userid;
+       QString m_pseudo;
+       QTcpSocket * m_soc;
+       QList<crole*> m_roles;
+       int m_idChannel;
+
 };
 
-#endif // CROLE_H
+#endif // CCLIENT_H

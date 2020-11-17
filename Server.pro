@@ -21,7 +21,8 @@ SOURCES += \
     src/cserver.cpp \
     Server/qxmpp_server.cpp \
     Server/main.cpp \
-    Server/mainwindow.cpp
+    Server/mainwindow.cpp \
+    src/includes/crole.cpp
 
 HEADERS += \
     src/includes/audioinput.h \
@@ -30,6 +31,7 @@ HEADERS += \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
     src/includes/cpacket.h \
+    src/includes/crole.h \
     src/includes/cserver.h \
     Server/qxmpp_server.h
     Server/mainwindow.h
