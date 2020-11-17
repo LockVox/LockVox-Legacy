@@ -1,4 +1,5 @@
 #include "qxmpp_server.h"
+#include <QCoreApplication>
 
 #define USERNAME "lockvox"
 #define PASSWORD "azerty"
@@ -23,11 +24,12 @@ class passwordChecker : public QXmppPasswordChecker
     };
 };
 
-int startServer()
+int startServer(int argc, char *argv[])
 {
+    QCoreApplication app(argc, argv);
     printf("Server start...\n");
 
-    const QString domain = QString::fromLocal8Bit("127.0.0.1");
+    const QString domain = QString::fromLocal8Bit("192.168.1.40");
     QXmppLogger logger;
     logger.setLoggingType(QXmppLogger::StdoutLogging);
 
@@ -41,5 +43,5 @@ int startServer()
     server.listenForClients();
     server.listenForServers();
 
-    return 0;
+    return app.exec();
 }

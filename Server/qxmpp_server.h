@@ -6,6 +6,6 @@
 #include "QXmppServer.h"
 #include <QtCore/QCoreApplication>
 
-int startServer();
+int startServer(int argc, char *argv[]);
 
 #endif // QXMPP_SERVER_H
