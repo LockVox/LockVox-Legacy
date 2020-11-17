@@ -244,46 +244,6 @@ void CServer::SendObjectsToClient()
 
 }
 
-void CServer::sReceiveData(){
-
-    /*
-    QDataStream in(get_socket());
-
-    int flag = -1;
-    if(tailleMessage == 0)
-    {
-        if(get_socket()->bytesAvailable() < (int)sizeof(quint16)){
-            return;
-        }
-        in >> flag;
-        qDebug() << "Flag found : " << flag << Qt::endl;
-        switch(flag){
-
-            case 1:
-                    //Not implement yet - send CServer object
-                break;
-
-            case 2:
-                 this->data(in);
-                break;
-            case 3:
-                 FillClientFromDataStream(in);
-                break;
-            default:
-                qDebug() << "Flag not found - \n";
-                return;
-            break;
-        }
-        //No more bytes ready for reading
-        if(get_socket()->bytesAvailable() < tailleMessage){
-            return;
-        }
-        tailleMessage = 0;
-    }
-*/
-}
-
-
 //Comment récupérer les données ??
 void CServer::sReceiveData(CClient sender, QByteArray data){
     sender.set_pseudo("abc");
@@ -584,8 +544,68 @@ void CServer::deserializeClients(QJsonArray & json_array){
 
 
 
+QList<CChannel*> CServer::GetRightChannels(int p_rightid)
+{
+    QList<CChannel*> res;
+    for(int i = 0; i < m_channels.size(); i++)
+        if(t_chan_right[i][p_rightid] == true)
+        {
+            res.append(m_channels.at(i));
+        }
+    return res;
+}
 
+QList<CClient*> CServer::GetRightClient(int p_rightid)
+{
+    QList<CClient*> res;
+    for(int i =0 ; i < m_clients.size() ; i++)
+        if(t_user_right[i][p_rightid] == true)
+            res.append(m_clients.at(i));
+    return res;
+}
 
+QList<crole*> CServer::GetUserRoles(int p_userid)
+{
+    QList<crole*> res;
+    for(int i = 0; i < m_roles.size(); i++)
+        if(t_user_right[p_userid][i] == true)
+        {
+            res.append(m_roles.at(i));
+        }
+    return res;
+
+}
+
+QList<CChannel*> CServer::GetUserChannels(int p_userid)
+{
+    QList<CChannel*> res;
+    for(int i = 0; i < m_channels.size(); i++)
+        if(t_user_chan[p_userid][i] != -1) //si il appartient au chan
+        {
+            res.append(m_channels.at(i));
+        }
+    return res;
+}
+
+QList<CClient*> CServer::GetChannelClients(int p_chanid, bool p_online)
+{
+    QList<CClient*> res;
+    for(int i = 0 ; i < m_clients.size() ; i++)
+        if((p_online && t_user_chan[i][p_chanid] == 1) || (!p_online && (t_user_chan[i][p_chanid] == 0 || t_user_chan[i][p_chanid] == 1))) // Si online seulement les co, sinon tous ceux qui appartiennent
+        {
+            res.append(m_clients.at(i));
+        }
+    return res;
+}
+
+QList<crole*> CServer::GetChannelRoles(int p_chanid)
+{
+    QList<crole*> res;
+    for(int i = 0; i < m_roles.size() ; i++)
+        if(t_chan_right[p_chanid][i] == true)
+            res.append(m_roles.at(i));
+    return res;
+}
 
 
 

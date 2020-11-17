@@ -18,6 +18,7 @@ SOURCES += \
     src/cclient.cpp \
     src/cdatabase.cpp \
     src/cpacket.cpp \
+    src/crole.cpp \
     src/cserver.cpp \
     Server/qxmpp_server.cpp \
     Server/main.cpp \

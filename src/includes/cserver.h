@@ -108,13 +108,27 @@ class CServer : public QWidget
         QPushButton *boutonQuitter;
 
         QTcpServer *serveur;
-        QMap<QTcpSocket *, CClient> clients;                                        //A suppr plus tard ( m_clients remplace clients)
+        QMap<QTcpSocket *, CClient> m_online_clients;       //Lien socket/user
         quint16 tailleMessage;
 
         QList<CChannel*> m_channels;                                        //List of channels
         QList<CClient *> m_clients;                                         //List of client
-
+        QList<crole*> m_roles;
         CDatabase * m_db;                                                   //Database
+
+        //Tableaux
+        bool **t_user_right;    //true user doesn't have the right ; false he has it
+        bool **t_chan_right;    //true channel isn't concerned by the right ; 1 he is
+        int **t_user_chan;     //-1 not part of ; 0 not in chan ; 1 in chan
+
+        QList<CChannel*> GetRightChannels(int p_rightid);
+        QList<CClient*> GetRightClient(int p_rightid);
+
+        QList<crole*> GetUserRoles(int p_userid);
+        QList<CChannel*> GetUserChannels(int p_userid);
+
+        QList<CClient*> GetChannelClients(int p_chanid, bool p_online);
+        QList<crole*> GetChannelRoles(int p_chanid);
 
         //Client mode
 
@@ -122,7 +136,7 @@ class CServer : public QWidget
 
 
 
-        //Audio
+       //Audio
        // QUdpSocket * m_udp_server;
 
         QTcpServer  m_audio_server;
