@@ -20,7 +20,8 @@ SOURCES += \
     src/cserver.cpp \
     Client/qxmpp_client.cpp \
     Client/main.cpp \
-    Client/mainwindow.cpp
+    Client/mainwindow.cpp \
+    src/includes/crole.cpp
 
 HEADERS += \
     Client/mainwindow.h \
@@ -29,6 +30,7 @@ HEADERS += \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cpacket.h \
+    src/includes/crole.h \
     src/includes/cserver.h \
     Client/qxmpp_client.h
 
