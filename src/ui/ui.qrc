@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>login_interface.ui</file>
-        <file>mainwindow.ui</file>
-        <file>register_interface.ui</file>
-        <file>register_lockvox_interface.ui</file>
-    </qresource>
-</RCC>

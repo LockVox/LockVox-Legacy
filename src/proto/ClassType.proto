@@ -1,9 +1,0 @@
-syntax="proto2";
-
-
-package ClassType;
-
-message Channel {
-  required int32 id = 1;
-  required string name = 2;
-}

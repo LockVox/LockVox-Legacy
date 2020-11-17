@@ -3,7 +3,7 @@
 #include <QDebug>
 CServer::CServer()
 {
-    // Gestion du serveur
+    // Gestion du serveur TCP
     serveur = new QTcpServer(this);
     if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50585
     {
@@ -18,6 +18,13 @@ CServer::CServer()
     }
 
     tailleMessage = 0;
+
+
+    //UDP Server initialization
+
+
+
+
 }
 
 //Getters

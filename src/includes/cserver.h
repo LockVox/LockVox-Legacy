@@ -121,8 +121,31 @@ class CServer : public QWidget
 
         QTcpSocket * m_socket;
 
+
+
+        //Audio
+       // QUdpSocket * m_udp_server;
+
+        QTcpServer  m_audio_server;
+
 };
 
 #endif // CSERVER_H
 
+
+/*
+// Get network interfaces list
+QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
+
+// Interfaces iteration
+for (int i = 0; i < ifaces.size(); i++)
+{
+    // Now get all IP addresses for the current interface
+    QList<QNetworkAddressEntry> addrs = ifaces[i].addressEntries();
+
+    // And for any IP address, if it is IPv4 and the interface is active, send the packet
+    for (int j = 0; j < addrs.size(); j++)
+        if ((addrs[j].ip().protocol() == QAbstractSocket::IPv4Protocol) && (addrs[j].broadcast().toString() != ""))
+            udpManager.writeDatagram(packet->data(), packet->length(), addrs[j].broadcast(), 64501);
+}*/
 
