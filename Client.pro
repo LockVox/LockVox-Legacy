@@ -18,7 +18,7 @@ SOURCES += \
     src/cclient.cpp \
     src/cpacket.cpp \
     src/cserver.cpp \
-    src/qxmpp_server.cpp \
+    src/Client/qxmpp_client.c \
     Client/main.cpp \
     Client/mainwindow.cpp
 
@@ -30,7 +30,7 @@ HEADERS += \
     src/includes/cclient.h \
     src/includes/cpacket.h \
     src/includes/cserver.h \
-    src/includes/qxmpp_server.h
+    Client/qxmpp_client.h
 
 
 FORMS += \
