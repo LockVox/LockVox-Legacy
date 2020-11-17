@@ -18,7 +18,7 @@ SOURCES += \
     src/cclient.cpp \
     src/cpacket.cpp \
     src/cserver.cpp \
-    src/Client/qxmpp_client.c \
+    Client/qxmpp_client.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp
 
