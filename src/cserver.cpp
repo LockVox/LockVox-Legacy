@@ -17,12 +17,37 @@ CServer::CServer()
         connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
     }
 
-    tailleMessage = 0;
+
+}
+CServer::CServer(int mode)
+{
+    switch(mode)
+    {
+        case 1 :
+            qDebug() << "START APPLICATION AS SERVER" << Qt::endl;
+
+            // Gestion du serveur TCP
+            serveur = new QTcpServer(this);
+            if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50585
+            {
+                // Si le serveur n'a pas été démarré correctement
+                qDebug()<< "Le serveur n'a pas pu être démarré. Raison :" << serveur->errorString();
+            }
+            else
+            {
+                // Si le serveur a été démarré correctement
+                qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
+                connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
+            }
 
 
-    //UDP Server initialization
+        break;
+        case 2 :
+            qDebug() << "START APPLICATION AS CLIENT" << Qt::endl;
+            serveur = NULL;
 
 
+    }
 
 
 }
@@ -169,26 +194,6 @@ void CServer::sendToClient(const QString &message, CClient * client)
     client->get_socket()->write(packet);
 }
 
-void CServer::envoyerATous(const QString &message)
-{
-    // Préparation du paquet
-    QByteArray paquet;
-    QDataStream out(&paquet, QIODevice::WriteOnly);
-
-    out << (quint16) 0; // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-    out << message; // On ajoute le message à la suite
-    out.device()->seek(0); // On se replace au début du paquet
-    out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
-
-
-    // Envoi du paquet préparé à tous les clients connectés au serveur
-    for (int i = 0; i < clients.size(); i++)
-    {
-        clients[i]->write(paquet);
-    }
-}
-
-
 void CServer::sendToAll(QByteArray out)
 {
 
@@ -203,11 +208,16 @@ void CServer::sendToAll(QByteArray out)
                 client->get_socket()->write(out);
                 client->get_socket()->flush();
 
-                qDebug() << "oula3";
                 qDebug() << "packet send to " << client->get_pseudo();
             }
     }
 }
+
+void CServer::sendToServer(QByteArray ba){
+    qDebug() << "Send to Server: " << ba;
+    m_socket->write(ba);
+}
+
 
 void CServer::addChannel(CChannel * tmp){
     m_channels.push_back(tmp);
@@ -216,6 +226,8 @@ void CServer::addChannel(CChannel * tmp){
 void CServer::addClient(CClient * client){
     m_clients.push_back(client);
 }
+
+
 
 //param : none
 //Send CServer, CChannel and CClient to clients.
@@ -246,6 +258,18 @@ void CServer::SendObjectsToClient()
 
 void CServer::sReceiveData(){
 
+
+    // On détermine quel client envoie le message (recherche du QTcpSocket du client)
+    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
+    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
+          return;
+
+    // Si tout va bien, on continue : on récupère le message
+    QByteArray ba;
+    QDataStream in(&ba, QIODevice::ReadWrite);
+    in <<socket;
+
+    qDebug() << in << Qt::endl;
     /*
     QDataStream in(get_socket());
 
@@ -288,6 +312,10 @@ void CServer::cReceiveData(){
 
 
 }
+
+
+
+
 
 
 QByteArray CServer::Serialize(){

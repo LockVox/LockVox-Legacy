@@ -6,6 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_server = new CServer();
+
+
+
+
 }
 
 MainWindow::~MainWindow()

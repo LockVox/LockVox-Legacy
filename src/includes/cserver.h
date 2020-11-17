@@ -19,7 +19,7 @@ class CServer : public QWidget
 
     public:
         CServer();
-
+        CServer(int mode); // 1 -> server | 2 -> client
 
         //Getters
         CDatabase * get_database();
@@ -29,7 +29,6 @@ class CServer : public QWidget
         QList<CClient> get_staticClientList();
         QTcpSocket * get_socket();
 
-
         //Setters
         void set_database(CDatabase * db);
         void set_clients(QList<CClient> clients);
@@ -37,22 +36,24 @@ class CServer : public QWidget
         void set_channel(CChannel channel, int index);
         void set_socket(QTcpSocket* soc);
 
-
         //free
         void freeChannels();
+        void freeClients();
 
 
-
-        //Network
-        void envoyerATous(const QString &message);
+        //Network - Server Side
         void sendToChannel(const QString &message, int id_channel);
         void sendToClient(const QString &message,CClient * client);
+
+
+
 
 
         //Network refait
         void SendObjectsToClient();                                         //Send channels and clients objects
         void cReceiveData();                                                //Client receive data
         void sendToAll(QByteArray out);                                     //Send packet to everyone
+
 
         //Channels management
         void addChannel(CChannel * tmp);
@@ -90,7 +91,6 @@ class CServer : public QWidget
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-
         //Création d'un channel grâce à un nouveau process -
         void create_process();
         void del_process();
@@ -102,31 +102,30 @@ class CServer : public QWidget
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
         void sReceiveData();                                                //Server receive data
 
+        //Network - Client Side
+        void sendToServer(QByteArray ba);
     private:
 
         //Server mode
-        QLabel *etatServeur;                                                //State of the server
-        QPushButton *boutonQuitter;
-
         QTcpServer *serveur;
-        QList<QTcpSocket *> clients;                                        //A suppr plus tard ( m_clients remplace clients)
-        quint16 tailleMessage;
+
+        //Client mode
+        QTcpSocket * m_socket;
+
+
+        //Database
+        CDatabase * m_db;                                                   //Database
+
+
+
+
+
 
         QList<CChannel*> m_channels;                                        //List of channels
         QList<CClient *> m_clients;                                         //List of client
 
-        CDatabase * m_db;                                                   //Database
-
-        //Client mode
-
-        QTcpSocket * m_socket;
-
-
-
         //Audio
-       // QUdpSocket * m_udp_server;
 
-        QTcpServer  m_audio_server;
 
 };
 

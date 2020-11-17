@@ -24,6 +24,7 @@ SOURCES += \
     Server/mainwindow.cpp
 
 HEADERS += \
+    Server/mainwindow.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
@@ -32,7 +33,6 @@ HEADERS += \
     src/includes/cpacket.h \
     src/includes/cserver.h \
     Server/qxmpp_server.h
-    Server/mainwindow.h
 
 FORMS += \
     Server/mainwindow.ui

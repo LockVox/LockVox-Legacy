@@ -10,7 +10,24 @@ class AudioInput : public QObject
 {
     Q_OBJECT
 public:
+
+    QIODevice * get_device();
+    QAudioFormat get_format();
+    QAudioInput *get_audio_input();
+    QAudioDeviceInfo get_audio_device_info();
+
+
+
+
+
     explicit AudioInput(QObject *parent = nullptr);
+    void initializeAudioInput();
+    void createAudioInput();
+    void start();
+
+    void stop();
+
+
 
 signals:
     void error(QString);
@@ -19,16 +36,13 @@ signals:
 
 
 public slots:
-    void initializeAudioInput();
-    void createAudioInput();
-    void start();
-    void stop();
+
 
 
 
 
 private slots:
-    //void readMore();
+    void sendBuffer();
 
 
 private:

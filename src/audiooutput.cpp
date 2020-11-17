@@ -50,7 +50,7 @@ void AudioOutput::createAudioOutput(){
     }
 
     //Connect widget to function
-    connect(m_output, SIGNAL(readyRead()), SLOT(readMore()));
+
 
 }
 
