@@ -19,8 +19,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
+
 public slots:
-    void sendToServer();
+
+    //Audio
 
 
 
@@ -40,9 +43,9 @@ private:
 
 
 
-    //Audio
-    AudioInput * m_audio_in;
-    AudioOutput * m_audio_out;
+
+
+
 
 
 

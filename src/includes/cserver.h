@@ -9,6 +9,8 @@
 
 #include "cchannel.h"
 #include "cdatabase.h"
+#include "src/includes/audioinput.h"
+#include "src/includes/audiooutput.h"
 
 class CClient;
 class CChannel;
@@ -18,7 +20,15 @@ class CServer : public QWidget
     Q_OBJECT
 
     public:
-        CServer();
+
+    //Audio
+    AudioInput * m_audio_in;
+    AudioOutput * m_audio_out;
+
+
+
+
+    CServer();
         CServer(int mode); // 1 -> server | 2 -> client
 
         //Getters
@@ -51,7 +61,7 @@ class CServer : public QWidget
 
         //Network refait
         void SendObjectsToClient();                                         //Send channels and clients objects
-        void cReceiveData();                                                //Client receive data
+                                                        //Client receive data
         void sendToAll(QByteArray out);                                     //Send packet to everyone
 
 
@@ -101,9 +111,13 @@ class CServer : public QWidget
         void nouvelleConnexion();                                           //Add client to the server - default no channel           //get data
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
         void sReceiveData();                                                //Server receive data
+        void cReceiveData();
+
 
         //Network - Client Side
         void sendToServer(QByteArray ba);
+        void sendToServer();
+
     private:
 
         //Server mode
@@ -125,6 +139,8 @@ class CServer : public QWidget
         QList<CClient *> m_clients;                                         //List of client
 
         //Audio
+        QByteArray *m_receive_data;
+        QBuffer * m_audio_buffer;
 
 
 };

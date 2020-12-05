@@ -11,47 +11,33 @@ MainWindow::MainWindow(QWidget *parent)
     //Initialize widgets
 
 
-
-
-
-
-
-    //Connect widget to action
-
-
-
-
     //Initialize server
     m_server = new CServer(2); //Create CServer as Client mode
 
-    m_server->set_socket(new QTcpSocket());
 
-    m_server->get_socket()->abort();
-    m_server->get_socket()->connectToHost("127.0.0.1", 50885);
+    //Initialize Audio
+    m_server->m_audio_in = new AudioInput();
+    m_server->m_audio_out = new AudioOutput();
+
+    m_server->m_audio_in->initializeAudioInput();
+    m_server->m_audio_out->initializeAudioOutput();
+
+    //Start streaming audio on socket
+
+    m_server->m_audio_in->start();
+    //connect(this->m_server->m_audio_in->get_device(), SIGNAL(readyRead()), this->m_server, SLOT(sendToServer()));
+    connect(this->m_server->m_audio_in, SIGNAL(dataReady(QByteArray)),this->m_server ,SLOT(sendToServer(QByteArray)));
 
 
 
 
+    m_server->m_audio_out->m_output = m_server->m_audio_out->m_audio_output->start();
 
-
-    m_audio_in = new AudioInput();
-    m_audio_out = new AudioOutput();
-
-    m_audio_in->initializeAudioInput();
-    m_audio_out->initializeAudioOutput();
-
-    m_audio_in->start();
-    m_audio_out->start();
-
-    connect(m_audio_in->get_device(), SIGNAL(readyRead()),this, SLOT(sendToServer()));
+    //connect(m_audio_in->get_device(), SIGNAL(readyRead()),this, SLOT(sendToServer()));
 
 }
 
 
-void MainWindow::sendToServer(){
-    qDebug() << "Send to server - ";
-    m_server->get_socket()->write(m_audio_in->get_device()->readAll());
-}
 
 MainWindow::~MainWindow()
 {

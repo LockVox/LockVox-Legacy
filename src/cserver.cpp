@@ -1,5 +1,8 @@
 #include "src/includes/cserver.h"
 
+
+
+
 #include <QDebug>
 CServer::CServer()
 {
@@ -16,11 +19,12 @@ CServer::CServer()
         qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
         connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
     }
-
-
 }
 CServer::CServer(int mode)
 {
+
+
+    m_receive_data = new QByteArray();
     switch(mode)
     {
         case 1 :
@@ -45,7 +49,12 @@ CServer::CServer(int mode)
         case 2 :
             qDebug() << "START APPLICATION AS CLIENT" << Qt::endl;
             serveur = NULL;
+            m_socket = new QTcpSocket();
 
+            m_socket->abort();
+            m_socket->connectToHost("127.0.0.1", 50885);
+
+            connect(m_socket, SIGNAL(readyRead()), this, SLOT(cReceiveData()));
 
     }
 
@@ -131,13 +140,13 @@ void CServer::nouvelleConnexion()
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 
     qDebug() << "New client";
+
+
     ///////////////////////////////////////////////////////////////////////////////////////
-
-    QByteArray out = this->Serialize();
-
-    QThread::sleep(5);
-    sendToAll(out);
-    qDebug() << "packet send";
+    //QByteArray out = this->Serialize();
+    //QThread::sleep(5);
+    //sendToAll(out);
+    //qDebug() << "packet send";
     ///////////////////////////////////////////////////////////////////////////////////////
 }
 
@@ -214,8 +223,17 @@ void CServer::sendToAll(QByteArray out)
 }
 
 void CServer::sendToServer(QByteArray ba){
-    qDebug() << "Send to Server: " << ba;
+    qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
+}
+
+void CServer::sendToServer(){
+
+    QByteArray buffer;
+    buffer = m_audio_in->get_device()->read(8192);
+    qDebug() << "Send to server - " << buffer << Qt::endl;
+    m_socket->write(buffer);
+    buffer.clear();
 }
 
 
@@ -264,54 +282,40 @@ void CServer::sReceiveData(){
     if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
           return;
 
-    // Si tout va bien, on continue : on récupère le message
-    QByteArray ba;
-    QDataStream in(&ba, QIODevice::ReadWrite);
-    in <<socket;
+    qDebug() << "Receive msg \n";
 
-    qDebug() << in << Qt::endl;
-    /*
-    QDataStream in(get_socket());
+    QByteArray *data = new QByteArray();
+    data->append(socket->readAll());
 
-    int flag = -1;
-    if(tailleMessage == 0)
-    {
-        if(get_socket()->bytesAvailable() < (int)sizeof(quint16)){
-            return;
-        }
-        in >> flag;
-        qDebug() << "Flag found : " << flag << Qt::endl;
-        switch(flag){
-
-            case 1:
-                    //Not implement yet - send CServer object
-                break;
-
-            case 2:
-                 this->data(in);
-                break;
-            case 3:
-                 FillClientFromDataStream(in);
-                break;
-            default:
-                qDebug() << "Flag not found - \n";
-                return;
-            break;
-        }
-        //No more bytes ready for reading
-        if(get_socket()->bytesAvailable() < tailleMessage){
-            return;
-        }
-        tailleMessage = 0;
-    }
-*/
+    qDebug() << "Resend data to client";
+    socket->write(*data);
 }
 
 void CServer::cReceiveData(){
+    qDebug() << "Receive data from server" ;
+
+    //Either JSON
+
+
+    //Either Audio
+    QByteArray audioBlock; //holds received audio
+    QString controlString; //unused for now, holds received control string
+    m_audio_out->writeData(m_socket->readAll());
+
+    //m_receive_data->append(m_socket->readAll());
+    //qDebug() << *m_receive_data;
+
+
+
+
+
+
+
 
 
 
 }
+
 
 
 

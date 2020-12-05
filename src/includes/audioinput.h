@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QtMultimedia>
 
-
+#define AUDIO_BUFFER_SIZE 1024
 
 class AudioInput : public QObject
 {
@@ -16,6 +16,7 @@ public:
     QAudioInput *get_audio_input();
     QAudioDeviceInfo get_audio_device_info();
 
+    void set_device(QIODevice * dev);
 
 
 
@@ -31,12 +32,11 @@ public:
 
 signals:
     void error(QString);
-    void readyRead(QByteArray);
-
+    void dataReady(QByteArray data);
 
 
 public slots:
-
+    void readyRead();
 
 
 
