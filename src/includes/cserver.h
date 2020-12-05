@@ -41,17 +41,14 @@ class CServer : public QWidget
         //free
         void freeChannels();
 
-
-
         //Network
-        void envoyerATous(const QString &message);
-        void sendToChannel(const QString &message, int id_channel);
-        void sendToClient(const QString &message,CClient * client);
+        void envoyerATous(const QString &message);                  //Send data to all connected users
+        void sendToChannel(const QString &message, int id_channel); //Send data to users in a channel
+        void sendToClient(const QString &message,CClient * client); //Send data to client
 
 
         //Network refait
         void SendObjectsToClient();                                         //Send channels and clients objects
-        void cReceiveData();                                                //Client receive data
         void sendToAll(QByteArray out);                                     //Send packet to everyone
 
         //Channels management
@@ -69,14 +66,16 @@ class CServer : public QWidget
         void quitChannel(int id);
         void joinChannel(int id);
 
-        int whichClient(QTcpSocket * soc);
+        int whichClient(QTcpSocket * soc);              //Returns the client that corresponds to the scoket
 
+        //Events
 
 
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
         void Deserialize(QByteArray in);
 
+        QByteArray SerializeServer();                                       //Serializes Server infos
         QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
         QByteArray SerializeClients();                                      //Serialize clients into json document then byte array
 
@@ -99,7 +98,7 @@ class CServer : public QWidget
 
         void nouvelleConnexion();                                           //Add client to the server - default no channel           //get data
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
-        void sReceiveData(CClient sender, QByteArray data);                                         //Server receive data
+        void sReceiveData(CClient *sender, QByteArray data);                                         //Server receive data
 
     private:
 

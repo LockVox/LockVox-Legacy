@@ -10,5 +10,22 @@ CDatabase::CDatabase()
         bool ok = false;
         ok = m_db.open();
         if(ok == true)
-            printf("Connection establish");
+            printf("Connection establish\n");
+        else
+            printf("Connection couldn't be established...\n");
+}
+
+QSqlDatabase * CDatabase::get_db()
+{
+    return &m_db;
+}
+
+void CDatabase::initDatabase()
+{
+    return;
+}
+
+void CDatabase::AskDatabase()   //TODO réaliser un traitement avec le protocole LV
+{
+    return;
 }

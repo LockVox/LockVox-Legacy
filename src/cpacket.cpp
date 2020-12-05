@@ -6,6 +6,16 @@ CPacket::CPacket()
     m_action = 0xFF;
 }
 
+CPacket::CPacket(QByteArray n_data, CClient *p_sender)
+{
+    SetType(n_data.at(0));
+    SetType(n_data.at(1));
+    n_data.remove(0, 1);
+    m_client = *p_sender;
+    m_data = QJsonDocument::fromJson(n_data);
+    qDebug() << m_data << Qt::endl;
+}
+
 //Getters
 
 char CPacket::GetType()
@@ -174,17 +184,17 @@ char CPacket::UserEncode(QString p_action)
 //Serialiaze
 
 //Deserialize
-void CPacket::Deserialize(QByteArray in)
+void CPacket::Deserialize()
 {
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
-    QJsonObject obj = jsonDoc.object();
+    switch (GetType()) {
+        case 0:
+        switch (GetAction())
+        {
+            case 0:
+            break;
+        }
 
-    QJsonArray sArray = obj["clients"].toArray();
-    QJsonArray cArray = obj["channels"].toArray();
-
-    DeserializeChannel(cArray);
-    DeserializeClient(sArray);
-
+    }
 }
 
 
@@ -226,7 +236,7 @@ CChannel CPacket::DeserializeChannel(QJsonArray  array)
     }
 }
 
-CServer DeserializeServer(QJsonArray in)
+CServer CPacket::DeserializeServer(QJsonArray in)
 {
 
 }
