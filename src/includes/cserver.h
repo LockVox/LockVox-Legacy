@@ -61,7 +61,7 @@ class CServer : public QWidget
 
         //Network refait
         void SendObjectsToClient();                                         //Send channels and clients objects
-                                                        //Client receive data
+        //Client receive data
         void sendToAll(QByteArray out);                                     //Send packet to everyone
 
 
@@ -81,6 +81,22 @@ class CServer : public QWidget
         void joinChannel(int id);
 
         int whichClient(QTcpSocket * soc);
+
+
+        //Process audio streaming
+
+        int m_size_to_buffer;
+        int m_time_to_buffer;
+        int m_max_size_to_buffer;
+
+        QByteArray mixFloatAudio(QList<QByteArray> audio_raw_list);
+        void convertHexToFloat();
+        QList<QByteArray> m_to_mix_buffer;
+        QTimer * m_timer;
+
+
+
+
 
 
 
@@ -106,7 +122,14 @@ class CServer : public QWidget
         void del_process();
 
 
+
+    public slots:
+
+
+
     private slots:
+        void timer_done();
+
 
         void nouvelleConnexion();                                           //Add client to the server - default no channel           //get data
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
@@ -129,11 +152,6 @@ class CServer : public QWidget
 
         //Database
         CDatabase * m_db;                                                   //Database
-
-
-
-
-
 
         QList<CChannel*> m_channels;                                        //List of channels
         QList<CClient *> m_clients;                                         //List of client

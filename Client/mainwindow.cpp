@@ -15,25 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     m_server = new CServer(2); //Create CServer as Client mode
 
 
-    //Initialize Audio
+    //Initialize Audio Input
     m_server->m_audio_in = new AudioInput();
     m_server->m_audio_out = new AudioOutput();
-
+    //Initialize Audio Output
     m_server->m_audio_in->initializeAudioInput();
     m_server->m_audio_out->initializeAudioOutput();
 
-    //Start streaming audio on socket
-
+    //Start streaming audio
     m_server->m_audio_in->start();
-    //connect(this->m_server->m_audio_in->get_device(), SIGNAL(readyRead()), this->m_server, SLOT(sendToServer()));
-    connect(this->m_server->m_audio_in, SIGNAL(dataReady(QByteArray)),this->m_server ,SLOT(sendToServer(QByteArray)));
-
-
-
-
     m_server->m_audio_out->m_output = m_server->m_audio_out->m_audio_output->start();
 
-    //connect(m_audio_in->get_device(), SIGNAL(readyRead()),this, SLOT(sendToServer()));
+
+    connect(this->m_server->m_audio_in, SIGNAL(dataReady(QByteArray)),this->m_server ,SLOT(sendToServer(QByteArray)));
 
 }
 

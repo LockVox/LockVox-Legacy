@@ -19,11 +19,14 @@ CServer::CServer()
         qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
         connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
     }
+
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(timer_done()));
+    m_timer->start(5);
+
 }
 CServer::CServer(int mode)
 {
-
-
     m_receive_data = new QByteArray();
     switch(mode)
     {
@@ -129,8 +132,6 @@ void CServer::freeChannels(){
 
 void CServer::nouvelleConnexion()
 {
-
-    //
     CClient * newClient = new CClient();
     newClient->set_socket(serveur->nextPendingConnection());
 
@@ -140,14 +141,6 @@ void CServer::nouvelleConnexion()
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 
     qDebug() << "New client";
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //QByteArray out = this->Serialize();
-    //QThread::sleep(5);
-    //sendToAll(out);
-    //qDebug() << "packet send";
-    ///////////////////////////////////////////////////////////////////////////////////////
 }
 
 void CServer::deconnexionClient()
@@ -165,7 +158,6 @@ void CServer::deconnexionClient()
             qDebug() << "Client " << i << " has disconnect" << Qt::endl;
         }
     }
-
     //send msg to everybody to say someone disconnect (id client)
 
 }
@@ -205,7 +197,6 @@ void CServer::sendToClient(const QString &message, CClient * client)
 
 void CServer::sendToAll(QByteArray out)
 {
-
     if(m_clients.isEmpty() == true)
     {
         qDebug() << "there is no client ! ";
@@ -222,8 +213,9 @@ void CServer::sendToAll(QByteArray out)
     }
 }
 
+//Envoie de l'audio au server grâce à un QByteArray
 void CServer::sendToServer(QByteArray ba){
-    qDebug() << "Data has been send to Server ";
+    //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
 }
 
@@ -256,22 +248,7 @@ void CServer::SendObjectsToClient()
     QByteArray packet;
     QDataStream out(&packet, QIODevice::WriteOnly);
 
-    //First - Send Server Object -
-    //Flag 1 - Send Server
-
-
-
-
-
-
-
-    //Second - Send Channels
-    out << "2";                                 //Flag 2 - Send Channel
-
-    //Third - Send clients
-
-    out << 3;                                   //Flag 3 - Send Client
-
+    //TODO
 }
 
 void CServer::sReceiveData(){
@@ -287,8 +264,65 @@ void CServer::sReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(socket->readAll());
 
+    //On rajoute data à la liste de buffer à mixer
+    m_to_mix_buffer.append(*data);
+
+
+
+
+
+
+    /*
     qDebug() << "Resend data to client";
-    socket->write(*data);
+    for(int i = 0; i < m_clients.size(); i++){
+        m_clients[i]->get_socket()->write(*data);
+    }
+    qDebug() << "Data size " << data->size() << "\n";
+    */
+
+}
+#define BUFFER_SIZE 8000
+#define MAX_SIZE 100
+
+void CServer::timer_done(){
+
+    qDebug() << "Timer done - " << m_to_mix_buffer.size() << "\n";
+
+
+    //New thread - Take m_to_mix_buffer as entry
+
+    //Send the final raw audio
+
+
+
+
+    for(int i = 0; i < m_to_mix_buffer.size();i++){
+        int size = m_to_mix_buffer[i].size()/sizeof(int);
+     const float* ptrFloat = reinterpret_cast<const float*>(m_to_mix_buffer[i].constData());
+
+
+        for (int i = 0; i < size; ++i) {
+
+            ptrFloat+=4;
+            qDebug() << (qint16)*ptrFloat;
+        }
+
+        qDebug() <<"\n";
+     }
+
+
+
+
+
+
+    //Hex to float
+
+
+    //Mix all float raw audio
+    //Send result to client
+    //Clear audio raw in memory
+
+    m_to_mix_buffer.clear();
 }
 
 void CServer::cReceiveData(){
@@ -301,18 +335,6 @@ void CServer::cReceiveData(){
     QByteArray audioBlock; //holds received audio
     QString controlString; //unused for now, holds received control string
     m_audio_out->writeData(m_socket->readAll());
-
-    //m_receive_data->append(m_socket->readAll());
-    //qDebug() << *m_receive_data;
-
-
-
-
-
-
-
-
-
 
 }
 
@@ -407,7 +429,7 @@ void CServer::DeserializeChannels(QByteArray in){
             //if the channel exist, we reload it with new value
             foreach(CChannel * c, get_channelList()){
                 if(c->get_id() == newChannel->get_id()){
-                     exist = true;
+                    exist = true;
                     c->set_all(newChannel);
                 }
             }
@@ -416,7 +438,6 @@ void CServer::DeserializeChannels(QByteArray in){
                 qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
                 addChannel(newChannel);
             }
-
         }
 
         //Print content of the actual list of channel - check
