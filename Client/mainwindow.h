@@ -28,11 +28,16 @@ public slots:
 
 
 
+private slots:
+    void on_parameter_button_clicked();
+
 private:
 
 
 
     Ui::MainWindow *ui;
+
+    void Update();
 
 
     //Network

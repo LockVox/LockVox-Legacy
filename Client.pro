@@ -12,6 +12,8 @@ CONFIG += c++11 console
 
 
 SOURCES += \
+    Client/loginwindow.cpp \
+    Client/registerwindow.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
     src/cchannel.cpp \
@@ -22,7 +24,9 @@ SOURCES += \
     Client/mainwindow.cpp
 
 HEADERS += \
+    Client/loginwindow.h \
     Client/mainwindow.h \
+    Client/registerwindow.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
@@ -32,7 +36,10 @@ HEADERS += \
 
 
 FORMS += \
-    Client/mainwindow.ui
+    Client/loginwindow.ui \
+    Client/mainwindow.ui \
+    Client/registerwindow.ui \
+    Client/testMain.ui
 
 
 INCLUDEPATH += src \
@@ -72,3 +79,5 @@ unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
 
 INCLUDEPATH += $$PWD/libs/srtp2/unix
 DEPENDPATH += $$PWD/libs/srtp2/unixs
+
+DISTFILES +=
