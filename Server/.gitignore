@@ -1,0 +1,9 @@
+#Pesonnal configuration of Qt
+Client.pro.user
+Client.pro.user.*
+Server.pro.user
+Server.pro.user.*
+
+#Compiled autosave for ui
+*.autosave
+
