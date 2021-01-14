@@ -8,9 +8,6 @@ CONFIG += c++11 console
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
-
-
 SOURCES += \
     Server/qxmpp_password_checker.cpp \
     Server/qxmpp_server.cpp \
@@ -76,4 +73,15 @@ DEPENDPATH += $$PWD/libs/srtp2/win32
 unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
 
 INCLUDEPATH += $$PWD/libs/srtp2/unix
-DEPENDPATH += $$PWD/libs/srtp2/unixs
+DEPENDPATH += $$PWD/libs/srtp2/unix
+
+win32: LIBS += -L$$PWD/libs/libmariadb/win32/ -llibmariadb
+
+INCLUDEPATH += $$PWD/libs/libmariadb/include
+DEPENDPATH += $$PWD/libs/libmariadb/win32
+
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -lopenssl
+
+INCLUDEPATH += $$PWD/libs/openssl/include \
+    $$PWD/libs/openssl/win32
+DEPENDPATH += $$PWD/libs/openssl/include
