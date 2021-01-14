@@ -37,9 +37,7 @@ class passwordChecker : public QXmppPasswordChecker
 {
 
     /// Retrieves the password for the given username.
-    QXmppPasswordReply::Error checkpasswd(const QXmppPasswordRequest &request, string &password);
-    string sha256(const string str);
-
+    QXmppPasswordReply::Error getPassword(const QXmppPasswordRequest &request, QString &password) override;
 
     /// Returns true as we implemented getPassword().
     bool hasGetPassword() const override

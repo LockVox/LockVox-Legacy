@@ -72,8 +72,11 @@ INCLUDEPATH += $$PWD/libs/libmariadb/include \
 DEPENDPATH += $$PWD/libs/libmariadb/win32
 
 win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibcrypto
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibssl
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -lopenssl
 
 INCLUDEPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
 DEPENDPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
+
