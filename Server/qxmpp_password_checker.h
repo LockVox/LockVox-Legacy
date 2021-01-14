@@ -4,6 +4,10 @@
 #include "QXmppPasswordChecker.h"
 #include "mysql.h"
 
+#include <openssl/sha.h>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 using namespace std;

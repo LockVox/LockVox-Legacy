@@ -1,10 +1,5 @@
 ﻿#include "qxmpp_password_checker.h"
 
-#include <openssl/sha.h>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-
 #define PASSWORD "azerty"
 #define USERNAME "lockvox"
 
@@ -121,13 +116,27 @@ QXmppPasswordReply::Error passwordChecker::checkpasswd(const QXmppPasswordReques
         return QXmppPasswordReply::AuthorizationError;
     }
 
-    unsigned char hashed[SHA256_DIGEST_LENGTH];
-    const char * passwd = password.c_str();
-
+    unsigned char tmphash[SHA256_DIGEST_LENGTH];
     SHA256_CTX sha256;
-
     SHA256_Init(&sha256);
-    SHA256_Update(&sha256,passwd,strlen(passwd));
-    SHA256_Final(hashed, &sha256);
+    SHA256_Update(&sha256, password.c_str(), password.size());
+    SHA256_Final(tmphash, &sha256);
+    stringstream ss;
+    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+         ss << hex << setw(2) << setfill('0') << (int)hash[i];
+    }
+
+    string hashed = ss.str();
+
+    if(hashed == hash)
+    {
+        return QXmppPasswordReply::NoError;
+    }
+
+    else
+    {
+        return QXmppPasswordReply::AuthorizationError;
+    }
 };
 

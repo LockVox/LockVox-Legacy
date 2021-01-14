@@ -9,7 +9,6 @@
 #include "QXmppServer.h"
 #include "qxmpp_password_checker.h"
 
-
 class qxmpp_server
 {
     public:
