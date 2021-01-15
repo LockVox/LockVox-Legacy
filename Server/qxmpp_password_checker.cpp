@@ -1,8 +1,5 @@
 ﻿#include "qxmpp_password_checker.h"
 
-#define PASSWORD "azerty"
-#define USERNAME "lockvox"
-
 QXmppPasswordReply::Error passwordChecker::getPassword(const QXmppPasswordRequest &request, QString &password)
 {
     CDatabase bdd;
