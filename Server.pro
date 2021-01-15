@@ -11,6 +11,7 @@ CONFIG += c++11 console
 SOURCES += \
     Server/qxmpp_password_checker.cpp \
     Server/qxmpp_server.cpp \
+    Server/sha256.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
     src/cchannel.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     Server/mainwindow.h \
     Server/qxmpp_password_checker.h \
     Server/qxmpp_server.h \
+    Server/sha256.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \

@@ -5,37 +5,16 @@
 
 QXmppPasswordReply::Error passwordChecker::getPassword(const QXmppPasswordRequest &request, QString &password)
 {
-    string hash;
-    try
-    {
-        CDatabase bdd;
-        bool res = bdd.execMain();
-        if(!res)
-        {
-            cout << "Can't connect to database !" << endl;
-        }
-        hash = bdd.getHash(request.username().toStdString());
+    CDatabase bdd;
+    string hash = bdd.getHash(request.username().toStdString());
 
-        if(hash == "")
-        {
-            cout << "Identifiant incorrect" << endl;
-            return QXmppPasswordReply::AuthorizationError;
-        }
-
-        else
-        {
-            if (hash == "badquery")
-            {
-                cout << "Erreur de requete SQL" << endl;
-                return QXmppPasswordReply::AuthorizationError;
-            }
-        }
-    } catch (char *e)
+    if (hash == "false")
     {
-        cerr << "[EXCEPTION]" << e << endl;
+        cout << "Erreur de requete SQL" << endl;
         return QXmppPasswordReply::AuthorizationError;
     }
-    string hashed = "filsdepute";
+
+    string hashed = sha256(password.toStdString());
     if(hashed == hash)
     {
         return QXmppPasswordReply::NoError;
@@ -44,6 +23,7 @@ QXmppPasswordReply::Error passwordChecker::getPassword(const QXmppPasswordReques
     else
     {
         return QXmppPasswordReply::AuthorizationError;
+
     }
 };
 

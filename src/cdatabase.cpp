@@ -14,7 +14,7 @@ CDatabase::CDatabase()
 /*
  * Main Process
  */
-bool CDatabase::execMain()
+bool CDatabase::execMain() //test connexion bdd
 {
     try {
         // Format a MySQL object
