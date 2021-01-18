@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "src/includes/cserver.h"
+
+#include "Server/cserver.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

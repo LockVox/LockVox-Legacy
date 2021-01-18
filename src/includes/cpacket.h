@@ -2,8 +2,8 @@
 #define CPACKET_H
 
 #include <QString>
+
 #include "src/includes/cchannel.h"
-#include "src/includes/cserver.h"
 #include "src/includes/cclient.h"
 
 class CPacket
@@ -31,7 +31,7 @@ public:
 
 private:
     char header[2];
-    CServer Serv;
+
 };
 
 #endif // CPACKET_H

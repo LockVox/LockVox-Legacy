@@ -1,4 +1,4 @@
-#include "src/includes/cserver.h"
+#include "Server/cserver.h"
 
 
 
@@ -6,6 +6,8 @@
 #include <QDebug>
 CServer::CServer()
 {
+    qDebug() << "Starting LockVox Server - \n";
+
     // Gestion du serveur TCP
     serveur = new QTcpServer(this);
     if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50585
@@ -17,51 +19,8 @@ CServer::CServer()
     {
         // Si le serveur a été démarré correctement
         qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
-        connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
+        connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
     }
-
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timer_done()));
-    m_timer->start(5);
-
-}
-CServer::CServer(int mode)
-{
-    m_receive_data = new QByteArray();
-    switch(mode)
-    {
-        case 1 :
-            qDebug() << "START APPLICATION AS SERVER" << Qt::endl;
-
-            // Gestion du serveur TCP
-            serveur = new QTcpServer(this);
-            if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50585
-            {
-                // Si le serveur n'a pas été démarré correctement
-                qDebug()<< "Le serveur n'a pas pu être démarré. Raison :" << serveur->errorString();
-            }
-            else
-            {
-                // Si le serveur a été démarré correctement
-                qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
-                connect(serveur, SIGNAL(newConnection()), this, SLOT(nouvelleConnexion()));
-            }
-
-
-        break;
-        case 2 :
-            qDebug() << "START APPLICATION AS CLIENT" << Qt::endl;
-            serveur = NULL;
-            m_socket = new QTcpSocket();
-
-            m_socket->abort();
-            m_socket->connectToHost("127.0.0.1", 50885);
-
-            connect(m_socket, SIGNAL(readyRead()), this, SLOT(cReceiveData()));
-
-    }
-
-
 }
 
 //Getters
@@ -69,31 +28,7 @@ CDatabase * CServer::get_database(){
     return m_db;
 }
 
-QList<CChannel *> CServer::get_channelList(){
-    return m_channels;
-}
 
-QList<CClient *> CServer::get_clientList(){
-    return m_clients;
-}
-
-QList<CChannel> CServer::get_staticChannelList(){
-    QList<CChannel> list;
-    foreach(CChannel *c, m_channels)
-        list.append(*c);
-    return list;
-}
-
-QList<CClient> CServer::get_staticClientList(){
-    QList<CClient> list;
-    foreach(CClient *c, m_clients)
-        list.append(*c);
-    return list;
-}
-
-QTcpSocket * CServer::get_socket(){
-    return m_socket;
-}
 
 
 //Setters
@@ -101,49 +36,22 @@ void CServer::set_database(CDatabase * db){
     m_db = db;
 }
 
-void CServer::set_clients(QList<CClient> clients){
-    foreach(CClient c, clients)
-    {
-        m_clients.append(&c);
-
-    }
-}
-
-void CServer::set_channels(QList<CChannel> channels){
-
-}
-
-void CServer::set_channel(CChannel channel, int index){
-    m_channels[index] = &channel;
-}
 
 
-void CServer::set_socket(QTcpSocket* soc){
-    m_socket  = soc;
-}
-
-void CServer::freeChannels(){
-    foreach(CChannel * c, m_channels)
-    {
-       free(c);
-    }
-}
-
-
-void CServer::nouvelleConnexion()
+void CServer::onNewConnection()
 {
     CClient * newClient = new CClient();
     newClient->set_socket(serveur->nextPendingConnection());
 
-    m_clients.append(newClient);
+    addClient(newClient);
 
-    connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(sReceiveData()));
-    connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
+    connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
+    connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(onDisconnectClient()));
 
     qDebug() << "New client";
 }
 
-void CServer::deconnexionClient()
+void CServer::onDisconnectClient()
 {
     //Looking for sender -
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
@@ -151,16 +59,35 @@ void CServer::deconnexionClient()
         return;
 
     //Compare to clients list
-    for( int i = 0 ; i  < m_clients.size(); i++){
-        if(m_clients[i]->get_socket() == socket){
-            free(m_clients[i]);
-            m_clients.removeAt(i);
+    for( int i = 0 ; i  < get_clientList().size(); i++){
+        if(get_clientList()[i]->get_socket() == socket){
+            free(get_clientList()[i]);
+            get_clientList().removeAt(i);
             qDebug() << "Client " << i << " has disconnect" << Qt::endl;
         }
     }
     //send msg to everybody to say someone disconnect (id client)
-
 }
+
+void CServer::onReceiveData(){
+
+    //Process receiving data -
+
+
+    //Get sender -
+    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
+    if (socket == 0) //Couldn't find sender
+          return;
+    qDebug() << "Receive msg \n";
+
+    //Get data
+    QByteArray *data = new QByteArray();
+    data->append(socket->readAll());
+
+    //Process data
+    //TO DO
+}
+
 
 void CServer::sendToChannel(const QString &message, int id_channel)
 {
@@ -174,9 +101,9 @@ void CServer::sendToChannel(const QString &message, int id_channel)
     out << (quint16) (packet.size() - sizeof(quint16));
 
     //send msg to all client of the channel
-    for( int i = 0; i < m_channels[id_channel]->get_clients().size(); i++)
+    for( int i = 0; i < get_channelList()[id_channel]->get_clients().size(); i++)
     {
-        m_channels[id_channel]->get_clients()[i]->get_socket()->write(packet);
+        get_channelList()[id_channel]->get_clients()[i]->get_socket()->write(packet);
     }
 }
 
@@ -197,12 +124,12 @@ void CServer::sendToClient(const QString &message, CClient * client)
 
 void CServer::sendToAll(QByteArray out)
 {
-    if(m_clients.isEmpty() == true)
+    if(get_clientList().isEmpty() == true)
     {
         qDebug() << "there is no client ! ";
     }
     else{
-        foreach(CClient * client, m_clients)
+        foreach(CClient * client, get_clientList())
             {
                 qDebug() << out;
                 client->get_socket()->write(out);
@@ -213,134 +140,10 @@ void CServer::sendToAll(QByteArray out)
     }
 }
 
-//Envoie de l'audio au server grâce à un QByteArray
-void CServer::sendToServer(QByteArray ba){
-    //qDebug() << "Data has been send to Server ";
-    m_socket->write(ba);
-}
-
-void CServer::sendToServer(){
-
-    QByteArray buffer;
-    buffer = m_audio_in->get_device()->read(8192);
-    qDebug() << "Send to server - " << buffer << Qt::endl;
-    m_socket->write(buffer);
-    buffer.clear();
-}
-
-
-void CServer::addChannel(CChannel * tmp){
-    m_channels.push_back(tmp);
-}
-
-void CServer::addClient(CClient * client){
-    m_clients.push_back(client);
-}
-
-
-
-//param : none
-//Send CServer, CChannel and CClient to clients.
-//A flag is used for each type of object
-//1: CServer  / 2: CChannel / 3: CClient
 void CServer::SendObjectsToClient()
 {
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
     //TODO
 }
-
-void CServer::sReceiveData(){
-
-
-    // On détermine quel client envoie le message (recherche du QTcpSocket du client)
-    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
-    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
-          return;
-
-    qDebug() << "Receive msg \n";
-
-    QByteArray *data = new QByteArray();
-    data->append(socket->readAll());
-
-    //On rajoute data à la liste de buffer à mixer
-    m_to_mix_buffer.append(*data);
-
-
-
-
-
-
-    /*
-    qDebug() << "Resend data to client";
-    for(int i = 0; i < m_clients.size(); i++){
-        m_clients[i]->get_socket()->write(*data);
-    }
-    qDebug() << "Data size " << data->size() << "\n";
-    */
-
-}
-#define BUFFER_SIZE 8000
-#define MAX_SIZE 100
-
-void CServer::timer_done(){
-
-    qDebug() << "Timer done - " << m_to_mix_buffer.size() << "\n";
-
-
-    //New thread - Take m_to_mix_buffer as entry
-
-    //Send the final raw audio
-
-
-
-
-    for(int i = 0; i < m_to_mix_buffer.size();i++){
-        int size = m_to_mix_buffer[i].size()/sizeof(int);
-     const float* ptrFloat = reinterpret_cast<const float*>(m_to_mix_buffer[i].constData());
-
-
-        for (int i = 0; i < size; ++i) {
-
-            ptrFloat+=4;
-            qDebug() << (qint16)*ptrFloat;
-        }
-
-        qDebug() <<"\n";
-     }
-
-
-
-
-
-
-    //Hex to float
-
-
-    //Mix all float raw audio
-    //Send result to client
-    //Clear audio raw in memory
-
-    m_to_mix_buffer.clear();
-}
-
-void CServer::cReceiveData(){
-    qDebug() << "Receive data from server" ;
-
-    //Either JSON
-
-
-    //Either Audio
-    QByteArray audioBlock; //holds received audio
-    QString controlString; //unused for now, holds received control string
-    m_audio_out->writeData(m_socket->readAll());
-
-}
-
-
-
-
 
 
 

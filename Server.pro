@@ -11,13 +11,14 @@ CONFIG += c++11 console
 SOURCES += \
     Server/qxmpp_password_checker.cpp \
     Server/qxmpp_server.cpp \
+    src/AbstractServer.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cdatabase.cpp \
     src/cpacket.cpp \
-    src/cserver.cpp \
+    Server/cserver.cpp \
     Server/main.cpp \
     Server/mainwindow.cpp
 
@@ -25,13 +26,15 @@ HEADERS += \
     Server/mainwindow.h \
     Server/qxmpp_password_checker.h \
     Server/qxmpp_server.h \
+    Server/cserver.h \
+    src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
-    src/includes/cpacket.h \
-    src/includes/cserver.h
+    src/includes/cpacket.h
+
 
 FORMS += \
     Server/mainwindow.ui

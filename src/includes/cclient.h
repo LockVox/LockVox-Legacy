@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QtNetwork>
-#include <QVariant>
 
 #include "cchannel.h"
 

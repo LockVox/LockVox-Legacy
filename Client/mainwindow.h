@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "src/includes/cserver.h"
+#include "Client/cserver.h"
 #include "src/includes/audioinput.h"
 #include "src/includes/audiooutput.h"
 
@@ -24,8 +24,6 @@ public:
 public slots:
 
     //Audio
-
-
 
 
 private slots:
