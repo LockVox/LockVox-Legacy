@@ -214,7 +214,7 @@ QList<CClient*> CPacket::DeserializeClient(QJsonArray  in)
     }
     return clients;
 }
-CChannel CPacket::DeserializeChannel(QJsonArray  array)
+CChannel CPacket::DeserializeChannel(QJsonArray  array, QList<CChannel*>& list)
 {
     CChannel tmp;
     return tmp;
@@ -228,14 +228,14 @@ CChannel CPacket::DeserializeChannel(QJsonArray  array)
         //check if the channel already exist or not
         bool exist = false;
         //if the channel exist, we reload it with new value
-        foreach(CChannel * c, get_channelList()){
+        foreach(CChannel * c, list){
             if(c->get_id() == newChannel->get_id()){
                 exist = true;
                 c->set_all(newChannel);
             }
         }
         //if the channel doesnt exist, we add it to the list of channel
-        if(get_channelList().isEmpty() || exist == false){
+        if(list.isEmpty() || exist == false){
             qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
             addChannel(newChannel);
         }

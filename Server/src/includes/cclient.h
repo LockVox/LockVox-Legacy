@@ -23,6 +23,7 @@ class CClient
         QTcpSocket * get_socket();
         int get_idChannel();
         int GetUserID();
+        bool GetMuted();
 
         //Setters
         void set_pseudo(QString pseudo);
@@ -32,6 +33,7 @@ class CClient
 
         void cInsertToDataStream(QDataStream & ds);
         void cExtractFromDataStream(QDataStream & ds);
+        void SetMute(bool val);
 
 
 
@@ -48,6 +50,7 @@ class CClient
        QTcpSocket * m_soc;
        QList<crole*> m_roles;
        int m_idChannel;
+       bool m_muted;
 
 };
 

@@ -99,7 +99,7 @@ class CServer : public QWidget
 
         void nouvelleConnexion();                                           //Add client to the server - default no channel           //get data
         void deconnexionClient();                                           //Disconnecting client - del client from channel list - del client
-        void sReceiveData(CClient *sender, QByteArray data);                                         //Server receive data
+        void sReceiveData(CClient *sender, QByteArray data);                //Server receive data
 
     private:
 

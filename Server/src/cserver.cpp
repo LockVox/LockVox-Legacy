@@ -289,6 +289,7 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
             CPacket ans(SerializeServer(), NULL);
             ans.SetType(0);
             ans.SetAction(1);
+
             sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
 
             break;
@@ -329,11 +330,24 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
         case 5:
             //BAN IP
             //Rajouter système de gestion du temps
-        case 6:
+        case 6: {
             //Kick user
+            t_user_chan[packet->GetData()["id"].toInt()][m_clients[packet->GetData()["id"].toInt()]->GetUserID()] = -1;
+            QJsonObject info;
+            info.insert("reason", packet->GetData()["reason"]);
+            CPacket ret;
+            ret.SetType(0);
+            ret.SetAction(6);
+            m_clients[packet->GetData()["id"].toInt()]->get_socket()->write(ret.Serialize());
+            for(int i = 0 ; i < m_clients.length() ; i++)
+                if(m_clients[i]->GetUserID() == packet->GetData()["id"].toInt())
+                {
+                    m_clients.removeAt(i);
+                }
+            sender->get_socket()->close();
 
-            //
             break;
+        }
         default:
             qDebug() << "Error invalid action" << Qt::endl;
         }
@@ -397,9 +411,15 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
             }
             break;
         }
-        case 10:
+        case 10: {
             //Mute user voc (server side)
+            m_clients[packet->GetData()["id"].toInt()]->SetMute(!m_clients[packet->GetData()["id"].toInt()]->GetMuted());
+            CPacket res;
+            res.SetType(0);
+            res.SetAction(10);
+
             break;
+        }
         case 11:
             //Create chan text --------> Qxmpp
             break;
@@ -430,6 +450,8 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
             break;
         case 4:
             //Modif pseudo (update bdd)
+            m_clients[packet->GetData()["id"].toInt()]->set_pseudo(packet->GetData()["pseudo"].toString());
+            sendToAll(packet->Serialize());
             break;
         case 5:
             //Change right
