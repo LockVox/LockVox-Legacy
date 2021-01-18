@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-
     //qxmpp_server * MainServer = new qxmpp_server(QString::fromLocal8Bit("172.20.208.1"));
     //MainServer->startServer();
     CDatabase bdd;

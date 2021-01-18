@@ -4,7 +4,6 @@
 #include "QXmppPasswordChecker.h"
 #include "mysql.h"
 #include "includes/cdatabase.h"
-#include "sha256.h"
 
 #include <openssl/sha.h>
 #include <iostream>

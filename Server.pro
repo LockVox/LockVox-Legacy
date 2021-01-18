@@ -26,7 +26,6 @@ HEADERS += \
     Server/mainwindow.h \
     Server/qxmpp_password_checker.h \
     Server/qxmpp_server.h \
-    Server/sha256.h \
     Server/cserver.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
@@ -83,3 +82,4 @@ INCLUDEPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
 DEPENDPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
+

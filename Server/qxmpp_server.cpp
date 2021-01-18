@@ -3,6 +3,10 @@
 
 #include "qxmpp_server.h"
 
+
+#define USERNAME "lockvox"
+#define PASSWORD "azerty"
+
 qxmpp_server::qxmpp_server(QString domain)
 {
     this->domain = domain;
