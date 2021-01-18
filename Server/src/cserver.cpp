@@ -286,10 +286,15 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
             //SERV DISCONNECT
             //Update online users
             m_online_clients.remove(m_clients[sender->GetUserID()]->get_socket());      //Supprime des utilisateurs online
-            CPacket ans(SerializeServer(), NULL);
+            for(int i = 0 ; i < m_channels.size() ; i++)    //Mise à jour du tableau
+                if(t_user_chan[sender->GetUserID()][i] == 1)
+                    t_user_chan[sender->GetUserID()][i] = 0;
+
+            CPacket ans;
             ans.SetType(0);
             ans.SetAction(1);
-
+            QJsonObject info;
+            info.insert("id", sender->GetUserID());
             sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
 
             break;
@@ -371,8 +376,7 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
         case 5: {
             //Create chan voc
             QList<CClient*> clientlist;
-            QList<CMessage*> messagelist;
-            CChannel * newChan = new CChannel(clientlist, messagelist, packet->GetData()["name"].toString(), m_channels.size());
+            CChannel * newChan = new CChannel(clientlist, packet->GetData()["name"].toString(), m_channels.size());
             m_channels.push_back(newChan);
             break;
         }

@@ -30,10 +30,10 @@ class CClient
         void set_socket(QTcpSocket * soc);
         void set_id(int id);
         void set_description(QString p_desc) {m_description = p_desc;};
+        void SetMute(bool val);
 
         void cInsertToDataStream(QDataStream & ds);
         void cExtractFromDataStream(QDataStream & ds);
-        void SetMute(bool val);
 
 
 

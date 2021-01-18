@@ -43,7 +43,7 @@ public:
     //Deserialize
     void Deserialize();                //Deserialisation d'un paquet reçu à travers le réseau
     QList<CClient*> DeserializeClient(QJsonArray  in);      //Deserialisation de la structure Client
-    CChannel DeserializeChannel(QJsonArray  in);    //Deserialisation de la structure Channel
+    QList<CChannel*> DeserializeChannel(QJsonArray  in);    //Deserialisation de la structure Channel
     //CServer DeserializeServer(QJsonArray  in);      //Deserialisation de la structure Serveur
 
 private:

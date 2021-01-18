@@ -3,8 +3,6 @@
 CChannel::CChannel()
 {
     m_clients = {NULL};
-    m_messages = {NULL};
-
     m_name = "";
     m_id = 0;
     m_maxUsers = 5;
@@ -18,10 +16,9 @@ CChannel::CChannel(const CChannel & copy){
     m_id = copy.m_id;
 }
 
-CChannel::CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id)
+CChannel::CChannel(QList<CClient*> clients, QString name, int id)
 {
     m_clients = clients;
-    m_messages = msg;
     m_name = name;
     m_id = id;
 
@@ -34,9 +31,6 @@ QList<CClient *> CChannel::get_clients()
     return m_clients;
 }
 
-QList<CMessage *> CChannel::get_message(){
-    return m_messages;
-}
 
 QString CChannel::get_name(){
     return m_name;
@@ -62,9 +56,6 @@ void CChannel::set_clients(QList<CClient*> clients){
     m_clients = clients;
 }
 
-void CChannel::set_message(QList<CMessage*>message){
-    m_messages = message;
-}
 
 void CChannel::set_name(QString name){
     m_name = name;

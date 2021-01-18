@@ -31,7 +31,7 @@ CClient::CClient( QTcpSocket * soc){
 }
 
 
-
+//Getters
 
 QString CClient::get_pseudo()
 {
@@ -52,6 +52,12 @@ int CClient::GetUserID()
         return m_userid;
 }
 
+bool CClient::GetMuted()
+{
+    return m_muted;
+}
+
+//Setters
 
 void CClient::set_pseudo(QString pseudo)
 {
@@ -65,6 +71,11 @@ void CClient::set_socket(QTcpSocket * soc)
 
 void CClient::set_id(int id){
     m_userid = id;
+}
+
+void CClient::SetMute(bool val)
+{
+    m_muted = val;
 }
 
 //Optionnal
@@ -84,7 +95,7 @@ void CClient::set_id(int id){
 
     return out;
 }
-/*void CClient::deserialize(QByteArray & in){
+void CClient::deserialize(QByteArray & in){
     QJsonDocument json_doc = QJsonDocument::fromJson(in);
     if(json_doc.isNull()){
         qDebug() << "Failed to create JSON document. " << Qt::endl;

@@ -33,7 +33,7 @@ class CServer : public QWidget
         //Setters
         void set_database(CDatabase * db);
         void set_clients(QList<CClient> clients);
-        void set_channels(QList<CChannel> channels);
+        void set_channels(QList<CChannel*> channels);
         void set_channel(CChannel channel, int index);
         void set_socket(QTcpSocket* soc);
 

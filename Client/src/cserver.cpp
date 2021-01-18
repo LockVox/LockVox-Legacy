@@ -73,8 +73,8 @@ void CServer::set_clients(QList<CClient> clients){
     }
 }
 
-void CServer::set_channels(QList<CChannel> channels){
-
+void CServer::set_channels(QList<CChannel*> channels){
+    m_channels = channels;
 }
 
 void CServer::set_channel(CChannel channel, int index){
@@ -269,23 +269,33 @@ void CServer::sReceiveData(CClient *sender, QByteArray data){    //Treats data r
         case 0:
         {
             //SERV CONNECT
-            CPacket ans(SerializeServer(), NULL);     //Pour éviter NULL et erreurs, à voir
-            ans.SetType(0);
-            ans.SetAction(0);
-            sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
-            sendToAll(packet->Serialize());                     //Dit aux autres que qq1 s'est co
+            CClient * new_client = new CClient(packet->GetData()["name"].toString(), sender->get_socket(), packet->GetData()["id"].toInt());
+            m_clients.push_back(new_client);   //Ajout à la liste
+            for(int i = 0 ; i < m_channels.size() ; i++)    //Mise à jour du tableau
+            {
+                t_user_chan[new_client->GetUserID()][i] = -1;
+                for(int j = 0 ; j < m_roles.size() ; j++)
+                {
+                    if(t_user_right[new_client->GetUserID()][j] && t_chan_right[i][j])
+                      t_user_chan[new_client->GetUserID()][i] = 0;
+                }
+            }
             break;
         }
         case 1:
         {
             //SERV DISCONNECT
             //Update online users
-            m_online_clients.remove(m_clients[sender->GetUserID()]->get_socket());      //Supprime des utilisateurs online
-            CPacket ans(SerializeServer(), NULL);
-            ans.SetType(0);
-            ans.SetAction(1);
-            sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
-
+            for(int i = 0 ; i < m_clients.size() ; i++)      //Supprime des utilisateurs online
+            {
+                if(m_clients[i]->GetUserID() == packet->GetData()["id"].toInt())
+                    m_clients.removeAt(i);
+            }
+            for(int i = 0 ; i < m_channels.size() ; i++)    //Mise à jour du tableau
+            {
+                if(t_user_chan[sender->GetUserID()][i] == 1)
+                    t_user_chan[sender->GetUserID()][i] = 0;
+            }
             break;
         }
         case 2:

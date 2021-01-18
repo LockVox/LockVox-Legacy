@@ -18,10 +18,9 @@ CChannel::CChannel(const CChannel & copy){
     m_id = copy.m_id;
 }
 
-CChannel::CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id)
+CChannel::CChannel(QList<CClient*> clients, QString name, int id)
 {
     m_clients = clients;
-    m_messages = msg;
     m_name = name;
     m_id = id;
 

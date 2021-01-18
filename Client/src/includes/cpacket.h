@@ -17,7 +17,6 @@ public:
     //Getters
     char GetType();                 //Retourne le code du type d'action
     char GetAction();               //Retourne le code de l'action en fonction de son type
-    CClient GetSender();            //Retourne l'envoyeur du message
     QJsonDocument GetData();        //Retourne la data
 
     //Setters
@@ -39,12 +38,11 @@ public:
     //Serialiaze
     QByteArray Serialize();                 //Serialisation d'un paquet pour l'envoi à travers le réseau
 
-
     //Deserialize
-    void Deserialize();                //Deserialisation d'un paquet reçu à travers le réseau
+    void Deserialize();                                     //Deserialisation d'un paquet reçu à travers le réseau
     QList<CClient*> DeserializeClient(QJsonArray  in);      //Deserialisation de la structure Client
-    CChannel DeserializeChannel(QJsonArray  in);    //Deserialisation de la structure Channel
-    //CServer DeserializeServer(QJsonArray  in);      //Deserialisation de la structure Serveur
+    QList<CChannel*> DeserializeChannel(QJsonArray  in);            //Deserialisation de la structure Channel
+    //CServer DeserializeServer(QJsonArray  in);            //Deserialisation de la structure Serveur
 
 private:
     char m_type;            //Type d'action

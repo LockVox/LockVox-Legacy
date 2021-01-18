@@ -214,35 +214,25 @@ QList<CClient*> CPacket::DeserializeClient(QJsonArray  in)
     }
     return clients;
 }
-CChannel CPacket::DeserializeChannel(QJsonArray  array, QList<CChannel*>& list)
+
+QList<CChannel*> CPacket::DeserializeChannel(QJsonArray  in)
 {
-    CChannel tmp;
-    return tmp;
-    foreach( const QJsonValue & value, array){
+    QList<CChannel*> ret;
+    QList<CClient*> clients;
+
+    foreach( const QJsonValue & value, in){
 
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
-        CChannel * newChannel = new CChannel(obj);
-        //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
-
-        //check if the channel already exist or not
-        bool exist = false;
-        //if the channel exist, we reload it with new value
-        foreach(CChannel * c, list){
-            if(c->get_id() == newChannel->get_id()){
-                exist = true;
-                c->set_all(newChannel);
-            }
-        }
-        //if the channel doesnt exist, we add it to the list of channel
-        if(list.isEmpty() || exist == false){
-            qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
-            addChannel(newChannel);
-        }
-
+        QJsonArray client_list = value["clients"].toArray();
+        clients = DeserializeClient(client_list);
+        CChannel * newChannel = new CChannel(clients, value["name"].toString(), value["id"].toInt());
+        qDebug() << "New channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
+        ret.push_back(newChannel);
     }
-
+    return ret;
 }
+
 
 /*CServer CPacket::DeserializeServer(QJsonArray in)
 {

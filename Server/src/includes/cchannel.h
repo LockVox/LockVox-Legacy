@@ -15,7 +15,7 @@ public:
 
     CChannel();
 
-    CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
+    CChannel(QList<CClient*> clients, QString name, int id);
     CChannel(const CChannel & copy);
     CChannel(QJsonObject serial);
     ~CChannel() {};

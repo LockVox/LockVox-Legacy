@@ -21,7 +21,7 @@ SOURCES += \
     Client/qxmpp_client.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp \
-    src/includes/crole.cpp
+    src/crole.cpp
 
 HEADERS += \
     Client/mainwindow.h \
