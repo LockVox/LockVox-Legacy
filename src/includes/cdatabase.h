@@ -7,6 +7,7 @@
 #include <string>
 
 #include "mysql.h"
+#include "Server/sha256.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
     CDatabase();           // Constructor
     bool execMain();  // Main Process
     string getHash(string id);
+    string newUser(string pseudo, string mail, string password);
 
 };
 
