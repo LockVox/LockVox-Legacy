@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "src/includes/cserver.h"
+#include "Client/cserver.h"
 #include "src/includes/audioinput.h"
 #include "src/includes/audiooutput.h"
 
@@ -19,24 +19,38 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
+
+public slots:
+
+    //Audio
+
+
+private slots:
+    void on_parameter_button_clicked();
+
 private:
 
 
 
     Ui::MainWindow *ui;
 
+    void Update();
+
 
     //Network
 
-    QTcpSocket * m_socket;
+    CServer * m_server;
 
 
 
 
 
-    //Audio
-    AudioInput * m_audio_in;
-    AudioOutput * m_audio_out;
+
+
+
+
+
 
 };
 #endif // MAINWINDOW_H
