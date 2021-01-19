@@ -16,8 +16,6 @@ class passwordChecker : public QXmppPasswordChecker
 
     /// Retrieves the password for the given username.
     QXmppPasswordReply::Error getPassword(const QXmppPasswordRequest &request, QString &password) override;
-    QXmppPasswordReply *checkPassword(const QXmppPasswordRequest &request) override;
-
 
     /// Returns true as we implemented getPassword().
     bool hasGetPassword() const override
