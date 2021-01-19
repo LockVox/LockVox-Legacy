@@ -16,7 +16,7 @@ SOURCES += \
     src/audiooutput.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
-    src/cdatabase.cpp \
+    Server/cdatabase.cpp \
     src/cpacket.cpp \
     Server/cserver.cpp \
     Server/main.cpp \
@@ -35,7 +35,7 @@ HEADERS += \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
-    src/includes/cdatabase.h \
+    Server/includes/cdatabase.h \
     src/includes/cpacket.h \
     src/includes/crole.h
 

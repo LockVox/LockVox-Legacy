@@ -16,3 +16,26 @@ QXmppPasswordReply::Error passwordChecker::getPassword(const QXmppPasswordReques
 
 };
 
+QXmppPasswordReply *passwordChecker::checkPassword(const QXmppPasswordRequest &request)
+{
+    auto *reply = new QXmppPasswordReply;
+
+    QString secret;
+    QXmppPasswordReply::Error error = getPassword(request, secret);
+    if (error == QXmppPasswordReply::NoError)
+    {
+        if (sha256(request.password().toStdString()) != secret.toStdString())
+        {
+            reply->setError(QXmppPasswordReply::AuthorizationError);
+        }
+    }
+    else
+    {
+        reply->setError(error);
+    }
+
+    // reply is finished
+    reply->finishLater();
+    return reply;
+}
+
