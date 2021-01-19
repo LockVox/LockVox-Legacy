@@ -28,15 +28,21 @@ CDatabase * CServer::get_database(){
     return m_db;
 }
 
-
-
-
 //Setters
 void CServer::set_database(CDatabase * db){
     m_db = db;
 }
 
-
+int CServer::whichClient(QTcpSocket * s){
+    //Looking for the client's index with the socket 's'
+    for(int i = 0; i < get_clientList().size(); i++){
+        if(get_clientList()[i]->get_socket() == s){
+            return i;
+        }
+    }
+    //No client find
+    return -1;
+}
 
 void CServer::onNewConnection()
 {
@@ -72,8 +78,6 @@ void CServer::onDisconnectClient()
 void CServer::onReceiveData(){
 
     //Process receiving data -
-
-
     //Get sender -
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) //Couldn't find sender
@@ -84,8 +88,13 @@ void CServer::onReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(socket->readAll());
 
+    int uid = whichClient(socket);
+    if(uid == -1){
+        return;
+    }
+
     //Process data
-    //TO DO
+    processIncomingData(get_clientList()[uid], *data);
 }
 
 
@@ -140,11 +149,253 @@ void CServer::sendToAll(QByteArray out)
     }
 }
 
+void CServer::sendToClient(QByteArray out, CClient * client){
+    client->get_socket()->write(out);
+    client->get_socket()->waitForBytesWritten();
+}
+
+
 void CServer::SendObjectsToClient()
 {
     //TODO
 }
 
+void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
+        if(!sender)
+            return;
+        sender->set_pseudo("abc");
+        data = "000000001215461as561s5c";
+        CPacket* packet = new CPacket(data, sender);
+
+
+
+        //Récupération du type
+        switch (packet->GetType().toInt()) {
+        case 0: //SERV
+            switch (packet->GetAction().toInt())
+            {
+            case 0:
+            {
+                //SERV CONNECT
+
+
+                //Check Auth -
+
+
+
+
+
+                //If Auth is Ok
+                CPacket ans(Serialize(), NULL);     //Pour éviter NULL et erreurs, à voir
+                ans.SetType(0);
+                ans.SetAction(0);
+
+                ans.Serialize(true);
+
+                sendToClient(ans.GetByteArray(), sender);
+
+
+
+
+                //sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
+                //sendToAll(packet->Serialize());                     //Dit aux autres que qq1 s'est co
+
+                break;
+            }
+            case 1:
+            {
+                //SERV DISCONNECT
+                //Update online users
+                get_clientList()[sender->get_id()]->set_isOnline(false);            //User is not online anymore
+
+                /*for(int i = 0 ; i < m_channels.size() ; i++)    //Mise à jour du tableau
+                    if(t_user_chan[sender->GetUserID()][i] == 1)
+                        t_user_chan[sender->GetUserID()][i] = 0;
+                */
+
+                CPacket ans;
+                ans.SetType("0");
+                ans.SetAction("1");
+                QJsonObject info;
+                //info.insert("id", sender->get_id());
+                //sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
+
+                break;
+            }
+            case 2:
+            {
+                //PSEUDO UPDATE
+
+                //Modify pseudo
+                get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["pseudo"].toString());
+
+                //Send update to the other client
+
+                QJsonObject infos;
+                infos.insert("id", sender->get_id());
+                infos.insert("pseudo", packet->GetData()["pseudo"]);
+                QJsonDocument doc(infos);
+                QByteArray ret;                 //Réponse
+                //ret.push_back(packet->GetType());
+                //ret.push_back(packet->GetAction());
+                sendToAll(ret);
+                free(packet);
+                break;
+            }
+            case 3:
+            {
+                //BIO UPDATE
+                //Comme au dessus
+                get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["description"].toString());
+                QJsonObject infos;
+                infos.insert("id", sender->get_id());
+                infos.insert("description", packet->GetData()["description"]);
+                QJsonDocument doc(infos);
+                QByteArray ret;
+                //ret.push_back(packet->GetType());
+                //ret.push_back(packet->GetAction());
+                sendToAll(ret);
+                break;
+            }
+            case 4:
+                //BAN USER
+                break;
+            case 5:
+                //BAN IP
+                //Rajouter système de gestion du temps
+            case 6: {
+                //Kick user
+                /*t_user_chan[packet->GetData()["id"].toInt()][m_clients[packet->GetData()["id"].toInt()]->GetUserID()] = -1;
+                QJsonObject info;
+                info.insert("reason", packet->GetData()["reason"]);
+                CPacket ret;
+                ret.SetType(0);
+                ret.SetAction(6);
+                m_clients[packet->GetData()["id"].toInt()]->get_socket()->write(ret.Serialize());
+                for(int i = 0 ; i < m_clients.length() ; i++)
+                    if(m_clients[i]->GetUserID() == packet->GetData()["id"].toInt())
+                    {
+                        m_clients.removeAt(i);
+                    }
+                sender->get_socket()->close();
+                */
+                break;
+            }
+            default:
+                qDebug() << "Error invalid action" << Qt::endl;
+            }
+            break;
+
+        case 1: //CHAN
+            switch (packet->GetAction().toInt())
+            {
+            case 0: {
+                //CONNECT CHAN
+                get_channelList()[packet->GetData()["id"].toInt()]->addUser(get_clientList()[sender->get_id()]);
+                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 1;
+                break;
+            }
+            case 1: {
+                //DISCONNECT CHAN
+                get_channelList()[packet->GetData()["id"].toInt()]->delUser(sender->get_id());
+                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 0;
+                break;
+            }
+            case 5: {
+                //Create chan voc
+                CChannel * newChan = new CChannel(packet->GetData()["name"].toString(), get_channelList().size());
+                addChannel(newChan);
+                break;
+            }
+            case 6: {
+                //Delete chan voc
+                for(int i = 0 ; i < get_channelList().size() ; i++)
+                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
+                        DelChannel(i);
+                break;
+            }
+            case 7: {
+                //Rename chan voc
+                for(int i = 0 ; i < get_channelList().size() ; i++)
+                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
+                        get_channelList()[i]->set_name(packet->GetData()["name"].toString());
+                break;
+            }
+            case 8: {
+                //Modif max user (voc)
+                for(int i = 0 ; i < get_channelList().size() ; i++)
+                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
+                        get_channelList()[i]->set_maxUsers(packet->GetData()["maxuser"].toInt());
+                break;
+            }
+            case 9: {
+                //kick user voc
+                /*if(t_user_right[sender->GetUserID()][2])    //Si l'utilisateur a le droit de kick
+                {
+                    m_clients[packet->GetData()["id"].toInt()]->get_socket()->close();  //On ferme la connection
+                    m_clients.removeAt(packet->GetData()["id"].toInt());        //On met à jour la liste des utilisateur
+                    QByteArray ret;
+                    ret.push_back(packet->GetType());
+                    ret.push_back(packet->GetAction());
+                    ret.push_back(data);
+                    sendToAll(ret);
+                }*/
+                break;
+            }
+            case 10: {
+                //Mute user voc (server side)
+                //m_clients[packet->GetData()["id"].toInt()]->SetMute(!m_clients[packet->GetData()["id"].toInt()]->GetMuted());
+                //CPacket res;
+                //res.SetType(0);
+                //res.SetAction(10);
+
+                break;
+            }
+            case 11:
+                //Create chan text --------> Qxmpp
+                break;
+            case 12:
+                //Delete cahn text
+                break;
+            case 13:
+                //Rename chan text
+                break;
+            default:
+                qDebug() << "Error invalid action" << Qt::endl;
+            }
+            break;
+        case 2: //USER
+            switch (packet->GetAction().toInt())
+            {
+            case 0:
+                //Mute (user side) ?????
+                break;
+            case 1:
+                //Add friend --> later
+                break;
+            case 2:
+                //Del friend
+                break;
+            case 3:
+                //Send msg to friend
+                break;
+            case 4:
+                //Modif pseudo (update bdd)
+                get_clientList()[packet->GetData()["id"].toInt()]->set_pseudo(packet->GetData()["pseudo"].toString());
+                //sendToAll(packet->Serialize());
+                break;
+            case 5:
+                //Change right
+                break;
+            default:
+                qDebug() << "Error invalid action" << Qt::endl;
+            }
+            break;
+        default:
+            qDebug() << "Error invalid type" << Qt::endl;
+        }
+        return;
+    }
 
 
 QByteArray CServer::Serialize(){
@@ -293,15 +544,12 @@ void CServer::deserializeChannel(QJsonArray & json_array){
             qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
             addChannel(newChannel);
         }
-
     }
-
 }
 
 void CServer::deserializeClients(QJsonArray & json_array){
 
     foreach( const QJsonValue & value, json_array){
-
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CClient * newClient = deserializeToClient(obj);
@@ -321,7 +569,6 @@ void CServer::deserializeClients(QJsonArray & json_array){
         if(get_channelList().isEmpty() || exist == false){
             qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
         }
-
     }
 }
 

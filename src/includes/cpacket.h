@@ -3,30 +3,41 @@
 
 #include "cclient.h"
 #include "cchannel.h"
-#include "cserver.h"
+#include "Server/cserver.h"
 #include <QString>
 #include <QJsonArray>
 
+class CServer;
 
 class CPacket
 {
 public:
     CPacket();
+    CPacket(QByteArray data, CClient * client);
+    CPacket(QString action, QString type);
 
     //Getters
-    char GetType();
-    char GetAction();
+    QString GetType();
+    QString GetAction();
     CClient GetSender();
+    QJsonDocument GetData(){
+        return m_data;
+    }
+
+    QByteArray GetByteArray(){
+        return m_ba;
+    }
+
 
     //Setters
-    void SetType(char p_type);
-    void SetAction(char p_action);
+    void SetType(QString p_type);
+    void SetAction(QString p_action);
 
     //Text<-->code
-    QString TypeDecode(char p_type);
-    QString ServerDecode(char p_action);
-    QString ChannelDecode(char p_action);
-    QString UserDecode(char p_action);
+    QString TypeDecode(QString p_type);
+    QString ServerDecode(QString p_action);
+    QString ChannelDecode(QString p_action);
+    QString UserDecode(QString p_action);
 
     char TypeEncode(QString p_type);
     char ServerEncode(QString p_action);
@@ -34,20 +45,28 @@ public:
     char UserEncode(QString p_action);
 
     //Serialiaze
-    QByteArray Serialize();
+    //QByteArray Serialize();
+    QByteArray Serialize(CServer* c);
+    QByteArray Serialize(bool isActionValid);
 
 
-    //Deserialize
-    void Deserialize(QByteArray in);
-    CClient DeserializeClient(QJsonArray  in);
-    CChannel DeserializeChannel(QJsonArray  in);
-    CServer DeserializeServer(QJsonArray  in);
+
+
+    //Serialize by action -
+    void Serialize_newClient(CClient * client);
+    void Serialize_newChannel();
+
+
+
+
+
 
 private:
-    char m_type;
-    char m_action;
-    CClient m_client;
+    QString m_type;
+    QString m_action;
+    CClient * m_client;
     QJsonDocument m_data;
+    QByteArray m_ba;
 };
 
 #endif // CPACKET_H

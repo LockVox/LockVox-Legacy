@@ -1,4 +1,4 @@
-#include "cpacket.h"
+#include "src/includes/cpacket.h"
 
 CPacket::CPacket()
 {
@@ -6,35 +6,54 @@ CPacket::CPacket()
     m_action = 0xFF;
 }
 
+CPacket::CPacket(QString action, QString type) :
+m_action(action), m_type(type)
+{
+    m_client = NULL;
+}
+
+
+
+CPacket::CPacket(QByteArray data, CClient * client){
+    m_client = client;                              //Client
+    m_data = QJsonDocument::fromJson(data);         //JSON Doc
+
+    qDebug() << m_data;
+
+    //Set type & action from m_data
+    m_type = m_data["type"].toString();
+    m_action = m_data["action"].toString();
+}
+
 //Getters
 
-char CPacket::GetType()
+QString CPacket::GetType()
 {
     return m_type;
 }
 
-char CPacket::GetAction()
+QString CPacket::GetAction()
 {
     return m_action;
 }
 
 //Setters
 
-void CPacket::SetType(char p_type)
+void CPacket::SetType(QString p_type)
 {
     m_type = p_type;
 }
 
-void CPacket::SetAction(char p_action)
+void CPacket::SetAction(QString p_action)
 {
     m_action = p_action;
 }
 
 //Text<-->Code
 
-QString CPacket::TypeDecode(char p_type)
+QString CPacket::TypeDecode(QString p_type)
 {
-    switch (p_type) {
+    switch (p_type.toInt()) {
 
     case 0: return "Server";
     case 1: return "Channel";
@@ -43,9 +62,9 @@ QString CPacket::TypeDecode(char p_type)
     }
 }
 
-QString CPacket::ServerDecode(char p_action)
+QString CPacket::ServerDecode(QString p_action)
 {
-    switch(p_action) {
+    switch(p_action.toInt()) {
     case 0: return "Connexion";
     case 1: return "Deconnexion";
     case 2: return "Nick";
@@ -57,9 +76,9 @@ QString CPacket::ServerDecode(char p_action)
     }
 }
 
-QString CPacket::ChannelDecode(char p_action)
+QString CPacket::ChannelDecode(QString p_action)
 {
-    switch (p_action) {
+    switch (p_action.toInt()) {
     case 0: return "Connexion";
     case 1: return "Deconnexion";
     case 2: return "text_send";
@@ -78,9 +97,9 @@ QString CPacket::ChannelDecode(char p_action)
     }
 }
 
-QString CPacket::UserDecode(char p_action)
+QString CPacket::UserDecode(QString p_action)
 {
-    switch(p_action){
+    switch(p_action.toInt()){
     case 0: return "Mute";
     case 1: return "add_friend";
     case 2: return "del_friend";
@@ -171,66 +190,49 @@ char CPacket::UserEncode(QString p_action)
     return 0xFF;
 }
 
-//Serialiaze
 
-//Deserialize
-void CPacket::Deserialize(QByteArray in)
-{
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
-    QJsonObject obj = jsonDoc.object();
 
-    QJsonArray sArray = obj["clients"].toArray();
-    QJsonArray cArray = obj["channels"].toArray();
+QByteArray CPacket::Serialize(CServer* c){
+      m_ba = c->Serialize();
+      return m_ba;
+}
 
-    DeserializeChannel(cArray);
-    DeserializeClient(sArray);
+
+//Answer to a client request
+QByteArray CPacket::Serialize(bool isActionValid){
+   //Create a JSON Document with m_type & m_action
+   QJsonObject obj;
+
+   obj.insert("type", m_type);
+   obj.insert("action", m_action);
+   obj.insert("isActionValid", isActionValid);
+
+   QJsonDocument jsonDoc(obj);
+   qDebug() << jsonDoc;
+
+   m_ba = jsonDoc.toJson();
+   return m_ba;
+}
+
+
+
+void CPacket::Serialize_newClient(CClient* client){
+   QJsonObject clientObj;
+   clientObj.insert("id", client->get_id());
+   clientObj.insert("pseudo", client->get_pseudo());
+   clientObj.insert("isOnline", client->get_isOnline());
+
+   //m_data.insert(clientObj);
+}
+
+
+void Serialize_newChannel(CChannel* channel){
 
 }
 
 
-CClient CPacket::DeserializeClient(QJsonArray  in)
-{
-    QList<CClient *> clients;
-    foreach(const QJsonValue & value, in)
-        QJsonObject obj = value.toObject();
-        CClient* newClient = new CClient();
-}
-CChannel CPacket::DeserializeChannel(QJsonArray  array)
-{
 
-    foreach( const QJsonValue & value, array){
 
-        //Convert it to an json object then to a channel
-        QJsonObject obj = (CChannel)value.toObject();
-        CChannel * newChannel = new CChannel(obj);
-        //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
 
-        //check if the channel already exist or not
-        bool exist = false;
-        //if the channel exist, we reload it with new value
-        foreach(CChannel * c, get_channelList()){
-            if(c->get_id() == newChannel->get_id()){
-                 exist = true;
-                c->set_all(newChannel);
-            }
-        }
-        //if the channel doesnt exist, we add it to the list of channel
-        if(get_channelList().isEmpty() || exist == false){
-            qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
-            addChannel(newChannel);
-        }
-
-    }
-}
-
-CServer DeserializeServer(QJsonArray in)
-{
-
-}
-
-QByteArray CPacket::Serialize()
-{
-
-}
 
 //UI

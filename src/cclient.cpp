@@ -5,6 +5,7 @@ CClient::CClient()
     m_pseudo = "";
     m_soc = NULL;
     m_idChannel = 0;
+    m_isOnline = false;
 }
 
 
@@ -13,21 +14,21 @@ CClient::CClient( const CClient & copy)
     m_pseudo = copy.m_pseudo;
     m_idChannel = copy.m_idChannel;
     m_soc = copy.m_soc;
+    m_isOnline = copy.m_isOnline;
 }
 
-CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel)
+CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool online)
 {
     m_id = id;
     m_pseudo = pseudo;
     m_soc = soc;
     m_idChannel = idChannel;
-
+    m_isOnline = online;
 }
 
 CClient::CClient( QTcpSocket * soc){
     m_soc = soc;
 }
-
 
 
 

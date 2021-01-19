@@ -15,6 +15,8 @@
 #include "src/includes/audioinput.h"
 #include "src/includes/audiooutput.h"
 
+#include "src/includes/cpacket.h"
+
 
 
 
@@ -27,35 +29,39 @@ class CServer : public AbstractServer
     Q_OBJECT
     public:
 
-    //Audio
-    AudioInput * m_audio_in;
-    AudioOutput * m_audio_out;
+        //Audio
+        AudioInput * m_audio_in;
+        AudioOutput * m_audio_out;
+
+        CServer();
+
+        //Getters
+        CDatabase * get_database();
+
+        //Setters
+        void set_database(CDatabase * db);
+
+
+        //Network
+        void sendToChannel(const QString &message, int id_channel);         //Send message to a channel
+        void sendToClient(const QString &message,CClient * client);         //Send message to a client
+        void SendObjectsToClient();                                         //Send channels and clients objects
+
+
+        void sendToAll(QByteArray out);                                     //Send packet to everyone
+        void sendToClient(QByteArray out, CClient * client);
 
 
 
-
-    CServer();
-
-
-    //Getters
-    CDatabase * get_database();
-
-    //Setters
-    void set_database(CDatabase * db);
+        //Process
+        void processIncomingData(CClient *sender, QByteArray data);         //Process incoming data
 
 
-    //Network
-    void sendToChannel(const QString &message, int id_channel);         //Send message to a channel
-    void sendToClient(const QString &message,CClient * client);         //Send message to a client
-    void SendObjectsToClient();                                         //Send channels and clients objects
-    void sendToAll(QByteArray out);                                     //Send packet to everyone
-
-
-    //Server action - To develop
-    void changeChannel(int id);
-    void quitChannel(int id);
-    void joinChannel(int id);
-    int whichClient(QTcpSocket * soc);
+        //Server action - To develop
+        void changeChannel(int id);
+        void quitChannel(int id);
+        void joinChannel(int id);
+        int whichClient(QTcpSocket * soc);
 
 
         //Serialization | Deserialization
@@ -67,13 +73,11 @@ class CServer : public AbstractServer
 
         void DeserializeChannels(QByteArray in);                            //Deserialize channels from byte array
         void DeserializeClient(QByteArray in);                              //Deserialize clients from byte array
-
         void deserializeChannel(QJsonArray & json_array);
         void deserializeClients(QJsonArray & json_array);
 
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
-
 
         //Création d'un channel grâce à un nouveau process -
         void create_process();
@@ -82,7 +86,6 @@ class CServer : public AbstractServer
 
 
     public slots:
-
 
 
     private slots:
@@ -102,24 +105,10 @@ class CServer : public AbstractServer
 
 
 
+
+
+
 };
 
 #endif // CSERVER_H
-
-
-/*
-// Get network interfaces list
-QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
-
-// Interfaces iteration
-for (int i = 0; i < ifaces.size(); i++)
-{
-    // Now get all IP addresses for the current interface
-    QList<QNetworkAddressEntry> addrs = ifaces[i].addressEntries();
-
-    // And for any IP address, if it is IPv4 and the interface is active, send the packet
-    for (int j = 0; j < addrs.size(); j++)
-        if ((addrs[j].ip().protocol() == QAbstractSocket::IPv4Protocol) && (addrs[j].broadcast().toString() != ""))
-            udpManager.writeDatagram(packet->data(), packet->length(), addrs[j].broadcast(), 64501);
-}*/
 
