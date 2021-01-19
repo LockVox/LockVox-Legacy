@@ -20,7 +20,8 @@ SOURCES += \
     src/cpacket.cpp \
     Server/cserver.cpp \
     Server/main.cpp \
-    Server/mainwindow.cpp
+    Server/mainwindow.cpp \
+    Server/sha256.cpp
 
 HEADERS += \
     Server/mainwindow.h \
