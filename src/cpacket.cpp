@@ -2,8 +2,7 @@
 
 CPacket::CPacket()
 {
-    m_type = 0xFF;
-    m_action = 0xFF;
+    header[0] = header[1] = 0xFF;
 }
 
 CPacket::CPacket(QString action, QString type) :

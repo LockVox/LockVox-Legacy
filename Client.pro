@@ -12,31 +12,39 @@ CONFIG += c++11 console
 
 
 SOURCES += \
+    Client/loginwindow.cpp \
+    Client/registerwindow.cpp \
+    src/AbstractServer.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cpacket.cpp \
-    src/cserver.cpp \
-    Client/qxmpp_client.cpp \
+    Client/cserver.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp \
-    src/includes/crole.cpp
+    src/AbstractServer.cpp
 
 HEADERS += \
+    Client/cserver.h \
+    Client/loginwindow.h \
     Client/mainwindow.h \
+    Client/registerwindow.h \
+    src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cpacket.h \
-    src/includes/crole.h \
-    src/includes/cserver.h \
-    Client/qxmpp_client.h
+    src/includes/AbstractServer.h \
+    Client/cserver.h
 
 
 FORMS += \
-    Client/mainwindow.ui
+    Client/loginwindow.ui \
+    Client/mainwindow.ui \
+    Client/registerwindow.ui \
+    Client/testMain.ui
 
 
 INCLUDEPATH += src \
@@ -67,12 +75,4 @@ INCLUDEPATH += $$PWD/libs/QXmpp/unix \
 
 DEPENDPATH += $$PWD/libs/QXmpp/unix
 
-win32: LIBS += -L$$PWD/libs/srtp2/win32/ -lsrtp2
 
-INCLUDEPATH += $$PWD/libs/srtp2/win32
-DEPENDPATH += $$PWD/libs/srtp2/win32
-
-unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
-
-INCLUDEPATH += $$PWD/libs/srtp2/unix
-DEPENDPATH += $$PWD/libs/srtp2/unixs

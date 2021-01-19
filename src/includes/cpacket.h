@@ -5,9 +5,11 @@
 #include "cchannel.h"
 #include "Server/cserver.h"
 #include <QString>
-#include <QJsonArray>
 
-class CServer;
+
+#include "src/includes/cchannel.h"
+#include "src/includes/cclient.h"
+
 
 class CPacket
 {
