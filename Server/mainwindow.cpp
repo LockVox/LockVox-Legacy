@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qxmpp_server.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,8 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     m_server = new CServer();
-    qxmpp_server * MainServer = new qxmpp_server(QString::fromLocal8Bit("192.168.204.132"));
-    MainServer->startServer();
+
 }
 
 MainWindow::~MainWindow()

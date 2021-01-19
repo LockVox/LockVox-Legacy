@@ -1,4 +1,5 @@
 #include "src/includes/cclient.h"
+#include "src/includes/cdatabase.h"
 
 CClient::CClient()
 {
@@ -37,6 +38,11 @@ QString CClient::get_pseudo()
     return m_pseudo;
 }
 
+QString CClient::get_mail()
+{
+    return m_mail;
+}
+
 QTcpSocket * CClient::get_socket()
 {
         return m_soc;
@@ -54,6 +60,11 @@ int CClient::get_id(){
 void CClient::set_pseudo(QString pseudo)
 {
     m_pseudo = pseudo;
+}
+
+void CClient::set_mail (QString mail)
+{
+    m_mail = mail;
 }
 
 void CClient::set_socket(QTcpSocket * soc)
@@ -128,6 +139,29 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
 
+
+}
+
+void CClient::Auth(QByteArray password)
+{
+
+    QString hashedPswd = QTextCodec::codecForMib(106)->toUnicode(QCryptographicHash::hash(password,QCryptographicHash::Sha256));
+
+    CDatabase myDatabase;
+
+    QString hash = QString::fromStdString(myDatabase.getHash(m_mail.toStdString()));
+
+    if(hashedPswd == hash)
+    {
+        set_isAuthenticate(true);
+        return;
+    }
+
+    else
+    {
+        set_isAuthenticate(false);
+        return;
+    }
 
 }
 

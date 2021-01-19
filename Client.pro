@@ -13,7 +13,6 @@ CONFIG += c++11 console
 
 SOURCES += \
     Client/loginwindow.cpp \
-    Client/qxmpp_client.cpp \
     Client/registerwindow.cpp \
     src/AbstractServer.cpp \
     src/audioinput.cpp \
@@ -30,7 +29,6 @@ HEADERS += \
     Client/cserver.h \
     Client/loginwindow.h \
     Client/mainwindow.h \
-    Client/qxmpp_client.h \
     Client/registerwindow.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
@@ -64,23 +62,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-
-win32: LIBS += -L$$PWD/libs/QXmpp/win32/ -lqxmpp
-
-INCLUDEPATH += $$PWD/libs/QXmpp/win32 \
-    $$PWD/libs/QXmpp/win32/base \
-    $$PWD/libs/QXmpp/win32/client \
-    $$PWD/libs/QXmpp/win32/server
-
-DEPENDPATH += $$PWD/libs/QXmpp/win32
-
-unix:!macx: LIBS += -L$$PWD/libs/QXmpp/unix/ -lqxmpp
-
-INCLUDEPATH += $$PWD/libs/QXmpp/unix \
-    $$PWD/libs/QXmpp/unix/base \
-    $$PWD/libs/QXmpp/unix/client \
-    $$PWD/libs/QXmpp/unix/server
-
-DEPENDPATH += $$PWD/libs/QXmpp/unix
 
 
