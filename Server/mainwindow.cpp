@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     m_server = new CServer();
-    qxmpp_server * MainServer = new qxmpp_server(QString::fromLocal8Bit("172.20.208.1"));
+    qxmpp_server * MainServer = new qxmpp_server(QString::fromLocal8Bit("192.168.204.132"));
     MainServer->startServer();
 }
 

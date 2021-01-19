@@ -20,9 +20,6 @@ class qxmpp_server
 
     private:
         QString domain;
-        QString database_domain;
-        QString database_username;
-        QString database_password;
         QXmppLogger logger;
         QXmppServer server;
         passwordChecker checker;

@@ -13,6 +13,7 @@ CONFIG += c++11 console
 
 SOURCES += \
     Client/loginwindow.cpp \
+    Client/qxmpp_client.cpp \
     Client/registerwindow.cpp \
     src/AbstractServer.cpp \
     src/audioinput.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     Client/cserver.h \
     Client/loginwindow.h \
     Client/mainwindow.h \
+    Client/qxmpp_client.h \
     Client/registerwindow.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
