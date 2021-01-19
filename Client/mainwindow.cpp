@@ -6,39 +6,51 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("LockVox");
-
-    //Initialize server
-    m_server = new CServer(); //Create CServer as Client mode
 
 
     //Initialize widgets
 
-        //channel frame
 
 
 
-        //user frame //
+
+
+
+    //Connect widget to action
+
+
+
+
+    //Initialize server
+    m_server = new CServer();
+
+
+    m_socket = new QTcpSocket();
+
+    m_socket->abort();
+    m_socket->connectToHost("127.0.0.1", 50885);
+
+
+
+
+
+
+
+    m_audio_in = new AudioInput();
+    m_audio_out = new AudioOutput();
+
+    m_audio_in->initializeAudioInput();
+    m_audio_out->initializeAudioOutput();
+
+
+
+
 
 
 }
-
-
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::Update()
-{
-
-}
-
-
-
-// if we click on the parameter button of the main window //
-void MainWindow::on_parameter_button_clicked()
-{
-    // open user interface
-}

@@ -6,13 +6,6 @@ AudioOutput::AudioOutput(QObject *parent) : QObject(parent)
 }
 
 
-
-
-QIODevice * AudioOutput::get_device(){
-    return m_output;
-}
-
-
 void AudioOutput::initializeAudioOutput(){
     //Set format
     m_format.setSampleRate(8000);
@@ -21,6 +14,7 @@ void AudioOutput::initializeAudioOutput(){
     m_format.setSampleType(QAudioFormat::SignedInt);
     m_format.setByteOrder(QAudioFormat::LittleEndian);
     m_format.setCodec("audio/pcm");
+
     //Set input device
     QAudioDeviceInfo output_dev_info = QAudioDeviceInfo::defaultOutputDevice();
     if(output_dev_info.isNull())
@@ -56,7 +50,7 @@ void AudioOutput::createAudioOutput(){
     }
 
     //Connect widget to function
-
+    connect(m_output, SIGNAL(readyRead()), SLOT(readMore()));
 
 }
 
@@ -72,6 +66,6 @@ void AudioOutput::stop() {
     }
 }
 
-void AudioOutput::writeData(QByteArray data){
-    qDebug() << "wrote: " << m_output->write(data.data(), data.size()) << " down from: " << data.size();
+void AudioOutput::write(){
+
 }

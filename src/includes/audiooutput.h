@@ -9,31 +9,18 @@ class AudioOutput : public QObject
     Q_OBJECT
 public:
     explicit AudioOutput(QObject *parent = nullptr);
-
-
-    QIODevice * get_device();
-
-
-
-
-
     void initializeAudioOutput();
     void createAudioOutput();
     void start();
     void stop();
-
-
-
-    QIODevice * m_output;
-    QAudioOutput * m_audio_output;
-
 
 signals:
     void error(QString);
 
 
 public slots:
-    void writeData(QByteArray);
+
+    void write();
 
 
 private slots:
@@ -47,9 +34,9 @@ private:
     bool m_initialized;
 
     QAudioFormat m_format;
-
+    QAudioOutput * m_audio_output;
     QAudioDeviceInfo m_output_device_pending;
-
+    QIODevice * m_output;
 
     QList<QAudioDeviceInfo> m_available_device;
 

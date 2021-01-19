@@ -1,33 +1,45 @@
-#include <QThread>
-#include <QString>
-
 #include "qxmpp_server.h"
 
-qxmpp_server::qxmpp_server(QString domain)
+#define USERNAME "lockvox"
+#define PASSWORD "azerty"
+
+class passwordChecker : public QXmppPasswordChecker
 {
-    this->domain = domain;
+    /// Retrieves the password for the given username.
+    QXmppPasswordReply::Error getPassword(const QXmppPasswordRequest &request, QString &password) override
+    {
+        if (request.username() == USERNAME) {
+            password = PASSWORD;
+            return QXmppPasswordReply::NoError;
+        } else {
+            return QXmppPasswordReply::AuthorizationError;
+        }
+    };
+
+    /// Returns true as we implemented getPassword().
+    bool hasGetPassword() const override
+    {
+        return true;
+    };
+};
+
+int startServer()
+{
+    printf("Server start...\n");
+
+    const QString domain = QString::fromLocal8Bit("127.0.0.1");
+    QXmppLogger logger;
     logger.setLoggingType(QXmppLogger::StdoutLogging);
-    server.setDomain(this->domain);
+
+    printf("Logger created...\n");
+    passwordChecker checker;
+
+    QXmppServer server;
+    server.setDomain(domain);
     server.setLogger(&logger);
     server.setPasswordChecker(&checker);
-}
-
-bool qxmpp_server::startServer()
-{
-    printf("Starting QXmpp server...\n");
     server.listenForClients();
-    bool started = server.listenForServers();
+    server.listenForServers();
 
-    if(started == false)
-    {
-        printf("It seems like QXmpp server dosen't want to start...\n");
-        return false;
-    }
-
-    else
-    {
-        printf("QXmpp server started\n");
-        return true;
-    }
+    return 0;
 }
-
