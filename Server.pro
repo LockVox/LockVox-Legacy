@@ -21,7 +21,7 @@ SOURCES += \
     Server/cserver.cpp \
     Server/main.cpp \
     Server/mainwindow.cpp \
-    src/crole.cpp
+    src/crole.cpp \
     Server/sha256.cpp
 
 HEADERS += \

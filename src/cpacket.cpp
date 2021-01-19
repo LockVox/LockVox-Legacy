@@ -2,7 +2,7 @@
 
 CPacket::CPacket()
 {
-    header[0] = header[1] = 0xFF;
+
 }
 
 CPacket::CPacket(QString action, QString type) :
@@ -254,7 +254,6 @@ void CPacket::Serialize_newChannel(CChannel* channel){
 }
 
 
-
 void CPacket::Deserialize(){
     if(m_obj.contains("mainObj")){
         QJsonObject mainObj = m_obj.value("mainObj").toObject();
@@ -266,7 +265,7 @@ void CPacket::Deserialize(){
     }
 }
 
-CClient * CPacket::Deserialize_newClient(CClient * client){
+CClient * CPacket::Deserialize_newClient(){
 
     QString name;
     int id;
@@ -286,7 +285,7 @@ CClient * CPacket::Deserialize_newClient(CClient * client){
     }
 }
 
-CChannel * CPacket::Deserialize_newChannel(CChannel * channel){
+CChannel * CPacket::Deserialize_newChannel(){
     QString name;
     int id, maxUsers;
 
@@ -303,8 +302,6 @@ CChannel * CPacket::Deserialize_newChannel(CChannel * channel){
         qDebug() << "Err - Cannot find newClient in Json Parse\n";
     }
 }
-
-
 
 
 

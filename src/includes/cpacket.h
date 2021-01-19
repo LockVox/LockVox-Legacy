@@ -11,6 +11,8 @@
 #include "src/includes/cclient.h"
 
 
+class CServer;
+
 class CPacket
 {
 public:
@@ -59,8 +61,8 @@ public:
     void Serialize_newChannel(CChannel * channel);
 
     //Deserialize specific object
-    CClient * Deserialize_newClient(CClient * client);
-    CChannel * Deserialize_newChannel(CChannel * channel);
+    CClient * Deserialize_newClient();
+    CChannel * Deserialize_newChannel();
 
 
 

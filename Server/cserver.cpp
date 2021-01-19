@@ -201,14 +201,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             {
                 //SERV DISCONNECT
                 //Update online users
+                CClient * client = packet->Deserialize_newClient();
 
                 if(get_clientList()[sender->get_id()]->get_isOnline() == true){
                     get_clientList()[sender->get_id()]->set_isOnline(false);            //User is not online anymore
 
 
+                 CPacket ans("0","1");
+                 ans.Serialize_newClient(client);
 
-                    CPacket ans("0","1");
-                    ans.Serialize(true);
                 }
 
                 break;
