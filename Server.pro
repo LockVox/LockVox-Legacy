@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui multimedia xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
 
@@ -15,6 +15,7 @@ SOURCES += \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cdatabase.cpp \
+    src/cmessage.cpp \
     src/cpacket.cpp \
     Server/cserver.cpp \
     Server/main.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     Server/mainwindow.h \
     Server/sha256.h \
     Server/cserver.h \
+    src/cmessage.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
@@ -33,6 +35,7 @@ HEADERS += \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
     src/includes/cpacket.h \
+    src/includes/cmessage.h \
     src/includes/crole.h
 
 
