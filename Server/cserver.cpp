@@ -21,6 +21,14 @@ CServer::CServer()
         qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
         connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
     }
+
+    CClient * client = new CClient();
+    CPacket ans("0","0");
+    ans.Serialize_newClient(client);
+    CPacket * packet = new CPacket(ans.GetByteArray(), client);
+
+
+
 }
 
 //Getters
@@ -163,11 +171,8 @@ void CServer::SendObjectsToClient()
 void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
         if(!sender)
             return;
-        sender->set_pseudo("abc");
-        data = "000000001215461as561s5c";
+
         CPacket* packet = new CPacket(data, sender);
-
-
 
         //Récupération du type
         switch (packet->GetType().toInt()) {
@@ -177,28 +182,18 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             case 0:
             {
                 //SERV CONNECT
-
-
                 //Check Auth -
 
 
 
-
-
                 //If Auth is Ok
-                CPacket ans(Serialize(), NULL);     //Pour éviter NULL et erreurs, à voir
-                ans.SetType(0);
-                ans.SetAction(0);
+                CClient * client = new CClient();
+                addClient(client);
 
-                ans.Serialize(true);
-
-                sendToClient(ans.GetByteArray(), sender);
-
-
-
-
-                //sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
-                //sendToAll(packet->Serialize());                     //Dit aux autres que qq1 s'est co
+                //Update info -
+                CPacket ans("0","0");
+                ans.Serialize_newClient(client);
+                sendToAll(ans.GetByteArray());
 
                 break;
             }
@@ -206,19 +201,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             {
                 //SERV DISCONNECT
                 //Update online users
-                get_clientList()[sender->get_id()]->set_isOnline(false);            //User is not online anymore
 
-                /*for(int i = 0 ; i < m_channels.size() ; i++)    //Mise à jour du tableau
-                    if(t_user_chan[sender->GetUserID()][i] == 1)
-                        t_user_chan[sender->GetUserID()][i] = 0;
-                */
+                if(get_clientList()[sender->get_id()]->get_isOnline() == true){
+                    get_clientList()[sender->get_id()]->set_isOnline(false);            //User is not online anymore
 
-                CPacket ans;
-                ans.SetType("0");
-                ans.SetAction("1");
-                QJsonObject info;
-                //info.insert("id", sender->get_id());
-                //sender->get_socket()->write(ans.Serialize());       //Renvoie les infos serveur
+
+
+                    CPacket ans("0","1");
+                    ans.Serialize(true);
+                }
 
                 break;
             }

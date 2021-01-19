@@ -15,6 +15,7 @@ public:
 
     CChannel();
     CChannel(QString name, int id);
+    CChannel(QString name, int id, int maxUsers);
     CChannel(QList<CClient*> clients, QString name, int id);
     CChannel(const CChannel & copy);
     ~CChannel() {};

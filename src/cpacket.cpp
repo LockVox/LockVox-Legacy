@@ -15,14 +15,19 @@ m_action(action), m_type(type)
 
 
 CPacket::CPacket(QByteArray data, CClient * client){
-    m_client = client;                              //Client
-    m_data = QJsonDocument::fromJson(data);         //JSON Doc
+    m_client = client;                                  //Client
+    QJsonParseError *err = nullptr;
+
+    m_data = QJsonDocument::fromJson(data,err);         //JSON Doc
+    m_obj = m_data.object();
 
     qDebug() << m_data;
 
     //Set type & action from m_data
-    m_type = m_data["type"].toString();
-    m_action = m_data["action"].toString();
+    Deserialize();
+
+    qDebug() << "m_type = " << m_type;
+    qDebug() << "m_action = " << m_action;
 }
 
 //Getters
@@ -190,7 +195,14 @@ char CPacket::UserEncode(QString p_action)
     return 0xFF;
 }
 
+void CPacket::Serialize(){
+    QJsonObject mainObj;
 
+    mainObj.insert("type", m_type);
+    mainObj.insert("action", m_action);
+
+    m_obj["mainObj"] = mainObj;
+}
 
 QByteArray CPacket::Serialize(CServer* c){
       m_ba = c->Serialize();
@@ -215,20 +227,84 @@ QByteArray CPacket::Serialize(bool isActionValid){
 }
 
 
-
+//When a new client connected
 void CPacket::Serialize_newClient(CClient* client){
+
+   Serialize();
+
    QJsonObject clientObj;
    clientObj.insert("id", client->get_id());
    clientObj.insert("pseudo", client->get_pseudo());
    clientObj.insert("isOnline", client->get_isOnline());
 
-   //m_data.insert(clientObj);
+   m_obj["newClient"] = clientObj;
 }
 
 
-void Serialize_newChannel(CChannel* channel){
+//When a new channel is created
+void CPacket::Serialize_newChannel(CChannel* channel){
 
+    Serialize();
+
+    QJsonObject channelObj;
+    channelObj.insert("id", channel->get_id());
+    channelObj.insert("name", channel->get_name());
+    channelObj.insert("maxUsers", channel->get_maxUsers());
+
+    m_obj["newChannel"] = channelObj;
 }
+
+
+
+void CPacket::Deserialize(){
+    if(m_obj.contains("mainObj")){
+        QJsonObject mainObj = m_obj.value("mainObj").toObject();
+        m_type = mainObj.value("type").toString();
+        m_action = mainObj.value("action").toString();
+    }
+    else{
+        qDebug() << "Err - Cannot find mainObj in Json Parse\n";
+    }
+}
+
+CClient * CPacket::Deserialize_newClient(CClient * client){
+
+    QString name;
+    int id;
+    bool isOnline;
+
+    if(m_obj.contains("newClient")){
+        QJsonObject newClient = m_obj.value("newClient").toObject();
+        id = newClient.value("id").toInt();
+        name = newClient.value("pseudo").toString();
+        isOnline = newClient.value("isOnline").toBool();
+
+        CClient * client = new CClient(id,name,NULL, -1,isOnline);
+        return client;
+    }
+    else{
+        qDebug() << "Err - Cannot find newClient in Json Parse\n";
+    }
+}
+
+CChannel * CPacket::Deserialize_newChannel(CChannel * channel){
+    QString name;
+    int id, maxUsers;
+
+    if(m_obj.contains("newChannel")){
+        QJsonObject newClient = m_obj.value("newChannel").toObject();
+        id = newClient.value("id").toInt();
+        name = newClient.value("name").toString();
+        maxUsers = newClient.value("maxUsers").toInt();
+
+        CChannel * channel = new CChannel(name,id,maxUsers);
+        return channel;
+    }
+    else{
+        qDebug() << "Err - Cannot find newClient in Json Parse\n";
+    }
+}
+
 
 
 

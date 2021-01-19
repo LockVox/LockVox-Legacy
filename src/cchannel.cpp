@@ -17,6 +17,12 @@ CChannel::CChannel(const CChannel & copy){
     m_id = copy.m_id;
 }
 
+CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name) , m_id(id) , m_maxUsers(maxUsers)
+{
+
+
+}
+
 CChannel::CChannel(QString name, int id)
 {
     m_clients.clear();
@@ -56,9 +62,6 @@ int CChannel::get_maxUsers(){
 int CChannel::get_nbClients(){
     return m_nbClients;
 }
-
-
-
 
 void CChannel::set_clients(QList<CClient*> clients){
     m_clients = clients;

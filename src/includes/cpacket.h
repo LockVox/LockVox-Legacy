@@ -25,9 +25,11 @@ public:
     }
 
     QByteArray GetByteArray(){
+        QJsonDocument doc(m_obj);
+        qDebug() << doc;
+        m_ba = doc.toJson();
         return m_ba;
     }
-
 
     //Setters
     void SetType(QString p_type);
@@ -45,18 +47,23 @@ public:
     char UserEncode(QString p_action);
 
     //Serialiaze
-    //QByteArray Serialize();
+    void Serialize();
     QByteArray Serialize(CServer* c);
     QByteArray Serialize(bool isActionValid);
 
 
-
-
-    //Serialize by action -
+    //Serialize specific object -
     void Serialize_newClient(CClient * client);
-    void Serialize_newChannel();
+    void Serialize_newChannel(CChannel * channel);
+
+    //Deserialize specific object
+    CClient * Deserialize_newClient(CClient * client);
+    CChannel * Deserialize_newChannel(CChannel * channel);
 
 
+
+    //Deserialize
+    void Deserialize();
 
 
 
@@ -65,7 +72,10 @@ private:
     QString m_type;
     QString m_action;
     CClient * m_client;
+
+    QJsonObject m_obj;
     QJsonDocument m_data;
+    QJsonArray m_array;
     QByteArray m_ba;
 };
 
