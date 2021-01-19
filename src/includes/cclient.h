@@ -1,6 +1,10 @@
 #ifndef CCLIENT_H
 #define CCLIENT_H
 
+
+#include <QString>
+#include <QList>
+#include <QDebug>
 #include <QObject>
 #include <QtNetwork>
 
@@ -11,7 +15,7 @@ class CClient
     public:
         CClient();                                          //Constructeur par défault
         CClient(const CClient & copy);                      //Constrcteur par copie
-        CClient(int id, QString name, QTcpSocket * soc, int idChannel);    //Constructeur perso
+        CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online);    //Constructeur perso
         CClient(QTcpSocket * soc);
 
         ~CClient() {};                                      //Destructeur
@@ -23,7 +27,9 @@ class CClient
         QTcpSocket * get_socket();
         int get_idChannel();
         int get_id();
-
+        bool get_isOnline(){
+            return m_isOnline;
+        }
 
 
         //Setters
@@ -32,6 +38,9 @@ class CClient
         void set_idChannel(int id);
         void set_id(int id);
         void set_all(CClient *c);
+        void set_isOnline(bool online){
+            m_isOnline = online;
+        }
 
 
 
@@ -60,7 +69,11 @@ class CClient
         int m_idChannel;
 
 
+        bool m_isOnline;
+
+
 };
+
 
 
 

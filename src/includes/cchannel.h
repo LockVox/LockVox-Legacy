@@ -14,14 +14,14 @@ class CChannel
 public:
 
     CChannel();
-
-    CChannel(QList<CClient*> clients, QList<CMessage*> msg, QString name, int id);
+    CChannel(QString name, int id);
+    CChannel(QString name, int id, int maxUsers);
+    CChannel(QList<CClient*> clients, QString name, int id);
     CChannel(const CChannel & copy);
     ~CChannel() {};
 
   //Getters
     QList<CClient *> get_clients();
-    QList<CMessage *> get_message();
     QString get_name();
     CChannel* get_this();
     int get_id();
@@ -30,7 +30,6 @@ public:
 
   //Setters
     void set_clients(QList<CClient*> clients);
-    void set_message(QList<CMessage*>message);
     void set_name(QString name);
     void set_id(int id);
     void set_maxUsers(int maxUsers);
@@ -45,13 +44,24 @@ public:
     QJsonObject serializeToObj();
     void deserialize(QJsonObject json_obj);
 
+    void addUser(CClient * c){
+        m_clients.append(c);
+    }
+
+    void delUser(int idUser){
+       /*for(int i = 0; i < m_clients.size(); i++){
+           if(m_clients[i]->get_id() == idUser){
+               m_clients.removeAt(i);
+           }
+       }*/
+    }
+
 
 signals:
 
 
 private:
     QList<CClient*> m_clients;
-    QList<CMessage*> m_messages;
 
     QString m_name;
     int m_nbClients;

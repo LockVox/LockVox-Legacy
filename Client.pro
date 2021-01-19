@@ -43,10 +43,16 @@ HEADERS += \
 
 
 FORMS += \
+    Client/ChangeUsername.ui \
+    Client/ChannelList.ui \
+    Client/Message.ui \
+    Client/UserInfos.ui \
+    Client/UserStatus.ui \
     Client/loginwindow.ui \
     Client/mainwindow.ui \
     Client/registerwindow.ui \
-    Client/testMain.ui
+    Client/testMain.ui \
+    Client/untitled.ui
 
 
 INCLUDEPATH += src \

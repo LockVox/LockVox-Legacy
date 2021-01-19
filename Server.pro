@@ -21,6 +21,7 @@ SOURCES += \
     Server/cserver.cpp \
     Server/main.cpp \
     Server/mainwindow.cpp \
+    src/crole.cpp \
     Server/sha256.cpp
 
 HEADERS += \
@@ -35,7 +36,8 @@ HEADERS += \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
-    src/includes/cpacket.h
+    src/includes/cpacket.h \
+    src/includes/crole.h
 
 
 FORMS += \
