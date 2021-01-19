@@ -1,9 +1,57 @@
 #include "src/includes/audioinput.h"
 
+
 AudioInput::AudioInput(QObject *parent) : QObject(parent)
 {
 
 }
+
+
+
+QIODevice * AudioInput::get_device(){
+    return m_input;
+}
+QAudioFormat AudioInput::get_format(){
+    return m_format;
+}
+QAudioInput *AudioInput::get_audio_input(){
+    return m_audio_input;
+}
+QAudioDeviceInfo AudioInput::get_audio_device_info(){
+    return m_input_device_pending;
+}
+
+void AudioInput::set_device(QIODevice * dev){
+    m_input = dev;
+}
+
+
+void AudioInput::readyRead(){
+
+    qDebug() << "Data ready to read\n";
+
+    QByteArray buffer;
+
+    qint64 len = m_audio_input->bytesReady();
+    qint64 l;
+
+    if (len > AUDIO_BUFFER_SIZE){
+        len = AUDIO_BUFFER_SIZE;
+    }
+
+    if(len > 0){
+        buffer.resize(len);
+        l = m_input->read(buffer.data(), len);
+        if(l > 0){
+            qDebug() << "Data emit to dataRead()\n";
+            emit dataReady(buffer);
+        }
+    }
+
+}
+
+
+
 
 void AudioInput::initializeAudioInput(){
 
@@ -39,8 +87,6 @@ void AudioInput::initializeAudioInput(){
     createAudioInput();
 }
 
-
-
 void AudioInput::createAudioInput(){
 
     //Create Audio input
@@ -50,16 +96,17 @@ void AudioInput::createAudioInput(){
         emit error("Failed to create a new audio input");
     }
 
-
-    //Connect widget to function
-    connect(m_input, SIGNAL(readyRead()), SLOT(readMore()));
+    m_audio_input->setBufferSize(AUDIO_BUFFER_SIZE);
 }
 
 //Start Audio input
 void AudioInput::start(){
-    if(!m_input){
-        m_input = m_audio_input->start();
-    }
+    qDebug() << "Starting Audio input";
+
+    m_input = m_audio_input->start();
+
+    //Connect
+    connect(m_input, SIGNAL(readyRead()), this, SLOT(readyRead()));
 }
 
 //Stop Audio input
@@ -68,3 +115,8 @@ void AudioInput::stop(){
       m_audio_input->stop();
   }
 }
+
+void AudioInput::sendBuffer(){
+    qDebug() << m_input->readAll();
+}
+

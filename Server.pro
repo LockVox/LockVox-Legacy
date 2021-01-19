@@ -8,31 +8,34 @@ CONFIG += c++11 console
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
-
-
 SOURCES += \
+    Server/qxmpp_password_checker.cpp \
+    Server/qxmpp_server.cpp \
+    src/AbstractServer.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cdatabase.cpp \
     src/cpacket.cpp \
-    src/cserver.cpp \
-    Server/qxmpp_server.cpp \
+    Server/cserver.cpp \
     Server/main.cpp \
     Server/mainwindow.cpp
 
 HEADERS += \
+    Server/mainwindow.h \
+    Server/qxmpp_password_checker.h \
+    Server/qxmpp_server.h \
+    Server/sha256.h \
+    Server/cserver.h \
+    src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
-    src/includes/cpacket.h \
-    src/includes/cserver.h \
-    Server/qxmpp_server.h
-    Server/mainwindow.h
+    src/includes/cpacket.h
+
 
 FORMS += \
     Server/mainwindow.ui
@@ -66,12 +69,17 @@ INCLUDEPATH += $$PWD/libs/QXmpp/unix \
 
 DEPENDPATH += $$PWD/libs/QXmpp/unix
 
-win32: LIBS += -L$$PWD/libs/srtp2/win32/ -lsrtp2
+win32: LIBS += -L$$PWD/libs/libmariadb/win32/ -llibmariadb
 
-INCLUDEPATH += $$PWD/libs/srtp2/win32
-DEPENDPATH += $$PWD/libs/srtp2/win32
+INCLUDEPATH += $$PWD/libs/libmariadb/include \
+    $$PWD/libs/libmariadb/win32
+DEPENDPATH += $$PWD/libs/libmariadb/win32
 
-unix:!macx: LIBS += -L$$PWD/libs/srtp2/unix/ -lsrtp2
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibcrypto
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibssl
+win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -lopenssl
 
-INCLUDEPATH += $$PWD/libs/srtp2/unix
-DEPENDPATH += $$PWD/libs/srtp2/unixs
+INCLUDEPATH += $$PWD/libs/openssl/include \
+    $$PWD/libs/openssl/win32
+DEPENDPATH += $$PWD/libs/openssl/include \
+    $$PWD/libs/openssl/win32

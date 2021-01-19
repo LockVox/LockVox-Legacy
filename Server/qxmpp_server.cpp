@@ -1,45 +1,33 @@
+#include <QThread>
+#include <QString>
+
 #include "qxmpp_server.h"
 
-#define USERNAME "lockvox"
-#define PASSWORD "azerty"
-
-class passwordChecker : public QXmppPasswordChecker
+qxmpp_server::qxmpp_server(QString domain)
 {
-    /// Retrieves the password for the given username.
-    QXmppPasswordReply::Error getPassword(const QXmppPasswordRequest &request, QString &password) override
-    {
-        if (request.username() == USERNAME) {
-            password = PASSWORD;
-            return QXmppPasswordReply::NoError;
-        } else {
-            return QXmppPasswordReply::AuthorizationError;
-        }
-    };
-
-    /// Returns true as we implemented getPassword().
-    bool hasGetPassword() const override
-    {
-        return true;
-    };
-};
-
-int startServer()
-{
-    printf("Server start...\n");
-
-    const QString domain = QString::fromLocal8Bit("127.0.0.1");
-    QXmppLogger logger;
+    this->domain = domain;
     logger.setLoggingType(QXmppLogger::StdoutLogging);
-
-    printf("Logger created...\n");
-    passwordChecker checker;
-
-    QXmppServer server;
-    server.setDomain(domain);
+    server.setDomain(this->domain);
     server.setLogger(&logger);
     server.setPasswordChecker(&checker);
-    server.listenForClients();
-    server.listenForServers();
-
-    return 0;
 }
+
+bool qxmpp_server::startServer()
+{
+    printf("Starting QXmpp server...\n");
+    server.listenForClients();
+    bool started = server.listenForServers();
+
+    if(started == false)
+    {
+        printf("It seems like QXmpp server dosen't want to start...\n");
+        return false;
+    }
+
+    else
+    {
+        printf("QXmpp server started\n");
+        return true;
+    }
+}
+
