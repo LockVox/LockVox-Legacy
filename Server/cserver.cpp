@@ -565,13 +565,6 @@ void CServer::deserializeClients(QJsonArray & json_array){
     }
 }
 
-void Auth(QByteArray password)
-{
-
-    QString hashedPswd = QTextCodec::codecForMib(106)->toUnicode(QCryptographicHash::hash(password,QCryptographicHash::Sha256));
-
-
-}
 
 
 

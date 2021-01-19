@@ -11,7 +11,7 @@ class cpassword
         cpassword();
         ~cpassword();
 
-        void setuserId(QString userId);
+        void setuserId(QString userId); //Database
         QString getuserId();
 
         void setuserPassword(QString password); // received user password

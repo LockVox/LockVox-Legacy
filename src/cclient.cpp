@@ -27,11 +27,10 @@ CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool on
     m_isOnline = online;
 }
 
-CClient::CClient( QTcpSocket * soc){
+CClient::CClient( QTcpSocket * soc)
+{
     m_soc = soc;
 }
-
-
 
 QString CClient::get_pseudo()
 {
@@ -143,28 +142,6 @@ void CClient::deserialize(QJsonObject json_obj){
 
 }
 
-void CClient::Auth(QByteArray password)
-{
-
-    QString hashedPswd = QTextCodec::codecForMib(106)->toUnicode(QCryptographicHash::hash(password,QCryptographicHash::Sha256));
-
-    CDatabase myDatabase;
-
-    QString hash = QString::fromStdString(myDatabase.getHash(m_mail.toStdString()));
-
-    if(hashedPswd == hash)
-    {
-        set_isAuthenticate(true);
-        return;
-    }
-
-    else
-    {
-        set_isAuthenticate(false);
-        return;
-    }
-
-}
 
 
 

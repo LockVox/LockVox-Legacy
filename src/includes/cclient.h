@@ -54,9 +54,6 @@ class CClient
             m_isAuthenticate = Auth;
         }
 
-        //Check if good password
-        void pswdChecker(QByteArray password);
-
         //Optionnal
         QByteArray serialize();
         void deserialize(QByteArray & in);
