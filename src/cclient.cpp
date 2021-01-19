@@ -84,6 +84,7 @@ void CClient::set_all(CClient *c){
     this->set_id(c->get_id());
     this->set_pseudo(c->get_pseudo());
     this->set_idChannel(c->get_idChannel());
+    this->set_mail(c->get_mail());
 }
 
 //Optionnal
@@ -106,7 +107,7 @@ QByteArray CClient::serialize(){
 void CClient::deserialize(QByteArray & in){
     QJsonDocument json_doc = QJsonDocument::fromJson(in);
     if(json_doc.isNull()){
-        qDebug() << "Failed to create JSON document. " << Qt::endl;
+        qDebug() << "Failed to create JSON document." << Qt::endl;
     }
     if(json_doc.isObject()){
         qDebug() << "JSON isn't an object." << Qt::endl;

@@ -55,7 +55,7 @@ class CClient
         }
 
         //Check if good password
-        void Auth(QByteArray password);
+        void pswdChecker(QByteArray password);
 
         //Optionnal
         QByteArray serialize();
@@ -64,6 +64,9 @@ class CClient
         //Serialize | Deserialize
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
+
+        //Connexion to server
+        void connect(QString mail, QByteArray password);
 
 
 
