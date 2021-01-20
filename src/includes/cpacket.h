@@ -1,6 +1,7 @@
 #ifndef CPACKET_H
 #define CPACKET_H
 
+
 #include "cclient.h"
 #include "cchannel.h"
 #include "Client/cserver.h"

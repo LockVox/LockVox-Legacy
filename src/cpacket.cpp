@@ -286,6 +286,7 @@ CClient * CPacket::Deserialize_newClient(){
     }
     else{
         qDebug() << "Err - Cannot find newClient in Json Parse\n";
+        return NULL;
     }
 
 }

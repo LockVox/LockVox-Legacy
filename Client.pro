@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui multimedia xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
 
@@ -23,6 +23,7 @@ SOURCES += \
     Client/cserver.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp \
+    src/cmessage.cpp \
     src/AbstractServer.cpp
 
 HEADERS += \
@@ -37,6 +38,7 @@ HEADERS += \
     src/includes/cclient.h \
     src/includes/cpacket.h \
     src/includes/AbstractServer.h \
+    src/includes/cmessage.h \
     Client/cserver.h
 
 
@@ -62,23 +64,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-
-win32: LIBS += -L$$PWD/libs/QXmpp/win32/ -lqxmpp
-
-INCLUDEPATH += $$PWD/libs/QXmpp/win32 \
-    $$PWD/libs/QXmpp/win32/base \
-    $$PWD/libs/QXmpp/win32/client \
-    $$PWD/libs/QXmpp/win32/server
-
-DEPENDPATH += $$PWD/libs/QXmpp/win32
-
-unix:!macx: LIBS += -L$$PWD/libs/QXmpp/unix/ -lqxmpp
-
-INCLUDEPATH += $$PWD/libs/QXmpp/unix \
-    $$PWD/libs/QXmpp/unix/base \
-    $$PWD/libs/QXmpp/unix/client \
-    $$PWD/libs/QXmpp/unix/server
-
-DEPENDPATH += $$PWD/libs/QXmpp/unix
 
 
