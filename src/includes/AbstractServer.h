@@ -49,19 +49,18 @@ class AbstractServer : public QWidget
         }
 
         //Set a list of clients
-        void set_clients(QList<CClient> clients){
-            foreach(CClient c, clients)
+        void set_clients(QList<CClient*> clients){
+            foreach(CClient *c, clients)
             {
-                m_clients.append(&c);
-
+                m_clients.append(c);
             }
         }
 
         //Set a list of channels
-        void set_channels(QList<CChannel> channels){
-            foreach(CChannel c, channels)
+        void set_channels(QList<CChannel*> channels){
+            foreach(CChannel *c, channels)
             {
-                m_channels.append(&c);
+                m_channels.append(c);
             }
         }
 
@@ -89,8 +88,8 @@ class AbstractServer : public QWidget
             m_clients.append(client);
         }
         //Add a new channel
-        void addChannel(CChannel * client){
-            m_channels.append(client);
+        void addChannel(CChannel * channel){
+            m_channels.append(channel);
         }
 
 
@@ -116,8 +115,22 @@ class AbstractServer : public QWidget
             m_channels.removeAt(index);
         }
 
-    signals:
+        void printChannels(){
+            qDebug() << "Channels : \n";
+            foreach(CChannel * c, get_channelList())
+                qDebug() << "ID" << c->get_id() << "Name " << c->get_name()<< "\n";
+        }
 
+        void printClients(){
+            qDebug() << "Clients : \n";
+            foreach(CClient * c, get_clientList())
+                qDebug() << "ID" << c->get_id() << "Name " << c->get_pseudo()<< "\n";
+        }
+
+
+
+
+    signals:
 
 
     private slots:

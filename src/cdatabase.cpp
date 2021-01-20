@@ -174,3 +174,150 @@ string CDatabase::newUser(string pseudo, string mail, string password)
         return "false";
     }
 }
+
+
+QList<CChannel*> CDatabase::parseChannel()
+{
+    QList<CChannel*> list_channel;
+    string query = "SELECT * FROM channel";
+    char* tmp =0;
+    char* tmp2 = 0;
+    int id, maxUsers;
+
+
+
+    try {
+
+        // Format a MySQL object
+        conn = mysql_init(NULL);
+
+        // Establish a MySQL connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,
+                                MY_PASSWORD, MY_DATABASE,
+                                MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            cerr << mysql_error(conn) << endl;
+            list_channel.clear();
+            list_channel.push_back(NULL);
+            return list_channel;
+        }
+       ///////////////////////
+
+        if(mysql_query(conn, query.c_str()))
+        {
+            cerr << mysql_error(conn) << endl;
+            list_channel.clear();
+            list_channel.push_back(NULL);
+            return list_channel;
+        }
+
+// Get and fill Channel list data
+        // Get a result set
+        res = mysql_use_result(conn);
+
+        // Fetch a result set
+       while((row = mysql_fetch_row(res)) != NULL)
+       {
+           string r = row[0];
+
+           tmp = (char*)row[0];
+           id = atoi(tmp);
+
+           tmp2 = (char*)row[3];
+           maxUsers = atoi(tmp2);
+
+           QString name(row[1]);
+
+           CChannel* channel = new CChannel( name,id, maxUsers );
+
+           list_channel.push_back(channel);
+       }
+
+        // Release memories
+        mysql_free_result(res);
+
+        // Close a MySQL connection
+        mysql_close(conn);
+
+        return list_channel;
+
+        //////////////////////
+    }
+        catch (char *e)
+        {
+            cerr << "[EXCEPTION] " << e << endl;
+            list_channel.clear();
+            list_channel.push_back(NULL);
+            return list_channel;
+            //Il faudra check la taille a la sortie pour un return NULL
+        }
+}
+
+QList<CClient*> CDatabase::parseClient()
+{
+    QList<CClient*> list_client;
+    string query = "SELECT * FROM utilisateurs";
+    char* tmp =0;
+    int id;
+
+    try {
+
+        // Format a MySQL object
+        conn = mysql_init(NULL);
+
+        // Establish a MySQL connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,
+                                MY_PASSWORD, MY_DATABASE,
+                                MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            cerr << mysql_error(conn) << endl;
+            list_client.clear();
+            list_client.push_back(NULL);
+            return list_client;
+        }
+       ///////////////////////
+
+        if(mysql_query(conn, query.c_str()))
+        {
+            cerr << mysql_error(conn) << endl;
+            list_client.clear();
+            list_client.push_back(NULL);
+            return list_client;
+        }
+
+// Get and fill Channel list data
+        // Get a result set
+        res = mysql_use_result(conn);
+
+        // Fetch a result set
+       while((row = mysql_fetch_row(res)) != NULL)
+       {
+           tmp = (char*)row[0];
+           id = atoi(tmp);
+
+           QString name(row[1]);
+
+           CClient* client = new CClient(id,name,NULL,-1,false);
+
+           list_client.push_back(client);
+       }
+
+        // Release memories
+        mysql_free_result(res);
+
+        // Close a MySQL connection
+        mysql_close(conn);
+
+        return list_client;
+
+        //////////////////////
+    }
+        catch (char *e)
+        {
+            cerr << "[EXCEPTION] " << e << endl;
+            list_client.clear();
+            list_client.push_back(NULL);
+            return list_client;
+            //Il faudra check la taille a la sortie pour un return NULL
+        }
+}

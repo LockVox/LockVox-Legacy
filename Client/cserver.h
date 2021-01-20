@@ -13,6 +13,8 @@
 #include "src/includes/audioinput.h"
 #include "src/includes/audiooutput.h"
 
+#include "src/includes/cpacket.h"
+
 
 
 class CClient;
@@ -29,6 +31,12 @@ class CServer : public AbstractServer
 
     //Setters
     void set_socket(QTcpSocket* soc);
+
+
+    //Process
+    void processIncomingData(QByteArray data);         //Process incoming data
+
+
 
     //Server action - To develop
     void changeChannel(int id);

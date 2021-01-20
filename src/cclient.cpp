@@ -80,6 +80,7 @@ QByteArray CClient::serialize(){
 
     //Create JSON object from client
     QJsonObject obj;
+    obj["id"] = this->get_id();
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
 
@@ -107,7 +108,7 @@ void CClient::deserialize(QByteArray & in){
         qDebug() << "JSON object is empty. " << Qt::endl;
     }
 
-
+    this->set_id(json_obj["id"].toInt());
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
 
@@ -118,17 +119,16 @@ void CClient::deserialize(QByteArray & in){
 //Serialize | Deserialize
 QJsonObject CClient::serializeToObj(){
     QJsonObject obj;
+    obj["id"] = this->get_id();
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
 
     return obj;
 }
 void CClient::deserialize(QJsonObject json_obj){
-
+    this->set_id(json_obj["id"].toInt());
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
-
-
 }
 
 

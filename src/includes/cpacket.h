@@ -3,7 +3,7 @@
 
 #include "cclient.h"
 #include "cchannel.h"
-#include "Server/cserver.h"
+#include "Client/cserver.h"
 #include <QString>
 
 

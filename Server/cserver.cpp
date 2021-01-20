@@ -1,9 +1,8 @@
 #include "Server/cserver.h"
 
 
-
-
 #include <QDebug>
+
 CServer::CServer()
 {
     qDebug() << "Starting LockVox Server - \n";
@@ -22,12 +21,11 @@ CServer::CServer()
         connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
     }
 
-    CClient * client = new CClient();
-    CPacket ans("0","0");
-    ans.Serialize_newClient(client);
-    CPacket * packet = new CPacket(ans.GetByteArray(), client);
+    m_db = new CDatabase();
+    m_db->execMain();
 
-
+    set_channels(m_db->parseChannel());
+    set_clients(m_db->parseClient());
 
 }
 
@@ -55,14 +53,20 @@ int CServer::whichClient(QTcpSocket * s){
 void CServer::onNewConnection()
 {
     CClient * newClient = new CClient();
+    newClient->set_id(0);
+    newClient->set_pseudo("taga");
     newClient->set_socket(serveur->nextPendingConnection());
 
     addClient(newClient);
 
+
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(onDisconnectClient()));
 
-    qDebug() << "New client";
+    //Send server object
+    CPacket * packet = new CPacket();
+    newClient->get_socket()->write(packet->Serialize(this));
+
 }
 
 void CServer::onDisconnectClient()
@@ -166,6 +170,9 @@ void CServer::sendToClient(QByteArray out, CClient * client){
 void CServer::SendObjectsToClient()
 {
     //TODO
+    CPacket * packet = new CPacket("0","1");
+    packet->Serialize(this);
+    sendToAll(packet->GetByteArray());
 }
 
 void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
@@ -173,6 +180,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             return;
 
         CPacket* packet = new CPacket(data, sender);
+        packet->Deserialize();
 
         //Récupération du type
         switch (packet->GetType().toInt()) {
@@ -180,20 +188,24 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             switch (packet->GetAction().toInt())
             {
             case 0:
-            {
+            {   
                 //SERV CONNECT
                 //Check Auth -
 
-
-
                 //If Auth is Ok
                 CClient * client = new CClient();
+                client = packet->Deserialize_newClient();
                 addClient(client);
+
+                if(get_clientList()[client->get_id()]->get_isOnline() == true)
+                    get_clientList()[client->get_id()]->set_isOnline(false);
 
                 //Update info -
                 CPacket ans("0","0");
                 ans.Serialize_newClient(client);
                 sendToAll(ans.GetByteArray());
+
+                //TODO -
 
                 break;
             }
@@ -203,14 +215,26 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 //Update online users
                 CClient * client = packet->Deserialize_newClient();
 
-                if(get_clientList()[sender->get_id()]->get_isOnline() == true){
-                    get_clientList()[sender->get_id()]->set_isOnline(false);            //User is not online anymore
-
+                for(int i = 0; i < get_clientList().size(); i++){
+                    if(get_clientList()[i]->get_id() == client->get_id()){
+                        get_clientList()[client->get_id()]->set_isOnline(false);
+                    }
+                }
+                //User is not online anymore
 
                  CPacket ans("0","1");
+                 ans.Serialize();
                  ans.Serialize_newClient(client);
 
-                }
+                 //Send Update
+                 sendToAll(packet->GetByteArray());
+
+                 free(client);
+
+
+                 //TODO -
+
+
 
                 break;
             }
@@ -387,22 +411,32 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             qDebug() << "Error invalid type" << Qt::endl;
         }
         return;
-    }
+ }
+
 
 
 QByteArray CServer::Serialize(){
 
     QJsonObject obj;
+
     QJsonArray cArray, sArray;
+
+    QJsonObject mainObj;
+
+    mainObj.insert("type", "-1");
+    mainObj.insert("action", "-1");
+
+    obj["mainObj"] = mainObj;
+
 
     foreach(CChannel * c, get_channelList()){
         cArray.append(c->serializeToObj());
     }
-    //foreach(CClient * c, get_clientList()){
-       // sArray.append(c->serializeToObj());
-    //}
+    foreach(CClient * c, get_clientList()){
+       sArray.append(c->serializeToObj());
+    }
     obj["channels"] = cArray;
-    //obj["clients"] = sArray;
+    obj["clients"] = sArray;
 
 
 
@@ -520,20 +554,16 @@ void CServer::deserializeChannel(QJsonArray & json_array){
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CChannel * newChannel = deserializeToChannel(obj);
-        //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
+
 
         //check if the channel already exist or not
         bool exist = false;
-        //if the channel exist, we reload it with new value
         foreach(CChannel * c, get_channelList()){
-            if(c->get_id() == newChannel->get_id()){
+            if(c->get_id() == newChannel->get_id())
                  exist = true;
-                c->set_all(newChannel);
-            }
         }
-        //if the channel doesnt exist, we add it to the list of channel
-        if(get_channelList().isEmpty() || exist == false){
-            qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
+
+        if(exist == false){
             addChannel(newChannel);
         }
     }
@@ -545,22 +575,17 @@ void CServer::deserializeClients(QJsonArray & json_array){
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CClient * newClient = deserializeToClient(obj);
-        //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
 
         //check if the channel already exist or not
         bool exist = false;
-        //if the channel exist, we reload it with new value
         foreach(CClient * c, get_clientList()){
-            if(c->get_id() == newClient->get_id()){
-                 exist = true;
-                c->set_all(newClient);
-            }
+            if(c->get_id() == newClient->get_id())
+                 exist = true; 
         }
 
-        //if the channel doesnt exist, we add it to the list of channel
-        if(get_channelList().isEmpty() || exist == false){
-            qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
-        }
+        if(exist == false)
+            addClient(newClient);
+
     }
 }
 

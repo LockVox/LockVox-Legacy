@@ -106,8 +106,6 @@ class CServer : public AbstractServer
 
 
 
-
-
 };
 
 #endif // CSERVER_H

@@ -255,10 +255,13 @@ void CPacket::Serialize_newChannel(CChannel* channel){
 
 
 void CPacket::Deserialize(){
+
     if(m_obj.contains("mainObj")){
         QJsonObject mainObj = m_obj.value("mainObj").toObject();
-        m_type = mainObj.value("type").toString();
-        m_action = mainObj.value("action").toString();
+        QJsonValue type = mainObj.value("type");
+        QJsonValue action = mainObj.value("action");
+        m_type = type.toString();
+        m_action = action.toString();
     }
     else{
         qDebug() << "Err - Cannot find mainObj in Json Parse\n";
@@ -278,11 +281,13 @@ CClient * CPacket::Deserialize_newClient(){
         isOnline = newClient.value("isOnline").toBool();
 
         CClient * client = new CClient(id,name,NULL, -1,isOnline);
+        qDebug() << "Name " << name << "   ID " << id;
         return client;
     }
     else{
         qDebug() << "Err - Cannot find newClient in Json Parse\n";
     }
+
 }
 
 CChannel * CPacket::Deserialize_newChannel(){
@@ -299,7 +304,7 @@ CChannel * CPacket::Deserialize_newChannel(){
         return channel;
     }
     else{
-        qDebug() << "Err - Cannot find newClient in Json Parse\n";
+        qDebug() << "Err - Cannot find newChannel in Json Parse\n";
     }
 }
 

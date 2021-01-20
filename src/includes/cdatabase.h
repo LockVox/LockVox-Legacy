@@ -9,6 +9,9 @@
 #include "mysql.h"
 #include "Server/sha256.h"
 
+#include "src/includes/cchannel.h"
+#include "src/includes/cclient.h"
+
 using namespace std;
 
 class CDatabase
@@ -31,6 +34,10 @@ public:
     bool execMain();  // Main Process
     string getHash(string id);
     string newUser(string pseudo, string mail, string password);
+
+    QList<CChannel*> parseChannel();
+    QList<CClient*> parseClient();
+
 
 };
 
