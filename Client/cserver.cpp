@@ -38,7 +38,6 @@ void CServer::sendToServer(){
 
 void CServer::onReceiveData(){
 
-
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
@@ -48,7 +47,6 @@ void CServer::onReceiveData(){
 
     QByteArray *data = new QByteArray();
     data->append(socket->readAll());
-
 
     //Process data
     processIncomingData(*data);
@@ -75,7 +73,6 @@ void CServer::processIncomingData(QByteArray data){
             case 0:
             {
                 //New User is now online
-
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
 
@@ -99,28 +96,16 @@ void CServer::processIncomingData(QByteArray data){
                         get_clientList()[client->get_id()]->set_isOnline(false);
                     }
                 }
-                 free(client);
+                free(client);
 
                 break;
             }
             case 2:
             {
                 //PSEUDO UPDATE
-
-                //Modify pseudo
-                //get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["pseudo"].toString());
-
-                //Send update to the other client
-
-                QJsonObject infos;
-                //infos.insert("id", sender->get_id());
-                infos.insert("pseudo", packet->GetData()["pseudo"]);
-                QJsonDocument doc(infos);
-                QByteArray ret;                 //Réponse
-                //ret.push_back(packet->GetType());
-                //ret.push_back(packet->GetAction());
-                //sendToAll(ret);
-                free(packet);
+                CClient * c = packet->Deserialize_newClient();
+                CClient * client = get_clientById(c->get_id());
+                client->set_pseudo(c->get_pseudo());
                 break;
             }
             case 3:
@@ -185,17 +170,24 @@ void CServer::processIncomingData(QByteArray data){
         }
         case 5: {
             //Create chan voc
+            CChannel * c = packet->Deserialize_newChannel();
+            addChannel(c);
 
             break;
         }
         case 6: {
             //Delete chan voc
-
+            CChannel * c = packet->Deserialize_newChannel();
+            CChannel * toDelChannel = get_channelById(c->get_id());
+            DelChannel(toDelChannel);
             break;
         }
         case 7: {
             //Rename chan voc
+            CChannel * c = packet->Deserialize_newChannel();
 
+            CChannel * channel = get_channelById(c->get_id());
+            channel->set_name(c->get_name());
             break;
         }
         case 8: {

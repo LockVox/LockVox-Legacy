@@ -33,25 +33,19 @@ private slots:
     void on_newClient();
 
     void on_changeState(int newState);
+    void on_username_clicked();
+    void on_status_clicked();
 
 private:
 
     Ui::MainWindow *ui; 
 
     int m_state;
+
+
+
     //Network
-
     CServer * m_server;
-
-
-
-
-
-
-
-
-
-
 
 };
 #endif // MAINWINDOW_H

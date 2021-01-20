@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>userStatusWindow</class>
+ <widget class="QWidget" name="userStatusWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>190</width>
+    <height>170</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>191</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(75, 87, 88);
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="OnlineStatus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+
+	border-style: none;
+	font: 10pt &quot;Nirmala UI Semilight&quot;;
+	color: rgb(109, 109, 109);
+	border-radius:4px;
+}
+
+QPushButton:hover{
+	
+	background-color: rgb(99, 180, 255);
+	border-radius:4px;
+	
+	color: rgb(255, 255, 255);
+}
+
+
+QPushButton:pressed{
+	background-color: rgb(53, 166, 226);
+	font-size:9pt;
+	border-radius:4px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Online</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="InactiveStatus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+
+	border-style: none;
+	font: 10pt &quot;Nirmala UI Semilight&quot;;
+	color: rgb(109, 109, 109);
+	border-radius:4px;
+}
+
+QPushButton:hover{
+	
+	background-color: rgb(99, 180, 255);
+	border-radius:4px;
+	
+	color: rgb(255, 255, 255);
+}
+
+
+QPushButton:pressed{
+	background-color: rgb(53, 166, 226);
+	font-size:9pt;
+	border-radius:4px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Inactive</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="DontDisturbStatus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+
+	border-style: none;
+	font: 10pt &quot;Nirmala UI Semilight&quot;;
+	color: rgb(109, 109, 109);
+	border-radius:4px;
+}
+
+QPushButton:hover{
+	
+	background-color: rgb(99, 180, 255);
+	border-radius:4px;
+	
+	color: rgb(255, 255, 255);
+}
+
+
+QPushButton:pressed{
+	background-color: rgb(53, 166, 226);
+	font-size:9pt;
+	border-radius:4px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Don't disturb</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="DontDisturbStatus_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+
+	border-style: none;
+	font: 10pt &quot;Nirmala UI Semilight&quot;;
+	color: rgb(109, 109, 109);
+	border-radius:4px;
+}
+
+QPushButton:hover{
+	
+	background-color: rgb(99, 180, 255);
+	border-radius:4px;
+	
+	color: rgb(255, 255, 255);
+}
+
+
+QPushButton:pressed{
+	background-color: rgb(53, 166, 226);
+	font-size:9pt;
+	border-radius:4px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Invisible</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>10</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+
+	border-style: none;
+	
+	
+	background-color: rgb(255, 63, 29);
+
+	border-radius:8px;
+}
+
+
+
+QPushButton:pressed{
+	
+	
+	background-color: rgb(184, 54, 42);
+	border-radius:8px;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //connect()
-
 }
 
 
@@ -56,12 +55,23 @@ void MainWindow::on_parameter_button_clicked()
 
 void MainWindow::on_newChannel(){
 
-
 }
 
 void MainWindow::on_newClient(){
 
+}
 
+void MainWindow::on_username_clicked()
+{
+    //ChangeUsernameWindow *window = new ChangeUsernameWindow();
+    //window->show();
+
+}
+
+void MainWindow::on_status_clicked()
+{
+    //userStatusWindow *status = new userStatusWindow();
+    //status->show();
 }
 
 void MainWindow::on_changeState(int newState){
@@ -79,7 +89,6 @@ void MainWindow::on_changeState(int newState){
             QPushButton * button = new QPushButton(m_server->get_clientList()[i]->get_pseudo(),this);
             ui->client_layout->addWidget(button);
         }
-
     }
 }
 

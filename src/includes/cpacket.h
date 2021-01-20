@@ -81,11 +81,6 @@ public:
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
 
 
-
-
-
-
-
 private:
     //Type & Action corresponding to the request
     QString m_type;
