@@ -304,31 +304,32 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 CPacket* ans = new CPacket("0", "7");
                 //Hachage du password
                 std::string hashed = info[1].toStdString();
+                bool valid = false;
                 hashed = sha256(hashed);
                 if(hashed == m_db->getHash(info[0].toStdString()))  //Si le mdp correspond à l'utilisateur
                 {
                     CClient * tmp_client = m_db->parseClient(info[0].toStdString());
-                    if(!tmp_client) //Si l'utilisateur n'existe pas
+                    if(tmp_client) //Si l'utilisateur existe pas
                     {
-                        //On le dit au client
-                        ans->Serialize_auth(NULL, 1);
-                        break;
+                        for(auto c : m_clients) //Vérification de connexion déjà existante
+                        {
+                            if(tmp_client->get_id() == c->get_id() && c->get_isAuthenticate()) //utilisateur déjà co
+                            {
+                                ans->Serialize_auth(NULL, 2);
+                            }
+                            if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
+                            {
+                                //mettre l'utilisateur authentifié
+                                tmp_client->set_isAuthenticate(true);
+                                //Lui envoyer ses infos
+                                ans->Serialize_auth(tmp_client, 0);
+                                valid = true;
+                            }
+                        }
                     }
-                    for(auto c : m_clients) //Vérification de connexion déjà existante
+                    else
                     {
-                        if(tmp_client->get_id() == c->get_id() && c->get_isAuthenticate()) //utilisateur déjà co
-                        {
-                            ans->Serialize_auth(NULL, 2);
-                            break;
-                        }
-                        if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
-                        {
-                            //mettre l'utilisateur authentifié
-                            tmp_client->set_isAuthenticate(true);
-                            //Lui envoyer ses infos
-                            ans->Serialize_auth(tmp_client, 0);
-                            break;
-                        }
+                        ans->Serialize_auth(NULL, 1);
                     }
 
                     break;
@@ -338,8 +339,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     ans->Serialize_auth(NULL, 3);
                 }
                 sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
-
-
+                if(valid)
+                {
+                    CPacket * packet = new CPacket();
+                    sender->get_socket()->write(packet->Serialize(this));
+                }
+                break;
             }
             default:
                 qDebug() << "Error invalid action" << Qt::endl;
