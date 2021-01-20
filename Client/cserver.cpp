@@ -250,12 +250,27 @@ void CServer::processIncomingData(QByteArray data){
 
 int CServer::Login(QString mail, QString passwd)
 {
+    CClient* info;
+    QString err;
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     m_self->get_socket()->write(auth_pkt.GetByteArray());
     CPacket ans(m_self->get_socket()->readAll(), NULL);
-    ans
-
+    info = ans.Deserialize_authAns();
+    if(info->get_id() == -1)
+    {
+        err = info->get_description();
+        return 1;
+    }
+    if(!info)
+    {
+        return 2;
+    }
+    else
+    {
+        m_self = info;
+        return 0;
+    }
 }
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
