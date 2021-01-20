@@ -12,8 +12,11 @@ CONFIG += c++11 console
 
 
 SOURCES += \
+    Client/changeusernamewindow.cpp \
+    Client/channelwidget.cpp \
     Client/loginwindow.cpp \
     Client/registerwindow.cpp \
+    Client/userstatuswindow.cpp \
     src/AbstractServer.cpp \
     src/audioinput.cpp \
     src/audiooutput.cpp \
@@ -27,10 +30,13 @@ SOURCES += \
     src/AbstractServer.cpp
 
 HEADERS += \
+    Client/changeusernamewindow.h \
+    Client/channelwidget.h \
     Client/cserver.h \
     Client/loginwindow.h \
     Client/mainwindow.h \
     Client/registerwindow.h \
+    Client/userstatuswindow.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \
@@ -48,11 +54,14 @@ FORMS += \
     Client/Message.ui \
     Client/UserInfos.ui \
     Client/UserStatus.ui \
+    Client/changeusernamewindow.ui \
+    Client/channelwidget.ui \
     Client/loginwindow.ui \
     Client/mainwindow.ui \
     Client/registerwindow.ui \
     Client/testMain.ui \
-    Client/untitled.ui
+    Client/untitled.ui \
+    Client/userstatuswindow.ui
 
 
 INCLUDEPATH += src \

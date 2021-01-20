@@ -81,8 +81,6 @@ public:
     QList<QString> Deserialize_auth();
     void Serialize_auth(CClient* info, int code);
 
-    //Deserialize
-    void Deserialize();
 
 
     void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)

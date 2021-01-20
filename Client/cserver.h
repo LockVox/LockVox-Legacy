@@ -61,18 +61,20 @@ class CServer : public AbstractServer
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-        void AskRequest(int type, int action);
+
+
+
 
     signals:
         void changeState(int newState);
 
 
     public slots:
+        void RequestServer(int type, int action, CClient * client, CChannel * chan);
 
     private slots:
 
         void onReceiveData();
-
         void sendToServer(QByteArray ba);
         void sendToServer();
 

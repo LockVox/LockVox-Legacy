@@ -3,7 +3,6 @@
 
 CServer::CServer()
 {
-
             qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
             m_socket = new QTcpSocket();
 
@@ -11,7 +10,6 @@ CServer::CServer()
             m_socket->connectToHost("127.0.0.1", 50885);
 
             connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
-
 }
 
 
@@ -247,11 +245,151 @@ void CServer::processIncomingData(QByteArray data){
         qDebug() << "That action isn't listed : " << packet->GetType() << " " <<packet->GetAction() << Qt::endl;
     }
     return;
+    }
 }
 
 
-}
 
+void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
+
+    QString t = QString::number(type);
+    QString a = QString::number(action);
+
+    //Récupération du type
+    switch (type) {
+    case 0:{ //SERV
+            switch (action)
+            {
+            case 0:
+            {
+                //New User is now online
+                CPacket request(t,a);
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
+
+                break;
+            }
+            case 1:
+            {
+                //User is now offline
+
+                break;
+            }
+            case 2:
+            {
+                //PSEUDO UPDATE
+
+                break;
+            }
+            case 3:
+            {
+
+                break;
+            }
+            case 4:
+                //BAN USER
+                break;
+            case 5:{
+                //BAN IP
+                //Rajouter système de gestion du temps
+                break;
+                }
+            case 6: {
+                //Kick user
+
+                break;
+                }
+        break;
+        }
+    case 1: //CHAN
+        switch (action)
+        {
+        case 0: {
+            //CONNECT CHAN
+
+            break;
+        }
+        case 1: {
+            //QUIT CHAN
+
+            break;
+        }
+        case 5: {
+            //Create chan voc
+
+
+            break;
+        }
+        case 6: {
+            //Delete chan voc
+
+            break;
+        }
+        case 7: {
+            //Rename chan voc
+
+            break;
+        }
+        case 8: {
+            //Modif max user (voc)
+
+            break;
+        }
+        case 9: {
+            //kick user voc
+
+            break;
+        }
+        case 10: {
+            //Mute user voc (server side)
+
+            break;
+        }
+        case 11:
+            //Create chan text --------> Qxmpp
+            break;
+        case 12:
+            //Delete cahn text
+            break;
+        case 13:
+            //Rename chan text
+            break;
+        default:
+            qDebug() << "Error invalid action" << Qt::endl;
+        }
+        break;
+    case 2: //USER
+        switch (action)
+        {
+        case 0:
+            //Mute (user side) ?????
+            break;
+        case 1:
+            //Add friend --> later
+            break;
+        case 2:
+            //Del friend
+            break;
+        case 3:
+            //Send msg to friend
+            break;
+        case 4:
+            //Modif pseudo (update bdd)
+            break;
+        case 5:
+            //Change right
+            break;
+        default:
+            qDebug() << "Error invalid action" << Qt::endl;
+        }
+        break;
+    default:
+        qDebug() << "That action isn't listed : " << Qt::endl;
+    }
+    return;
+    }
+
+}
 
 
 
