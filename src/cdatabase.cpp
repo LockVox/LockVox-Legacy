@@ -54,7 +54,7 @@ bool CDatabase::execMain() //test connexion bdd
     return true;
 }
 
-string CDatabase::getHash(string id)
+string CDatabase::getHash(string mail)
 {
     string hash;
     try {
@@ -72,7 +72,7 @@ string CDatabase::getHash(string id)
 
         string query = "SELECT password FROM utilisateurs WHERE mail = '";
 
-        query += id;
+        query += mail;
         query += "';";
 
         if (mysql_query(conn, query.c_str()))
@@ -318,6 +318,70 @@ QList<CClient*> CDatabase::parseClient()
             list_client.clear();
             list_client.push_back(NULL);
             return list_client;
+            //Il faudra check la taille a la sortie pour un return NULL
+        }
+}
+
+CClient* CDatabase::parseClient(string email)
+{
+    CClient* client;
+    string query = "SELECT * FROM utilisateurs WHERE email = '";
+    query += email + "'";
+    char* tmp =0;
+    int id;
+
+    try {
+
+        // Format a MySQL object
+        conn = mysql_init(NULL);
+
+        // Establish a MySQL connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,
+                                MY_PASSWORD, MY_DATABASE,
+                                MY_PORT_NO, MY_SOCKET, MY_OPT))     //No connection
+        {
+            cerr << mysql_error(conn) << endl;
+            client = NULL;
+            return client;
+        }
+       ///////////////////////
+
+        if(mysql_query(conn, query.c_str()))        //Bad query
+        {
+            cerr << mysql_error(conn) << endl;
+            client = NULL;
+            return client;
+        }
+
+        // Get result
+        res = mysql_use_result(conn);
+
+        // Fetch a result set
+       while((row = mysql_fetch_row(res)) != NULL)
+       {
+           tmp = (char*)row[0];
+           id = atoi(tmp);
+
+           QString name(row[1]);
+
+           client = new CClient(id,name,NULL,-1,false);
+       }
+
+        // Release memories
+        mysql_free_result(res);
+
+        // Close a MySQL connection
+        mysql_close(conn);
+
+        return client;
+
+        //////////////////////
+    }
+        catch (char *e)
+        {
+            cerr << "[EXCEPTION] " << e << endl;
+            client = NULL;
+            return client;
             //Il faudra check la taille a la sortie pour un return NULL
         }
 }

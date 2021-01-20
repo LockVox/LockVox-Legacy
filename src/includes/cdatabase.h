@@ -37,6 +37,7 @@ public:
 
     QList<CChannel*> parseChannel();
     QList<CClient*> parseClient();
+    CClient* parseClient(string email);
 
 
 };

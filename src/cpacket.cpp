@@ -310,7 +310,47 @@ CChannel * CPacket::Deserialize_newChannel(){
 }
 
 
+QList<QString> CPacket::Deserialize_auth()
+{
+    QList<QString> info;
+    if(m_obj.contains("newAuth"))
+    {
+        QJsonObject newAuth = m_obj.value("newAuth").toObject();
+        info.push_back(newAuth.value("email").toString());
+        info.push_back(newAuth.value("pass").toString());
+    }
+    return info;
+}
 
+void CPacket::Serialize_auth(CClient* info, int code)
+{
+    QJsonObject authObj;
+    Serialize();
+    switch(code)
+    {
+    case 0:{
+        authObj.insert("code", code);
+        Serialize_newClient(info);
+        break;
+        }
+    case 1:{
+        authObj.insert("code", code);
+        authObj.insert("reason", "user does not exist");
+        break;
+        }
+    case 2:{
+        authObj.insert("code", code);
+        authObj.insert("reason", "user already connected");
+        break;
+        }
+    case 3:{
+        authObj.insert("code", code);
+        authObj.insert("reason", "bad password");
+        break;
+        }
+    }
+    m_obj["newAuth"] = authObj;
+}
 
 
 //UI

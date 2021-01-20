@@ -133,14 +133,14 @@ class AbstractServer : public QWidget
     signals:
 
 
-    private slots:
+    protected slots:
         virtual void onReceiveData(){
             qDebug() << "Receive Data - Virtual member of abstract server\n";
         };
 
 
 
-    private:
+        protected:
 
         QList<CChannel*> m_channels;                        //List of channels
         QList<CClient*> m_clients;                          //List of clients

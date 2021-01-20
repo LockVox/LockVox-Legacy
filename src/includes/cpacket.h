@@ -65,6 +65,10 @@ public:
     CClient * Deserialize_newClient();
     CChannel * Deserialize_newChannel();
 
+    //Serialize specific object
+    QList<QString> Deserialize_auth();
+    void Serialize_auth(CClient* info, int code);
+
 
 
     //Deserialize
