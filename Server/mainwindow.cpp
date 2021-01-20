@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_server = new CServer();
 
+
+
 }
 
 MainWindow::~MainWindow()

@@ -8,7 +8,7 @@
 #include <QObject>
 #include <QtNetwork>
 
-#include "cchannel.h"
+#include "src/includes/cchannel.h"
 
 class CClient
 {
@@ -61,6 +61,7 @@ class CClient
         //Serialize | Deserialize
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
+
 
         //Connexion to server
         void connect(QString mail, QByteArray password);

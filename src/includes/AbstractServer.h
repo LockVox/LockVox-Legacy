@@ -14,8 +14,6 @@ class CChannel;
 class AbstractServer : public QWidget
 {
     Q_OBJECT
-
-
     public:
         //Constructor
         AbstractServer(){
@@ -47,6 +45,24 @@ class AbstractServer : public QWidget
                 list.append(*c);
             return list;
         }
+
+
+        CChannel * get_channelById(int id){
+            foreach(CChannel * c, get_channelList()){
+                if(c->get_id() == id)
+                    return c;
+            }
+            return NULL;
+        }
+
+        CClient * get_clientById(int id){
+            foreach(CClient * c, get_clientList()){
+                if(c->get_id() == id)
+                    return c;
+            }
+            return NULL;
+        }
+
 
         //Set a list of clients
         void set_clients(QList<CClient*> clients){

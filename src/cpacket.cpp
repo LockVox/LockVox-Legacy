@@ -310,6 +310,28 @@ CChannel * CPacket::Deserialize_newChannel(){
 }
 
 
+void CPacket::Serialize_ID(int chan, int client){
+
+    QJsonObject channelObj;
+    channelObj.insert("id_channel", chan);
+    channelObj.insert("id_client", client);
+
+    m_obj["id"] = channelObj;
+
+}
+
+void CPacket::Deserialize_ID(){
+    if(m_obj.contains("id")){
+        QJsonObject id = m_obj.value("id").toObject();
+        id_channel = id.value("id_channel").toInt();
+        id_client = id.value("id_client").toInt();
+    }
+    else{
+        qDebug() << "Err - Cannot find 'id' in Json Parse\n";
+    }
+}
+
+
 
 
 

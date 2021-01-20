@@ -25,16 +25,27 @@ public:
     QString GetType();
     QString GetAction();
     CClient GetSender();
+
     QJsonDocument GetData(){
         return m_data;
     }
 
+    //Convert m_obj to a byte array
     QByteArray GetByteArray(){
         QJsonDocument doc(m_obj);
         qDebug() << doc;
         m_ba = doc.toJson();
         return m_ba;
     }
+
+    int get_IdClient(){
+        return id_client;
+    }
+
+    int get_IdChannel(){
+        return id_channel;
+    }
+
 
     //Setters
     void SetType(QString p_type);
@@ -52,35 +63,48 @@ public:
     char UserEncode(QString p_action);
 
     //Serialiaze
-    void Serialize();
-    QByteArray Serialize(CServer* c);
-    QByteArray Serialize(bool isActionValid);
+    void Serialize();                                            //Server mainObj - Type & Action
+    void Deserialize();                                          //Deserialize mainObj - Type & Action
+    QByteArray Serialize(CServer* c);                            //Serialize Object Server
+    QByteArray Serialize(bool isActionValid);                    //Serialize - Is Action request is valid or not
 
 
     //Serialize specific object -
-    void Serialize_newClient(CClient * client);
-    void Serialize_newChannel(CChannel * channel);
+    void Serialize_newClient(CClient * client);                  //Serialize Client object ( Pseudo & ID & isOnline & ...)
+    void Serialize_newChannel(CChannel * channel);               //Serialize Channel object ( Name & ID & MaxUsers=
 
     //Deserialize specific object
-    CClient * Deserialize_newClient();
-    CChannel * Deserialize_newChannel();
+    CClient * Deserialize_newClient();                           //Deserialize Client object
+    CChannel * Deserialize_newChannel();                         //Deserialize Channel object
+
+    void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
+    void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
 
 
 
-    //Deserialize
-    void Deserialize();
 
 
 
 
 private:
+    //Type & Action corresponding to the request
     QString m_type;
     QString m_action;
+
+    //Client who send the request
     CClient * m_client;
 
-    QJsonObject m_obj;
+
+    //If ID object exist - on call Deserialize_ID();
+    int id_client;
+    int id_channel;
+
+
+    //Use for serialization / Deserialization
+    QJsonObject m_obj;                                           //regroup all of the object that has been serialize
+
+    //From Object to Byte Array
     QJsonDocument m_data;
-    QJsonArray m_array;
     QByteArray m_ba;
 };
 

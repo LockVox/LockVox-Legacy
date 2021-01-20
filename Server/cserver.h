@@ -19,7 +19,6 @@
 
 
 
-
 class CClient;
 class CChannel;
 

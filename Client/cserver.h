@@ -22,26 +22,27 @@ class CChannel;
 
 class CServer : public AbstractServer
 {
+    Q_OBJECT
     public:
 
-    CServer();
+        CServer();
 
-    //Getters
-    QTcpSocket * get_socket();
+        //Getters
+        QTcpSocket * get_socket();
 
-    //Setters
-    void set_socket(QTcpSocket* soc);
-
-
-    //Process
-    void processIncomingData(QByteArray data);         //Process incoming data
+        //Setters
+        void set_socket(QTcpSocket* soc);
 
 
+        //Process
+        void processIncomingData(QByteArray data);         //Process incoming data
 
-    //Server action - To develop
-    void changeChannel(int id);
-    void quitChannel(int id);
-    void joinChannel(int id);
+
+
+        //Server action - To develop
+        void changeChannel(int id);
+        void quitChannel(int id);
+        void joinChannel(int id);
 
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
@@ -60,9 +61,13 @@ class CServer : public AbstractServer
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-public slots:
+        void AskRequest(int type, int action);
 
-        void sendToAll(QByteArray out);
+    signals:
+        void changeState(int newState);
+
+
+    public slots:
 
     private slots:
 

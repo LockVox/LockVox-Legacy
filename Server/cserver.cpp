@@ -307,15 +307,46 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             switch (packet->GetAction().toInt())
             {
             case 0: {
-                //CONNECT CHAN
-                get_channelList()[packet->GetData()["id"].toInt()]->addUser(get_clientList()[sender->get_id()]);
-                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 1;
+
+                //JOIN CHANNEL
+                packet->Deserialize_ID();
+
+                CClient * client = get_clientById(packet->get_IdClient());
+                CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                if(channel && client){
+                    client->set_idChannel(channel->get_id());
+                    channel->addUser(client);
+                }
+
+                CPacket ans("1","0");
+                ans.Serialize();
+                ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                sendToAll(ans.GetByteArray());
+
                 break;
             }
             case 1: {
-                //DISCONNECT CHAN
-                get_channelList()[packet->GetData()["id"].toInt()]->delUser(sender->get_id());
-                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 0;
+                //QUIT CHAN
+                packet->Deserialize_ID();
+
+                CClient * client = get_clientById(packet->get_IdClient());
+                CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                if(channel && client){
+                    client->set_idChannel(-1);
+                    channel->delUser(client->get_id());
+                }
+
+                CPacket ans("1","1");
+                ans.Serialize();
+                ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                sendToAll(ans.GetByteArray());
+
                 break;
             }
             case 5: {

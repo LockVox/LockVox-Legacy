@@ -27,7 +27,7 @@ HEADERS += \
     Server/mainwindow.h \
     Server/sha256.h \
     Server/cserver.h \
-    src/cmessage.h \
+    src/includes/cmessage.h \
     src/includes/AbstractServer.h \
     src/includes/audioinput.h \
     src/includes/audiooutput.h \

@@ -1,5 +1,4 @@
 #include "src/includes/cclient.h"
-#include "src/includes/cdatabase.h"
 
 CClient::CClient()
 {
