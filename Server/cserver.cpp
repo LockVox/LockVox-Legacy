@@ -242,36 +242,23 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             case 2:
             {
                 //PSEUDO UPDATE
+                CClient * client = packet->Deserialize_newClient();
 
-                //Modify pseudo
-                get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["pseudo"].toString());
+                //Apply changement
+                sender->set_pseudo(client->get_pseudo());
 
-                //Send update to the other client
+                //Send update
+                CPacket ans("0","2");
+                ans.Serialize_newClient(sender);
+                sendToAll(ans.GetByteArray());
 
-                QJsonObject infos;
-                infos.insert("id", sender->get_id());
-                infos.insert("pseudo", packet->GetData()["pseudo"]);
-                QJsonDocument doc(infos);
-                QByteArray ret;                 //Réponse
-                //ret.push_back(packet->GetType());
-                //ret.push_back(packet->GetAction());
-                sendToAll(ret);
-                free(packet);
+                free(client);
                 break;
             }
             case 3:
             {
                 //BIO UPDATE
-                //Comme au dessus
-                get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["description"].toString());
-                QJsonObject infos;
-                infos.insert("id", sender->get_id());
-                infos.insert("description", packet->GetData()["description"]);
-                QJsonDocument doc(infos);
-                QByteArray ret;
-                //ret.push_back(packet->GetType());
-                //ret.push_back(packet->GetAction());
-                sendToAll(ret);
+
                 break;
             }
             case 4:
@@ -282,20 +269,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 //Rajouter système de gestion du temps
             case 6: {
                 //Kick user
-                /*t_user_chan[packet->GetData()["id"].toInt()][m_clients[packet->GetData()["id"].toInt()]->GetUserID()] = -1;
-                QJsonObject info;
-                info.insert("reason", packet->GetData()["reason"]);
-                CPacket ret;
-                ret.SetType(0);
-                ret.SetAction(6);
-                m_clients[packet->GetData()["id"].toInt()]->get_socket()->write(ret.Serialize());
-                for(int i = 0 ; i < m_clients.length() ; i++)
-                    if(m_clients[i]->GetUserID() == packet->GetData()["id"].toInt())
-                    {
-                        m_clients.removeAt(i);
-                    }
-                sender->get_socket()->close();
-                */
+
                 break;
             }
             case 7: {
@@ -355,65 +329,97 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             switch (packet->GetAction().toInt())
             {
             case 0: {
-                //CONNECT CHAN
-                get_channelList()[packet->GetData()["id"].toInt()]->addUser(get_clientList()[sender->get_id()]);
-                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 1;
+
+                //JOIN CHANNEL
+                packet->Deserialize_ID();
+
+                CClient * client = get_clientById(packet->get_IdClient());
+                CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                if(channel && client){
+                    client->set_idChannel(channel->get_id());
+                    channel->addUser(client);
+                }
+
+                CPacket ans("1","0");
+                ans.Serialize();
+                ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                sendToAll(ans.GetByteArray());
+
                 break;
             }
             case 1: {
-                //DISCONNECT CHAN
-                get_channelList()[packet->GetData()["id"].toInt()]->delUser(sender->get_id());
-                //t_user_chan[sender->GetUserID()][packet->GetData()["id"].toInt()] = 0;
+                //QUIT CHAN
+                packet->Deserialize_ID();
+
+                CClient * client = get_clientById(packet->get_IdClient());
+                CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                if(channel && client){
+                    client->set_idChannel(-1);
+                    channel->delUser(client->get_id());
+                }
+
+                CPacket ans("1","1");
+                ans.Serialize();
+                ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                sendToAll(ans.GetByteArray());
+
                 break;
             }
             case 5: {
                 //Create chan voc
-                CChannel * newChan = new CChannel(packet->GetData()["name"].toString(), get_channelList().size());
-                addChannel(newChan);
+                CChannel * c = packet->Deserialize_newChannel();
+                addChannel(c);
+
+                CPacket ans("1","5");
+                ans.Serialize_newChannel(c);
+                sendToAll(ans.GetByteArray());
+
                 break;
             }
             case 6: {
                 //Delete chan voc
-                for(int i = 0 ; i < get_channelList().size() ; i++)
-                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
-                        DelChannel(i);
+                CChannel * c = packet->Deserialize_newChannel();
+                CChannel * toDelChannel = get_channelById(c->get_id());
+                DelChannel(toDelChannel);
+
+
+                CPacket ans("1","6");
+                ans.Serialize_newChannel(c);
+                sendToAll(ans.GetByteArray());
+
+                free(c);
                 break;
             }
             case 7: {
                 //Rename chan voc
-                for(int i = 0 ; i < get_channelList().size() ; i++)
-                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
-                        get_channelList()[i]->set_name(packet->GetData()["name"].toString());
+                CChannel * c = packet->Deserialize_newChannel();
+
+                CChannel * channel = get_channelById(c->get_id());
+                channel->set_name(c->get_name());
+
+
+                CPacket ans("1","7");
+                ans.Serialize_newChannel(channel);
+                sendToAll(ans.GetByteArray());
+                free(c);
                 break;
             }
             case 8: {
                 //Modif max user (voc)
-                for(int i = 0 ; i < get_channelList().size() ; i++)
-                    if(get_channelList()[i]->get_id() == packet->GetData()["id"].toInt())
-                        get_channelList()[i]->set_maxUsers(packet->GetData()["maxuser"].toInt());
                 break;
             }
             case 9: {
                 //kick user voc
-                /*if(t_user_right[sender->GetUserID()][2])    //Si l'utilisateur a le droit de kick
-                {
-                    m_clients[packet->GetData()["id"].toInt()]->get_socket()->close();  //On ferme la connection
-                    m_clients.removeAt(packet->GetData()["id"].toInt());        //On met à jour la liste des utilisateur
-                    QByteArray ret;
-                    ret.push_back(packet->GetType());
-                    ret.push_back(packet->GetAction());
-                    ret.push_back(data);
-                    sendToAll(ret);
-                }*/
                 break;
             }
             case 10: {
-                //Mute user voc (server side)
-                //m_clients[packet->GetData()["id"].toInt()]->SetMute(!m_clients[packet->GetData()["id"].toInt()]->GetMuted());
-                //CPacket res;
-                //res.SetType(0);
-                //res.SetAction(10);
-
+                //Mute user voc (server side) 
                 break;
             }
             case 11:
@@ -446,8 +452,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 break;
             case 4:
                 //Modif pseudo (update bdd)
-                get_clientList()[packet->GetData()["id"].toInt()]->set_pseudo(packet->GetData()["pseudo"].toString());
-                //sendToAll(packet->Serialize());
                 break;
             case 5:
                 //Change right

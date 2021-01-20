@@ -19,6 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void Update();
 
 
 public slots:
@@ -28,29 +29,23 @@ public slots:
 
 private slots:
     void on_parameter_button_clicked();
+    void on_newChannel();
+    void on_newClient();
+
+    void on_changeState(int newState);
+    void on_username_clicked();
+    void on_status_clicked();
 
 private:
 
+    Ui::MainWindow *ui; 
 
+    int m_state;
 
-    Ui::MainWindow *ui;
-
-    void Update();
 
 
     //Network
-
     CServer * m_server;
-
-
-
-
-
-
-
-
-
-
 
 };
 #endif // MAINWINDOW_H

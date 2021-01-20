@@ -37,7 +37,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="registerBtn">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -289,7 +289,7 @@ QLabel:hover{
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

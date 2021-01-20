@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+
 namespace Ui {
 class RegisterWindow;
 }
@@ -14,6 +15,9 @@ class RegisterWindow : public QMainWindow
 public:
     explicit RegisterWindow(QWidget *parent = nullptr);
     ~RegisterWindow();
+
+private slots:
+    void on_registerBtn_clicked();
 
 private:
     Ui::RegisterWindow *ui;
