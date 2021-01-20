@@ -12,3 +12,10 @@ RegisterWindow::~RegisterWindow()
 {
     delete ui;
 }
+
+void RegisterWindow:: on_registerBtn_clicked()
+{
+    //////////////////////////////
+    //Envoi des données register au server
+    //////////////////////////////
+}
