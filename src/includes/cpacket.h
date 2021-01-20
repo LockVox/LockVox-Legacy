@@ -19,7 +19,7 @@ class CPacket
 public:
     CPacket();
     CPacket(QByteArray data, CClient * client);
-    CPacket(QString action, QString type);
+    CPacket(QString type, QString action);
 
     //Getters
     QString GetType();
@@ -80,18 +80,12 @@ public:
     //Serialize specific object
     QList<QString> Deserialize_auth();
     void Serialize_auth(CClient* info, int code);
-
-<<<<<<< Updated upstream
-
-
-=======
-    //Deserialize
->>>>>>> Stashed changes
-
+    void Serialize_authReq(QString email, QString pass);
     void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
 
-
+    //Authentification
+    CClient* Deserialize_authAns();
 private:
     //Type & Action corresponding to the request
     QString m_type;

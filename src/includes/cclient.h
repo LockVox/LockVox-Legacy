@@ -15,7 +15,7 @@ class CClient
     public:
         CClient();                                          //Constructeur par défault
         CClient(const CClient & copy);                      //Constrcteur par copie
-        CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online);    //Constructeur perso
+        CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);    //Constructeur perso
         CClient(QTcpSocket * soc);
 
         ~CClient() {};                                      //Destructeur
@@ -36,7 +36,7 @@ class CClient
         {
             return m_isAuthenticate;
         }
-
+        QString get_description(){return m_description;};
 
         //Setters
         void set_pseudo(QString pseudo);
@@ -53,7 +53,7 @@ class CClient
         {
             m_isAuthenticate = Auth;
         }
-
+        void set_description(QString d){m_description = d;};
         //Optionnal
         QByteArray serialize();
         void deserialize(QByteArray & in);
@@ -77,6 +77,7 @@ class CClient
     private:
         QString m_pseudo;
         QString m_mail;
+        QString m_description;
         QTcpSocket * m_soc;
 
         int m_id;

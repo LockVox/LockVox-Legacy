@@ -5,7 +5,7 @@ CServer::CServer()
 {
             qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
             m_socket = new QTcpSocket();
-
+            m_self = NULL;
             m_socket->abort();
             m_socket->connectToHost("127.0.0.1", 50885);
 
@@ -248,12 +248,21 @@ void CServer::processIncomingData(QByteArray data){
     }
 }
 
+int CServer::Login(QString mail, QString passwd)
+{
+    CPacket auth_pkt("0", "7");
+    auth_pkt.Serialize_authReq(mail, passwd);
+    m_self->get_socket()->write(auth_pkt.GetByteArray());
+    CPacket ans(m_self->get_socket()->readAll(), NULL);
+    ans
 
+}
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
 
     QString t = QString::number(type);
     QString a = QString::number(action);
+    CPacket request(t,a);
 
     //Récupération du type
     switch (type) {
@@ -263,7 +272,6 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             case 0:
             {
                 //New User is now online
-                CPacket request(t,a);
                 request.Serialize_newClient(client);
                 sendToServer(request.GetByteArray());
 
@@ -272,13 +280,15 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             case 1:
             {
                 //User is now offline
-
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 2:
             {
                 //PSEUDO UPDATE
-
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 3:

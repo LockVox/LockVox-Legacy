@@ -223,7 +223,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 }
                 //User is not online anymore
 
-                 CPacket ans("0","1");
+                 CPacket ans("1","0");
                  ans.Serialize();
                  ans.Serialize_newClient(client);
 
@@ -248,7 +248,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 sender->set_pseudo(client->get_pseudo());
 
                 //Send update
-                CPacket ans("0","2");
+                CPacket ans("2","0");
                 ans.Serialize_newClient(sender);
                 sendToAll(ans.GetByteArray());
 

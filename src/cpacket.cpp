@@ -5,10 +5,11 @@ CPacket::CPacket()
 
 }
 
-CPacket::CPacket(QString action, QString type) :
-m_action(action), m_type(type)
+CPacket::CPacket(QString type, QString action) :
+m_type(type),m_action(action)
 {
     m_client = NULL;
+    Serialize();
 }
 
 
@@ -229,21 +230,17 @@ QByteArray CPacket::Serialize(bool isActionValid){
 //When a new client connected
 void CPacket::Serialize_newClient(CClient* client){
 
-   Serialize();
-
    QJsonObject clientObj;
    clientObj.insert("id", client->get_id());
    clientObj.insert("pseudo", client->get_pseudo());
    clientObj.insert("isOnline", client->get_isOnline());
-
+    clientObj.insert("description", client->get_description());
    m_obj["newClient"] = clientObj;
 }
 
 
 //When a new channel is created
 void CPacket::Serialize_newChannel(CChannel* channel){
-
-    Serialize();
 
     QJsonObject channelObj;
     channelObj.insert("id", channel->get_id());
@@ -252,7 +249,6 @@ void CPacket::Serialize_newChannel(CChannel* channel){
 
     m_obj["newChannel"] = channelObj;
 }
-
 
 void CPacket::Deserialize(){
 
@@ -273,14 +269,16 @@ CClient * CPacket::Deserialize_newClient(){
     QString name;
     int id;
     bool isOnline;
+    QString description;
 
     if(m_obj.contains("newClient")){
         QJsonObject newClient = m_obj.value("newClient").toObject();
         id = newClient.value("id").toInt();
         name = newClient.value("pseudo").toString();
         isOnline = newClient.value("isOnline").toBool();
+        description = newClient.value("description").toString();
 
-        CClient * client = new CClient(id,name,NULL, -1,isOnline);
+        CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
         qDebug() << "Name " << name << "   ID " << id;
         return client;
     }
@@ -344,12 +342,9 @@ void CPacket::Deserialize_ID(){
 }
 
 
-
-
 void CPacket::Serialize_auth(CClient* info, int code)
 {
     QJsonObject authObj;
-    Serialize();
     switch(code)
     {
     case 0:{
@@ -376,5 +371,40 @@ void CPacket::Serialize_auth(CClient* info, int code)
     m_obj["newAuth"] = authObj;
 }
 
+void CPacket::Serialize_authReq(QString email, QString pass)
+{
+    QJsonObject credsObj;
+    credsObj.insert("email", email);
+    credsObj.insert("pass", pass);
+    m_obj["newAuth"] = credsObj;
+}
+
+CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide avec erreur en description
+{
+    int code;
+    CClient* tmp;
+    QString err;
+    if(m_obj.contains("newAuth"))
+    {
+        QJsonObject newAuth = m_obj.value("newAuth").toObject();
+        code = newAuth.value("code").toInt();
+        switch(code){
+        case 0:{
+            tmp = Deserialize_newClient();
+            return tmp;         //On renvoie les infos client
+        }
+        case 1:
+        case 2:
+        case 3:
+        {
+            err = newAuth.value("reason").toString();
+            tmp = new CClient(-1, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
+        }
+        default:
+            return NULL;
+        }
+    }
+    return NULL;
+}
 
 //UI

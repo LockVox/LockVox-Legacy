@@ -36,7 +36,7 @@ class CServer : public AbstractServer
 
         //Process
         void processIncomingData(QByteArray data);         //Process incoming data
-
+        int Login(QString mail, QString passwd);               //Requests the server to authenticate
 
 
         //Server action - To develop
@@ -81,6 +81,7 @@ class CServer : public AbstractServer
     private:
         //Client mode
         QTcpSocket * m_socket;
+        CClient* m_self;
 
 };
 

@@ -297,7 +297,7 @@ QList<CClient*> CDatabase::parseClient()
 
            QString name(row[1]);
 
-           CClient* client = new CClient(id,name,NULL,-1,false);
+           CClient* client = new CClient(id,name,NULL,-1,false, "");
 
            list_client.push_back(client);
        }
@@ -364,7 +364,7 @@ CClient* CDatabase::parseClient(string email)
 
            QString name(row[1]);
 
-           client = new CClient(id,name,NULL,-1,false);
+           client = new CClient(id,name,NULL,-1,false, ""); //A rework pour la description
        }
 
         // Release memories

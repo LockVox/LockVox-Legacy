@@ -17,13 +17,14 @@ CClient::CClient( const CClient & copy)
     m_isOnline = copy.m_isOnline;
 }
 
-CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool online)
+CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
     m_id = id;
     m_pseudo = pseudo;
     m_soc = soc;
     m_idChannel = idChannel;
     m_isOnline = online;
+    m_description = description;
 }
 
 CClient::CClient( QTcpSocket * soc)
