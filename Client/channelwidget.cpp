@@ -19,7 +19,9 @@ channelWidget::channelWidget(QWidget *parent,CChannel* channel):
 {
     ui->setupUi(this);
     this->channel = channel;
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->channel_name = channel->get_name();
+    ui->channel_name->setText(this->channel_name);
+    //this->setWindowFlags(Qt::FramelessWindowHint);
 
 
 }
