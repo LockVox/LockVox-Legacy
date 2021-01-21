@@ -248,6 +248,7 @@ void CServer::processIncomingData(QByteArray data){
 int CServer::Login(QString mail, QString passwd)
 {
 
+
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     m_socket->write(auth_pkt.GetByteArray());
@@ -561,31 +562,3 @@ void CServer::deserializeClients(QJsonArray & json_array){
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

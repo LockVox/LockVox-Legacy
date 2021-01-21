@@ -400,10 +400,10 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
             tmp = new CClient(-1, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
         }
         default:
-            return NULL;
+            return NULL;    //bad packet
         }
     }
-    return NULL;
+    return NULL;    //bad packet
 }
 
 //UI
