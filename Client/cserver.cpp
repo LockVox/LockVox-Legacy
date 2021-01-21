@@ -124,7 +124,7 @@ void CServer::processIncomingData(QByteArray data){
         }
     }
 
-    if(packet->GetAction().toInt() == 1){
+    if(packet->GetType().toInt() == 1){
         switch (packet->GetAction().toInt())
         {
                 case 0: {
@@ -139,6 +139,7 @@ void CServer::processIncomingData(QByteArray data){
                         channel->addUser(client);
                     }
 
+                    qDebug() << client->get_pseudo() << " has join channel " << channel->get_name();
                     break;
                 }
                 case 1: {
