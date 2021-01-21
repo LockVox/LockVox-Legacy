@@ -7,7 +7,7 @@ CServer::CServer()
             m_socket = new QTcpSocket();
             m_self = NULL;
             m_socket->abort();
-            m_socket->connectToHost("127.0.0.1", 50885);
+            m_socket->connectToHost("192.168.1.99", 50885);
 
             connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
 }
@@ -179,7 +179,10 @@ void CServer::processIncomingData(QByteArray data){
                 }
                 case 8: {
                     //Modif max user (voc)
+                   CChannel * c = packet->Deserialize_newChannel();
 
+                   CChannel * channel = get_channelById(c->get_id());
+                 channel->set_maxUsers(c->get_maxUsers());
                     break;
                 }
                 case 9: {
@@ -211,7 +214,7 @@ void CServer::processIncomingData(QByteArray data){
         }
     }
 
-    if(packet->GetAction().toInt() == 2){
+    if(packet->GetType().toInt() == 2){
         switch (packet->GetAction().toInt())
         {
         case 0:
@@ -242,12 +245,28 @@ void CServer::processIncomingData(QByteArray data){
 int CServer::Login(QString mail, QString passwd)
 {
 
-
+    CClient * result;
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     m_socket->write(auth_pkt.GetByteArray());
-
-    return 0;
+    Sleep(500);
+    CPacket auth_res(m_socket->readAll(), NULL);
+    result = auth_res.Deserialize_authAns();
+    if(!result)
+    {
+        return 2;
+    }
+    if(result->get_pseudo() == "NULL")
+    {
+        QString err = result->get_description();
+        qDebug() << err;
+        return 1;
+    }
+    else
+    {
+        m_self = result;
+        return 0;
+    }
 }
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
