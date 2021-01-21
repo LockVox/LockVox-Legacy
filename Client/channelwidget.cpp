@@ -20,13 +20,7 @@ channelWidget::channelWidget(QWidget *parent,CChannel* channel):
     ui->setupUi(this);
     this->channel = channel;
     this->setWindowFlags(Qt::FramelessWindowHint);
-
-
 }
-
-
-
-
 
 channelWidget::~channelWidget()
 {
@@ -34,11 +28,9 @@ channelWidget::~channelWidget()
 }
 
 
-
 void channelWidget::on_button_clicked()
 {
     // go to channel;
-
-
+    RequestServer(1,0, NULL,channel);
 
 }

@@ -23,6 +23,10 @@ public:
 private slots:
     void on_button_clicked();
 
+
+signals:
+    void RequestServer(int,int,CClient*,CChannel*);
+
 private:
     Ui::channelWidget *ui;
     QString channel_name;

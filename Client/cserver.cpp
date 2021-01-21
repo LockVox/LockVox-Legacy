@@ -27,6 +27,7 @@ void CServer::set_socket(QTcpSocket* soc){
 void CServer::sendToServer(QByteArray ba){
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
+    m_socket->waitForBytesWritten();
 }
 
 void CServer::sendToServer(){
@@ -35,10 +36,7 @@ void CServer::sendToServer(){
 
 
 void CServer::onReceiveData(){
-
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
-
-
     qDebug() << "Receive msg \n";
 
     QByteArray *data = new QByteArray();
@@ -46,7 +44,6 @@ void CServer::onReceiveData(){
 
     //Process data
     processIncomingData(*data);
-
 }
 
 void CServer::processIncomingData(QByteArray data){
@@ -103,7 +100,6 @@ void CServer::processIncomingData(QByteArray data){
             case 3:
             {
                 //BIO UPDATE
-
                 break;
             }
             case 4:
@@ -120,7 +116,6 @@ void CServer::processIncomingData(QByteArray data){
                 break;
                 }
             case 7: {
-
                 m_self = packet->Deserialize_authAns();
                 if(m_self){
                     emit(on_Authentification(1));
@@ -152,7 +147,6 @@ void CServer::processIncomingData(QByteArray data){
 
                     CClient * client = get_clientById(packet->get_IdClient());
                     CChannel * channel = get_channelById(packet->get_IdChannel());
-
 
                     if(channel && client){
                         client->set_idChannel(-1);
@@ -314,7 +308,8 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
         {
         case 0: {
             //CONNECT CHAN
-
+            request.Serialize_ID(chan->get_id(),m_self->get_id());
+            sendToServer(request.GetByteArray());
             break;
         }
         case 1: {

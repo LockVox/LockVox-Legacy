@@ -105,6 +105,7 @@ void MainWindow::on_changeState(int newState){
            channelWidget * button = new channelWidget(this,m_server->get_channelList()[i]);
            connect(button, SIGNAL(clicked()), button,SLOT(on_button_clicked()));
            connect(button,SIGNAL(RequestServer(int,int,CClient*,CChannel*)), m_server, SLOT(RequestServer(int,int,CClient*, CChannel*)));
+
            ui->channel_layout->addWidget(button);
 
         }

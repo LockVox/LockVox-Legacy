@@ -141,20 +141,14 @@ void CServer::sendToClient(const QString &message, CClient * client)
 
 void CServer::sendToAll(QByteArray out)
 {
-    if(get_clientList().isEmpty() == true)
-    {
-        qDebug() << "there is no client ! ";
-    }
-    else{
-        foreach(CClient * client, get_clientList())
+      foreach(CClient * client, get_clientList())
+      {
+            if(client->get_socket() != NULL)
             {
-                qDebug() << out;
-                client->get_socket()->write(out);
-                client->get_socket()->flush();
-
-                qDebug() << "packet send to " << client->get_pseudo();
+                    client->get_socket()->write(out);
+                    qDebug() << "packet send to " << client->get_pseudo();
             }
-    }
+      }
 }
 
 void CServer::sendToClient(QByteArray out, CClient * client){
@@ -305,7 +299,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     {
                         ans->Serialize_auth(NULL, 1);
                     }
-
                 }
                 else    //Bad password
                 {
@@ -321,9 +314,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     //CPacket * packet = new CPacket();
                     sender->get_socket()->write(packet->Serialize(this));
                     sender->get_socket()->waitForBytesWritten();
-
                 }
-
                 break;
             }
             default:
