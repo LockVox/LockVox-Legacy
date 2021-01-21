@@ -103,6 +103,9 @@ void MainWindow::on_changeState(int newState){
 
         for(int i = 0; i < m_server->get_channelList().size(); i++){
            channelWidget * button = new channelWidget(this,m_server->get_channelList()[i]);
+           button->setFlat( true );
+           button->setCheckable( true );
+           button->setFixedSize(250, 61 );
            connect(button, SIGNAL(clicked()), button,SLOT(on_button_clicked()));
            connect(button,SIGNAL(RequestServer(int,int,CClient*,CChannel*)), m_server, SLOT(RequestServer(int,int,CClient*, CChannel*)));
 
