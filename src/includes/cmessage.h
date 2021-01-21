@@ -15,14 +15,15 @@ class CMessage
         ~CMessage();
 
         //Getters
-        QString get_from();
-        QString get_to();
-        QString get_message();
-        bool get_isPrivate();
+        QString get_from(); //Return sender
+        QString get_to(); //Return receiver
+        QString get_message(); //return content of the message
+        bool get_isPrivate(); //return if it's a private message
 
-        QDomDocument get_xmlmessage();
+        QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format
 
-        void toXML();
+        void toXML(); //Init QDomDocument xmlmessage from var
+        QString toString(); //Convert QDomDocument xmlmessage in to string, toXML() should be called before
 
     private:
 

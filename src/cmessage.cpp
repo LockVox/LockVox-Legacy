@@ -18,8 +18,6 @@ CMessage::CMessage(QString xml)
     QStringList tmp = xml.split("</from>\n");
     from = tmp[0];
 
-    qDebug() << from;
-
     tmp[1].remove("<to>");
     tmp = tmp[1].split("</to>\n");
     to = tmp[0];
@@ -28,13 +26,9 @@ CMessage::CMessage(QString xml)
     tmp = tmp[1].split("</time>\n");
     time = QTime::fromString(tmp[0], "hh:mm:ss");
 
-    qDebug() << time.toString("hh:mm:ss");
-
     tmp[1].remove("<date>");
     tmp = tmp[1].split("</date>\n");
     date = QDate::fromString(tmp[0],"d MMM yyyy");
-
-    qDebug() << date;
 
     tmp[1].remove("<content>");
     tmp = tmp[1].split("</content>\n");
@@ -133,4 +127,9 @@ void CMessage::toXML()
     }
 
     return;
+}
+
+QString CMessage::toString()
+{
+    return xmlmessage.toString();
 }
