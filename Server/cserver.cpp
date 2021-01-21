@@ -54,19 +54,10 @@ int CServer::whichClient(QTcpSocket * s){
 void CServer::onNewConnection()
 {
     CClient * newClient = new CClient();
-    newClient->set_id(0);
-    newClient->set_pseudo("taga");
     newClient->set_socket(serveur->nextPendingConnection());
-
-    addClient(newClient);
-
 
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(onDisconnectClient()));
-
-    //Send server object
-    CPacket * packet = new CPacket();
-    newClient->get_socket()->write(packet->Serialize(this));
 
 }
 
@@ -103,6 +94,10 @@ void CServer::onReceiveData(){
 
     int uid = whichClient(socket);
     if(uid == -1){
+        //Process data
+        CClient * c = new CClient();
+        c->set_socket(socket);
+        processIncomingData(c, *data);
         return;
     }
 
@@ -275,12 +270,16 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             case 7: {
                 //Demande d'authentification
                 QList<QString> info = packet->Deserialize_auth();
+
+                qDebug() << "Authentification request  - " << info[0] << " " << info[1];
                 CPacket* ans = new CPacket("0", "7");
                 //Hachage du password
                 std::string hashed = info[1].toStdString();
-                bool valid = false;
                 hashed = sha256(hashed);
-                if(hashed == m_db->getHash(info[0].toStdString()))  //Si le mdp correspond à l'utilisateur
+                qDebug() << "hash : " << QString::fromStdString(hashed);
+                bool valid = false;
+
+                if(hashed == m_db->getHash(info[1].toStdString()))  //Si le mdp correspond à l'utilisateur
                 {
                     CClient * tmp_client = m_db->parseClient(info[0].toStdString());
                     if(tmp_client) //Si l'utilisateur existe pas
@@ -294,9 +293,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
                             {
                                 //mettre l'utilisateur authentifié
-                                tmp_client->set_isAuthenticate(true);
+                                c->set_isAuthenticate(true);
+                                c->set_socket(sender->get_socket());
                                 //Lui envoyer ses infos
-                                ans->Serialize_auth(tmp_client, 0);
+                                ans->Serialize_auth(c, 0);
                                 valid = true;
                             }
                         }
@@ -306,18 +306,22 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         ans->Serialize_auth(NULL, 1);
                     }
 
-                    break;
+
                 }
                 else    //Bad password
                 {
                     ans->Serialize_auth(NULL, 3);
                 }
+
                 sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
+
+                //If authentification suceed - Send Server Object to the client
                 if(valid)
                 {
                     CPacket * packet = new CPacket();
                     sender->get_socket()->write(packet->Serialize(this));
                 }
+
                 break;
             }
             default:

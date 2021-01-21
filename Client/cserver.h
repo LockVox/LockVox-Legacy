@@ -36,7 +36,7 @@ class CServer : public AbstractServer
 
         //Process
         void processIncomingData(QByteArray data);         //Process incoming data
-        int Login(QString mail, QString passwd);               //Requests the server to authenticate
+
 
 
         //Server action - To develop
@@ -61,16 +61,13 @@ class CServer : public AbstractServer
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-
-
-
-
     signals:
         void changeState(int newState);
-
+        void on_Authentification(int newValue);
 
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
+        int Login(QString mail, QString passwd);               //Requests the server to authenticate
 
     private slots:
 

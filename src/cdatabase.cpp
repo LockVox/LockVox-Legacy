@@ -70,10 +70,11 @@ string CDatabase::getHash(string mail)
 
         // Execute a sql statement
 
-        string query = "SELECT password FROM utilisateurs WHERE mail = '";
+        string query = "SELECT password FROM utilisateurs WHERE username = \"";
 
         query += mail;
-        query += "';";
+        query += "\";";
+
 
         if (mysql_query(conn, query.c_str()))
         {
@@ -83,12 +84,13 @@ string CDatabase::getHash(string mail)
 
         // Get a result set
         res = mysql_use_result(conn);
+        //hash += row[0];
+        while ((row = mysql_fetch_row(res)))
+            hash+=row[0];
 
         // Fetch a result set
-        while ((row = mysql_fetch_row(res)) != NULL)
-        {
-            hash += row[0];
-        }
+
+
 
         // Release memories
         mysql_free_result(res);
@@ -100,6 +102,7 @@ string CDatabase::getHash(string mail)
         cerr << "[EXCEPTION] " << e << endl;
         return "false";
     }
+    qDebug() << QString::fromStdString(hash);
     return hash;
 }
 
@@ -122,6 +125,8 @@ string CDatabase::newUser(string pseudo, string mail, string password)
         string query = "SELECT mail FROM utilisateurs WHERE mail = '";
 
         query += mail + "';";
+
+        qDebug() << QString::fromStdString(query);
 
         if (mysql_query(conn, query.c_str()))
         {
@@ -325,7 +330,7 @@ QList<CClient*> CDatabase::parseClient()
 CClient* CDatabase::parseClient(string email)
 {
     CClient* client;
-    string query = "SELECT * FROM utilisateurs WHERE email = '";
+    string query = "SELECT * FROM utilisateurs WHERE username = '";
     query += email + "'";
     char* tmp =0;
     int id;
@@ -359,10 +364,14 @@ CClient* CDatabase::parseClient(string email)
         // Fetch a result set
        while((row = mysql_fetch_row(res)) != NULL)
        {
+
+
            tmp = (char*)row[0];
+           qDebug() << tmp;
            id = atoi(tmp);
 
            QString name(row[1]);
+           qDebug() << name;
 
            client = new CClient(id,name,NULL,-1,false, ""); //A rework pour la description
        }

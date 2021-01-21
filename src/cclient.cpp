@@ -25,6 +25,7 @@ CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool on
     m_idChannel = idChannel;
     m_isOnline = online;
     m_description = description;
+    m_isAuthenticate = false;
 }
 
 CClient::CClient( QTcpSocket * soc)

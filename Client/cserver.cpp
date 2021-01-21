@@ -1,5 +1,5 @@
 #include "Client/cserver.h"
-
+#include "mainwindow.h"
 
 CServer::CServer()
 {
@@ -37,14 +37,12 @@ void CServer::sendToServer(){
 void CServer::onReceiveData(){
 
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
-    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
-    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
-          return;
+
 
     qDebug() << "Receive msg \n";
 
     QByteArray *data = new QByteArray();
-    data->append(socket->readAll());
+    data->append(m_socket->readAll());
 
     //Process data
     processIncomingData(*data);
@@ -52,8 +50,8 @@ void CServer::onReceiveData(){
 }
 
 void CServer::processIncomingData(QByteArray data){
-    CPacket * packet = new CPacket(data,NULL);
 
+    CPacket * packet = new CPacket(data,NULL);
     packet->Deserialize();
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1){
@@ -62,12 +60,9 @@ void CServer::processIncomingData(QByteArray data){
        emit(changeState(1));
     }
 
-
     //Récupération du type
-    switch (packet->GetType().toInt()) {
-    case 0:{ //SERV
-            switch (packet->GetAction().toInt())
-            {
+    if(packet->GetType().toInt() == 0){
+         switch (packet->GetAction().toInt()){
             case 0:
             {
                 //New User is now online
@@ -109,16 +104,7 @@ void CServer::processIncomingData(QByteArray data){
             case 3:
             {
                 //BIO UPDATE
-                //Comme au dessus
-                //get_clientList()[sender->get_id()]->set_pseudo(packet->GetData()["description"].toString());
-                QJsonObject infos;
-                //infos.insert("id", sender->get_id());
-                infos.insert("description", packet->GetData()["description"]);
-                QJsonDocument doc(infos);
-                QByteArray ret;
-                //ret.push_back(packet->GetType());
-                //ret.push_back(packet->GetAction());
-                //sendToAll(ret);
+
                 break;
             }
             case 4:
@@ -134,89 +120,104 @@ void CServer::processIncomingData(QByteArray data){
 
                 break;
                 }
-        break;
+            case 7: {
+
+                m_self = packet->Deserialize_authAns();
+                if(m_self){
+                    emit(on_Authentification(1));
+                }
+            }
         }
-    case 1: //CHAN
+    }
+
+    if(packet->GetAction().toInt() == 1){
         switch (packet->GetAction().toInt())
         {
-        case 0: {
-            //CONNECT CHAN
-            packet->Deserialize_ID();
+                case 0: {
+                    //CONNECT CHAN
+                    packet->Deserialize_ID();
 
-            CClient * client = get_clientById(packet->get_IdClient());
-            CChannel * channel = get_channelById(packet->get_IdChannel());
+                    CClient * client = get_clientById(packet->get_IdClient());
+                    CChannel * channel = get_channelById(packet->get_IdChannel());
 
-            if(channel && client){
-                client->set_idChannel(channel->get_id());
-                channel->addUser(client);
-            }
+                    if(channel && client){
+                        client->set_idChannel(channel->get_id());
+                        channel->addUser(client);
+                    }
+
+                    break;
+                }
+                case 1: {
+                    //QUIT CHAN
+                    packet->Deserialize_ID();
+
+                    CClient * client = get_clientById(packet->get_IdClient());
+                    CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                    if(channel && client){
+                        client->set_idChannel(-1);
+                        channel->delUser(client->get_id());
+                    }
+                    break;
+                }
+                case 5: {
+                    //Create chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+                    addChannel(c);
+
+                    break;
+                }
+                case 6: {
+                    //Delete chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+                    CChannel * toDelChannel = get_channelById(c->get_id());
+                    DelChannel(toDelChannel);
+                    break;
+                }
+                case 7: {
+                    //Rename chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+
+                    CChannel * channel = get_channelById(c->get_id());
+                    channel->set_name(c->get_name());
+                    break;
+                }
+                case 8: {
+                    //Modif max user (voc)
+
+                    break;
+                }
+                case 9: {
+                    //kick user voc
+
+                    break;
+                }
+                case 10: {
+                    //Mute user voc (server side)
+
+                    break;
+                }
+                case 11:{
+                    //Create chan text --------> Qxmpp
+
+                    break;
+                }
+                case 12:
+                    //Delete cahn text
+                    break;
+                case 13:
+                    //Rename chan text
+                    break;
+                default:
+                    qDebug() << "Error invalid action" << Qt::endl;
+                    break;
+
             break;
         }
-        case 1: {
-            //QUIT CHAN
-            packet->Deserialize_ID();
+    }
 
-            CClient * client = get_clientById(packet->get_IdClient());
-            CChannel * channel = get_channelById(packet->get_IdChannel());
-
-
-            if(channel && client){
-                client->set_idChannel(-1);
-                channel->delUser(client->get_id());
-            }
-            break;
-        }
-        case 5: {
-            //Create chan voc
-            CChannel * c = packet->Deserialize_newChannel();
-            addChannel(c);
-
-            break;
-        }
-        case 6: {
-            //Delete chan voc
-            CChannel * c = packet->Deserialize_newChannel();
-            CChannel * toDelChannel = get_channelById(c->get_id());
-            DelChannel(toDelChannel);
-            break;
-        }
-        case 7: {
-            //Rename chan voc
-            CChannel * c = packet->Deserialize_newChannel();
-
-            CChannel * channel = get_channelById(c->get_id());
-            channel->set_name(c->get_name());
-            break;
-        }
-        case 8: {
-            //Modif max user (voc)
-
-            break;
-        }
-        case 9: {
-            //kick user voc
-
-            break;
-        }
-        case 10: {
-            //Mute user voc (server side)
-
-            break;
-        }
-        case 11:
-            //Create chan text --------> Qxmpp
-            break;
-        case 12:
-            //Delete cahn text
-            break;
-        case 13:
-            //Rename chan text
-            break;
-        default:
-            qDebug() << "Error invalid action" << Qt::endl;
-        }
-        break;
-    case 2: //USER
+    if(packet->GetAction().toInt() == 2){
         switch (packet->GetAction().toInt())
         {
         case 0:
@@ -240,22 +241,18 @@ void CServer::processIncomingData(QByteArray data){
         default:
             qDebug() << "Error invalid action" << Qt::endl;
         }
-        break;
-    default:
-        qDebug() << "That action isn't listed : " << packet->GetType() << " " <<packet->GetAction() << Qt::endl;
-    }
-    return;
-    }
+     }
+
 }
 
 int CServer::Login(QString mail, QString passwd)
 {
+
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
-    m_self->get_socket()->write(auth_pkt.GetByteArray());
-    CPacket ans(m_self->get_socket()->readAll(), NULL);
-    ans
+    m_socket->write(auth_pkt.GetByteArray());
 
+    return 0;
 }
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
@@ -309,6 +306,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
                 break;
                 }
+
         break;
         }
     case 1: //CHAN

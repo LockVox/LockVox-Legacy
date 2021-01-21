@@ -16,9 +16,8 @@ m_type(type),m_action(action)
 
 CPacket::CPacket(QByteArray data, CClient * client){
     m_client = client;                                  //Client
-    QJsonParseError *err = nullptr;
 
-    m_data = QJsonDocument::fromJson(data,err);         //JSON Doc
+    m_data = QJsonDocument::fromJson(data);             //JSON Doc
     m_obj = m_data.object();
 
     qDebug() << m_data;
