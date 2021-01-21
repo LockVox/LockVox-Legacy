@@ -179,7 +179,10 @@ void CServer::processIncomingData(QByteArray data){
                 }
                 case 8: {
                     //Modif max user (voc)
+                   CChannel * c = packet->Deserialize_newChannel();
 
+                   CChannel * channel = get_channelById(c->get_id());
+                 channel->set_maxUsers(c->get_maxUsers());
                     break;
                 }
                 case 9: {
@@ -211,7 +214,7 @@ void CServer::processIncomingData(QByteArray data){
         }
     }
 
-    if(packet->GetAction().toInt() == 2){
+    if(packet->GetType().toInt() == 2){
         switch (packet->GetAction().toInt())
         {
         case 0:
