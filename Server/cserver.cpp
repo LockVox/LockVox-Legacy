@@ -306,7 +306,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         ans->Serialize_auth(NULL, 1);
                     }
 
-
                 }
                 else    //Bad password
                 {
@@ -314,12 +313,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 }
 
                 sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
+                sender->get_socket()->waitForBytesWritten();
 
                 //If authentification suceed - Send Server Object to the client
                 if(valid)
                 {
-                    CPacket * packet = new CPacket();
+                    //CPacket * packet = new CPacket();
                     sender->get_socket()->write(packet->Serialize(this));
+                    sender->get_socket()->waitForBytesWritten();
+
                 }
 
                 break;

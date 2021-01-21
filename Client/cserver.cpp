@@ -52,7 +52,6 @@ void CServer::onReceiveData(){
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    packet->Deserialize();
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1){
        qDebug() << "Receive Server obj\n";
