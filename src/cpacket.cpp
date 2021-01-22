@@ -249,21 +249,15 @@ void CPacket::Deserialize(){
 
         if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
-            if(!mainObj.contains("type"))
-                throw("missing type");
             QJsonValue type = mainObj.value("type");
-            if(!m_obj.contains("action"))
-                throw("missing action");
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
         }
-        else
-           throw("missing mainObj");
     }
-    catch(QString miss)
+    catch(char* e)
     {
-        qDebug() << "Error in deserialize : " << miss;
+        qDebug() << "Error in deserialize : " << e;
     }
 }
 
@@ -276,30 +270,19 @@ CClient * CPacket::Deserialize_newClient(){
 
         if(m_obj.contains("newClient")){
             QJsonObject newClient = m_obj.value("newClient").toObject();
-            if(!newClient.contains("id"))
-                throw("missing id");
             id = newClient.value("id").toInt();
-            if(!newClient.contains("pseudo"))
-                throw("misssing pseudo");
             name = newClient.value("pseudo").toString();
-            if(!newClient.contains("isOnline"))
-                throw("missing isOnline");
             isOnline = newClient.value("isOnline").toBool();
-            if(!newClient.contains("description"))
-                throw("missing description");
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
             qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
-        else{
-            throw("missing newClient");
-        }
-    }
-    catch(QString miss)
+      }
+    catch(char* e)
     {
-        qDebug() << "Error in deserialize newClient : " << miss;
+        qDebug() << "Error in deserialize newClient : " << e;
     }
 }
 
@@ -311,25 +294,25 @@ CChannel * CPacket::Deserialize_newChannel(){
         if(m_obj.contains("newChannel")){
             QJsonObject newClient = m_obj.value("newChannel").toObject();
             if(!m_obj.contains("id"))
-                throw("missing id");
+                throw("eing id");
             id = newClient.value("id").toInt();
             if(!m_obj.contains("name"))
-                throw("missing name");
+                throw("eing name");
             name = newClient.value("name").toString();
             if(!m_obj.contains("maxUsers"))
-                throw("missing maxUsers");
+                throw("eing maxUsers");
             maxUsers = newClient.value("maxUsers").toInt();
 
             CChannel * channel = new CChannel(name,id,maxUsers);
             return channel;
         }
         else{
-            throw("missing newChannel");
+            throw("eing newChannel");
         }
     }
-    catch(QString miss)
+    catch(char* e)
     {
-        qDebug() << "Error in deserialize newChannel : " << miss;
+        qDebug() << "Error in deserialize newChannel : " << e;
         return NULL;
     }
 }
@@ -342,22 +325,14 @@ QList<QString> CPacket::Deserialize_auth()
         if(m_obj.contains("newAuth"))
         {
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
-            if(!m_obj.contains("email"))
-                throw("missing email");
             info.push_back(newAuth.value("email").toString());
-            if(!m_obj.contains("pass"))
-                throw("missing pass");
             info.push_back(newAuth.value("pass").toString());
         }
-        else
-            throw("missing newAuth");
         return info;
     }
-    catch(QString miss)
+    catch(char* e)
     {
-        qDebug() << "Error in Deserialize_auth :" << miss;
-        QList<QString> ret;
-        return ret;
+        qDebug() << "Error in Deserialize_auth :" << e;
     }
 }
 
@@ -373,19 +348,13 @@ void CPacket::Serialize_ID(int chan, int client){
 
 void CPacket::Deserialize_ID(){
     try{
-        if(!m_obj.contains("id"))
-            throw("missing id");
         QJsonObject id = m_obj.value("id").toObject();
-        if(!m_obj.contains("id_channel"))
-            throw("missing id channel");
         id_channel = id.value("id_channel").toInt();
-        if(!m_obj.contains("id_client"))
-            throw("missing id client");
         id_client = id.value("id_client").toInt();
     }
-    catch(QString miss)
+    catch(char* e)
     {
-        qDebug() << "Error in deserializeID : " << miss;
+        qDebug() << "Error in deserializeID : " << e;
     }
 }
 
@@ -436,8 +405,6 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
         if(m_obj.contains("newAuth"))
         {
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
-            if(!newAuth.contains("code"))
-                throw("missing code");
             code = newAuth.value("code").toInt();
             switch(code){
             case 0:{
@@ -448,8 +415,6 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
             case 2:
             case 3:
             {
-                if(!newAuth.contains("reason"))
-                    throw("missing reason");
                 err = newAuth.value("reason").toString();
                 tmp = new CClient(-1, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
             }
@@ -457,12 +422,10 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
                 return NULL;    //bad packet
             }
         }
-        else
-            throw("missing newAuth");
     }
-    catch(QString miss)
+    catch(char* e)
     {
-        qDebug() << "Error in Deserialize_authAns : " << miss;
+        qDebug() << "Error in Deserialize_authAns : " << e;
         return NULL;
     }
 }
