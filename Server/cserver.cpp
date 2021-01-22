@@ -71,9 +71,14 @@ void CServer::onDisconnectClient()
     //Compare to clients list
     for( int i = 0 ; i  < get_clientList().size(); i++){
         if(get_clientList()[i]->get_socket() == socket){
-            free(get_clientList()[i]);
-            get_clientList().removeAt(i);
-            qDebug() << "Client " << i << " has disconnect" << Qt::endl;
+            get_clientList()[i]->set_isOnline(false);
+            get_clientList()[i]->set_isAuthenticate(false);
+
+
+            //Say to everyone
+            CPacket request("0","1");
+            request.Serialize_newClient(get_clientList()[i]);
+            sendToAll(request.GetByteArray());
         }
     }
     //send msg to everybody to say someone disconnect (id client)
@@ -326,7 +331,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             switch (packet->GetAction().toInt())
             {
             case 0: {
-
                 //JOIN CHANNEL
                 packet->Deserialize_ID();
 
@@ -534,7 +538,6 @@ QByteArray CServer::SerializeClients(){
     return jsonDoc.toJson();
 }
 
-
 void CServer::DeserializeChannels(QByteArray in){
 
         //Deserialize byte array into a json document
@@ -581,7 +584,6 @@ void CServer::DeserializeChannels(QByteArray in){
 
 }
 
-
 CChannel * CServer::deserializeToChannel(QJsonObject json_obj){
     CChannel * channel = new CChannel();
 
@@ -595,7 +597,6 @@ CClient * CServer::deserializeToClient(QJsonObject json_obj){
     client->deserialize(json_obj);
     return client;
 }
-
 
 void CServer::deserializeChannel(QJsonArray & json_array){
 

@@ -12,7 +12,6 @@ CServer::CServer()
             connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
 }
 
-
 //Getters
 QTcpSocket * CServer::get_socket(){
     return m_socket;
@@ -236,7 +235,7 @@ void CServer::processIncomingData(QByteArray data){
             qDebug() << "Error invalid action" << Qt::endl;
         }
      }
-
+    emit(updateMainWindow());
 }
 
 int CServer::Login(QString mail, QString passwd)

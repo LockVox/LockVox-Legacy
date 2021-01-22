@@ -30,8 +30,13 @@ class CServer : public AbstractServer
         //Getters
         QTcpSocket * get_socket();
 
+        CClient * get_self(){
+            return m_self;
+        }
+
         //Setters
         void set_socket(QTcpSocket* soc);
+
 
 
         //Process
@@ -65,6 +70,7 @@ class CServer : public AbstractServer
         void changeState(int newState);
         void on_Authentification(int newValue);
 
+        void updateMainWindow();
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
         int Login(QString mail, QString passwd);               //Requests the server to authenticate

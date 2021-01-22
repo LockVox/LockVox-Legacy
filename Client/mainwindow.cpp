@@ -13,9 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("LockVox");
 
 
-
     m_timer = new QTimer();
-
     window = 0;
 
     //Show Login Window
@@ -31,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_login, SIGNAL(on_askServer(QString, QString)), m_server, SLOT(Login(QString,QString)));
     connect(m_server, SIGNAL(changeState(int)), this, SLOT(on_changeState(int)));
     connect(m_server, SIGNAL(on_Authentification(int)), this, SLOT(changeWindow(int)));
+    //connect(m_server, SIGNAL(updateMainWindow()), this, SLOT(Update(int)));
+
+    connect(this, SIGNAL(RequestServer(int,int,CClient * client, CChannel * chan)), m_server, SLOT(RequestServer(int,int,CClient * client, CChannel * chan)));
     connect(m_timer, &QTimer::timeout, this, &MainWindow::Update);
 
     //Initialize widgets
@@ -38,11 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
         //channel frame
 
 
-
         //user frame //
-
-
-    //connect()
 
     m_timer->start(100);
 }
@@ -56,13 +53,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::Update()
 {
+    qDebug() << "Update Main Window\n";
     if(window == 0 && this->isVisible()){
         changeWindow();
     }
     if(window == 1 && ui_login->isVisible()){
         changeWindow();
     }
+
+    if(m_state == 1){
+
+        for(int i = 0; i < list_channel_widgets.size(); i++){
+            list_channel_widgets[i]->Update();
+        }
+   }
 }
+
 
 
 // if we click on the parameter button of the main window //
@@ -83,7 +89,6 @@ void MainWindow::on_username_clicked()
 {
     ChangeUsernameWindow *window = new ChangeUsernameWindow();
     window->show();
-
 }
 
 void MainWindow::on_status_clicked()
@@ -100,16 +105,20 @@ void MainWindow::on_changeState(int newState){
     if(m_state == 1){
         qDebug() << "Channel & Server has been load\n";
 
+        for(int i = 0; i < m_server->get_channelList().size(); i++)
+        {
 
-        for(int i = 0; i < m_server->get_channelList().size(); i++){
+           //ui->channel_layout->inse(layout_per_channel[i]);
+
+
            channelWidget * button = new channelWidget(this,m_server->get_channelList()[i]);
-           button->setFlat( true );
-           button->setCheckable( true );
-           button->setFixedSize(250, 61 );
-           connect(button, SIGNAL(clicked()), button,SLOT(on_button_clicked()));
-           connect(button,SIGNAL(RequestServer(int,int,CClient*,CChannel*)), m_server, SLOT(RequestServer(int,int,CClient*, CChannel*)));
+           list_channel_widgets.push_back(button);
 
+           //button->setFlat( true );
+           //button->setCheckable( true );
+           button->setMinimumSize(250, 61);
            ui->channel_layout->addWidget(button);
+           connect(button,SIGNAL(RequestServer(int,int,CClient*,CChannel*)), m_server, SLOT(RequestServer(int,int,CClient*, CChannel*)));
 
         }
 
@@ -117,6 +126,7 @@ void MainWindow::on_changeState(int newState){
             QPushButton * button = new QPushButton(m_server->get_clientList()[i]->get_pseudo(),this);
             ui->client_layout->addWidget(button);
         }
+
     }
 }
 
@@ -146,3 +156,8 @@ void MainWindow::changeWindow()
        }
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+        emit(RequestServer(0,1, m_server->get_self(), NULL));
+        event->accept();
+}

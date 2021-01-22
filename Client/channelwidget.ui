@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>61</height>
+    <width>245</width>
+    <height>114</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>251</width>
-     <height>61</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -91,6 +91,17 @@ border: 1px solid rgb(81, 99, 107);</string>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>201</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="client_layout"/>
    </widget>
   </widget>
  </widget>

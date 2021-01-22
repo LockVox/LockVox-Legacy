@@ -40,7 +40,7 @@ class CServer : public AbstractServer
         //Setters
         void set_database(CDatabase * db);
 
-
+        int whichClient(QTcpSocket * soc);                                  //Find ID client from socket
         //Network
         void sendToChannel(const QString &message, int id_channel);         //Send message to a channel
         void sendToClient(const QString &message,CClient * client);         //Send message to a client
@@ -52,15 +52,13 @@ class CServer : public AbstractServer
 
 
 
+
+
+
+
+
         //Process
         void processIncomingData(CClient *sender, QByteArray data);         //Process incoming data
-
-
-        //Server action - To develop
-        void changeChannel(int id);
-        void quitChannel(int id);
-        void joinChannel(int id);
-        int whichClient(QTcpSocket * soc);
 
 
         //Serialization | Deserialization
@@ -77,11 +75,6 @@ class CServer : public AbstractServer
 
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
-
-        //Création d'un channel grâce à un nouveau process -
-        void create_process();
-        void del_process();
-
 
 
     public slots:

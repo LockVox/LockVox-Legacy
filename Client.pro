@@ -14,6 +14,7 @@ CONFIG += c++11 console
 SOURCES += \
     Client/changeusernamewindow.cpp \
     Client/channelwidget.cpp \
+    Client/client_customwidget.cpp \
     Client/loginwindow.cpp \
     Client/registerwindow.cpp \
     Client/userstatuswindow.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 HEADERS += \
     Client/changeusernamewindow.h \
     Client/channelwidget.h \
+    Client/client_customwidget.h \
     Client/cserver.h \
     Client/loginwindow.h \
     Client/mainwindow.h \
@@ -56,6 +58,7 @@ FORMS += \
     Client/UserStatus.ui \
     Client/changeusernamewindow.ui \
     Client/channelwidget.ui \
+    Client/client_customwidget.ui \
     Client/loginwindow.ui \
     Client/mainwindow.ui \
     Client/registerwindow.ui \

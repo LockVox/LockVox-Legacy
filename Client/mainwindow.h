@@ -29,6 +29,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    CServer * get_server(){
+        return m_server;
+    }
 
 
     QTimer * m_timer;
@@ -55,10 +58,10 @@ private slots:
     void on_username_clicked();
     void on_status_clicked();
 
-
+    void closeEvent(QCloseEvent *event);
 signals:
 
-
+    void RequestServer(int,int,CClient * client, CChannel * chan);
 
 
 
@@ -66,6 +69,12 @@ private:
 
     Ui::MainWindow *ui;
     LoginWindow *ui_login;
+    QWidget * m_mainWidget;
+
+    QList<channelWidget*> list_channel_widgets;
+    QList<QVBoxLayout*> c_layout; //layout contenant les clients connecté pour chaque channel
+
+
 
     int m_state;
     int window;

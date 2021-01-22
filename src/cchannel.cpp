@@ -2,7 +2,6 @@
 
 CChannel::CChannel()
 {
-    m_clients = {NULL};
 
     m_name = "";
     m_id = 0;
