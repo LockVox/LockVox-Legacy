@@ -85,15 +85,15 @@ public:
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
 
 
-    typedef struct register_info {
+    struct register_info{
         QString email;
         QString password;
         QString password_confirm;
         QString name;
-    }s_Reg;
+    };
 
     void Serialize_Register(struct register_info reg);           //Serialize Register
-    s_Reg Deserialize_Register();                 //Deserialize Register
+    struct register_info Deserialize_Register();                 //Deserialize Register
 
 
     //Authentification
