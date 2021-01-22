@@ -1,55 +1,50 @@
 #include "src/includes/cmessage.h"
 
-CMessage::CMessage(QString from, QString to,bool isPrivate)
+CMessage::CMessage(QString from, QString to, QString message,bool isPrivate)
 {
+
     this->from = from;
     this->to = to;
+    time = QTime::currentTime();
+    date = QDate::currentDate();
+    this->message = message;
     this->isPrivate = isPrivate;
 
-    sender = message.createElement("from");
-    message.appendChild(sender);
+}
 
-    t_sender = message.createTextNode(this->from);
-    sender.appendChild(t_sender);
+CMessage::CMessage(QString xml)
+{
+    xml.remove("<from>");
+    QStringList tmp = xml.split("</from>\n");
+    from = tmp[0];
 
-    receiver = message.createElement("to");
-    message.appendChild(receiver);
+    tmp[1].remove("<to>");
+    tmp = tmp[1].split("</to>\n");
+    to = tmp[0];
 
-    t_receiver = message.createTextNode(this->to);
-    receiver.appendChild(t_receiver);
+    tmp[1].remove("<time>");
+    tmp = tmp[1].split("</time>\n");
+    time = QTime::fromString(tmp[0], "hh:mm:ss");
 
-    sendedtime = message.createElement("time");
-    message.appendChild(sendedtime);
+    tmp[1].remove("<date>");
+    tmp = tmp[1].split("</date>\n");
+    date = QDate::fromString(tmp[0],"d MMM yyyy");
 
-    time = QTime::currentTime();
+    tmp[1].remove("<content>");
+    tmp = tmp[1].split("</content>\n");
+    message = tmp[0];
 
-    t_sendedtime = message.createTextNode(time.toString("hh:mm:ss"));
-    sendedtime.appendChild(t_sendedtime);
 
-    sendeddate = message.createElement("date");
-    message.appendChild(sendeddate);
+    tmp[1].remove("<private>");
+    tmp = tmp[1].split("</private>");
 
-    date = QDate::currentDate();
-
-    t_sendeddate = message.createTextNode(date.toString("d MMM yyyy"));
-    sendeddate.appendChild(t_sendeddate);
-
-    content = message.createElement("content");
-    message.appendChild(content);
-
-    pm = message.createElement("private");
-    message.appendChild(pm);
-
-    if(this->isPrivate)
+    if(tmp[0] == "true")
     {
-        t_pm = message.createTextNode("true");
-        pm.appendChild(t_pm);
+        isPrivate = true;
     }
-
     else
     {
-        t_pm = message.createTextNode("false");
-        pm.appendChild(t_pm);
+        isPrivate = false;
     }
 }
 
@@ -71,54 +66,70 @@ QString CMessage::get_to()
     return to;
 }
 
-
-QDomDocument CMessage::get_message()
+QString CMessage::get_message()
 {
     return message;
 }
 
 
-QDomText CMessage:: get_tsender()
+QDomDocument CMessage::get_xmlmessage()
 {
-    return t_sender;
+    return xmlmessage;
 }
 
-QDomText CMessage::get_treceiver()
+//Methods
+
+void CMessage::toXML()
 {
-    return t_receiver;
-}
+    sender = xmlmessage.createElement("from");
+    xmlmessage.appendChild(sender);
 
-QDomText CMessage::get_tsendedtime()
-{
-    return t_sendedtime;
-}
+    t_sender = xmlmessage.createTextNode(from);
+    sender.appendChild(t_sender);
 
-QDomText CMessage::get_tsendeddate()
-{
-    return t_sendeddate;
-}
+    receiver = xmlmessage.createElement("to");
+    xmlmessage.appendChild(receiver);
 
-QDomText CMessage::get_tcontent()
-{
-    return t_content;
-}
+    t_receiver = xmlmessage.createTextNode(to);
+    receiver.appendChild(t_receiver);
 
-QDomText CMessage::get_tpm()
-{
-    return t_pm;
-}
+    sendedtime = xmlmessage.createElement("time");
+    xmlmessage.appendChild(sendedtime);
 
+    t_sendedtime = xmlmessage.createTextNode(time.toString("hh:mm:ss"));
+    sendedtime.appendChild(t_sendedtime);
 
-//Setters
+    sendeddate = xmlmessage.createElement("date");
+    xmlmessage.appendChild(sendeddate);
 
-void CMessage::set_text(QDomText text)
-{
-    t_content = text;
+    t_sendeddate = xmlmessage.createTextNode(date.toString("d MMM yyyy"));
+    sendeddate.appendChild(t_sendeddate);
+
+    content = xmlmessage.createElement("content");
+    xmlmessage.appendChild(content);
+
+    t_content = xmlmessage.createTextNode(message);
     content.appendChild(t_content);
+
+    pm = xmlmessage.createElement("private");
+    xmlmessage.appendChild(pm);
+
+    if(this->isPrivate)
+    {
+        t_pm = xmlmessage.createTextNode("true");
+        pm.appendChild(t_pm);
+    }
+
+    else
+    {
+        t_pm = xmlmessage.createTextNode("false");
+        pm.appendChild(t_pm);
+    }
+
+    return;
 }
 
-void CMessage::set_text(QString text)
+QString CMessage::toString()
 {
-    t_content = message.createTextNode(text);
-    content.appendChild(t_content);
+    return xmlmessage.toString();
 }

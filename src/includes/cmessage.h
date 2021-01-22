@@ -10,54 +10,51 @@
 class CMessage
 {
     public:
-        CMessage(QString from, QString to,bool isPrivate);
+        CMessage(QString from, QString to,QString message,bool isPrivate); //Create message from var
+        CMessage(QString xml); //Create message from xml
         ~CMessage();
 
         //Getters
-        QString get_from();
-        QString get_to();
+        QString get_from(); //Return sender
+        QString get_to(); //Return receiver
+        QString get_message(); //return content of the message
+        bool get_isPrivate(); //return if it's a private message
 
-        QDomDocument get_message();
+        QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format
 
-        QDomText get_tsender();
-        QDomText get_treceiver();
-        QDomText get_tsendedtime();
-        QDomText get_tsendeddate();
-        QDomText get_tcontent();
-        QDomText get_tpm();
-
-        bool get_isPrivate();
-
-        //Setters
-        void set_text(QDomText text);
-        void set_text(QString text);
-
+        void toXML(); //Init QDomDocument xmlmessage from var
+        QString toString(); //Convert QDomDocument xmlmessage in to string, toXML() should be called before
 
     private:
 
-        QString from;
-        QString to;
 
-        QDomDocument message; //XML Document containing message
+        //Var part
 
-        QDomElement sender;
-        QDomElement receiver;
-        QDomElement sendedtime;
-        QDomElement sendeddate;
-        QDomElement content; // Content of message
-        QDomElement pm; //Pirvate tag
-
-        QDomText t_sender;
-        QDomText t_receiver;
-        QDomText t_sendedtime;
-        QDomText t_sendeddate;
-        QDomText t_content; //Text of message
-        QDomText t_pm; // private content
-
-        bool isPrivate; //if true private message if false chanel message
+        QString from; //Sender
+        QString to; //Receiver
         QTime time; //Time when message sended
-        QDate date;
+        QDate date; //Date when message sended
+        QString message; // The message
+        bool isPrivate; //if true private message if false chanel message
 
+
+        //XML part
+
+        QDomDocument xmlmessage; //XML Document containing message and information
+
+        QDomElement sender; //Sender tag
+        QDomElement receiver; //Receiver tag
+        QDomElement sendedtime; //Time when message sended tag
+        QDomElement sendeddate; //Date when message sended tag
+        QDomElement content; // Content of message tag
+        QDomElement pm; //Private tag
+
+        QDomText t_sender; //Sender
+        QDomText t_receiver; //Receiver
+        QDomText t_sendedtime; //Time when message sended
+        QDomText t_sendeddate; //Date when message sended
+        QDomText t_content; // The message
+        QDomText t_pm; //if true private message if false chanel message
 
 };
 
