@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QtNetwork>
+#include <QUuid>
 
 #include "src/includes/cchannel.h"
 
@@ -28,15 +29,10 @@ class CClient
         QTcpSocket * get_socket();
         int get_idChannel();
         int get_id();
-        bool get_isOnline()
-        {
-            return m_isOnline;
-        }
-        bool get_isAuthenticate()
-        {
-            return m_isAuthenticate;
-        }
-        QString get_description(){return m_description;};
+        bool get_isOnline();
+        bool get_isAuthenticate();
+        QString get_description();
+        QUuid get_uuid();
 
         //Setters
         void set_pseudo(QString pseudo);
@@ -45,15 +41,10 @@ class CClient
         void set_idChannel(int id);
         void set_id(int id);
         void set_all(CClient *c);
-        void set_isOnline(bool online)
-        {
-            m_isOnline = online;
-        }
-        void set_isAuthenticate(bool Auth)
-        {
-            m_isAuthenticate = Auth;
-        }
-        void set_description(QString d){m_description = d;};
+        void set_isOnline(bool online);
+        void set_isAuthenticate(bool Auth);
+        void set_description(QString d);
+        void set_uuid(QUuid uuid);
         //Optionnal
         QByteArray serialize();
         void deserialize(QByteArray & in);
@@ -62,13 +53,7 @@ class CClient
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
 
-
-        //Connexion to server
-        void connect(QString mail, QByteArray password);
-
-
-
-
+        void generateUUID();
 
 
     private slots:
@@ -81,6 +66,7 @@ class CClient
         QTcpSocket * m_soc;
 
         int m_id;
+        QUuid m_uuid;
         int m_idChannel;
 
         bool m_isOnline;
