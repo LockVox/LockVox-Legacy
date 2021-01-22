@@ -7,7 +7,7 @@ CServer::CServer()
             m_socket = new QTcpSocket();
             m_self = NULL;
             m_socket->abort();
-            m_socket->connectToHost("192.168.1.99", 50885);
+            m_socket->connectToHost("128.78.81.134", 50885);
 
             connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
 }

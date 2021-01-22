@@ -56,6 +56,25 @@ int CClient::get_id(){
     return m_id;
 }
 
+QUuid CClient::get_uuid()
+{
+    return m_uuid;
+}
+
+bool CClient::get_isOnline()
+{
+    return m_isOnline;
+}
+
+bool CClient::get_isAuthenticate()
+{
+    return m_isAuthenticate;
+}
+
+QString CClient::get_description()
+{
+    return m_description;
+};
 
 void CClient::set_pseudo(QString pseudo)
 {
@@ -78,6 +97,26 @@ void CClient::set_idChannel(int id){
 
 void CClient::set_id(int id){
     m_id = id;
+}
+
+void CClient::set_isOnline(bool online)
+{
+    m_isOnline = online;
+}
+
+void CClient::set_isAuthenticate(bool Auth)
+{
+    m_isAuthenticate = Auth;
+}
+
+void CClient::set_description(QString d)
+{
+    m_description = d;
+};
+
+void CClient::set_uuid(QUuid uuid)
+{
+    m_uuid = uuid;
 }
 
 void CClient::set_all(CClient *c){
@@ -141,6 +180,11 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_id(json_obj["id"].toInt());
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
+}
+
+void CClient::generateUUID()
+{
+    m_uuid = QUuid::createUuid();
 }
 
 
