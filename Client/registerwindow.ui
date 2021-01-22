@@ -248,9 +248,9 @@ QLineEdit:hover{
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>230</x>
        <y>380</y>
-       <width>201</width>
+       <width>181</width>
        <height>16</height>
       </rect>
      </property>
