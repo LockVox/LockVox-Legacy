@@ -23,8 +23,6 @@ CServer::CServer()
     }
 
     m_db = new CDatabase();
-    m_db->execMain();
-
     set_channels(m_db->parseChannel());
     set_clients(m_db->parseClient());
 
@@ -91,7 +89,6 @@ void CServer::onReceiveData(){
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) //Couldn't find sender
           return;
-    qDebug() << "Receive msg \n";
 
     //Get data
     QByteArray *data = new QByteArray();
@@ -151,7 +148,6 @@ void CServer::sendToAll(QByteArray out)
             if(client->get_socket() != NULL)
             {
                     client->get_socket()->write(out);
-                    qDebug() << "packet send to " << client->get_pseudo();
             }
       }
 }
@@ -227,8 +223,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                  free(client);
 
 
-                 //TODO -
-
 
 
                 break;
@@ -275,7 +269,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 //Hachage du password
                 std::string hashed = info[1].toStdString();
                 hashed = sha256(hashed);
-                qDebug() << "hash : " << QString::fromStdString(hashed);
                 bool valid = false;
 
                 if(hashed == m_db->getHash(info[1].toStdString()))  //Si le mdp correspond à l'utilisateur
@@ -312,6 +305,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                 sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
                 sender->get_socket()->waitForBytesWritten();
+                Sleep(100);
 
                 //If authentification suceed - Send Server Object to the client
                 if(valid)
@@ -482,7 +476,6 @@ QByteArray CServer::Serialize(){
 
     obj["mainObj"] = mainObj;
 
-
     foreach(CChannel * c, get_channelList()){
         cArray.append(c->serializeToObj());
     }
@@ -491,8 +484,6 @@ QByteArray CServer::Serialize(){
     }
     obj["channels"] = cArray;
     obj["clients"] = sArray;
-
-
 
     QJsonDocument jsonDoc(obj);
     qDebug() << jsonDoc;

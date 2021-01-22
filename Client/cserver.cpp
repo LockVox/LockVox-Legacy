@@ -36,7 +36,6 @@ void CServer::sendToServer(){
 
 void CServer::onReceiveData(){
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
-    qDebug() << "Receive msg \n";
 
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
@@ -50,7 +49,6 @@ void CServer::processIncomingData(QByteArray data){
     CPacket * packet = new CPacket(data,NULL);
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1){
-       qDebug() << "Receive Server obj\n";
        Deserialize(data);
        emit(changeState(1));
     }
@@ -69,7 +67,6 @@ void CServer::processIncomingData(QByteArray data){
                         get_clientList()[client->get_id()]->set_isOnline(false);
                     }
                 }
-
                 free(client);
 
                 break;
@@ -208,7 +205,6 @@ void CServer::processIncomingData(QByteArray data){
                 default:
                     qDebug() << "Error invalid action" << Qt::endl;
                     break;
-
             break;
         }
     }
@@ -243,7 +239,6 @@ void CServer::processIncomingData(QByteArray data){
 
 int CServer::Login(QString mail, QString passwd)
 {
-
     CClient * result;
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);

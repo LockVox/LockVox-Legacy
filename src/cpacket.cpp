@@ -20,13 +20,8 @@ CPacket::CPacket(QByteArray data, CClient * client){
     m_data = QJsonDocument::fromJson(data);             //JSON Doc
     m_obj = m_data.object();
 
-    qDebug() << m_data;
-
     //Set type & action from m_data
     Deserialize();
-
-    qDebug() << "m_type = " << m_type;
-    qDebug() << "m_action = " << m_action;
 }
 
 //Getters
@@ -278,7 +273,6 @@ CClient * CPacket::Deserialize_newClient(){
         description = newClient.value("description").toString();
 
         CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-        qDebug() << "Name " << name << "   ID " << id;
         return client;
     }
     else{
