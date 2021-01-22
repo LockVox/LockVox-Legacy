@@ -20,13 +20,8 @@ CPacket::CPacket(QByteArray data, CClient * client){
     m_data = QJsonDocument::fromJson(data);             //JSON Doc
     m_obj = m_data.object();
 
-    qDebug() << m_data;
-
     //Set type & action from m_data
     Deserialize();
-
-    qDebug() << "m_type = " << m_type;
-    qDebug() << "m_action = " << m_action;
 }
 
 //Getters

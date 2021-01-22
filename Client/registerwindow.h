@@ -2,6 +2,8 @@
 #define REGISTERWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
+#include <QMessageBox>
 
 
 namespace Ui {
