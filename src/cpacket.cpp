@@ -342,7 +342,7 @@ QList<QString> CPacket::Deserialize_auth()
         if(m_obj.contains("newAuth"))
         {
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
-            if(!m_obj.contains("email"));
+            if(!m_obj.contains("email"))
                 throw("missing email");
             info.push_back(newAuth.value("email").toString());
             if(!m_obj.contains("pass"))
