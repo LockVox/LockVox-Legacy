@@ -73,14 +73,10 @@ void channelWidget::on_DelClient(CClient * c){
               clients.removeAt(i);
           }
     }
-
-
 }
 
 void channelWidget::Update(){
-    qDebug() << " Update channel widget";
     if(channel->get_clients().isEmpty()){
-        qDebug() << "No client in this channel";
         return;
     }
 

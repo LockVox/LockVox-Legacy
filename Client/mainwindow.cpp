@@ -53,7 +53,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::Update()
 {
-    qDebug() << "Update Main Window\n";
     if(window == 0 && this->isVisible()){
         changeWindow();
     }
@@ -103,7 +102,6 @@ void MainWindow::on_changeState(int newState){
 
 
     if(m_state == 1){
-        qDebug() << "Channel & Server has been load\n";
 
         for(int i = 0; i < m_server->get_channelList().size(); i++)
         {

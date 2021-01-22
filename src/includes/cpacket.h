@@ -84,6 +84,18 @@ public:
     void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
 
+
+    struct register_info{
+        QString email;
+        QString password;
+        QString password_confirm;
+        QString name;
+    };
+
+    void Serialize_Register(struct register_info reg);           //Serialize Register
+    struct register_info Deserialize_Register();                 //Deserialize Register
+
+
     //Authentification
     CClient* Deserialize_authAns();
 private:

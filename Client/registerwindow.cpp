@@ -6,7 +6,8 @@ RegisterWindow::RegisterWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::RegisterWindow)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);   
+    connect(ui->registerBtn, SIGNAL(clicked()), this, SLOT(on_registerBtn_clicked()));
 }
 
 RegisterWindow::~RegisterWindow()
