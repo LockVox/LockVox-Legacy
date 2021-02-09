@@ -298,12 +298,19 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             }
             case 3:
             {
-
+                //Bio update
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 4:
+            {
                 //BAN USER
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
+
                 break;
+            }
             case 5:{
                 //BAN IP
                 //Rajouter système de gestion du temps
@@ -311,7 +318,8 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
                 }
             case 6: {
                 //Kick user
-
+                request.Serialize_newClient(client);
+                sendToServer(request.GetByteArray());
                 break;
                 }
 

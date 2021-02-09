@@ -119,7 +119,7 @@ class AbstractServer : public QWidget
         }
 
         void DelChannel(CChannel * tmp){
-            qDebug() << "DelChannel(CChannel * tmp) not implement yet" << Qt::endl;
+            qDebug() << "DelChannel(CChannel *" <<  tmp << ") not implement yet" << Qt::endl;
         }
 
         //Delete client in list from his index

@@ -293,21 +293,12 @@ CChannel * CPacket::Deserialize_newChannel(){
 
         if(m_obj.contains("newChannel")){
             QJsonObject newClient = m_obj.value("newChannel").toObject();
-            if(!m_obj.contains("id"))
-                throw("eing id");
             id = newClient.value("id").toInt();
-            if(!m_obj.contains("name"))
-                throw("eing name");
             name = newClient.value("name").toString();
-            if(!m_obj.contains("maxUsers"))
-                throw("eing maxUsers");
             maxUsers = newClient.value("maxUsers").toInt();
 
             CChannel * channel = new CChannel(name,id,maxUsers);
             return channel;
-        }
-        else{
-            throw("eing newChannel");
         }
     }
     catch(char* e)

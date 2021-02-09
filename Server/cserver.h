@@ -51,10 +51,10 @@ class CServer : public AbstractServer
         void sendToClient(QByteArray out, CClient * client);
 
 
-
-
-
-
+        //Admin
+        void AddBannedUser(CClient * client);
+        void RemoveBannedUser(CClient* client);
+        QList<CClient*> GetBannedUserList();
 
 
         //Process
@@ -93,6 +93,7 @@ class CServer : public AbstractServer
 
         //Database
         CDatabase * m_db;                                                   //Database
+        QList<CClient*> m_banned_users;
 
 
 

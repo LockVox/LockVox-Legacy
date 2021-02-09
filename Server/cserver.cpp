@@ -166,6 +166,21 @@ void CServer::SendObjectsToClient()
     sendToAll(packet->GetByteArray());
 }
 
+void CServer::AddBannedUser(CClient * client)
+{
+    m_banned_users.push_back(client);
+}
+void CServer::RemoveBannedUser(CClient* client)
+{
+   if(!m_banned_users.removeOne(client))
+       qDebug() << "User : '" << client->get_pseudo() << "' is not banned" << Qt::endl;
+}
+QList<CClient*> CServer::GetBannedUserList()
+{
+    return m_banned_users;
+}
+
+
 void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
         if(!sender)
             return;
@@ -214,7 +229,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                 //User is not online anymore
 
                  CPacket ans("1","0");
-                 ans.Serialize();
                  ans.Serialize_newClient(client);
 
                  //Send Update
@@ -246,18 +260,41 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             case 3:
             {
                 //BIO UPDATE
+                CClient * client = packet->Deserialize_newClient();
 
+                //Apply changement
+                sender->set_description(client->get_description());
+
+                //Send update
+                CPacket ans("2","0");
+                ans.Serialize_newClient(sender);
+                sendToAll(ans.GetByteArray());
                 break;
             }
             case 4:
+            {
                 //BAN USER
+
+                //Il faudra check si le sender a l'autorisation
+
                 break;
+            }
             case 5:
+            {
                 //BAN IP
                 //Rajouter système de gestion du temps
+                break;
+            }
             case 6: {
                 //Kick user
-
+                CClient * client = packet->Deserialize_newClient();
+                for(auto c : m_clients)
+                    if(client->get_id() == c->get_id())
+                    {
+                        sendToAll(packet->GetByteArray());
+                        m_clients.removeOne(c);
+                        c->get_socket()->close();
+                    }
                 break;
             }
             case 7: {
@@ -407,10 +444,21 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
             }
             case 8: {
                 //Modif max user (voc)
+                CChannel * c = packet->Deserialize_newChannel();
+
+                CChannel * channel = get_channelById(c->get_id());
+                channel->set_maxUsers(c->get_maxUsers());
+
+
+                CPacket ans("1","8");
+                ans.Serialize_newChannel(channel);
+                sendToAll(ans.GetByteArray());
+                free(c);
                 break;
             }
             case 9: {
                 //kick user voc
+
                 break;
             }
             case 10: {
