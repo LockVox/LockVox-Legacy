@@ -78,3 +78,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib_d
+
+INCLUDEPATH += $$PWD/libs/emiplib/include \
+    $$PWD/libs/emiplib/win32
+DEPENDPATH += $$PWD/libs/emiplib/include \
+    $$PWD/libs/emiplib/win32
