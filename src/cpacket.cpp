@@ -308,25 +308,6 @@ CChannel * CPacket::Deserialize_newChannel(){
     }
 }
 
-
-QList<QString> CPacket::Deserialize_auth()
-{
-    try {
-        QList<QString> info;
-        if(m_obj.contains("newAuth"))
-        {
-            QJsonObject newAuth = m_obj.value("newAuth").toObject();
-            info.push_back(newAuth.value("email").toString());
-            info.push_back(newAuth.value("pass").toString());
-        }
-        return info;
-    }
-    catch(char* e)
-    {
-        qDebug() << "Error in Deserialize_auth :" << e;
-    }
-}
-
 void CPacket::Serialize_ID(int chan, int client){
 
     QJsonObject channelObj;
@@ -379,6 +360,24 @@ void CPacket::Serialize_auth(CClient* info, int code)
     m_obj["newAuth"] = authObj;
 }
 
+QList<QString> CPacket::Deserialize_auth()
+{
+    try {
+        QList<QString> info;
+        if(m_obj.contains("newAuth"))
+        {
+            QJsonObject newAuth = m_obj.value("newAuth").toObject();
+            info.push_back(newAuth.value("email").toString());
+            info.push_back(newAuth.value("pass").toString());
+        }
+        return info;
+    }
+    catch(char* e)
+    {
+        qDebug() << "Error in Deserialize_auth :" << e;
+    }
+}
+
 void CPacket::Serialize_authReq(QString email, QString pass)
 {
     QJsonObject credsObj;
@@ -417,6 +416,61 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
     catch(char* e)
     {
         qDebug() << "Error in Deserialize_authAns : " << e;
+        return NULL;
+    }
+}
+
+void CPacket::Serialize_regReq(QString username, QString mail, QString password, QString uuid)
+{
+    QJsonObject regObj;
+    regObj.insert("username", username);
+    regObj.insert("mail", mail);
+    regObj.insert("password", password);
+    regObj.insert("uuid", uuid);
+    m_obj["newReg"] = regObj;
+}
+
+QList<QString> CPacket::Deserialize_regReq()
+{
+    try {
+        QList<QString> regReq;
+        if(m_obj.contains("newReg"))
+        {
+            QJsonObject newReg = m_obj.value("newReg").toObject();
+            regReq.push_back(newReg.value("username").toString());
+            regReq.push_back(newReg.value("mail").toString());
+            regReq.push_back(newReg.value("password").toString());
+            regReq.push_back(newReg.value("uuid").toString());
+        }
+        return regReq;
+    }  catch (char* e) {
+        qDebug() << "Error in Deserialize_regReq :" << e;
+        QList<QString> err;
+        err.push_back("0");
+        return err;
+    }
+}
+
+void CPacket::Serialize_regAns(int code)
+{
+    QJsonObject regAnsObj;
+    regAnsObj.insert("code",code);
+    m_obj["ansReg"];
+}
+
+int CPacket::Deserialize_regAns()
+{
+    try {
+        int code = NULL;
+        if(m_obj.contains("ansReg"))
+        {
+            QJsonObject ansReg = m_obj.value("ansReg").toObject();
+            code = ansReg.value("code").toInt();
+        }
+        return code;
+
+    }  catch (char* e) {
+        qDebug() << "Error in Deserialize_regAns :" << e;
         return NULL;
     }
 }

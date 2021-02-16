@@ -72,17 +72,19 @@ public:
     //Serialize specific object -
     void Serialize_newClient(CClient * client);                  //Serialize Client object ( Pseudo & ID & isOnline & ...)
     void Serialize_newChannel(CChannel * channel);               //Serialize Channel object ( Name & ID & MaxUsers=
+    void Serialize_auth(CClient* info, int code);
+    void Serialize_authReq(QString email, QString pass);
+    void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
+    void Serialize_regReq(QString username, QString mail, QString password, QString uuid);
+    void Serialize_regAns(int code);
 
     //Deserialize specific object
     CClient * Deserialize_newClient();
     CChannel * Deserialize_newChannel();
-
-    //Serialize specific object
     QList<QString> Deserialize_auth();
-    void Serialize_auth(CClient* info, int code);
-    void Serialize_authReq(QString email, QString pass);
-    void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
+    QList<QString> Deserialize_regReq();
+    int Deserialize_regAns();
 
 
     struct register_info{

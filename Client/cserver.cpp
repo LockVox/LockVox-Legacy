@@ -237,6 +237,11 @@ void CServer::processIncomingData(QByteArray data){
     emit(updateMainWindow());
 }
 
+int CServer::Register(QString username, QString mail, QString Password , QUuid uuid)
+{
+    CPacket reg_pkt("0", "8");
+}
+
 int CServer::Login(QString mail, QString passwd)
 {
     CClient * result;
