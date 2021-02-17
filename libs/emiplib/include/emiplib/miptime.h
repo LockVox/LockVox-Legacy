@@ -32,13 +32,12 @@
 
 #include "mipconfig.h"
 #include "miptypes.h"
-#include "mipcompat.h"
 #include <stdio.h>
 #include <time.h>
 #include <string>
 
 // We're going to use some things from RTPTime
-#include <rtptimeutilities.h>
+#include <jrtplib3/rtptimeutilities.h>
 
 /** This class is used for timing purposes.
  *  This class provides some time handling functions.
@@ -140,17 +139,6 @@ inline bool MIPTime::operator>=(const MIPTime &t) const
 	if (m_time >= t.m_time)
 		return true;
 	return false;
-}
-
-#include <inttypes.h>
-
-inline std::string MIPTime::getString() const
-{
-	char str[256];
-
-	MIP_SNPRINTF(str, 255, "%" PRId64 ".%06d", getSeconds(), (int)getMicroSeconds());
-	
-	return std::string(str);
 }
 
 #endif // MIPTIME_H

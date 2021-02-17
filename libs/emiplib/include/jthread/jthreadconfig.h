@@ -29,8 +29,8 @@
 
 #define JTHREADCONFIG_H
 
-#define JTHREAD_IMPORT __declspec(dllimport)
-#define JTHREAD_EXPORT __declspec(dllexport)
+#define JTHREAD_IMPORT 
+#define JTHREAD_EXPORT 
 #ifdef JTHREAD_COMPILING
 	#define JTHREAD_IMPORTEXPORT JTHREAD_EXPORT
 #else

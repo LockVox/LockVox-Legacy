@@ -41,8 +41,8 @@
 #define JRTPLIB_UNUSED(x) (void)(x)
 #endif // JRTPLIB_UNUSED
 
-#define JRTPLIB_IMPORT __declspec(dllimport)
-#define JRTPLIB_EXPORT __declspec(dllexport)
+#define JRTPLIB_IMPORT 
+#define JRTPLIB_EXPORT 
 #ifdef JRTPLIB_COMPILING
 	#define JRTPLIB_IMPORTEXPORT JRTPLIB_EXPORT
 #else
@@ -84,7 +84,7 @@
 
 #define RTP_SUPPORT_MEMORYMANAGEMENT
 
-#define RTP_SUPPORT_RTCPUNKNOWN
+// No support for sending unknown RTCP packets
 
 // Don't have <netinet/in.h>
 

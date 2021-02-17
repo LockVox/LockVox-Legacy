@@ -26,8 +26,8 @@
 
 #define MIPCONFIG_H
 
-#define EMIPLIB_IMPORT __declspec(dllimport)
-#define EMIPLIB_EXPORT __declspec(dllexport)
+#define EMIPLIB_IMPORT 
+#define EMIPLIB_EXPORT 
 #ifdef EMIPLIB_COMPILING
 	#define EMIPLIB_IMPORTEXPORT EMIPLIB_EXPORT
 #else
@@ -42,7 +42,7 @@
 
 // No libaudiofile support
 
-#define MIPCONFIG_SUPPORT_QT5
+// No support for Qt5 output components
 
 // No ALSA support
 
@@ -83,6 +83,8 @@
 // No Opus support
 
 // No support for PulseAudio input/output
+
+// No support for OpenSL ES on Android
 
 #ifdef MIPCONFIG_SUPPORT_AVCODEC
 	#ifndef __STDC_CONSTANT_MACROS

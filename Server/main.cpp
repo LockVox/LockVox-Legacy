@@ -1,7 +1,3 @@
-
-#include "mipaudiosession.h"
-
-
 #include <QApplication>
 #include <QThread>
 #include <QString>

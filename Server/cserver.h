@@ -1,6 +1,9 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
+#include "libs/emiplib/include/emiplib/mipcomponentchain.h"
+#include "libs/emiplib/include/emiplib/mipcomponent.h"
+
 #include <QtWidgets>
 //#include <QtNetwork>
 #include <QDebug>
