@@ -189,320 +189,406 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
         packet->Deserialize();
 
         //Récupération du type
-        switch (packet->GetType().toInt()) {
-        case 0: //SERV
-            switch (packet->GetAction().toInt())
-            {
-            case 0:
-            {   
-                //SERV CONNECT
-                //Check Auth -
-
-                //If Auth is Ok
-                CClient * client = new CClient();
-                client = packet->Deserialize_newClient();
-                addClient(client);
-
-                if(get_clientList()[client->get_id()]->get_isOnline() == true)
-                    get_clientList()[client->get_id()]->set_isOnline(false);
-
-                //Update info -
-                CPacket ans("0","0");
-                ans.Serialize_newClient(client);
-                sendToAll(ans.GetByteArray());
-
-                //TODO -
-
-                break;
-            }
-            case 1:
-            {
-                //SERV DISCONNECT
-                //Update online users
-                CClient * client = packet->Deserialize_newClient();
-
-                for(int i = 0; i < get_clientList().size(); i++){
-                    if(get_clientList()[i]->get_id() == client->get_id()){
-                        get_clientList()[client->get_id()]->set_isOnline(false);
-                    }
-                }
-                //User is not online anymore
-
-                 CPacket ans("1","0");
-                 ans.Serialize_newClient(client);
-
-                 //Send Update
-                 sendToAll(packet->GetByteArray());
-
-                 free(client);
-
-
-
-
-                break;
-            }
-            case 2:
-            {
-                //PSEUDO UPDATE
-                CClient * client = packet->Deserialize_newClient();
-
-                //Apply changement
-                sender->set_pseudo(client->get_pseudo());
-
-                //Send update
-                CPacket ans("2","0");
-                ans.Serialize_newClient(sender);
-                sendToAll(ans.GetByteArray());
-
-                free(client);
-                break;
-            }
-            case 3:
-            {
-                //BIO UPDATE
-                CClient * client = packet->Deserialize_newClient();
-
-                //Apply changement
-                sender->set_description(client->get_description());
-
-                //Send update
-                CPacket ans("2","0");
-                ans.Serialize_newClient(sender);
-                sendToAll(ans.GetByteArray());
-                break;
-            }
-            case 4:
-            {
-                //BAN USER
-
-                //Il faudra check si le sender a l'autorisation
-
-                break;
-            }
-            case 5:
-            {
-                //BAN IP
-                //Rajouter système de gestion du temps
-                break;
-            }
-            case 6: {
-                //Kick user
-                CClient * client = packet->Deserialize_newClient();
-                for(auto c : m_clients)
-                    if(client->get_id() == c->get_id())
-                    {
-                        sendToAll(packet->GetByteArray());
-                        m_clients.removeOne(c);
-                        c->get_socket()->close();
-                    }
-                break;
-            }
-            case 7: {
-                //Demande d'authentification
-                QList<QString> info = packet->Deserialize_auth();
-
-                qDebug() << "Authentification request  - " << info[0] << " " << info[1];
-                CPacket* ans = new CPacket("0", "7");
-                //Hachage du password
-                std::string hashed = info[1].toStdString();
-                hashed = sha256(hashed);
-                bool valid = false;
-
-                if(hashed == m_db->getHash(info[1].toStdString()))  //Si le mdp correspond à l'utilisateur
+        switch (packet->GetType().toInt())
+        {
+            case 0: //SERV
+                switch (packet->GetAction().toInt())
                 {
-                    CClient * tmp_client = m_db->parseClient(info[0].toStdString());
-                    if(tmp_client) //Si l'utilisateur existe pas
+                    case 0:
                     {
-                        for(auto c : m_clients) //Vérification de connexion déjà existante
+                       //SERV CONNECT
+                       //Check Auth -
+                       //If Auth is Ok
+                       CClient * client = new CClient();
+                       client = packet->Deserialize_newClient();
+                       addClient(client);
+
+                       if(get_clientList()[client->get_id()]->get_isOnline() == true)
+                       {
+                           get_clientList()[client->get_id()]->set_isOnline(false);
+                       }
+
+                       //Update info -
+                       CPacket ans("0","0");
+                       ans.Serialize_newClient(client);
+                       sendToAll(ans.GetByteArray());
+
+                       break;
+                    }
+
+                    case 1:
+                    {
+                        //SERV DISCONNECT
+                        //Update online users
+                        CClient * client = packet->Deserialize_newClient();
+
+                        for(int i = 0; i < get_clientList().size(); i++)
                         {
-                            if(tmp_client->get_id() == c->get_id() && c->get_isAuthenticate()) //utilisateur déjà co
+                            if(get_clientList()[i]->get_id() == client->get_id())
                             {
-                                ans->Serialize_auth(NULL, 2);
-                            }
-                            if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
-                            {
-                                //mettre l'utilisateur authentifié
-                                c->set_isAuthenticate(true);
-                                c->set_socket(sender->get_socket());
-                                //Lui envoyer ses infos
-                                ans->Serialize_auth(c, 0);
-                                valid = true;
+                                get_clientList()[client->get_id()]->set_isOnline(false);
                             }
                         }
+
+                        //User is not online anymore
+                        CPacket ans("1","0");
+                        ans.Serialize_newClient(client);
+
+                        //Send Update
+                        sendToAll(packet->GetByteArray());
+
+                       free(client);
+
+                       break;
+                   }
+
+                   case 2:
+                   {
+                        //PSEUDO UPDATE
+                        CClient * client = packet->Deserialize_newClient();
+
+                        //Apply changement
+                        sender->set_pseudo(client->get_pseudo());
+
+                        //Send update
+                        CPacket ans("2","0");
+                        ans.Serialize_newClient(sender);
+                        sendToAll(ans.GetByteArray());
+
+                        free(client);
+
+                        break;
                     }
-                    else
+
+                    case 3:
                     {
-                        ans->Serialize_auth(NULL, 1);
+                        //BIO UPDATE
+                        CClient * client = packet->Deserialize_newClient();
+
+                        //Apply changement
+                        sender->set_description(client->get_description());
+
+                        //Send update
+                        CPacket ans("2","0");
+                        ans.Serialize_newClient(sender);
+                        sendToAll(ans.GetByteArray());
+                        break;
                     }
+
+                    case 4:
+                    {
+                        //BAN USER
+                        //Il faudra check si le sender a l'autorisation
+                        //TODO
+
+                        break;
+                    }
+
+                    case 5:
+                    {
+                        //BAN IP
+                        //Rajouter système de gestion du temps
+                        //TODO
+                        break;
+                    }
+
+                    case 6:
+                    {
+                        //Kick user
+                        CClient * client = packet->Deserialize_newClient();
+
+                        for(auto c : m_clients)
+                        {
+                            if(client->get_id() == c->get_id())
+                            {
+                                sendToAll(packet->GetByteArray());
+                                m_clients.removeOne(c);
+                                c->get_socket()->close();
+                            }
+                        }
+                        break;
+                    }
+
+                    case 7:
+                    {
+                        //Demande d'authentification
+                        QList<QString> info = packet->Deserialize_auth();
+
+                        qDebug() << "Authentification request  - " << info[0] << " " << info[1];
+                        CPacket* ans = new CPacket("0", "7");
+
+                        //Hachage du password
+                        std::string hashed = info[1].toStdString();
+                        hashed = sha256(hashed);
+                        bool valid = false;
+
+                        if(hashed == m_db->getHash(info[1].toStdString()))  //Si le mdp correspond à l'utilisateur
+                        {
+                            CClient * tmp_client = m_db->parseClient(info[0].toStdString());
+                            if(tmp_client) //Si l'utilisateur existe pas
+                            {
+                                for(auto c : m_clients) //Vérification de connexion déjà existante
+                                {
+                                    if(tmp_client->get_id() == c->get_id() && c->get_isAuthenticate()) //utilisateur déjà co
+                                    {
+                                        ans->Serialize_auth(NULL, 2);
+                                    }
+                                    if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
+                                    {
+                                        //mettre l'utilisateur authentifié
+                                        c->set_isAuthenticate(true);
+                                        c->set_socket(sender->get_socket());
+                                        //Lui envoyer ses infos
+                                        ans->Serialize_auth(c, 0);
+                                        valid = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ans->Serialize_auth(NULL, 1);
+                            }
+                        }
+                        else    //Bad password
+                        {
+                            ans->Serialize_auth(NULL, 3);
+                        }
+
+                        sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
+                        sender->get_socket()->waitForBytesWritten();
+                        Sleep(100);
+
+                        //If authentification suceed - Send Server Object to the client
+                        if(valid)
+                        {
+                            //CPacket * packet = new CPacket();
+                            sender->get_socket()->write(packet->Serialize(this));
+                            sender->get_socket()->waitForBytesWritten();
+                        }
+                        break;
                 }
-                else    //Bad password
+
+                case 8 :
                 {
-                    ans->Serialize_auth(NULL, 3);
+
                 }
 
-                sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
-                sender->get_socket()->waitForBytesWritten();
-                Sleep(100);
+                default:
+                    qDebug() << "Error invalid action" << Qt::endl;
+            }
+            break;
 
-                //If authentification suceed - Send Server Object to the client
-                if(valid)
+            case 1: //CHAN
+                switch (packet->GetAction().toInt())
                 {
-                    //CPacket * packet = new CPacket();
-                    sender->get_socket()->write(packet->Serialize(this));
-                    sender->get_socket()->waitForBytesWritten();
+                case 0:
+                {
+                    //JOIN CHANNEL
+                    packet->Deserialize_ID();
+
+                    CClient * client = get_clientById(packet->get_IdClient());
+                    CChannel * channel = get_channelById(packet->get_IdChannel());
+
+
+                    if(channel && client)
+                    {
+                        client->set_idChannel(channel->get_id());
+                        channel->addUser(client);
+                    }
+
+                    CPacket ans("1","0");
+                    ans.Serialize();
+                    ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                    sendToAll(ans.GetByteArray());
+
+                    break;
                 }
-                break;
-            }
-            default:
-                qDebug() << "Error invalid action" << Qt::endl;
+
+                case 1:
+                {
+                    //QUIT CHAN
+                    packet->Deserialize_ID();
+
+                    CClient * client = get_clientById(packet->get_IdClient());
+                    CChannel * channel = get_channelById(packet->get_IdChannel());
+
+                    if(channel && client)
+                    {
+                        client->set_idChannel(-1);
+                        channel->delUser(client->get_id());
+                    }
+
+                    CPacket ans("1","1");
+                    ans.Serialize();
+                    ans.Serialize_ID(channel->get_id(),client->get_id());
+
+                    sendToAll(ans.GetByteArray());
+
+                    break;
+                }
+
+                case 5:
+                {
+                    //Create chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+                    addChannel(c);
+
+                    CPacket ans("1","5");
+                    ans.Serialize_newChannel(c);
+                    sendToAll(ans.GetByteArray());
+
+                    break;
+                }
+
+                case 6:
+                {
+                    //Delete chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+                    CChannel * toDelChannel = get_channelById(c->get_id());
+                    DelChannel(toDelChannel);
+
+
+                    CPacket ans("1","6");
+                    ans.Serialize_newChannel(c);
+                    sendToAll(ans.GetByteArray());
+
+                    free(c);
+                    break;
+                }
+
+                case 7:
+                {
+                    //Rename chan voc
+                    CChannel * c = packet->Deserialize_newChannel();
+
+                    CChannel * channel = get_channelById(c->get_id());
+                    channel->set_name(c->get_name());
+
+                    CPacket ans("1","7");
+                    ans.Serialize_newChannel(channel);
+                    sendToAll(ans.GetByteArray());
+                    free(c);
+
+                    break;
+                }
+
+                case 8:
+                {
+                    //Modif max user (voc)
+                    CChannel * c = packet->Deserialize_newChannel();
+
+                    CChannel * channel = get_channelById(c->get_id());
+                    channel->set_maxUsers(c->get_maxUsers());
+
+                    CPacket ans("1","8");
+                    ans.Serialize_newChannel(channel);
+                    sendToAll(ans.GetByteArray());
+                    free(c);
+
+                    break;
+                }
+
+                case 9:
+                {
+                    //kick user voc
+                    //TODO
+
+                    break;
+                }
+
+                case 10:
+                {
+                    //Mute user voc (server side)
+                    //TODO
+
+                    break;
+                }
+
+                case 11:
+                {
+                    //Create chan text --------> Qxmpp
+                    //TODO
+
+                    break;
+                }
+
+                case 12:
+                {
+                    //Delete cahn text
+                    //TODO
+
+                    break;
+                }
+
+                case 13:
+                {
+                    //Rename chan text
+                    //TODO
+                    break;
+                }
+
+                default:
+                    qDebug() << "Error invalid action" << Qt::endl;
             }
             break;
 
-        case 1: //CHAN
-            switch (packet->GetAction().toInt())
-            {
-            case 0: {
-                //JOIN CHANNEL
-                packet->Deserialize_ID();
+            case 2: //USER
+                switch (packet->GetAction().toInt())
+                {
+                case 0:
+                {
+                    //Mute (user side) ?????
+                    //TODO
 
-                CClient * client = get_clientById(packet->get_IdClient());
-                CChannel * channel = get_channelById(packet->get_IdChannel());
-
-
-                if(channel && client){
-                    client->set_idChannel(channel->get_id());
-                    channel->addUser(client);
+                    break;
                 }
 
-                CPacket ans("1","0");
-                ans.Serialize();
-                ans.Serialize_ID(channel->get_id(),client->get_id());
+                case 1:
+                {
+                    //Add friend --> later
+                    //TODO
 
-                sendToAll(ans.GetByteArray());
-
-                break;
-            }
-            case 1: {
-                //QUIT CHAN
-                packet->Deserialize_ID();
-
-                CClient * client = get_clientById(packet->get_IdClient());
-                CChannel * channel = get_channelById(packet->get_IdChannel());
-
-
-                if(channel && client){
-                    client->set_idChannel(-1);
-                    channel->delUser(client->get_id());
+                    break;
                 }
 
-                CPacket ans("1","1");
-                ans.Serialize();
-                ans.Serialize_ID(channel->get_id(),client->get_id());
+                case 2:
+                {
+                    //Del friend
+                    //TODO
 
-                sendToAll(ans.GetByteArray());
+                    break;
+                }
 
-                break;
-            }
-            case 5: {
-                //Create chan voc
-                CChannel * c = packet->Deserialize_newChannel();
-                addChannel(c);
+                case 3:
+                {
+                    //Send msg to friend
+                    //TODO
 
-                CPacket ans("1","5");
-                ans.Serialize_newChannel(c);
-                sendToAll(ans.GetByteArray());
+                    break;
+                }
 
-                break;
-            }
-            case 6: {
-                //Delete chan voc
-                CChannel * c = packet->Deserialize_newChannel();
-                CChannel * toDelChannel = get_channelById(c->get_id());
-                DelChannel(toDelChannel);
+                case 4:
+                {
+                    //Modif pseudo (update bdd)
+                    //TODO
 
+                    break;
+                }
 
-                CPacket ans("1","6");
-                ans.Serialize_newChannel(c);
-                sendToAll(ans.GetByteArray());
+                case 5:
+                {
+                    //Change right
+                    //TODO
 
-                free(c);
-                break;
-            }
-            case 7: {
-                //Rename chan voc
-                CChannel * c = packet->Deserialize_newChannel();
+                    break;
+                }
 
-                CChannel * channel = get_channelById(c->get_id());
-                channel->set_name(c->get_name());
-
-
-                CPacket ans("1","7");
-                ans.Serialize_newChannel(channel);
-                sendToAll(ans.GetByteArray());
-                free(c);
-                break;
-            }
-            case 8: {
-                //Modif max user (voc)
-                CChannel * c = packet->Deserialize_newChannel();
-
-                CChannel * channel = get_channelById(c->get_id());
-                channel->set_maxUsers(c->get_maxUsers());
-
-
-                CPacket ans("1","8");
-                ans.Serialize_newChannel(channel);
-                sendToAll(ans.GetByteArray());
-                free(c);
-                break;
-            }
-            case 9: {
-                //kick user voc
-
-                break;
-            }
-            case 10: {
-                //Mute user voc (server side) 
-                break;
-            }
-            case 11:
-                //Create chan text --------> Qxmpp
-                break;
-            case 12:
-                //Delete cahn text
-                break;
-            case 13:
-                //Rename chan text
-                break;
-            default:
-                qDebug() << "Error invalid action" << Qt::endl;
+                default:
+                    qDebug() << "Error invalid action" << Qt::endl;
             }
             break;
-        case 2: //USER
-            switch (packet->GetAction().toInt())
-            {
-            case 0:
-                //Mute (user side) ?????
-                break;
-            case 1:
-                //Add friend --> later
-                break;
-            case 2:
-                //Del friend
-                break;
-            case 3:
-                //Send msg to friend
-                break;
-            case 4:
-                //Modif pseudo (update bdd)
-                break;
-            case 5:
-                //Change right
-                break;
-            default:
-                qDebug() << "Error invalid action" << Qt::endl;
-            }
-            break;
+
         default:
             qDebug() << "Error invalid type" << Qt::endl;
         }
