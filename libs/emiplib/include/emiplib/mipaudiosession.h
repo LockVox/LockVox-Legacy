@@ -32,12 +32,13 @@
 
 #include "mipconfig.h"
 
-#if (defined(MIPCONFIG_SUPPORT_WINMM) || defined(MIPCONFIG_SUPPORT_OSS) || defined(MIPCONFIG_SUPPORT_PORTAUDIO) )
+#if (defined(MIPCONFIG_SUPPORT_OPENSLESANDROID) || defined(MIPCONFIG_SUPPORT_WINMM) \
+	|| defined(MIPCONFIG_SUPPORT_OSS) || defined(MIPCONFIG_SUPPORT_PORTAUDIO) )
 
 #include "mipcomponentchain.h"
 #include "miperrorbase.h"
 #include "miptime.h"
-#include <rtptransmitter.h>
+#include <jrtplib3/rtptransmitter.h>
 #include <string>
 #include <list>
 
@@ -406,7 +407,7 @@ private:
 	friend class IOChain;
 };
 
-#endif // MIPCONFIG_SUPPORT_WINMM || MIPCONFIG_SUPPORT_OSS || MIPCONFIG_SUPPORT_PORTAUDIO
+#endif // MIPCONFIG_SUPPORT_OPENSLESANDROID || MIPCONFIG_SUPPORT_WINMM || MIPCONFIG_SUPPORT_OSS || MIPCONFIG_SUPPORT_PORTAUDIO
 
 #endif // MIPAUDIOSESSION_H
 
