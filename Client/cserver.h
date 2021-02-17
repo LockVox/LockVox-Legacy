@@ -76,7 +76,7 @@ class CServer : public AbstractServer
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
         int Login(QString mail, QString passwd);               //Requests the server to authenticate
-        int Register(QString username, Qstring mail, QString password, QUuid uuid);
+        bool Register(QString username, QString mail, QString password);
 
     private slots:
 
