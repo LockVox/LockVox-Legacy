@@ -38,7 +38,7 @@
 #include <string>
 
 // We're going to use some things from RTPTime
-#include <jrtplib3/rtptimeutilities.h>
+#include <rtptimeutilities.h>
 
 /** This class is used for timing purposes.
  *  This class provides some time handling functions.

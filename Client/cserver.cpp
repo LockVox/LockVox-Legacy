@@ -237,30 +237,11 @@ void CServer::processIncomingData(QByteArray data){
     emit(updateMainWindow());
 }
 
-int CServer::Login(QString mail, QString passwd)
+void CServer::Login(QString mail, QString passwd)
 {
-    CClient * result;
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     m_socket->write(auth_pkt.GetByteArray());
-    Sleep(500);
-    CPacket auth_res(m_socket->readAll(), NULL);
-    result = auth_res.Deserialize_authAns();
-    if(!result)
-    {
-        return 2;
-    }
-    if(result->get_pseudo() == "NULL")
-    {
-        QString err = result->get_description();
-        qDebug() << err;
-        return 1;
-    }
-    else
-    {
-        m_self = result;
-        return 0;
-    }
 }
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){

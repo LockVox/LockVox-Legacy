@@ -37,7 +37,7 @@
 #include "mipcomponentchain.h"
 #include "miperrorbase.h"
 #include "miptime.h"
-#include <jrtplib3/rtptransmitter.h>
+#include <rtptransmitter.h>
 #include <string>
 #include <list>
 

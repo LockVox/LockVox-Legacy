@@ -68,11 +68,20 @@ DEPENDPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib_d
 
-INCLUDEPATH += $$PWD/libs/emiplib/include \
-    $$PWD/libs/emiplib/win32
-DEPENDPATH += $$PWD/libs/emiplib/include \
-    $$PWD/libs/emiplib/win32
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib
+
+#INCLUDEPATH += $$PWD/libs/emiplib/include \
+#    $$PWD/libs/emiplib/win32
+#DEPENDPATH += $$PWD/libs/emiplib/include \
+#    $$PWD/libs/emiplib/win32
+
+INCLUDEPATH += C:\Users\Hugues\Desktop\LockVox\libs\emiplib\include\emiplib
+INCLUDEPATH += C:\Users\Hugues\Desktop\LockVox\libs\emiplib\include\jrtplib3
+INCLUDEPATH += C:\Users\Hugues\Desktop\LockVox\libs\emiplib\include\jthread
+
+LIBS+= -L"C:\Users\Hugues\Desktop\LockVox\libs\emiplib\win32" -ljrtplib
+LIBS+= -L"C:\Users\Hugues\Desktop\LockVox\libs\emiplib\win32" -ljthread
+LIBS+= -L"C:\Users\Hugues\Desktop\LockVox\libs\emiplib\win32" -lemiplib
+LIBS+= -lws2_32
 

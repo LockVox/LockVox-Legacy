@@ -2,7 +2,7 @@
 #define CSERVER_H
 
 #include <QtWidgets>
-#include <QtNetwork>
+//#include <QtNetwork>
 #include <QDebug>
 #include <QRegExp>
 

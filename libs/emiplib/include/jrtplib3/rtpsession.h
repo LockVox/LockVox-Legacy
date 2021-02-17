@@ -52,7 +52,7 @@
 #include <list>
 
 #ifdef RTP_SUPPORT_THREAD
-	#include <jthread/jmutex.h>	
+        #include <jmutex.h>
 #endif // RTP_SUPPORT_THREAD
 
 namespace jrtplib
