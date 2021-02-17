@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Connect
     connect(ui_login, SIGNAL(on_askServer(QString, QString)), m_server, SLOT(Login(QString,QString)));
+    connect(ui_register, SIGNAL(on_askServer(QString,QString,QString)), m_server, SLOT(Register(QString,QString,QString)));
     connect(m_server, SIGNAL(changeState(int)), this, SLOT(on_changeState(int)));
     connect(m_server, SIGNAL(on_Authentification(int)), this, SLOT(changeWindow(int)));
     //connect(m_server, SIGNAL(updateMainWindow()), this, SLOT(Update(int)));

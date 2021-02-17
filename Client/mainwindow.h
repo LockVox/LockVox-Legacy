@@ -10,6 +10,7 @@
 
 
 #include "loginwindow.h"
+#include "registerwindow.h"
 
 #include "changeusernamewindow.h"
 #include "userstatuswindow.h"
@@ -69,6 +70,7 @@ private:
 
     Ui::MainWindow *ui;
     LoginWindow *ui_login;
+    RegisterWindow *ui_register;
     QWidget * m_mainWidget;
 
     QList<channelWidget*> list_channel_widgets;

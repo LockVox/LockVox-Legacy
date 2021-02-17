@@ -21,6 +21,9 @@ public:
 private slots:
     void on_registerBtn_clicked();
 
+signals :
+    void on_askServer(QString, QString, QString);
+
 private:
     Ui::RegisterWindow *ui;
 };
