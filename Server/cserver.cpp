@@ -31,19 +31,24 @@ CServer::CServer()
 }
 
 //Getters
-CDatabase * CServer::get_database(){
+CDatabase * CServer::get_database()
+{
     return m_db;
 }
 
 //Setters
-void CServer::set_database(CDatabase * db){
+void CServer::set_database(CDatabase * db)
+{
     m_db = db;
 }
 
-int CServer::whichClient(QTcpSocket * s){
+int CServer::whichClient(QTcpSocket * s)
+{
     //Looking for the client's index with the socket 's'
-    for(int i = 0; i < get_clientList().size(); i++){
-        if(get_clientList()[i]->get_socket() == s){
+    for(int i = 0; i < get_clientList().size(); i++)
+    {
+        if(get_clientList()[i]->get_socket() == s)
+        {
             return i;
         }
     }
@@ -58,7 +63,6 @@ void CServer::onNewConnection()
 
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(onDisconnectClient()));
-
 }
 
 void CServer::onDisconnectClient()
@@ -66,14 +70,17 @@ void CServer::onDisconnectClient()
     //Looking for sender -
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if(socket == 0)
+    {
         return;
+    }
 
     //Compare to clients list
-    for( int i = 0 ; i  < get_clientList().size(); i++){
-        if(get_clientList()[i]->get_socket() == socket){
+    for( int i = 0 ; i  < get_clientList().size(); i++)
+    {
+        if(get_clientList()[i]->get_socket() == socket)
+        {
             get_clientList()[i]->set_isOnline(false);
             get_clientList()[i]->set_isAuthenticate(false);
-
 
             //Say to everyone
             CPacket request("0","1");
@@ -90,14 +97,17 @@ void CServer::onReceiveData(){
     //Get sender -
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) //Couldn't find sender
+    {
           return;
+    }
 
     //Get data
     QByteArray *data = new QByteArray();
     data->append(socket->readAll());
 
     int uid = whichClient(socket);
-    if(uid == -1){
+    if(uid == -1)
+    {
         //Process data
         CClient * c = new CClient();
         c->set_socket(socket);
@@ -154,7 +164,8 @@ void CServer::sendToAll(QByteArray out)
       }
 }
 
-void CServer::sendToClient(QByteArray out, CClient * client){
+void CServer::sendToClient(QByteArray out, CClient * client)
+{
     client->get_socket()->write(out);
     client->get_socket()->waitForBytesWritten();
 }
@@ -172,16 +183,17 @@ void CServer::AddBannedUser(CClient * client)
 {
     m_banned_users.push_back(client);
 }
+
 void CServer::RemoveBannedUser(CClient* client)
 {
    if(!m_banned_users.removeOne(client))
        qDebug() << "User : '" << client->get_pseudo() << "' is not banned" << Qt::endl;
 }
+
 QList<CClient*> CServer::GetBannedUserList()
 {
     return m_banned_users;
 }
-
 
 void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
         if(!sender)
@@ -599,7 +611,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
 
 
-QByteArray CServer::Serialize(){
+QByteArray CServer::Serialize()
+{
 
     QJsonObject obj;
 
@@ -612,12 +625,16 @@ QByteArray CServer::Serialize(){
 
     obj["mainObj"] = mainObj;
 
-    foreach(CChannel * c, get_channelList()){
+    foreach(CChannel * c, get_channelList())
+    {
         cArray.append(c->serializeToObj());
     }
-    foreach(CClient * c, get_clientList()){
+
+    foreach(CClient * c, get_clientList())
+    {
        sArray.append(c->serializeToObj());
     }
+
     obj["channels"] = cArray;
     obj["clients"] = sArray;
 
@@ -625,11 +642,10 @@ QByteArray CServer::Serialize(){
     qDebug() << jsonDoc;
 
     return jsonDoc.toJson();
-
 }
 
-void CServer::Deserialize(QByteArray in){
-
+void CServer::Deserialize(QByteArray in)
+{
     QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
     QJsonObject obj = jsonDoc.object();
 
@@ -638,47 +654,52 @@ void CServer::Deserialize(QByteArray in){
 
     deserializeChannel(cArray);
     deserializeClients(sArray);
-
 }
 
 
-QByteArray CServer::SerializeChannels(){
+QByteArray CServer::SerializeChannels()
+{
     QJsonArray jsonArray;
-    foreach(CChannel * c, get_channelList()){
+    foreach(CChannel * c, get_channelList())
+    {
         jsonArray.append(c->serializeToObj());
     }
-    QJsonDocument jsonDoc(jsonArray);
-    qDebug() << jsonDoc;
 
-    return jsonDoc.toJson();
-
-}
-
-QByteArray CServer::SerializeClients(){
-    QJsonArray jsonArray;
-    foreach(CClient * c, get_clientList()){
-        jsonArray.append(c->serializeToObj());
-    }
     QJsonDocument jsonDoc(jsonArray);
     qDebug() << jsonDoc;
 
     return jsonDoc.toJson();
 }
 
-void CServer::DeserializeChannels(QByteArray in){
+QByteArray CServer::SerializeClients()
+{
+    QJsonArray jsonArray;
+    foreach(CClient * c, get_clientList())
+    {
+        jsonArray.append(c->serializeToObj());
+    }
 
+    QJsonDocument jsonDoc(jsonArray);
+    qDebug() << jsonDoc;
+
+    return jsonDoc.toJson();
+}
+
+void CServer::DeserializeChannels(QByteArray in)
+{
         //Deserialize byte array into a json document
         QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
 
-        if(jsonDoc.isNull()){
+        if(jsonDoc.isNull())
+        {
             qDebug() <<"JSON doc is invalid (null)" << Qt::endl;
         }
 
         QJsonArray jsonArray = jsonDoc.array();
 
         //Get each element of the array
-        foreach( const QJsonValue & value, jsonArray){
-
+        foreach( const QJsonValue & value, jsonArray)
+        {
             //Convert it to an json object then to a channel
             QJsonObject obj = value.toObject();
             CChannel * newChannel = deserializeToChannel(obj);
@@ -686,15 +707,20 @@ void CServer::DeserializeChannels(QByteArray in){
 
             //check if the channel already exist or not
             bool exist = false;
+
             //if the channel exist, we reload it with new value
-            foreach(CChannel * c, get_channelList()){
-                if(c->get_id() == newChannel->get_id()){
+            foreach(CChannel * c, get_channelList())
+            {
+                if(c->get_id() == newChannel->get_id())
+                {
                     exist = true;
                     c->set_all(newChannel);
                 }
             }
+
             //if the channel doesnt exist, we add it to the list of channel
-            if(get_channelList().isEmpty() || exist == false){
+            if(get_channelList().isEmpty() || exist == false)
+            {
                 qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
                 addChannel(newChannel);
             }
@@ -708,10 +734,10 @@ void CServer::DeserializeChannels(QByteArray in){
          qDebug() << "MaxUsers: " << c->get_maxUsers()<< Qt::endl;
          qDebug() << "NbClients: " << c->get_nbClients()<< Qt::endl;
         }*/
-
 }
 
-CChannel * CServer::deserializeToChannel(QJsonObject json_obj){
+CChannel * CServer::deserializeToChannel(QJsonObject json_obj)
+{
     CChannel * channel = new CChannel();
 
     channel->deserialize(json_obj);
@@ -719,51 +745,61 @@ CChannel * CServer::deserializeToChannel(QJsonObject json_obj){
     return channel;
 }
 
-CClient * CServer::deserializeToClient(QJsonObject json_obj){
+CClient * CServer::deserializeToClient(QJsonObject json_obj)
+{
     CClient * client = new CClient();
     client->deserialize(json_obj);
     return client;
 }
 
-void CServer::deserializeChannel(QJsonArray & json_array){
+void CServer::deserializeChannel(QJsonArray & json_array)
+{
 
-    foreach( const QJsonValue & value, json_array){
-
+    foreach( const QJsonValue & value, json_array)
+    {
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CChannel * newChannel = deserializeToChannel(obj);
 
-
         //check if the channel already exist or not
         bool exist = false;
-        foreach(CChannel * c, get_channelList()){
+        foreach(CChannel * c, get_channelList())
+        {
             if(c->get_id() == newChannel->get_id())
+            {
                  exist = true;
+            }
         }
 
-        if(exist == false){
+        if(exist == false)
+        {
             addChannel(newChannel);
         }
     }
 }
 
-void CServer::deserializeClients(QJsonArray & json_array){
-
-    foreach( const QJsonValue & value, json_array){
+void CServer::deserializeClients(QJsonArray & json_array)
+{
+    foreach( const QJsonValue & value, json_array)
+    {
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CClient * newClient = deserializeToClient(obj);
 
         //check if the channel already exist or not
         bool exist = false;
-        foreach(CClient * c, get_clientList()){
+        foreach(CClient * c, get_clientList())
+        {
             if(c->get_id() == newClient->get_id())
+            {
                  exist = true; 
+            }
         }
 
         if(exist == false)
+        {
             addClient(newClient);
-
+        }
     }
 }
 
