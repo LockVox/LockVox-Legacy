@@ -237,11 +237,16 @@ void CServer::processIncomingData(QByteArray data){
     emit(updateMainWindow());
 }
 
-
-bool CServer::Register(QString username, QString mail, QString Password , QUuid uuid)
+bool CServer::Register(QString username, QString mail, QString password)
 {
     CPacket reg_pkt("0", "8");
-
+    QUuid uuid = QUuid::createUuid();
+    reg_pkt.Serialize_regReq(username, mail, password, uuid.toString());
+    if(m_socket->write(reg_pkt.GetByteArray()) == -1)
+    {
+        qDebug() << "Error in Register, can't write to socket" << Qt::endl;
+        return false;
+    }
     return true;
 
 }
@@ -250,7 +255,11 @@ bool CServer::Login(QString mail, QString passwd)
 {
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
-    m_socket->write(auth_pkt.GetByteArray());
+    if(m_socket->write(auth_pkt.GetByteArray()) == -1)
+    {
+        qDebug() << "Error in Login, can't write to socket" << Qt::endl;
+        return false;
+    }
 
     return true;
 }
