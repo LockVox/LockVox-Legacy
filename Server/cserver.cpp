@@ -172,6 +172,7 @@ void CServer::sendToClient(QByteArray out, CClient * client)
 void CServer::SendObjectsToClient()
 {
     //TODO
+    //ça sert a quoi au vue de la fct juste au dessus ?
     CPacket * packet = new CPacket("0","1");
     packet->Serialize(this);
     sendToAll(packet->GetByteArray());
@@ -606,8 +607,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
         }
         return;
  }
-
-
 
 QByteArray CServer::Serialize()
 {
