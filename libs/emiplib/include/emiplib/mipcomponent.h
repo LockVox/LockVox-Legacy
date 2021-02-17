@@ -33,7 +33,7 @@
 #include "mipconfig.h"
 #include "miperrorbase.h"
 #include "miptypes.h"
-#include <jthread/jmutex.h>
+#include <jmutex.h>
 #include <string>
 
 class MIPComponentChain;

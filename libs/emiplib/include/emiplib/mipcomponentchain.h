@@ -33,7 +33,7 @@
 #include "mipconfig.h"
 #include "miperrorbase.h"
 #include "mipmessage.h"
-#include <jthread/jthread.h>
+#include <jthread.h>
 #include <string>
 #include <list>
 
