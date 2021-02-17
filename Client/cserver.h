@@ -5,6 +5,7 @@
 #include <QtNetwork>
 #include <QDebug>
 #include <QRegExp>
+#include <QUuid>
 
 #include "src/includes/AbstractServer.h"
 
@@ -14,6 +15,7 @@
 #include "src/includes/audiooutput.h"
 
 #include "src/includes/cpacket.h"
+
 
 
 
@@ -73,7 +75,8 @@ class CServer : public AbstractServer
         void updateMainWindow();
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
-        void Login(QString mail, QString passwd);               //Requests the server to authenticate
+        int Login(QString mail, QString passwd);               //Requests the server to authenticate
+        int Register(QString username, Qstring mail, QString password, QUuid uuid);
 
     private slots:
 
@@ -89,4 +92,3 @@ class CServer : public AbstractServer
 };
 
 #endif // CSERVER_H
-
