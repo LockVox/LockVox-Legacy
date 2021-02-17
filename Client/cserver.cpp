@@ -238,16 +238,21 @@ void CServer::processIncomingData(QByteArray data){
 }
 
 
-int CServer::Register(QString username, QString mail, QString Password , QUuid uuid)
+bool CServer::Register(QString username, QString mail, QString Password , QUuid uuid)
 {
     CPacket reg_pkt("0", "8");
+
+    return true;
+
 }
 
-void CServer::Login(QString mail, QString passwd)
+bool CServer::Login(QString mail, QString passwd)
 {
     CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     m_socket->write(auth_pkt.GetByteArray());
+
+    return true;
 }
 
 void CServer::RequestServer(int type, int action, CClient * client, CChannel * chan){
