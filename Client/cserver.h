@@ -11,8 +11,6 @@
 
 #include "src/includes/cclient.h"
 #include "src/includes/cchannel.h"
-#include "src/includes/audioinput.h"
-#include "src/includes/audiooutput.h"
 
 #include "src/includes/cpacket.h"
 
@@ -76,6 +74,8 @@ class CServer : public AbstractServer
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
         bool Login(QString mail, QString passwd);               //Requests the server to authenticate
+
+        //bool Register(QString username, QString mail, QString password, QUuid uuid);
 
         bool Register(QString username, QString mail, QString password);
 

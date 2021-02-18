@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui_register = new RegisterWindow(this);
     ui->setupUi(this);
     this->setWindowTitle("LockVox");
-
+    this->show();
 
     m_timer = new QTimer();
     window = 0;

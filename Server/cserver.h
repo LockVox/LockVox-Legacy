@@ -15,9 +15,6 @@
 #include "src/includes/cchannel.h"
 #include "src/includes/cdatabase.h"
 
-#include "src/includes/audioinput.h"
-#include "src/includes/audiooutput.h"
-
 #include "src/includes/cpacket.h"
 
 
@@ -30,6 +27,7 @@ class CServer : public AbstractServer
 
     Q_OBJECT
     public:
+
         CServer();
 
         //Getters
@@ -90,4 +88,3 @@ class CServer : public AbstractServer
 };
 
 #endif // CSERVER_H
-

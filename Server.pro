@@ -10,8 +10,7 @@ CONFIG += c++11 console
 
 SOURCES += \
     src/AbstractServer.cpp \
-    src/audioinput.cpp \
-    src/audiooutput.cpp \
+    src/abstractaudio.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cdatabase.cpp \
@@ -29,8 +28,7 @@ HEADERS += \
     Server/cserver.h \
     src/includes/cmessage.h \
     src/includes/AbstractServer.h \
-    src/includes/audioinput.h \
-    src/includes/audiooutput.h \
+    src/includes/abstractaudio.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cdatabase.h \
