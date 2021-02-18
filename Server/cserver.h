@@ -15,9 +15,6 @@
 #include "src/includes/cchannel.h"
 #include "src/includes/cdatabase.h"
 
-#include "src/includes/audioinput.h"
-#include "src/includes/audiooutput.h"
-
 #include "src/includes/cpacket.h"
 
 
@@ -30,10 +27,6 @@ class CServer : public AbstractServer
 
     Q_OBJECT
     public:
-
-        //Audio
-        AudioInput * m_audio_in;
-        AudioOutput * m_audio_out;
 
         CServer();
 

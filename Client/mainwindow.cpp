@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui_login = new LoginWindow(this);
     ui->setupUi(this);
     this->setWindowTitle("LockVox");
-
+    this->show();
 
     m_timer = new QTimer();
     window = 0;

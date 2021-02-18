@@ -19,11 +19,10 @@ SOURCES += \
     Client/registerwindow.cpp \
     Client/userstatuswindow.cpp \
     src/AbstractServer.cpp \
-    src/audioinput.cpp \
-    src/audiooutput.cpp \
     src/cchannel.cpp \
     src/cclient.cpp \
     src/cpacket.cpp \
+    src/abstractaudio.cpp \
     Client/cserver.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp \
@@ -40,13 +39,12 @@ HEADERS += \
     Client/registerwindow.h \
     Client/userstatuswindow.h \
     src/includes/AbstractServer.h \
-    src/includes/audioinput.h \
-    src/includes/audiooutput.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
     src/includes/cpacket.h \
     src/includes/AbstractServer.h \
     src/includes/cmessage.h \
+    src/includes/abstractaudio.h \
     Client/cserver.h
 
 

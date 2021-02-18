@@ -4,8 +4,6 @@
 #include <QMainWindow>
 
 #include "Client/cserver.h"
-#include "src/includes/audioinput.h"
-#include "src/includes/audiooutput.h"
 
 
 
