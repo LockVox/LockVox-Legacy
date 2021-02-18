@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Loading UI File & Variable
     ui_login = new LoginWindow(this);
+    ui_register = new RegisterWindow(this);
     ui->setupUi(this);
     this->setWindowTitle("LockVox");
 
@@ -44,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_timer->start(100);
 }
-
 
 
 MainWindow::~MainWindow()
@@ -108,7 +108,6 @@ void MainWindow::on_changeState(int newState){
         {
 
            //ui->channel_layout->inse(layout_per_channel[i]);
-
 
            channelWidget * button = new channelWidget(this,m_server->get_channelList()[i]);
            list_channel_widgets.push_back(button);

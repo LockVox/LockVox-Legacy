@@ -77,10 +77,23 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/win32/ -lemiplib
+#INCLUDEPATH += $$PWD/libs/emiplib/include \
+#    $$PWD/libs/emiplib/lib
+#DEPENDPATH += $$PWD/libs/emiplib/include \
+#   $$PWD/libs/emiplib/lib
 
-INCLUDEPATH += $$PWD/libs/emiplib/include \
-    $$PWD/libs/emiplib/win32
-DEPENDPATH += $$PWD/libs/emiplib/include \
-    $$PWD/libs/emiplib/win32
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
+
+INCLUDEPATH += $$PWD/libs/emiplib/include
+DEPENDPATH += $$PWD/libs/emiplib/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib_d
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
+

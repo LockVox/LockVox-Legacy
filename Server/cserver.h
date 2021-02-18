@@ -30,11 +30,6 @@ class CServer : public AbstractServer
 
     Q_OBJECT
     public:
-
-        //Audio
-        AudioInput * m_audio_in;
-        AudioOutput * m_audio_out;
-
         CServer();
 
         //Getters
@@ -49,20 +44,16 @@ class CServer : public AbstractServer
         void sendToClient(const QString &message,CClient * client);         //Send message to a client
         void SendObjectsToClient();                                         //Send channels and clients objects
 
-
         void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
-
 
         //Admin
         void AddBannedUser(CClient * client);
         void RemoveBannedUser(CClient* client);
         QList<CClient*> GetBannedUserList();
 
-
         //Process
         void processIncomingData(CClient *sender, QByteArray data);         //Process incoming data
-
 
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
@@ -84,23 +75,17 @@ class CServer : public AbstractServer
 
 
     private slots:
-
         void onNewConnection();                                           //Add client to the server - default no channel           //get data
         void onDisconnectClient();                                        //Disconnecting client - del client from channel list - del client
         void onReceiveData();                                                //Server receive data
 
     private:
-
         //Server mode
         QTcpServer *serveur;
 
         //Database
         CDatabase * m_db;                                                   //Database
         QList<CClient*> m_banned_users;
-
-
-
-
 
 };
 
