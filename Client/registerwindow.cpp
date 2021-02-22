@@ -31,9 +31,7 @@ void RegisterWindow:: on_registerBtn_clicked()
    if(pwdTest == 0)
    {
        //REGISTER SERVER
-       emit(on_askServer(name, mail, pwd));
-
-
+       emit(on_askServer(name, mail, pwd, pwdConf));
    }
    else
    {

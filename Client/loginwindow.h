@@ -21,9 +21,13 @@ public:
 
 public slots:
     void on_loginBtn_clicked();
+    void on_registerBtn_clicked();
+
 
 signals:
     void on_askServer(QString,QString);
+    void displayRegisterWindow(int);
+
 
 private:
     Ui::LoginWindow *ui;

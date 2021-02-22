@@ -14,6 +14,14 @@
 
 class CServer;
 
+struct register_info{
+    QString email;
+    QString password;
+    QString password_confirm;
+    QString name;
+
+};
+
 class CPacket
 {
 public:
@@ -46,6 +54,9 @@ public:
         return id_channel;
     }
 
+    struct register_info get_RegisterInfo(){
+        return m_register;
+    }
 
     //Setters
     void SetType(QString p_type);
@@ -72,27 +83,27 @@ public:
     //Serialize specific object -
     void Serialize_newClient(CClient * client);                  //Serialize Client object ( Pseudo & ID & isOnline & ...)
     void Serialize_newChannel(CChannel * channel);               //Serialize Channel object ( Name & ID & MaxUsers=
+    void Serialize_myClient(CClient * client);
+
     void Serialize_auth(CClient* info, int code);
     void Serialize_authReq(QString email, QString pass);
     void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
-    void Serialize_regReq(QString username, QString mail, QString password, QString uuid);
+    void Serialize_regReq(QString username, QString mail, QString password,QString password_confirm);
     void Serialize_regAns(int code);
 
     //Deserialize specific object
+    CClient * Deserialize_myClient();
     CClient * Deserialize_newClient();
     CChannel * Deserialize_newChannel();
+
+
     QList<QString> Deserialize_auth();
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
-    QList<QString> Deserialize_regReq();
+    void Deserialize_regReq();
     int Deserialize_regAns();
 
 
-    struct register_info{
-        QString email;
-        QString password;
-        QString password_confirm;
-        QString name;
-    };
+
 
     void Serialize_Register(struct register_info reg);           //Serialize Register
     struct register_info Deserialize_Register();                 //Deserialize Register
@@ -120,6 +131,8 @@ private:
     //From Object to Byte Array
     QJsonDocument m_data;
     QByteArray m_ba;
+
+    struct register_info m_register;
 };
 
 #endif // CPACKET_H

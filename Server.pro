@@ -67,20 +67,15 @@ INCLUDEPATH += $$PWD/libs/openssl/include \
 DEPENDPATH += $$PWD/libs/openssl/include \
     $$PWD/libs/openssl/win32
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
+
+INCLUDEPATH += $$PWD/libs/emiplib/include
+DEPENDPATH += $$PWD/libs/emiplib/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib_d
 
 
-win32: LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jthread
-DEPENDPATH += $$PWD/libs/emiplib/include/jthread
-
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/emiplib/lib/jthread.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/libs/emiplib/lib/libjthread.a
-
-win32: LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jrtplib3
-DEPENDPATH += $$PWD/libs/emiplib/include/jrtplib3
-
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/emiplib/lib/jrtplib.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/libs/emiplib/lib/libjrtplib.a
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d

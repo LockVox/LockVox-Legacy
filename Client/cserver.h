@@ -77,7 +77,7 @@ class CServer : public AbstractServer
 
         //bool Register(QString username, QString mail, QString password, QUuid uuid);
 
-        bool Register(QString username, QString mail, QString password);
+        bool Register(QString username, QString mail, QString password,QString password_confirm);
 
     private slots:
 

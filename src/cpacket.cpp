@@ -244,21 +244,29 @@ void CPacket::Serialize_newChannel(CChannel* channel){
     m_obj["newChannel"] = channelObj;
 }
 
-void CPacket::Deserialize(){
-    try{
+void CPacket::Serialize_myClient(CClient * client){
+    QJsonObject clientObj;
+    clientObj.insert("id", client->get_id());
+    clientObj.insert("pseudo", client->get_pseudo());
+    clientObj.insert("isOnline", client->get_isOnline());
+    clientObj.insert("description", client->get_description());
+    clientObj.insert("uuid", client->get_uuid().toString());
+    m_obj["myClient"] = clientObj;
+}
 
-        if(m_obj.contains("mainObj")){
+void CPacket::Deserialize(){
+
+    qDebug() << m_obj;
+    if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
+
+            qDebug() << "m_type = " << m_type;
+            qDebug() << "m_action = " << m_action;
         }
-    }
-    catch(char* e)
-    {
-        qDebug() << "Error in deserialize : " << e;
-    }
 }
 
 CClient * CPacket::Deserialize_newClient(){
@@ -308,6 +316,31 @@ CChannel * CPacket::Deserialize_newChannel(){
     }
 }
 
+CClient * CPacket::Deserialize_myClient(){
+    try{
+        QString name,description;
+        int id;
+        bool isOnline;
+        QUuid uuid;
+
+        if(m_obj.contains("myClient")){
+            QJsonObject myClient = m_obj.value("newClient").toObject();
+            id = myClient.value("id").toInt();
+            name = myClient.value("pseudo").toString();
+            isOnline = myClient.value("isOnline").toBool();
+            description = myClient.value("description").toString();
+            QUuid uuid(myClient.value("uuid").toString());
+
+            CClient * client = new CClient(uuid , id,name,NULL, -1,isOnline, description);
+            qDebug() << "Name " << name << "   ID " << id;
+            return client;
+        }
+      }
+    catch(char* e)
+    {
+        qDebug() << "Error in deserialize newClient : " << e;
+    }
+}
 void CPacket::Serialize_ID(int chan, int client){
 
     QJsonObject channelObj;
@@ -420,34 +453,33 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
     }
 }
 
-void CPacket::Serialize_regReq(QString username, QString mail, QString password, QString uuid)
+void CPacket::Serialize_regReq(QString username, QString mail, QString password,QString password_confirm)
 {
     QJsonObject regObj;
     regObj.insert("username", username);
     regObj.insert("mail", mail);
     regObj.insert("password", password);
-    regObj.insert("uuid", uuid);
+    regObj.insert("password_confirm", password_confirm);
+
     m_obj["newReg"] = regObj;
 }
 
-QList<QString> CPacket::Deserialize_regReq()
+void CPacket::Deserialize_regReq()
 {
     try {
-        QList<QString> regReq;
         if(m_obj.contains("newReg"))
         {
             QJsonObject newReg = m_obj.value("newReg").toObject();
-            regReq.push_back(newReg.value("username").toString());
-            regReq.push_back(newReg.value("mail").toString());
-            regReq.push_back(newReg.value("password").toString());
-            regReq.push_back(newReg.value("uuid").toString());
+            m_register.name = newReg.value("username").toString();
+            m_register.email = newReg.value("mail").toString();
+            m_register.password = newReg.value("password").toString();
+            m_register.password_confirm = newReg.value("password_confirm").toString();
         }
-        return regReq;
+
     }  catch (char* e) {
         qDebug() << "Error in Deserialize_regReq :" << e;
         QList<QString> err;
         err.push_back("0");
-        return err;
     }
 }
 
@@ -455,7 +487,7 @@ void CPacket::Serialize_regAns(int code)
 {
     QJsonObject regAnsObj;
     regAnsObj.insert("code",code);
-    m_obj["ansReg"];
+    m_obj["ansReg"] = regAnsObj;
 }
 
 int CPacket::Deserialize_regAns()

@@ -17,7 +17,7 @@
    <widget class="QFrame" name="window">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>80</x>
       <y>20</y>
       <width>641</width>
       <height>551</height>
@@ -172,42 +172,6 @@ QLineEdit:hover{
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>380</y>
-       <width>231</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel {
-
-	background-color: transparent;
-	font: 8pt &quot;Nirmala UI&quot;;
-	
-	color: rgb(69, 108, 170);
-
-
-}
-
-
-QLabel:hover{
-
-		color: rgb(255, 127, 127);
-
-
-}
-</string>
-     </property>
-     <property name="text">
-      <string>Don't have an account : Create new one</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
@@ -244,6 +208,19 @@ QLabel:hover{
       <string>forgot your password ?</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="registerButton">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>390</y>
+       <width>261</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>You d'ont have an account ? Click here to create one</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -252,7 +229,7 @@ QLabel:hover{
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

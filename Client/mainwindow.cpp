@@ -10,9 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     //Loading UI File & Variable
     ui_login = new LoginWindow(this);
     ui_register = new RegisterWindow(this);
+
+
     ui->setupUi(this);
     this->setWindowTitle("LockVox");
-    this->show();
 
     m_timer = new QTimer();
     window = 0;
@@ -28,13 +29,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Connect
     connect(ui_login, SIGNAL(on_askServer(QString, QString)), m_server, SLOT(Login(QString,QString)));
-    connect(ui_register, SIGNAL(on_askServer(QString,QString,QString)), m_server, SLOT(Register(QString,QString,QString)));
+    connect(ui_register, SIGNAL(on_askServer(QString,QString,QString,QString)), m_server, SLOT(Register(QString,QString,QString,QString)));
+    connect(ui_login, SIGNAL(displayRegisterWindow(int)), this, SLOT(on_changeState(int)));
     connect(m_server, SIGNAL(changeState(int)), this, SLOT(on_changeState(int)));
-    connect(m_server, SIGNAL(on_Authentification(int)), this, SLOT(changeWindow(int)));
+    connect(m_server, SIGNAL(on_Authentification(int)), this, SLOT(on_changeState(int)));
     //connect(m_server, SIGNAL(updateMainWindow()), this, SLOT(Update(int)));
-
     connect(this, SIGNAL(RequestServer(int,int,CClient * client, CChannel * chan)), m_server, SLOT(RequestServer(int,int,CClient * client, CChannel * chan)));
     connect(m_timer, &QTimer::timeout, this, &MainWindow::Update);
+
 
     //Initialize widgets
 
@@ -54,19 +56,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::Update()
 {
-    if(window == 0 && this->isVisible()){
-        changeWindow();
-    }
-    if(window == 1 && ui_login->isVisible()){
-        changeWindow();
-    }
-
     if(m_state == 1){
-
         for(int i = 0; i < list_channel_widgets.size(); i++){
             list_channel_widgets[i]->Update();
         }
-   }
+   }    
 }
 
 
@@ -99,16 +93,15 @@ void MainWindow::on_status_clicked()
 
 void MainWindow::on_changeState(int newState){
     m_state = newState;
-    ui->channel_layout->setMargin(0);
+    changeWindow();
+
 
 
     if(m_state == 1){
-
+        ui->channel_layout->setMargin(0);
         for(int i = 0; i < m_server->get_channelList().size(); i++)
         {
-
            //ui->channel_layout->inse(layout_per_channel[i]);
-
            channelWidget * button = new channelWidget(this,m_server->get_channelList()[i]);
            list_channel_widgets.push_back(button);
 
@@ -117,42 +110,61 @@ void MainWindow::on_changeState(int newState){
            button->setMinimumSize(250, 61);
            ui->channel_layout->addWidget(button);
            connect(button,SIGNAL(RequestServer(int,int,CClient*,CChannel*)), m_server, SLOT(RequestServer(int,int,CClient*, CChannel*)));
-
         }
 
         for(int i = 0; i < m_server->get_clientList().size(); i++){
             QPushButton * button = new QPushButton(m_server->get_clientList()[i]->get_pseudo(),this);
             ui->client_layout->addWidget(button);
         }
-
     }
 }
 
 
-void MainWindow::changeWindow(int newValue){
-    window=newValue;
+void MainWindow::changeWindow(){
+    if(m_state == -1){
+        showLoginWindow();
+        return;
+    }
+
+    if(m_state == 0){
+        showRegisterWindow();
+        return;
+    }
+
+    if(m_state == 1){
+        showMainWindow();
+        return;
+    }
 }
 
 void MainWindow::showLoginWindow(){
-    if(this->isVisible()){
+    if(this->isVisible())
         this->hide();
-        ui_login->show();
-    }
+    if(ui_register->isVisible())
+        ui_register->hide();
+
+    ui_login->show();
 }
 
-void MainWindow::changeWindow()
-{
+void MainWindow::showRegisterWindow(){
+    if(this->isVisible())
+        this->hide();
     if(ui_login->isVisible())
-       {
-           ui_login->hide();
-           this->show();
-       }
-       else
-       {
-           this->hide();
-           ui_login->show();
-       }
+        ui_login->hide();
+
+    ui_register->show();
 }
+
+void MainWindow::showMainWindow(){
+    if(ui_register->isVisible())
+        ui_register->hide();
+    if(ui_login->isVisible())
+        ui_login->hide();
+
+    this->show();
+}
+
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {

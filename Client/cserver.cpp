@@ -33,7 +33,6 @@ void CServer::sendToServer(){
 
 }
 
-
 void CServer::onReceiveData(){
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
 
@@ -117,6 +116,18 @@ void CServer::processIncomingData(QByteArray data){
                     emit(on_Authentification(1));
                 }
             }
+             case 8: {
+                int code = packet->Deserialize_regAns();
+
+                //Register successfully
+                if(code == 1){
+                    m_self = packet->Deserialize_myClient();
+
+                    if(m_self){
+                        emit(on_Authentification(1));
+                    }
+                }
+             }
         }
     }
 
@@ -176,7 +187,6 @@ void CServer::processIncomingData(QByteArray data){
                 case 8: {
                     //Modif max user (voc)
                    CChannel * c = packet->Deserialize_newChannel();
-
                    CChannel * channel = get_channelById(c->get_id());
                  channel->set_maxUsers(c->get_maxUsers());
                     break;
@@ -237,16 +247,18 @@ void CServer::processIncomingData(QByteArray data){
     emit(updateMainWindow());
 }
 
-bool CServer::Register(QString username, QString mail, QString password)
+bool CServer::Register(QString username, QString mail, QString password,QString password_confirm)
 {
     CPacket reg_pkt("0", "8");
-    QUuid uuid = QUuid::createUuid();
-    reg_pkt.Serialize_regReq(username, mail, password, uuid.toString());
+
+    reg_pkt.Serialize_regReq(username, mail, password, password_confirm);
+
     if(m_socket->write(reg_pkt.GetByteArray()) == -1)
     {
         qDebug() << "Error in Register, can't write to socket" << Qt::endl;
         return false;
     }
+    m_socket->waitForBytesWritten();
     return true;
 
 }

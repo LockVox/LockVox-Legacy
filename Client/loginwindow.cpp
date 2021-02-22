@@ -6,6 +6,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    connect(ui->registerButton, & QPushButton::clicked, this, &LoginWindow::on_registerBtn_clicked);
     connect(ui->pushButton, &QPushButton::clicked, this, &LoginWindow::on_loginBtn_clicked);
 }
 
@@ -14,7 +15,7 @@ LoginWindow::~LoginWindow()
     delete ui;
 }
 
-void LoginWindow:: on_loginBtn_clicked()
+void LoginWindow::on_loginBtn_clicked()
 {
    QString mail,pwd;
    bool testmail = true;
@@ -33,5 +34,9 @@ void LoginWindow:: on_loginBtn_clicked()
    {
         emit(on_askServer(mail,pwd));
    }
+}
 
+void LoginWindow::on_registerBtn_clicked()
+{
+    emit(displayRegisterWindow(0));
 }

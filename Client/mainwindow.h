@@ -34,8 +34,11 @@ public:
 
 
     QTimer * m_timer;
+
     //Display UI
     void showLoginWindow();
+    void showRegisterWindow();
+    void showMainWindow();
     void changeWindow();
 
 public slots:
@@ -46,7 +49,6 @@ public slots:
 private slots:
 
     void Update();
-    void changeWindow(int newValue);
 
     void on_parameter_button_clicked();
     void on_newChannel();
@@ -59,7 +61,6 @@ private slots:
 
     void closeEvent(QCloseEvent *event);
 signals:
-
     void RequestServer(int,int,CClient * client, CChannel * chan);
 
 

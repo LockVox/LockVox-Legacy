@@ -17,10 +17,31 @@ CClient::CClient( const CClient & copy)
     m_isOnline = copy.m_isOnline;
 }
 
-CClient::CClient(int id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
+CClient::CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
     m_id = id;
+    m_pseudo = name;
+    m_soc = soc;
+    m_idChannel = idChannel;
+    m_isOnline = online;
+    m_description = description;
+    m_isAuthenticate = false;
+}
+CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
+{
+    m_uuid = id;
     m_pseudo = pseudo;
+    m_soc = soc;
+    m_idChannel = idChannel;
+    m_isOnline = online;
+    m_description = description;
+    m_isAuthenticate = false;
+}
+
+CClient::CClient(QUuid uuid,int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description){
+    m_uuid = uuid;
+    m_id =id;
+    m_pseudo = name;
     m_soc = soc;
     m_idChannel = idChannel;
     m_isOnline = online;

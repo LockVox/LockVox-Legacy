@@ -194,12 +194,18 @@ QList<CClient*> CServer::GetBannedUserList()
     return m_banned_users;
 }
 
+
 void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
         if(!sender)
             return;
 
         CPacket* packet = new CPacket(data, sender);
-        packet->Deserialize();
+
+
+        if(packet->GetAction() == NULL || packet->GetType() == NULL){
+            qDebug() << "Unable to deserialize mainObj - Request Aborted";
+            return;
+        }
 
         //Récupération du type
         switch (packet->GetType().toInt())
@@ -369,7 +375,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                         sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
                         sender->get_socket()->waitForBytesWritten();
-                        Sleep(100);
 
                         //If authentification suceed - Send Server Object to the client
                         if(valid)
@@ -383,7 +388,56 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                 case 8 :
                 {
+                    //Get Information from request
+                    packet->Deserialize_regReq();
 
+                    //Check informations
+                    if(packet->get_RegisterInfo().email.isNull() || packet->get_RegisterInfo().password.isNull() || packet->get_RegisterInfo().name.isNull())
+                        break;
+
+                    int id = 0;//add bdd request here or something
+                    QUuid * uuid = new QUuid();
+                    CClient * client = new CClient(uuid->toString(), id, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
+
+                    //To be functionnal - Add password confirm in deserialization of register
+                    //if(packet->get_RegisterInfo().password != packet->get_RegisterInfo().password_confirm)
+                    //  break;
+
+                    //Ask bdd here if the email and uuid already exist
+                    bool do_client_exist = false;
+
+                   if(do_client_exist){
+                       CPacket ans("0", "8");
+                       ans.Serialize_regAns(0);
+
+                       //Send register answer
+                       sender->get_socket()->write(ans.GetByteArray());
+                       sender->get_socket()->waitForBytesWritten();
+
+                       break;
+                   }
+
+                   //Add user in database
+                   m_db->newUser(packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+
+                   //Add client in the list of clients -
+                   addClient(client);
+
+                   //Send answer to the client
+                   CPacket ans("0", "8");
+                   ans.Serialize_regAns(1);
+
+                   //Serialize here the client with the corresponding information
+                   ans.Serialize_myClient(client);
+
+                   //Send register answer
+                   sender->get_socket()->write(ans.GetByteArray());
+                   sender->get_socket()->waitForBytesWritten();
+
+                   sender->get_socket()->write(Serialize());
+                   sender->get_socket()->waitForBytesWritten();
+
+                   break;
                 }
 
                 default:

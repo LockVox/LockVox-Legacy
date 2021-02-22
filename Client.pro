@@ -75,12 +75,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
-
-#INCLUDEPATH += $$PWD/libs/emiplib/include \
-#    $$PWD/libs/emiplib/lib
-#DEPENDPATH += $$PWD/libs/emiplib/include \
-#   $$PWD/libs/emiplib/lib
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d

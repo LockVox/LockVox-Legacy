@@ -17,6 +17,8 @@ class CClient
         CClient();                                          //Constructeur par défault
         CClient(const CClient & copy);                      //Constrcteur par copie
         CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);    //Constructeur perso
+        CClient(QUuid id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);
+        CClient(QUuid uuid,int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);
         CClient(QTcpSocket * soc);
 
         ~CClient() {};                                      //Destructeur
