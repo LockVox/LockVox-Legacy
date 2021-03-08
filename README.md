@@ -44,9 +44,9 @@ The project actually have :
 
 ## Authors :
 
-Valentin MONNOT
-Hugues MATTEI
-Hugo LAVEAU
-Louis BOURGEAIS
-François LELIEVRE
+- Valentin MONNOT (monnot@et.esiea.fr)
+- Hugues MATTEI
+- Hugo LAVEAU
+- Louis BOURGEAIS
+- François LELIEVRE
 
