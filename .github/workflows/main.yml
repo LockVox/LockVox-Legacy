@@ -1,8 +1,8 @@
 #form https://gist.github.com/cristianadam/49dfee3ce6fd359cda5f3b44e0d93536
 name: QMake Build Matrix
-
-on: [push]
-branches: [master]
+on:
+  push:
+    branche:  master
 
 env:
   QT_VERSION: 5.15.2
