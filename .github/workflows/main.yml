@@ -4,8 +4,8 @@ name: QMake Build Matrix
 on: [push]
 
 env:
-  QT_VERSION: 5.14.0
-  QT_CREATOR_VERSION: 4.11.0
+  QT_VERSION: 5.15.2
+  QT_CREATOR_VERSION: 4.14.1
   PLUGIN_PRO: Client.pro
   PLUGIN_NAME: Client
 
