@@ -7,6 +7,7 @@
 #include "Client/cserver.h"
 #include "cmessage.h"
 #include <QString>
+#include <QList>
 
 
 #include "src/includes/cchannel.h"
@@ -80,7 +81,8 @@ public:
     void Serialize_ID(int chan, QUuid client);                     //Serialize ID Object (ID chan & ID client)
     void Serialize_regReq(QString username, QString mail, QString password,QString password_confirm);
     void Serialize_regAns(int code);
-    void Serialize_Message(QDomDocument xml);
+    void Serialize_Message(CMessage msg);
+    void Serialize_MessageList(QList<CMessage> list);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
@@ -93,6 +95,7 @@ public:
     void Deserialize_regReq();
     int Deserialize_regAns();
     CMessage Deserialize_Message();
+    QList<CMessage> Deserialize_MessageList();
 
 
 

@@ -87,7 +87,7 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("uuid", client->get_uuid().toString());
    clientObj.insert("pseudo", client->get_pseudo());
    clientObj.insert("isOnline", client->get_isOnline());
-    clientObj.insert("description", client->get_description());
+   clientObj.insert("description", client->get_description());
    m_obj["newClient"] = clientObj;
 }
 
@@ -232,7 +232,10 @@ void CPacket::Serialize_auth(CClient* info, int code)
     {
     case 0:{
         authObj.insert("code", code);
-        Serialize_newClient(info);
+        authObj.insert("uuid", info->get_uuid().toString());
+        authObj.insert("pseudo", info->get_pseudo());
+        authObj.insert("isOnline", info->get_isOnline());
+        authObj.insert("description", info->get_description());
         break;
         }
     case 1:{
@@ -288,26 +291,49 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
 {
     try{
         int code;
-        CClient* tmp;
         QString err;
         if(m_obj.contains("newAuth"))
         {
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             code = newAuth.value("code").toInt();
-            switch(code){
-            case 0:{
-                tmp = Deserialize_newClient();
-                return tmp;         //On renvoie les infos client
-            }
-            case 1:
-            case 2:
-            case 3:
+            switch(code)
             {
-                err = newAuth.value("reason").toString();
-                tmp = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
-            }
-            default:
-                return NULL;    //bad packet
+                case 0:
+                {
+                    CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
+                    return tmp;         //On renvoie les infos client
+                    break;
+                }
+
+                case 1:
+                {
+                    err = newAuth.value("reason").toString();
+                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
+                    return error;
+                    break;
+                }
+
+                case 2:
+                {
+                    err = newAuth.value("reason").toString();
+                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
+                    return error;
+                    break;
+                }
+
+                case 3:
+                {
+                    err = newAuth.value("reason").toString();
+                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
+                    return error;
+                    break;
+                }
+
+                default:
+                {
+                    return NULL;    //bad packet
+                    break;
+                }
             }
         }
     }
@@ -373,11 +399,19 @@ int CPacket::Deserialize_regAns()
     }
 }
 
-void CPacket::Serialize_Message(QDomDocument xml)
+void CPacket::Serialize_Message(CMessage msg)
 {
     QJsonObject sendMsg;
-    sendMsg.insert("xml", xml.toString());
-    m_obj["message"] = sendMsg;
+    msg.toXML();
+    if(msg.get_xmlmessage().isNull())
+    {
+        qDebug() << "Why would you send an empty message ?" << Qt::endl;
+    }
+    else
+    {
+        sendMsg.insert("xml", msg.toString());
+        m_obj["message"] = sendMsg;
+    }
 }
 
 CMessage CPacket::Deserialize_Message()
@@ -396,9 +430,57 @@ CMessage CPacket::Deserialize_Message()
     }
     catch (char* e)
     {
-        qDebug() << "Error in Deserialize_sendMsg :" << e << Qt::endl;
+        qDebug() << "Error in Deserialize_Message :" << e << Qt::endl;
     }
     return null;
 }
+
+void CPacket::Serialize_MessageList(QList<CMessage> list)
+{
+    int index = 0;
+    QJsonArray msglist;
+
+    if(list[0].get_isPrivate() == false)
+    {
+        QJsonObject channel;
+        channel.insert("channel", list[0].get_to());
+    }
+
+    foreach(CMessage m, list)
+    {
+        m.toXML();
+        if(m.get_xmlmessage().isNull())
+        {
+            qDebug() << "Empty message ignored" << Qt::endl;
+        }
+        else
+        {
+            QJsonObject msg;
+            msg.insert("index",index);
+            msg.insert("xml",m.toString());
+            msglist.append(msg);
+            index++;
+        }
+    }
+    m_obj["message"] = msglist;
+}
+
+QList<CMessage> CPacket::Deserialize_MessageList()
+{
+    QList<CMessage> null;
+    null.append(CMessage("null","null","null",true));
+
+    try
+    {
+
+    }
+    catch (char *e)
+    {
+        qDebug() << "Error in Deserialize_MessageList :" << e << Qt::endl;
+    }
+    return null;
+}
+
+
 
 //UI

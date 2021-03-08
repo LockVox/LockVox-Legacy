@@ -10,6 +10,7 @@ CChannel::CChannel()
     m_name = "";
     m_id = 0;
     m_maxUsers = 5;
+    m_nbClients = 0;
 }
 
 /*
@@ -32,8 +33,7 @@ CChannel::CChannel(const CChannel & copy)
 */
 CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name) , m_id(id) , m_maxUsers(maxUsers)
 {
-
-
+    m_nbClients = 0;
 }
 
 /*
@@ -43,10 +43,9 @@ CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name) , m_id(id)
 */
 CChannel::CChannel(QString name, int id)
 {
-    m_clients.clear();
     m_name = name;
     m_id = id;
-
+    m_nbClients = 0;
 }
 
 /*
@@ -59,7 +58,7 @@ CChannel::CChannel(QList<CClient*> clients, QString name, int id)
     m_clients = clients;
     m_name = name;
     m_id = id;
-
+    m_nbClients = m_clients.size();
 }
 
 
@@ -201,6 +200,7 @@ void CChannel::deserialize(QJsonObject json_obj){
 */
 void CChannel::addUser(CClient * c){
     m_clients.append(c);
+    m_nbClients = m_clients.size();
 }
 
 /*
@@ -209,9 +209,12 @@ void CChannel::addUser(CClient * c){
 @return : none
 */
 void CChannel::delUser(QUuid idUser){
-   for(int i = 0; i < m_clients.size(); i++){
-       if(m_clients[i]->get_uuid() == idUser){
+   for(int i = 0; i < m_clients.size(); i++)
+   {
+       if(m_clients[i]->get_uuid() == idUser)
+       {
            m_clients.removeAt(i);
        }
    }
+   m_nbClients = m_clients.size();
 }

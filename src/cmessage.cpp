@@ -71,10 +71,23 @@ QString CMessage::get_message()
     return message;
 }
 
+bool CMessage::get_isPrivate()
+{
+    return isPrivate;
+}
+
 
 QDomDocument CMessage::get_xmlmessage()
 {
-    return xmlmessage;
+    if(xmlmessage.isNull())
+    {
+        qDebug() << "toXML() method must be called first !" << Qt::endl;
+        return QDomDocument();
+    }
+    else
+    {
+        return xmlmessage;
+    }
 }
 
 //Methods
@@ -131,5 +144,13 @@ void CMessage::toXML()
 
 QString CMessage::toString()
 {
-    return xmlmessage.toString();
+    if(xmlmessage.isNull())
+    {
+        qDebug() << "toXML() method must be called first !" << Qt::endl;
+        return "null";
+    }
+    else
+    {
+        return xmlmessage.toString();
+    }
 }

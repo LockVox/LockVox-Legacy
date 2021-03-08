@@ -70,7 +70,7 @@ string CDatabase::getHash(string mail)
 
         // Execute a sql statement
 
-        string query = "SELECT password FROM utilisateurs WHERE username = \"";
+        string query = "SELECT password FROM utilisateurs WHERE mail = \"";
 
         query += mail;
         query += "\";";
@@ -329,7 +329,7 @@ QList<CClient*> CDatabase::parseClient()
 CClient* CDatabase::parseClient(string email)
 {
     CClient* client;
-    string query = "SELECT * FROM utilisateurs WHERE username = '";
+    string query = "SELECT * FROM utilisateurs WHERE mail = '";
     query += email + "'";
     char* tmp =0;
     try {

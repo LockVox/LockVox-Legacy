@@ -23,7 +23,8 @@ void CServer::set_socket(QTcpSocket* soc){
 }
 
 //Envoie de l'audio au server grâce à un QByteArray
-void CServer::sendToServer(QByteArray ba){
+void CServer::sendToServer(QByteArray ba)
+{
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
     m_socket->waitForBytesWritten();
@@ -61,9 +62,11 @@ void CServer::processIncomingData(QByteArray data){
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
 
-                for(int i = 0; i < get_clientList().size(); i++){
-                    if(get_clientList()[i]->get_uuid() == client->get_uuid()){
-                        get_clientById(client->get_uuid())->set_isOnline(false);
+                for(int i = 0; i < get_clientList().size(); i++)
+                {
+                    if(get_clientList()[i]->get_uuid() == client->get_uuid())
+                    {
+                        get_clientById(client->get_uuid())->set_isOnline(true);
                     }
                 }
                 free(client);
@@ -110,9 +113,12 @@ void CServer::processIncomingData(QByteArray data){
 
                 break;
                 }
-            case 7: {
+            case 7:
+            {
                 m_self = packet->Deserialize_authAns();
-                if(m_self){
+                if(m_self)
+                {
+                    qDebug() << "Your UUID is :" << m_self->get_uuid().toString() << Qt::endl;
                     emit(on_Authentification(1));
                 }
             }
@@ -123,7 +129,8 @@ void CServer::processIncomingData(QByteArray data){
                 if(code == 1){
                     m_self = packet->Deserialize_myClient();
 
-                    if(m_self){
+                    if(m_self)
+                    {
                         emit(on_Authentification(1));
                     }
                 }

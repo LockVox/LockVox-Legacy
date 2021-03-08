@@ -231,7 +231,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                        CPacket ans("0","0");
                        ans.Serialize_newClient(client);
                        sendToAll(ans.GetByteArray());
-
                        break;
                     }
 
@@ -341,16 +340,17 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         hashed = sha256(hashed);
                         bool valid = false;
 
-                        if(hashed == m_db->getHash(info[1].toStdString()))  //Si le mdp correspond à l'utilisateur
+                        if(hashed == m_db->getHash(info[0].toStdString()))  //Si le mdp correspond à l'utilisateur
                         {
                             CClient * tmp_client = m_db->parseClient(info[0].toStdString());
-                            if(tmp_client) //Si l'utilisateur existe pas
+                            if(tmp_client) //Si l'utilisateur existe
                             {
                                 for(auto c : m_clients) //Vérification de connexion déjà existante
                                 {
                                     if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
                                         ans->Serialize_auth(NULL, 2);
+                                        qDebug() << "Already connected" << Qt::endl;
                                     }
                                     if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {

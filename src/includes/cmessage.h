@@ -20,10 +20,10 @@ class CMessage
         QString get_message(); //return content of the message
         bool get_isPrivate(); //return if it's a private message
 
-        QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format
+        QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format, toXML() must be called first
 
         void toXML(); //Init QDomDocument xmlmessage from var
-        QString toString(); //Convert QDomDocument xmlmessage in to string, toXML() should be called before
+        QString toString(); //Convert QDomDocument xmlmessage in to string, toXML() must be called first
 
     private:
 
