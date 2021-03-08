@@ -5,6 +5,7 @@
 #include "cclient.h"
 #include "cchannel.h"
 #include "Client/cserver.h"
+#include "cmessage.h"
 #include <QString>
 
 
@@ -62,17 +63,6 @@ public:
     void SetType(QString p_type);
     void SetAction(QString p_action);
 
-    //Text<-->code
-    QString TypeDecode(QString p_type);
-    QString ServerDecode(QString p_action);
-    QString ChannelDecode(QString p_action);
-    QString UserDecode(QString p_action);
-
-    char TypeEncode(QString p_type);
-    char ServerEncode(QString p_action);
-    char ChannelEncode(QString p_action);
-    char UserEncode(QString p_action);
-
     //Serialiaze
     void Serialize();                                            //Server mainObj - Type & Action
     void Deserialize();                                          //Deserialize mainObj - Type & Action
@@ -90,6 +80,7 @@ public:
     void Serialize_ID(int chan, QUuid client);                     //Serialize ID Object (ID chan & ID client)
     void Serialize_regReq(QString username, QString mail, QString password,QString password_confirm);
     void Serialize_regAns(int code);
+    void Serialize_Message(QDomDocument xml);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
@@ -101,6 +92,7 @@ public:
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
     void Deserialize_regReq();
     int Deserialize_regAns();
+    CMessage Deserialize_Message();
 
 
 

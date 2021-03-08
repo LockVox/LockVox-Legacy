@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QRegExp>
 #include <QUuid>
+#include <QtXml>
 
 #include "src/includes/AbstractServer.h"
 

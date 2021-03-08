@@ -48,147 +48,6 @@ void CPacket::SetAction(QString p_action)
     m_action = p_action;
 }
 
-//Text<-->Code
-
-QString CPacket::TypeDecode(QString p_type)
-{
-    switch (p_type.toInt()) {
-
-    case 0: return "Server";
-    case 1: return "Channel";
-    case 2: return "User";
-    default: return "Invalid code";
-    }
-}
-
-QString CPacket::ServerDecode(QString p_action)
-{
-    switch(p_action.toInt()) {
-    case 0: return "Connexion";
-    case 1: return "Deconnexion";
-    case 2: return "Nick";
-    case 3: return "Description";
-    case 4: return "Ban";
-    case 5: return "IPBan";
-    case 6: return "Kick";
-    default: return "Invalid action";
-    }
-}
-
-QString CPacket::ChannelDecode(QString p_action)
-{
-    switch (p_action.toInt()) {
-    case 0: return "Connexion";
-    case 1: return "Deconnexion";
-    case 2: return "text_send";
-    case 3: return "text_modif";
-    case 4: return "text_del";
-    case 5: return "chanv_create";
-    case 6: return "chanv_del";
-    case 7: return "chanv_rename";
-    case 8: return "chanv_setmax";
-    case 9: return "chanv_kick";
-    case 10: return "chanv_mute";
-    case 11: return "chant_create";
-    case 12: return "chant_delete";
-    case 13: return "chant_rename";
-    default: return "Invalid action";
-    }
-}
-
-QString CPacket::UserDecode(QString p_action)
-{
-    switch(p_action.toInt()){
-    case 0: return "Mute";
-    case 1: return "add_friend";
-    case 2: return "del_friend";
-    case 3: return "msg_friend";
-    case 4: return "nick_mod";
-    case 5: return "right_mod";
-    default: return "Invalid action";
-    }
-}
-
-char CPacket::TypeEncode(QString p_type)
-{
-    if(p_type == "Server")
-        return 0;
-    if(p_type == "Channel")
-        return 1;
-    if(p_type == "User")
-        return 2;
-    return 0xFF;
-}
-
-char CPacket::ServerEncode(QString p_action)
-{
-    if(p_action == "Connexion")
-        return 0;
-    if(p_action == "Deconnexion")
-        return 1;
-    if(p_action == "Nick")
-        return 2;
-    if(p_action == "Description")
-        return 3;
-    if(p_action == "Ban")
-        return 4;
-    if(p_action == "IPBan")
-        return 5;
-    if(p_action == "Kick")
-        return 6;
-    return 0xFF;
-}
-
-char CPacket::ChannelEncode(QString p_action)
-{
-    if(p_action == "Connexion")
-        return 0;
-    if(p_action == "Deconnexion")
-        return 1;
-    if(p_action == "text_send")
-        return 2;
-    if(p_action == "text_modif")
-        return 3;
-    if(p_action == "text_del")
-        return 4;
-    if(p_action == "chanv_create")
-        return 5;
-    if(p_action == "chanv_del")
-        return 6;
-    if(p_action == "chanv_rename")
-        return 7;
-    if(p_action == "chanv_setmax")
-        return 8;
-    if(p_action == "chanv_kick")
-        return 9;
-    if(p_action == "chanv_mute")
-        return 10;
-    if(p_action == "chant_create")
-        return 11;
-    if(p_action == "chant_delete")
-        return 12;
-    if(p_action == "chant_rename")
-        return 13;
-    return 0xFF;
-}
-
-char CPacket::UserEncode(QString p_action)
-{
-    if(p_action == "Mute")
-        return 0;
-    if(p_action == "add_friend")
-        return 1;
-    if(p_action == "del_friend")
-        return 2;
-    if(p_action == "msg_friend")
-        return 3;
-    if(p_action == "nick_mod")
-        return 4;
-    if(p_action == "right_mod")
-        return 5;
-    return 0xFF;
-}
-
 void CPacket::Serialize(){
     QJsonObject mainObj;
 
@@ -290,7 +149,7 @@ CClient * CPacket::Deserialize_newClient(){
       }
     catch(char* e)
     {
-        qDebug() << "Error in deserialize newClient : " << e;
+        qDebug() << "Error in deserialize newClient : " << e << Qt::endl;
     }
 
     return NULL;
@@ -313,7 +172,7 @@ CChannel * CPacket::Deserialize_newChannel(){
     }
     catch(char* e)
     {
-        qDebug() << "Error in deserialize newChannel : " << e;
+        qDebug() << "Error in deserialize newChannel : " << e << Qt::endl;
         return NULL;
     }
     return NULL;
@@ -339,7 +198,7 @@ CClient * CPacket::Deserialize_myClient(){
       }
     catch(char* e)
     {
-        qDebug() << "Error in deserialize newClient : " << e;
+        qDebug() << "Error in deserialize newClient : " << e << Qt::endl;
     }
     return NULL;
 }
@@ -361,7 +220,7 @@ void CPacket::Deserialize_ID(){
     }
     catch(char* e)
     {
-        qDebug() << "Error in deserializeID : " << e;
+        qDebug() << "Error in deserializeID : " << e << Qt::endl;
     }
 }
 
@@ -397,6 +256,8 @@ void CPacket::Serialize_auth(CClient* info, int code)
 
 QList<QString> CPacket::Deserialize_auth()
 {
+    QList<QString> null; //null Qlist in case of error
+    null.append("null");
     try {
         QList<QString> info;
         if(m_obj.contains("newAuth"))
@@ -404,13 +265,15 @@ QList<QString> CPacket::Deserialize_auth()
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             info.push_back(newAuth.value("email").toString());
             info.push_back(newAuth.value("pass").toString());
+            return info;
         }
-        return info;
+        return null;
     }
     catch(char* e)
     {
-        qDebug() << "Error in Deserialize_auth :" << e;
+        qDebug() << "Error in Deserialize_auth :" << e << Qt::endl;
     }
+    return null;
 }
 
 void CPacket::Serialize_authReq(QString email, QString pass)
@@ -450,9 +313,10 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
     }
     catch(char* e)
     {
-        qDebug() << "Error in Deserialize_authAns : " << e;
+        qDebug() << "Error in Deserialize_authAns : " << e << Qt::endl;
         return NULL;
     }
+    return NULL;
 }
 
 void CPacket::Serialize_regReq(QString username, QString mail, QString password,QString password_confirm)
@@ -479,7 +343,7 @@ void CPacket::Deserialize_regReq()
         }
 
     }  catch (char* e) {
-        qDebug() << "Error in Deserialize_regReq :" << e;
+        qDebug() << "Error in Deserialize_regReq :" << e << Qt::endl;
         QList<QString> err;
         err.push_back("0");
     }
@@ -504,9 +368,37 @@ int CPacket::Deserialize_regAns()
         return code;
 
     }  catch (char* e) {
-        qDebug() << "Error in Deserialize_regAns :" << e;
+        qDebug() << "Error in Deserialize_regAns :" << e << Qt::endl;
         return NULL;
     }
+}
+
+void CPacket::Serialize_Message(QDomDocument xml)
+{
+    QJsonObject sendMsg;
+    sendMsg.insert("xml", xml.toString());
+    m_obj["message"] = sendMsg;
+}
+
+CMessage CPacket::Deserialize_Message()
+{
+    CMessage null("null","null","null",false); //null msg in case of error
+    try
+    {
+        if(m_obj.contains("message"))
+        {
+            QJsonObject sendMsg = m_obj.value("message").toObject();
+            CMessage msg(sendMsg.value("xml").toString());
+            return msg;
+        }
+
+        return null;
+    }
+    catch (char* e)
+    {
+        qDebug() << "Error in Deserialize_sendMsg :" << e << Qt::endl;
+    }
+    return null;
 }
 
 //UI
