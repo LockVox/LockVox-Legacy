@@ -17,7 +17,7 @@ CClient::CClient( const CClient & copy)
     m_isOnline = copy.m_isOnline;
 }
 
-CClient::CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description)
+/*CClient::CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
     m_id = id;
     m_pseudo = name;
@@ -26,22 +26,12 @@ CClient::CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool onl
     m_isOnline = online;
     m_description = description;
     m_isAuthenticate = false;
-}
+}*/
+
 CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
     m_uuid = id;
     m_pseudo = pseudo;
-    m_soc = soc;
-    m_idChannel = idChannel;
-    m_isOnline = online;
-    m_description = description;
-    m_isAuthenticate = false;
-}
-
-CClient::CClient(QUuid uuid,int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description){
-    m_uuid = uuid;
-    m_id =id;
-    m_pseudo = name;
     m_soc = soc;
     m_idChannel = idChannel;
     m_isOnline = online;
@@ -73,9 +63,9 @@ int CClient::get_idChannel(){
     return m_idChannel;
 }
 
-int CClient::get_id(){
+/*int CClient::get_id(){
     return m_id;
-}
+}*/
 
 QUuid CClient::get_uuid()
 {
@@ -116,9 +106,9 @@ void CClient::set_idChannel(int id){
     m_idChannel = id;
 }
 
-void CClient::set_id(int id){
+/*void CClient::set_id(int id){
     m_id = id;
-}
+}*/
 
 void CClient::set_isOnline(bool online)
 {
@@ -141,7 +131,7 @@ void CClient::set_uuid(QUuid uuid)
 }
 
 void CClient::set_all(CClient *c){
-    this->set_id(c->get_id());
+    this->set_uuid(c->get_uuid());
     this->set_pseudo(c->get_pseudo());
     this->set_idChannel(c->get_idChannel());
     this->set_mail(c->get_mail());
@@ -152,7 +142,7 @@ QByteArray CClient::serialize(){
 
     //Create JSON object from client
     QJsonObject obj;
-    obj["id"] = this->get_id();
+    obj["uuid"] = this->get_uuid().toString();
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
 
@@ -180,7 +170,8 @@ void CClient::deserialize(QByteArray & in){
         qDebug() << "JSON object is empty. " << Qt::endl;
     }
 
-    this->set_id(json_obj["id"].toInt());
+    QUuid tmp = QUuid::fromString(json_obj["uuid"].toString());
+    this->set_uuid(tmp);
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
 
@@ -191,21 +182,17 @@ void CClient::deserialize(QByteArray & in){
 //Serialize | Deserialize
 QJsonObject CClient::serializeToObj(){
     QJsonObject obj;
-    obj["id"] = this->get_id();
+    obj["uuid"] = this->get_uuid().toString();
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
 
     return obj;
 }
 void CClient::deserialize(QJsonObject json_obj){
-    this->set_id(json_obj["id"].toInt());
+    QUuid tmp = QUuid::fromString(json_obj["uuid"].toString());
+    this->set_uuid(tmp);
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
-}
-
-void CClient::generateUUID()
-{
-    m_uuid = QUuid::createUuid();
 }
 
 

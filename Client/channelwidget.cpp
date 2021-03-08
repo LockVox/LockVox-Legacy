@@ -60,7 +60,7 @@ void channelWidget::on_AddClient(CClient * c){
 }
 void channelWidget::on_DelClient(CClient * c){
     for(int i = 0; i < clients.size(); i++){
-          if(clients[i]->get_client()->get_id() == c->get_id())
+          if(clients[i]->get_client()->get_uuid() == c->get_uuid())
           {
               QLayoutItem* item;
               while ( ( item = client_layout->takeAt( 0 ) ) != NULL )
@@ -83,7 +83,7 @@ void channelWidget::Update(){
     for(int i = 0; i < channel->get_clients().size(); i++){
         bool exist = false;
         for(int j = 0; j < clients.size(); j++){
-            if(clients[j]->get_client()->get_id() == channel->get_clients()[i]->get_id()){
+            if(clients[j]->get_client()->get_uuid() == channel->get_clients()[i]->get_uuid()){
                 exist = true;
             }
         }

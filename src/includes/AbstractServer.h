@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QtWidgets>
 #include <QtNetwork>
+#include <QUuid>
 
 
 #include "src/includes/cchannel.h"
@@ -55,9 +56,9 @@ class AbstractServer : public QWidget
             return NULL;
         }
 
-        CClient * get_clientById(int id){
+        CClient * get_clientById(QUuid uuid){
             foreach(CClient * c, get_clientList()){
-                if(c->get_id() == id)
+                if(c->get_uuid() == uuid)
                     return c;
             }
             return NULL;
@@ -140,7 +141,7 @@ class AbstractServer : public QWidget
         void printClients(){
             qDebug() << "Clients : \n";
             foreach(CClient * c, get_clientList())
-                qDebug() << "ID" << c->get_id() << "Name " << c->get_pseudo()<< "\n";
+                qDebug() << "ID" << c->get_uuid() << "Name " << c->get_pseudo()<< "\n";
         }
 
 
@@ -160,14 +161,5 @@ class AbstractServer : public QWidget
 
         QList<CChannel*> m_channels;                        //List of channels
         QList<CClient*> m_clients;                          //List of clients
-
-
-
-
-
-
-
-
-
 
 };

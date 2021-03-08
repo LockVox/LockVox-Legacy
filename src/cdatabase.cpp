@@ -106,7 +106,7 @@ string CDatabase::getHash(string mail)
     return hash;
 }
 
-string CDatabase::newUser(string pseudo, string mail, string password)
+string CDatabase::newUser(string uuid, string pseudo, string mail, string password)
 {
     try {
         string existMail;
@@ -157,8 +157,9 @@ string CDatabase::newUser(string pseudo, string mail, string password)
         else
         {
             string hashed = sha256(password);
-            query = "INSERT INTO utilisateurs (username,password,mail) VALUES ('";
-            query += pseudo + "','" + hashed + "','" + mail + "');";
+
+            query = "INSERT INTO utilisateurs (uuid,username,password,mail) VALUES ('";
+            query += uuid + "','" + pseudo + "','" + hashed + "','" + mail + "');";
 
             if (mysql_query(conn, query.c_str()))
             {
@@ -263,8 +264,6 @@ QList<CClient*> CDatabase::parseClient()
     QList<CClient*> list_client;
     string query = "SELECT * FROM utilisateurs";
     char* tmp =0;
-    int id;
-
     try {
 
         // Format a MySQL object
@@ -298,11 +297,11 @@ QList<CClient*> CDatabase::parseClient()
        while((row = mysql_fetch_row(res)) != NULL)
        {
            tmp = (char*)row[0];
-           id = atoi(tmp);
+           QUuid uuid = QUuid::fromString(QString::fromStdString(tmp));
 
            QString name(row[1]);
 
-           CClient* client = new CClient(id,name,NULL,-1,false, "");
+           CClient* client = new CClient(uuid,name,NULL,-1,false, "");
 
            list_client.push_back(client);
        }
@@ -333,8 +332,6 @@ CClient* CDatabase::parseClient(string email)
     string query = "SELECT * FROM utilisateurs WHERE username = '";
     query += email + "'";
     char* tmp =0;
-    int id;
-
     try {
 
         // Format a MySQL object
@@ -367,13 +364,13 @@ CClient* CDatabase::parseClient(string email)
 
 
            tmp = (char*)row[0];
+           QUuid uuid = QUuid::fromString(QString::fromStdString(tmp));
            qDebug() << tmp;
-           id = atoi(tmp);
 
            QString name(row[1]);
            qDebug() << name;
 
-           client = new CClient(id,name,NULL,-1,false, ""); //A rework pour la description
+           client = new CClient(uuid,name,NULL,-1,false, ""); //A rework pour la description
        }
 
         // Release memories

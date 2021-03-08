@@ -7,7 +7,7 @@ CServer::CServer()
             m_socket = new QTcpSocket();
             m_self = NULL;
             m_socket->abort();
-            m_socket->connectToHost("128.78.81.134", 50885);
+            m_socket->connectToHost("192.168.1.80", 50885);
 
             connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
 }
@@ -62,8 +62,8 @@ void CServer::processIncomingData(QByteArray data){
                 client = packet->Deserialize_newClient();
 
                 for(int i = 0; i < get_clientList().size(); i++){
-                    if(get_clientList()[i]->get_id() == client->get_id()){
-                        get_clientList()[client->get_id()]->set_isOnline(false);
+                    if(get_clientList()[i]->get_uuid() == client->get_uuid()){
+                        get_clientById(client->get_uuid())->set_isOnline(false);
                     }
                 }
                 free(client);
@@ -76,8 +76,8 @@ void CServer::processIncomingData(QByteArray data){
                 CClient * client = packet->Deserialize_newClient();
 
                 for(int i = 0; i < get_clientList().size(); i++){
-                    if(get_clientList()[i]->get_id() == client->get_id()){
-                        get_clientList()[client->get_id()]->set_isOnline(false);
+                    if(get_clientList()[i]->get_uuid() == client->get_uuid()){
+                        get_clientById(client->get_uuid())->set_isOnline(false);
                     }
                 }
                 free(client);
@@ -88,7 +88,7 @@ void CServer::processIncomingData(QByteArray data){
             {
                 //PSEUDO UPDATE
                 CClient * c = packet->Deserialize_newClient();
-                CClient * client = get_clientById(c->get_id());
+                CClient * client = get_clientById(c->get_uuid());
                 client->set_pseudo(c->get_pseudo());
                 break;
             }
@@ -158,7 +158,7 @@ void CServer::processIncomingData(QByteArray data){
 
                     if(channel && client){
                         client->set_idChannel(-1);
-                        channel->delUser(client->get_id());
+                        channel->delUser(client->get_uuid());
                     }
                     break;
                 }
@@ -343,7 +343,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
         {
         case 0: {
             //CONNECT CHAN
-            request.Serialize_ID(chan->get_id(),m_self->get_id());
+            request.Serialize_ID(chan->get_id(),m_self->get_uuid());
             sendToServer(request.GetByteArray());
             break;
         }
@@ -582,7 +582,7 @@ void CServer::deserializeClients(QJsonArray & json_array){
         //check if the channel already exist or not
         bool exist = false;
         foreach(CClient * c, get_clientList()){
-            if(c->get_id() == newClient->get_id())
+            if(c->get_uuid() == newClient->get_uuid())
                  exist = true;
         }
 

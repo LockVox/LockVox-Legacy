@@ -2,6 +2,7 @@
 #define CCHANNEL_H
 
 #include <QJsonObject>
+#include <QUuid>
 #include "src/includes/cclient.h"
 
 class CMessage;
@@ -41,7 +42,7 @@ class CChannel
 
         //Action
         void addUser(CClient * c);
-        void delUser(int idUser);
+        void delUser(QUuid idUser);
 
     signals:
 

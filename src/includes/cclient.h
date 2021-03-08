@@ -16,9 +16,8 @@ class CClient
     public:
         CClient();                                          //Constructeur par défault
         CClient(const CClient & copy);                      //Constrcteur par copie
-        CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);    //Constructeur perso
+        //CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);    //Constructeur perso
         CClient(QUuid id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);
-        CClient(QUuid uuid,int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);
         CClient(QTcpSocket * soc);
 
         ~CClient() {};                                      //Destructeur
@@ -30,7 +29,7 @@ class CClient
         QString get_mail();
         QTcpSocket * get_socket();
         int get_idChannel();
-        int get_id();
+        //int get_id();
         bool get_isOnline();
         bool get_isAuthenticate();
         QString get_description();
@@ -41,7 +40,7 @@ class CClient
         void set_mail(QString mail);
         void set_socket(QTcpSocket * soc);
         void set_idChannel(int id);
-        void set_id(int id);
+        //void set_id(int id);
         void set_all(CClient *c);
         void set_isOnline(bool online);
         void set_isAuthenticate(bool Auth);
@@ -55,9 +54,6 @@ class CClient
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
 
-        void generateUUID();
-
-
     private slots:
 
 
@@ -67,18 +63,12 @@ class CClient
         QString m_description;
         QTcpSocket * m_soc;
 
-        int m_id;
+        //int m_id;
         QUuid m_uuid;
         int m_idChannel;
 
         bool m_isOnline;
         bool m_isAuthenticate;
-
-
 };
-
-
-
-
 
 #endif // CCLIENT_H

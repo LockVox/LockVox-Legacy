@@ -225,7 +225,7 @@ QByteArray CPacket::Serialize(bool isActionValid){
 void CPacket::Serialize_newClient(CClient* client){
 
    QJsonObject clientObj;
-   clientObj.insert("id", client->get_id());
+   clientObj.insert("uuid", client->get_uuid().toString());
    clientObj.insert("pseudo", client->get_pseudo());
    clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
@@ -246,7 +246,7 @@ void CPacket::Serialize_newChannel(CChannel* channel){
 
 void CPacket::Serialize_myClient(CClient * client){
     QJsonObject clientObj;
-    clientObj.insert("id", client->get_id());
+    clientObj.insert("uuid", client->get_uuid().toString());
     clientObj.insert("pseudo", client->get_pseudo());
     clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
@@ -272,13 +272,13 @@ void CPacket::Deserialize(){
 CClient * CPacket::Deserialize_newClient(){
     try{
         QString name;
-        int id;
+        QUuid id;
         bool isOnline;
         QString description;
 
         if(m_obj.contains("newClient")){
             QJsonObject newClient = m_obj.value("newClient").toObject();
-            id = newClient.value("id").toInt();
+            id = QUuid::fromString(newClient.value("id").toString());
             name = newClient.value("pseudo").toString();
             isOnline = newClient.value("isOnline").toBool();
             description = newClient.value("description").toString();
@@ -292,6 +292,8 @@ CClient * CPacket::Deserialize_newClient(){
     {
         qDebug() << "Error in deserialize newClient : " << e;
     }
+
+    return NULL;
 }
 
 CChannel * CPacket::Deserialize_newChannel(){
@@ -314,24 +316,23 @@ CChannel * CPacket::Deserialize_newChannel(){
         qDebug() << "Error in deserialize newChannel : " << e;
         return NULL;
     }
+    return NULL;
 }
 
 CClient * CPacket::Deserialize_myClient(){
     try{
         QString name,description;
-        int id;
+        QUuid id;
         bool isOnline;
-        QUuid uuid;
 
         if(m_obj.contains("myClient")){
             QJsonObject myClient = m_obj.value("newClient").toObject();
-            id = myClient.value("id").toInt();
+            id = QUuid::fromString(myClient.value("uuid").toString());
             name = myClient.value("pseudo").toString();
             isOnline = myClient.value("isOnline").toBool();
             description = myClient.value("description").toString();
-            QUuid uuid(myClient.value("uuid").toString());
 
-            CClient * client = new CClient(uuid , id,name,NULL, -1,isOnline, description);
+            CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
             qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
@@ -340,12 +341,13 @@ CClient * CPacket::Deserialize_myClient(){
     {
         qDebug() << "Error in deserialize newClient : " << e;
     }
+    return NULL;
 }
-void CPacket::Serialize_ID(int chan, int client){
+void CPacket::Serialize_ID(int chan, QUuid client){
 
     QJsonObject channelObj;
     channelObj.insert("id_channel", chan);
-    channelObj.insert("id_client", client);
+    channelObj.insert("id_client", client.toString());
 
     m_obj["id"] = channelObj;
 
@@ -355,7 +357,7 @@ void CPacket::Deserialize_ID(){
     try{
         QJsonObject id = m_obj.value("id").toObject();
         id_channel = id.value("id_channel").toInt();
-        id_client = id.value("id_client").toInt();
+        id_client = QUuid::fromString(id.value("id_client").toString());
     }
     catch(char* e)
     {
@@ -439,7 +441,7 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
             case 3:
             {
                 err = newAuth.value("reason").toString();
-                tmp = new CClient(-1, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
+                tmp = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
             }
             default:
                 return NULL;    //bad packet

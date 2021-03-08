@@ -33,7 +33,7 @@ public:
     CDatabase();           // Constructor
     bool execMain();  // Main Process
     string getHash(string id);
-    string newUser(string pseudo, string mail, string password);
+    string newUser(string uuid,string pseudo, string mail, string password);
 
     QList<CChannel*> parseChannel();
     QList<CClient*> parseClient();

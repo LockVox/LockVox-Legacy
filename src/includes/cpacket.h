@@ -46,7 +46,7 @@ public:
         return m_ba;
     }
 
-    int get_IdClient(){
+    QUuid get_IdClient(){
         return id_client;
     }
 
@@ -87,7 +87,7 @@ public:
 
     void Serialize_auth(CClient* info, int code);
     void Serialize_authReq(QString email, QString pass);
-    void Serialize_ID(int chan, int client);                     //Serialize ID Object (ID chan & ID client)
+    void Serialize_ID(int chan, QUuid client);                     //Serialize ID Object (ID chan & ID client)
     void Serialize_regReq(QString username, QString mail, QString password,QString password_confirm);
     void Serialize_regAns(int code);
 
@@ -121,7 +121,7 @@ private:
 
 
     //If ID object exist - on call Deserialize_ID();
-    int id_client;
+    QUuid id_client;
     int id_channel;
 
 

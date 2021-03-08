@@ -17,7 +17,8 @@ CChannel::CChannel()
 @param : channel to copy
 @return : none
 */
-CChannel::CChannel(const CChannel & copy){
+CChannel::CChannel(const CChannel & copy)
+{
     m_name = copy.m_name;
     m_nbClients = copy.m_nbClients;
     m_maxUsers = copy.m_maxUsers;
@@ -207,9 +208,9 @@ void CChannel::addUser(CClient * c){
 @param : id of the client
 @return : none
 */
-void CChannel::delUser(int idUser){
+void CChannel::delUser(QUuid idUser){
    for(int i = 0; i < m_clients.size(); i++){
-       if(m_clients[i]->get_id() == idUser){
+       if(m_clients[i]->get_uuid() == idUser){
            m_clients.removeAt(i);
        }
    }

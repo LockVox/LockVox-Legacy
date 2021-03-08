@@ -222,9 +222,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                        client = packet->Deserialize_newClient();
                        addClient(client);
 
-                       if(get_clientList()[client->get_id()]->get_isOnline() == true)
+                       if(get_clientById(client->get_uuid())->get_isOnline() == true)
                        {
-                           get_clientList()[client->get_id()]->set_isOnline(false);
+                           get_clientById(client->get_uuid())->set_isOnline(false);
                        }
 
                        //Update info -
@@ -243,9 +243,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                         for(int i = 0; i < get_clientList().size(); i++)
                         {
-                            if(get_clientList()[i]->get_id() == client->get_id())
+                            if(get_clientList()[i]->get_uuid() == client->get_uuid())
                             {
-                                get_clientList()[client->get_id()]->set_isOnline(false);
+                                get_clientById(client->get_uuid())->set_isOnline(false);
                             }
                         }
 
@@ -318,7 +318,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                         for(auto c : m_clients)
                         {
-                            if(client->get_id() == c->get_id())
+                            if(client->get_uuid() == c->get_uuid())
                             {
                                 sendToAll(packet->GetByteArray());
                                 m_clients.removeOne(c);
@@ -348,11 +348,11 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             {
                                 for(auto c : m_clients) //Vérification de connexion déjà existante
                                 {
-                                    if(tmp_client->get_id() == c->get_id() && c->get_isAuthenticate()) //utilisateur déjà co
+                                    if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
                                         ans->Serialize_auth(NULL, 2);
                                     }
-                                    if(tmp_client->get_id() == c->get_id() && !c->get_isAuthenticate()) //Si c'est valide
+                                    if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {
                                         //mettre l'utilisateur authentifié
                                         c->set_isAuthenticate(true);
@@ -395,48 +395,50 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     if(packet->get_RegisterInfo().email.isNull() || packet->get_RegisterInfo().password.isNull() || packet->get_RegisterInfo().name.isNull())
                         break;
 
-                    int id = 0;//add bdd request here or something
-                    QUuid * uuid = new QUuid();
-                    CClient * client = new CClient(uuid->toString(), id, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
+                    QUuid uuid = QUuid::createUuid();
 
-                    //To be functionnal - Add password confirm in deserialization of register
-                    //if(packet->get_RegisterInfo().password != packet->get_RegisterInfo().password_confirm)
-                    //  break;
+                    string error = m_db->newUser(uuid.toString().toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
 
-                    //Ask bdd here if the email and uuid already exist
-                    bool do_client_exist = false;
+                    if(error == "mailerror")
+                    {
+                        //Mail already exist
+                        CPacket ans("0", "8");
+                        ans.Serialize_regAns(0);
 
-                   if(do_client_exist){
-                       CPacket ans("0", "8");
-                       ans.Serialize_regAns(0);
+                        //Send register answer
+                        sender->get_socket()->write(ans.GetByteArray());
+                        sender->get_socket()->waitForBytesWritten();
 
-                       //Send register answer
-                       sender->get_socket()->write(ans.GetByteArray());
-                       sender->get_socket()->waitForBytesWritten();
+                        break;
+                    }
 
-                       break;
-                   }
+                    else
+                    {
+                        if(error == "sqlquerry")
+                        {
+                            //Can't exec sql statement ?
+                        }
 
-                   //Add user in database
-                   m_db->newUser(packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+                        else
+                        {
+                            CClient * client = new CClient(uuid, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
+                            get_clientById(client->get_uuid())->set_isOnline(true);
 
-                   //Add client in the list of clients -
-                   addClient(client);
+                            //Send answer to the client
+                            CPacket ans("0", "8");
+                            ans.Serialize_regAns(1);
 
-                   //Send answer to the client
-                   CPacket ans("0", "8");
-                   ans.Serialize_regAns(1);
+                            //Serialize here the client with the corresponding information
+                            ans.Serialize_myClient(client);
 
-                   //Serialize here the client with the corresponding information
-                   ans.Serialize_myClient(client);
+                            //Send register answer
+                            sender->get_socket()->write(ans.GetByteArray());
+                            sender->get_socket()->waitForBytesWritten();
 
-                   //Send register answer
-                   sender->get_socket()->write(ans.GetByteArray());
-                   sender->get_socket()->waitForBytesWritten();
-
-                   sender->get_socket()->write(Serialize());
-                   sender->get_socket()->waitForBytesWritten();
-
+                            sender->get_socket()->write(Serialize());
+                            sender->get_socket()->waitForBytesWritten();
+                        }
+                    }
                    break;
                 }
 
@@ -453,7 +455,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     //JOIN CHANNEL
                     packet->Deserialize_ID();
 
-                    CClient * client = get_clientById(packet->get_IdClient());
+                    QUuid tmp = packet->get_IdClient();
+                    CClient * client = get_clientById(tmp);
                     CChannel * channel = get_channelById(packet->get_IdChannel());
 
 
@@ -465,7 +468,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     CPacket ans("1","0");
                     ans.Serialize();
-                    ans.Serialize_ID(channel->get_id(),client->get_id());
+                    ans.Serialize_ID(channel->get_id(),client->get_uuid());
 
                     sendToAll(ans.GetByteArray());
 
@@ -483,12 +486,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     if(channel && client)
                     {
                         client->set_idChannel(-1);
-                        channel->delUser(client->get_id());
+                        channel->delUser(client->get_uuid());
                     }
 
                     CPacket ans("1","1");
                     ans.Serialize();
-                    ans.Serialize_ID(channel->get_id(),client->get_id());
+                    ans.Serialize_ID(channel->get_id(),client->get_uuid());
 
                     sendToAll(ans.GetByteArray());
 
@@ -841,7 +844,7 @@ void CServer::deserializeClients(QJsonArray & json_array)
         bool exist = false;
         foreach(CClient * c, get_clientList())
         {
-            if(c->get_id() == newClient->get_id())
+            if(c->get_uuid() == newClient->get_uuid())
             {
                  exist = true; 
             }
@@ -853,30 +856,3 @@ void CServer::deserializeClients(QJsonArray & json_array)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
