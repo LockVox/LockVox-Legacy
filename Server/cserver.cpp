@@ -397,7 +397,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     QUuid uuid = QUuid::createUuid();
 
-                    string error = m_db->newUser(uuid.toString().toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+                    string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
 
                     if(error == "mailerror")
                     {
@@ -422,7 +422,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         else
                         {
                             CClient * client = new CClient(uuid, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
-                            get_clientById(client->get_uuid())->set_isOnline(true);
+                            addClient(client);
 
                             //Send answer to the client
                             CPacket ans("0", "8");
