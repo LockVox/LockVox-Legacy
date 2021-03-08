@@ -2,6 +2,7 @@
 name: QMake Build Matrix
 
 on: [push]
+branches: [master]
 
 env:
   QT_VERSION: 5.15.2
