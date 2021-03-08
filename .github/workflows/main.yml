@@ -14,6 +14,8 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
+    env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     strategy:
       matrix:
         config:
@@ -134,8 +136,6 @@ jobs:
           )
         endif()
     - name: Configure
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       shell: cmake -P {0}
       run: |
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
@@ -165,8 +165,6 @@ jobs:
           message(FATAL_ERROR "Bad exit status")
         endif()
     - name: Build
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       shell: cmake -P {0}
       run: |
         if ("${{ runner.os }}" STREQUAL "Windows")
