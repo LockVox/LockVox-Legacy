@@ -76,6 +76,16 @@ bool CMessage::get_isPrivate()
     return isPrivate;
 }
 
+QString CMessage::get_time()
+{
+    return time.toString("hh:mm:ss");
+}
+
+QString CMessage::get_date()
+{
+    return date.toString("d MMM yyyy");
+}
+
 
 QDomDocument CMessage::get_xmlmessage()
 {
