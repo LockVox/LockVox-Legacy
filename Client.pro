@@ -26,6 +26,7 @@ SOURCES += \
     Client/cserver.cpp \
     Client/main.cpp \
     Client/mainwindow.cpp \
+    Client/caudio.cpp \
     src/cmessage.cpp \
     src/AbstractServer.cpp
 
@@ -45,6 +46,7 @@ HEADERS += \
     src/includes/AbstractServer.h \
     src/includes/cmessage.h \
     src/includes/abstractaudio.h \
+    Client/caudio.h \
     Client/cserver.h
 
 
@@ -67,6 +69,7 @@ FORMS += \
 
 INCLUDEPATH += src \
     src/include \
+    libs/emiplib/include \
 
 
 # Default rules for deployment.
@@ -76,16 +79,26 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
 
-INCLUDEPATH += $$PWD/libs/emiplib/include
-DEPENDPATH += $$PWD/libs/emiplib/include
+INCLUDEPATH += $$PWD/libs/emiplib/include/emiplib
+DEPENDPATH += $$PWD/libs/emiplib/include/emiplib
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib_d
 
+INCLUDEPATH += $$PWD/libs/emiplib/include/jrtplib3
+DEPENDPATH += $$PWD/libs/emiplib/include/jrtplib3
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
 
+INCLUDEPATH += $$PWD/libs/emiplib/include/jthread
+DEPENDPATH += $$PWD/libs/emiplib/include/jthread
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio_d
+
+INCLUDEPATH += $$PWD/libs/emiplib/include/portaudio
+DEPENDPATH += $$PWD/libs/emiplib/include/portaudio

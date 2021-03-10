@@ -29,8 +29,8 @@
 
 #define JTHREADCONFIG_H
 
-#define JTHREAD_IMPORT 
-#define JTHREAD_EXPORT 
+#define JTHREAD_IMPORT __declspec(dllimport)
+#define JTHREAD_EXPORT __declspec(dllexport)
 #ifdef JTHREAD_COMPILING
 	#define JTHREAD_IMPORTEXPORT JTHREAD_EXPORT
 #else
@@ -39,7 +39,7 @@
 
 #define JTHREAD_CONFIG_WIN32THREADS
 
-// Using standard Win32 mutex
+#define JTHREAD_CONFIG_JMUTEXCRITICALSECTION
 
 #endif // JTHREADCONFIG_H
 
