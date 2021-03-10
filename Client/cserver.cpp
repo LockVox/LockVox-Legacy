@@ -436,6 +436,34 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
 }
 
+bool CServer::sendMessage(CMessage msg)
+{
+    CPacket sendMessage;
+    if(msg.get_isPrivate() ==  true)
+    {
+        sendMessage.SetType("2");
+        sendMessage.SetAction("6");
+
+        sendMessage.Serialize();
+    }
+    else
+    {
+        sendMessage.SetType("1");
+        sendMessage.SetAction("2");
+
+        sendMessage.Serialize();
+    }
+
+    sendMessage.Serialize_Message(msg);
+
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
+    {
+        qDebug() << "Error in Login, can't write to socket" << Qt::endl;
+        return false;
+    }
+    return true;
+}
+
 
 
 QByteArray CServer::Serialize(){

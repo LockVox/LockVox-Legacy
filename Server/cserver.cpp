@@ -498,6 +498,65 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     break;
                 }
 
+                case 2:
+                {
+                    //Text channel message
+                    CMessage msg = packet->Deserialize_Message();
+
+                    //Verify if it's a non private message
+                    if(msg.get_isPrivate() != false)
+                    {
+                        qDebug() << "Received a private message for a text channel ? Ignored." << Qt::endl;
+                        break;
+                    }
+                    msg.toXML();
+                    string filename = sha256(msg.toString().toStdString());
+
+                    QString path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
+                    QFile file(path);
+
+                    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                    {
+                        qDebug() << "Can't save received message from :" << msg.get_from() << " to :" << msg.get_to() << Qt::endl;
+                        break;
+                    }
+
+                    QTextStream stream(&file);
+                    stream << msg.toString();
+                    file.close();
+
+                    path = "storage/public/" +  msg.get_to()  + "/" + "index.json";
+
+                    if(QFile::exists(path))
+                    {
+                        //TODO
+                    }
+                    else
+                    {
+                        QFile index(path);
+                        if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                        {
+                            qDebug() << "Can't open index of channel n°" << msg.get_to() << Qt::endl;
+                            break;
+                        }
+
+                        QJsonArray array;
+                        QJsonObject obj;
+                        obj.insert("id","0");
+                        obj.insert("filename",QString::fromStdString(filename));
+                        array.append(obj);
+
+                        QJsonObject main;
+                        main["index"] = array;
+
+                        QJsonDocument jsonIndex;
+                        jsonIndex.setObject(main);
+
+                        QTextStream streamIndex(&index);
+                        streamIndex << jsonIndex.toJson();
+                    }
+                }
+
                 case 5:
                 {
                     //Create chan voc
@@ -652,6 +711,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     //TODO
 
                     break;
+                }
+
+                case 6:
+                {
+                    //Private message
+                    //TODO
                 }
 
                 default:
