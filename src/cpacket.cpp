@@ -439,13 +439,6 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
 {
     int index = 0;
     QJsonArray msglist;
-
-    if(list[0].get_isPrivate() == false)
-    {
-        QJsonObject channel;
-        channel.insert("channel", list[0].get_to());
-    }
-
     foreach(CMessage m, list)
     {
         m.toXML();
@@ -456,23 +449,53 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
         else
         {
             QJsonObject msg;
-            msg.insert("index",index);
             msg.insert("xml",m.toString());
-            msglist.append(msg);
+            QJsonObject tmp;
+            QString indexstr = QString::number(index);
+            tmp[indexstr] = msg;
+            msglist.append(tmp);
             index++;
         }
     }
-    m_obj["message"] = msglist;
+    m_obj["messagelist"] = msglist;
 }
-
 QList<CMessage> CPacket::Deserialize_MessageList()
 {
     QList<CMessage> null;
     null.append(CMessage("null","null","null",true));
+    QList<CMessage> list;
+    int index = 0;
 
     try
     {
+        if(m_obj.contains("messagelist"))
+        {
+            QJsonArray msglist = m_obj.value("messagelist").toArray();
 
+            while(!msglist.isEmpty())
+            {
+                QJsonObject tmp = msglist.first().toObject();
+                QString indexstr = QString::number(index);
+                if(tmp.contains(indexstr))
+                {
+                    QJsonObject tmp0 = tmp.value(indexstr).toObject();
+
+                    if(tmp0.contains("xml"))
+                    {
+                        CMessage tmpmsg(tmp0.value("xml").toString());
+                        tmpmsg.toXML();
+                        list.append(tmpmsg);
+                    }
+                    msglist.removeFirst();
+                    index++;
+                    indexstr = QString::number(index);
+                }
+            }
+        }
+        else
+        {
+            qDebug() << "No message list" << Qt::endl;
+        }
     }
     catch (char *e)
     {
@@ -480,7 +503,5 @@ QList<CMessage> CPacket::Deserialize_MessageList()
     }
     return null;
 }
-
-
 
 //UI

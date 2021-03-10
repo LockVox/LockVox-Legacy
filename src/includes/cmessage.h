@@ -18,7 +18,10 @@ class CMessage
         QString get_from(); //Return sender
         QString get_to(); //Return receiver
         QString get_message(); //return content of the message
+        QString get_time(); //Return time when message was sent
+        QString get_date(); //Return date when message was sent
         bool get_isPrivate(); //return if it's a private message
+
 
         QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format, toXML() must be called first
 
