@@ -47,7 +47,7 @@ protected:
     }
 };
 
-int main(void)
+/*int main(void)
 {
 #ifdef WIN32
     WSADATA dat;
@@ -113,7 +113,7 @@ int main(void)
 {
     std::cerr << "Not all necessary components are available to run this example." << std::endl;
     return 0;
-}
+}*/
 
 #endif
 

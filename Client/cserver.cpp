@@ -30,7 +30,8 @@ void CServer::sendToServer(QByteArray ba)
     m_socket->waitForBytesWritten();
 }
 
-void CServer::sendToServer(){
+void CServer::sendToServer()
+{
 
 }
 
@@ -436,10 +437,11 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
 }
 
-bool CServer::sendMessage(CMessage msg)
+bool CServer::sendMessage(QString msg)
 {
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
     CPacket sendMessage;
-    if(msg.get_isPrivate() ==  true)
+    if(message.get_isPrivate() ==  true)
     {
         sendMessage.SetType("2");
         sendMessage.SetAction("6");
@@ -454,7 +456,7 @@ bool CServer::sendMessage(CMessage msg)
         sendMessage.Serialize();
     }
 
-    sendMessage.Serialize_Message(msg);
+    sendMessage.Serialize_Message(message);
 
     if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {

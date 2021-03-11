@@ -514,7 +514,26 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     msg.toXML();
                     string filename = sha256(msg.toString().toStdString());
 
-                    QString path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
+                    QDir test;
+                    QString path = "storage/public/" +msg.get_to();
+
+                    if(!test.exists(path))
+                    {
+                        if(!test.mkpath(path))
+                        {
+                            qDebug() << "Directory doesn't exist and mkpath didn't worked properly" << Qt::endl;
+                        }
+                    }
+
+                    path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
+                    if(QFile::exists(path))
+                    {
+                        //Spamming copy paste drop the message
+                        //Send error packet to client
+                        //TODO
+                        break;
+                    }
+
                     QFile file(path);
 
                     if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -533,23 +552,23 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     if(QFile::exists(path))
                     {
-                        QList<QString> filenameList;
-                        filenameList = readChannelIndex(path,msg.get_to());
-                        if(filenameList.isEmpty())
+                        QList<QString> filename_list;
+                        filename_list = readChannelIndex(path);
+                        if(filename_list.isEmpty())
                         {
-                            qDebug() << "Error in readChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                            qDebug() << "Error in readChannelIndex for channel id:" << msg.get_to() << Qt::endl;
                             //Send error packet to client
                             //TODO
                             break;
                         }
                         else
                         {
-                            if(filenameList.first() == "no_index")
+                            if(filename_list.first() == "no_index")
                             {
-                                qDebug() << "No index in index.json from channel  n°" << msg.get_to() << Qt::endl;
-                                if(!createChannelIndex(filename,path,msg.get_to()))
+                                qDebug() << "No index in index.json from channel  id:" << msg.get_to() << Qt::endl;
+                                if(!createChannelIndex(filename,path))
                                 {
-                                    qDebug() << "Error in createChannelIndex from channel n°" << msg.get_to() << Qt::endl;
+                                    qDebug() << "Error in createChannelIndex from channel id:" << msg.get_to() << Qt::endl;
 
                                     //Send error packet to  client
                                     //TODO
@@ -558,8 +577,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             }
                             else
                             {
-                                filenameList.append(QString::fromStdString(filename));
-                                if(!insertChannelIndex(path,filenameList, msg.get_to()))
+                                filename_list.append(QString::fromStdString(filename));
+                                if(!insertChannelIndex(path,filename_list))
                                 {
                                     qDebug() << "Error in insertChannelIndex for channel n°" << msg.get_to() << Qt::endl;
                                     //Send error packet to client
@@ -570,7 +589,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     }
                     else
                     {
-                        if(!createChannelIndex(filename,path,msg.get_to()))
+                        if(!createChannelIndex(filename,path))
                         {
                             qDebug() << "Error in createChannelIndex for channel n°" << msg.get_to() << Qt::endl;
                             //Send error packet to  client
@@ -578,6 +597,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             break;
                         }
                     }
+
+                    //Send to all
+                    //TODO
                     break;
                 }
 
@@ -946,12 +968,20 @@ void CServer::deserializeClients(QJsonArray & json_array)
     }
 }
 
-bool CServer::createChannelIndex(string filename, QString path,QString to)
+// ///////////////////////////////////////////////////////// //
+//     Create an index.json for an empty channel and add     //
+//               the first message of it                     //
+//         filename should be the exacte file name           //
+//                  of the message file                      //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+// ///////////////////////////////////////////////////////// //
+bool CServer::createChannelIndex(string filename, QString path_to_index)
 {
-    QFile index(path);
+    QFile index(path_to_index);
     if(!index.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        qDebug() << "Can't open index of channel" << Qt::endl;
         return false;
     }
 
@@ -973,14 +1003,20 @@ bool CServer::createChannelIndex(string filename, QString path,QString to)
     return true;
 }
 
-QList<QString> CServer::readChannelIndex(QString path, QString to)
+// ///////////////////////////////////////////////////////// //
+//      returns the list of names of all messages files      //
+//             contained in the given index                  //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+// ///////////////////////////////////////////////////////// //
+QList<QString> CServer::readChannelIndex(QString path_to_index)
 {
-    QFile indexJson(path);
+    QFile indexJson(path_to_index);
     QList<QString> null;
 
     if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        qDebug() << "Can't open index of channel" << Qt::endl;
         return null;
     }
 
@@ -993,26 +1029,24 @@ QList<QString> CServer::readChannelIndex(QString path, QString to)
     {
         QJsonArray array = jsonObj.value("index").toArray();
         int index = 0;
-        QList<QString> filenameList;
+        QList<QString> filename_list;
 
         while(!array.isEmpty())
         {
             QJsonObject tmp = array.first().toObject();
-            QString indexstr = QString::number(index);
-            if(tmp.contains(indexstr))
+            if(tmp.value("id").toInt() == index)
             {
-                filenameList.append(tmp.value("filename").toString());
+                filename_list.append(tmp.value("filename").toString());
             }
             else
             {
-                qDebug() << "Error in index.json no containing correct index in channel n°" << to << Qt::endl;
+                qDebug() << "Error in index.json no containing correct index in channel"<< Qt::endl;
                 return null;
             }
             array.removeFirst();
             index++;
-            indexstr = QString::number(index);
         }
-        return filenameList;
+        return filename_list;
     }
     else
     {
@@ -1021,25 +1055,33 @@ QList<QString> CServer::readChannelIndex(QString path, QString to)
     }
 }
 
-bool CServer::insertChannelIndex(QString path, QList<QString> filenameList, QString to)
+// ///////////////////////////////////////////////////////// //
+//     Update index.json when inserting new message to it    //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+//    filename_list is the list of all filename of message   //
+// stored into for the given channel, can be exctracted with //
+//                     the above function                    //
+// ///////////////////////////////////////////////////////// //
+bool CServer::insertChannelIndex(QString path_to_index, QList<QString> filename_list)
 {
-    QFile indexJson(path);
+    QFile indexJson(path_to_index);
     if(!indexJson.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        qDebug() << "Can't open index of channel" << Qt::endl;
         return false;
     }
 
     QJsonArray array;
     int index = 0;
 
-    while(!filenameList.isEmpty())
+    while(!filename_list.isEmpty())
     {
         QJsonObject obj;
         obj.insert("id", index);
-        obj.insert("filename", filenameList.first());
+        obj.insert("filename", filename_list.first());
         array.append(obj);
-        filenameList.removeFirst();
+        filename_list.removeFirst();
         index++;
     }
 
@@ -1053,4 +1095,49 @@ bool CServer::insertChannelIndex(QString path, QList<QString> filenameList, QStr
     streamIndex << jsonIndex.toJson();
     indexJson.close();
     return true;
+}
+
+// ///////////////////////////////////////////////////////// //
+// Create a QList of CMessage stored localy using index.json //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+//      id refers to id of channel or user for storage       //
+//     isPrivate tells if it's a private message or not      //
+// ///////////////////////////////////////////////////////// //
+QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bool isPrivate)
+{
+    QList<QString> filename_list = readChannelIndex(path_to_index);
+    QList<CMessage> message_list;
+    QString default_path, path;
+
+    if(isPrivate)
+    {
+        default_path = "storage/private/" + id + "/";
+    }
+    else
+    {
+        default_path = "storage/public/" + id + "/";
+    }
+
+    foreach(QString filename, filename_list)
+    {
+        path = default_path + filename + ".xml";
+        if(QFile::exists(path))
+        {
+            QFile file(path);
+            if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                qDebug() << "Can't open file message [" << filename << "]" <<Qt::endl;
+            }
+            else
+            {
+                CMessage tmp(QString::fromLocal8Bit(file.readAll()));
+                message_list.append(tmp);
+            }
+        }
+        else
+        {
+            qDebug() << "Message [" << filename << "] may have been deleted and not removed from index id [" << id << "]" << Qt::endl;
+        }
+    }
 }

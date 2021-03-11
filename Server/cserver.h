@@ -8,6 +8,7 @@
 //#include <QtNetwork>
 #include <QDebug>
 #include <QRegExp>
+#include <QDir>
 
 
 #include "src/includes/AbstractServer.h"
@@ -68,9 +69,10 @@ class CServer : public AbstractServer
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
-        bool createChannelIndex(string filename, QString path, QString to);
-        QList<QString> readChannelIndex(QString path, QString to);
-        bool insertChannelIndex(QString path, QList<QString> filenameList, QString to);
+        bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it
+        QList<QString> readChannelIndex(QString path_to_index); //Returns the list of names of all messages files contained in the given index
+        bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
+        QList<CMessage> createMessageList(QString path_to_index, QString id, bool isPrivate); //Creates a QList of CMessage stored localy using index.json
 
 
     public slots:

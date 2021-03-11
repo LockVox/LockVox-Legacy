@@ -60,8 +60,11 @@ private slots:
     void on_status_clicked();
 
     void closeEvent(QCloseEvent *event);
+    void on_message_line_returnPressed();
+
 signals:
     void RequestServer(int,int,CClient * client, CChannel * chan);
+    void sendMessage(QString);
 
 
 

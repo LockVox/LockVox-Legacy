@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(m_server, SIGNAL(updateMainWindow()), this, SLOT(Update(int)));
     connect(this, SIGNAL(RequestServer(int,int,CClient * client, CChannel * chan)), m_server, SLOT(RequestServer(int,int,CClient * client, CChannel * chan)));
     connect(m_timer, &QTimer::timeout, this, &MainWindow::Update);
+    connect(this, SIGNAL(sendMessage(QString)), m_server, SLOT(sendMessage(QString)));
 
 
     //Initialize widgets
@@ -170,4 +171,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
         emit(RequestServer(0,1, m_server->get_self(), NULL));
         event->accept();
+}
+
+void MainWindow::on_message_line_returnPressed()
+{
+    QString message = ui->message_line->text();
+    emit(sendMessage(message));
+    ui->message_line->clear();
 }
