@@ -68,6 +68,10 @@ class CServer : public AbstractServer
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
+        bool createChannelIndex(string filename, QString path, QString to);
+        QList<QString> readChannelIndex(QString path, QString to);
+        bool insertChannelIndex(QString path, QList<QString> filenameList, QString to);
+
 
     public slots:
 

@@ -507,6 +507,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     if(msg.get_isPrivate() != false)
                     {
                         qDebug() << "Received a private message for a text channel ? Ignored." << Qt::endl;
+                        //Send error packet to client
+                        //TODO
                         break;
                     }
                     msg.toXML();
@@ -518,6 +520,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
                     {
                         qDebug() << "Can't save received message from :" << msg.get_from() << " to :" << msg.get_to() << Qt::endl;
+                        //Send error packet to client
+                        //TODO
                         break;
                     }
 
@@ -529,32 +533,52 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     if(QFile::exists(path))
                     {
-                        //TODO
+                        QList<QString> filenameList;
+                        filenameList = readChannelIndex(path,msg.get_to());
+                        if(filenameList.isEmpty())
+                        {
+                            qDebug() << "Error in readChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                            //Send error packet to client
+                            //TODO
+                            break;
+                        }
+                        else
+                        {
+                            if(filenameList.first() == "no_index")
+                            {
+                                qDebug() << "No index in index.json from channel  n°" << msg.get_to() << Qt::endl;
+                                if(!createChannelIndex(filename,path,msg.get_to()))
+                                {
+                                    qDebug() << "Error in createChannelIndex from channel n°" << msg.get_to() << Qt::endl;
+
+                                    //Send error packet to  client
+                                    //TODO
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                filenameList.append(QString::fromStdString(filename));
+                                if(!insertChannelIndex(path,filenameList, msg.get_to()))
+                                {
+                                    qDebug() << "Error in insertChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                                    //Send error packet to client
+                                    //TODO
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        QFile index(path);
-                        if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                        if(!createChannelIndex(filename,path,msg.get_to()))
                         {
-                            qDebug() << "Can't open index of channel n°" << msg.get_to() << Qt::endl;
+                            qDebug() << "Error in createChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                            //Send error packet to  client
+                            //TODO
                             break;
                         }
-
-                        QJsonArray array;
-                        QJsonObject obj;
-                        obj.insert("id","0");
-                        obj.insert("filename",QString::fromStdString(filename));
-                        array.append(obj);
-
-                        QJsonObject main;
-                        main["index"] = array;
-
-                        QJsonDocument jsonIndex;
-                        jsonIndex.setObject(main);
-
-                        QTextStream streamIndex(&index);
-                        streamIndex << jsonIndex.toJson();
                     }
+                    break;
                 }
 
                 case 5:
@@ -920,4 +944,113 @@ void CServer::deserializeClients(QJsonArray & json_array)
             addClient(newClient);
         }
     }
+}
+
+bool CServer::createChannelIndex(string filename, QString path,QString to)
+{
+    QFile index(path);
+    if(!index.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        return false;
+    }
+
+    QJsonArray array;
+    QJsonObject obj;
+    obj.insert("id","0");
+    obj.insert("filename",QString::fromStdString(filename));
+    array.append(obj);
+
+    QJsonObject main;
+    main["index"] = array;
+
+    QJsonDocument jsonIndex;
+    jsonIndex.setObject(main);
+
+    QTextStream streamIndex(&index);
+    streamIndex << jsonIndex.toJson();
+    index.close();
+    return true;
+}
+
+QList<QString> CServer::readChannelIndex(QString path, QString to)
+{
+    QFile indexJson(path);
+    QList<QString> null;
+
+    if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        return null;
+    }
+
+    QByteArray json = indexJson.readAll();
+    indexJson.close();
+    QJsonDocument jsonIndex = QJsonDocument::fromJson(json);
+    QJsonObject jsonObj = jsonIndex.object();
+
+    if(jsonObj.contains("index"))
+    {
+        QJsonArray array = jsonObj.value("index").toArray();
+        int index = 0;
+        QList<QString> filenameList;
+
+        while(!array.isEmpty())
+        {
+            QJsonObject tmp = array.first().toObject();
+            QString indexstr = QString::number(index);
+            if(tmp.contains(indexstr))
+            {
+                filenameList.append(tmp.value("filename").toString());
+            }
+            else
+            {
+                qDebug() << "Error in index.json no containing correct index in channel n°" << to << Qt::endl;
+                return null;
+            }
+            array.removeFirst();
+            index++;
+            indexstr = QString::number(index);
+        }
+        return filenameList;
+    }
+    else
+    {
+        null.append("no_index");
+        return null;
+    }
+}
+
+bool CServer::insertChannelIndex(QString path, QList<QString> filenameList, QString to)
+{
+    QFile indexJson(path);
+    if(!indexJson.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel n°" << to << Qt::endl;
+        return false;
+    }
+
+    QJsonArray array;
+    int index = 0;
+
+    while(!filenameList.isEmpty())
+    {
+        QJsonObject obj;
+        obj.insert("id", index);
+        obj.insert("filename", filenameList.first());
+        array.append(obj);
+        filenameList.removeFirst();
+        index++;
+    }
+
+    QJsonObject main;
+    main["index"] = array;
+
+    QJsonDocument jsonIndex;
+    jsonIndex.setObject(main);
+
+    QTextStream streamIndex(&indexJson);
+    streamIndex << jsonIndex.toJson();
+    indexJson.close();
+    return true;
 }
