@@ -59,15 +59,6 @@ INCLUDEPATH += $$PWD/libs/libmariadb/include \
     $$PWD/libs/libmariadb/win32
 DEPENDPATH += $$PWD/libs/libmariadb/win32
 
-win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibcrypto
-win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -llibssl
-win32: LIBS += -L$$PWD/libs/openssl/win32/lib/ -lopenssl
-
-INCLUDEPATH += $$PWD/libs/openssl/include \
-    $$PWD/libs/openssl/win32
-DEPENDPATH += $$PWD/libs/openssl/include \
-    $$PWD/libs/openssl/win32
-
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
 
