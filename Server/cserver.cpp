@@ -401,13 +401,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     QUuid uuid = QUuid::createUuid();
 
-
-
-                    //string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
-                    string error="";
-
-
-
+                    string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
 
                     if(error == "mailerror")
                     {
@@ -447,6 +441,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                             sender->get_socket()->write(Serialize());
                             sender->get_socket()->waitForBytesWritten();
+
+                            CPacket newUser("0","0");
+                            newUser.Serialize_newClient(client);
+
+                            sendToAll(newUser.GetByteArray());
+
                         }
                     }
                    break;
@@ -1150,4 +1150,5 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
             qDebug() << "Message [" << filename << "] may have been deleted and not removed from index id [" << id << "]" << Qt::endl;
         }
     }
+    return message_list;
 }
