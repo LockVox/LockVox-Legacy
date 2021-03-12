@@ -8,6 +8,9 @@ CServer::CServer()
 {
     qDebug() << "Starting LockVox Server - \n";
 
+
+
+
     // Gestion du serveur TCP
     serveur = new QTcpServer(this);
     if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
@@ -355,6 +358,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                                     if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {
                                         //mettre l'utilisateur authentifié
+                                        c->set_isOnline(true);
                                         c->set_isAuthenticate(true);
                                         c->set_socket(sender->get_socket());
                                         //Lui envoyer ses infos
@@ -397,7 +401,13 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                     QUuid uuid = QUuid::createUuid();
 
-                    string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+
+
+                    //string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+                    string error="";
+
+
+
 
                     if(error == "mailerror")
                     {

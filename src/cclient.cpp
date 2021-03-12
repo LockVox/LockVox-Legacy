@@ -185,6 +185,7 @@ QJsonObject CClient::serializeToObj(){
     obj["uuid"] = this->get_uuid().toString();
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
+    obj["isOnline"] = this->get_isOnline();
 
     return obj;
 }
@@ -193,6 +194,7 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_uuid(tmp);
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
+    this->set_isOnline(json_obj["isOnline"].toBool());
 }
 
 
