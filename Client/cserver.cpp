@@ -30,7 +30,8 @@ void CServer::sendToServer(QByteArray ba)
     m_socket->waitForBytesWritten();
 }
 
-void CServer::sendToServer(){
+void CServer::sendToServer()
+{
 
 }
 
@@ -434,6 +435,35 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
     return;
     }
 
+}
+
+bool CServer::sendMessage(QString msg)
+{
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
+    CPacket sendMessage;
+    if(message.get_isPrivate() ==  true)
+    {
+        sendMessage.SetType("2");
+        sendMessage.SetAction("6");
+
+        sendMessage.Serialize();
+    }
+    else
+    {
+        sendMessage.SetType("1");
+        sendMessage.SetAction("2");
+
+        sendMessage.Serialize();
+    }
+
+    sendMessage.Serialize_Message(message);
+
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
+    {
+        qDebug() << "Error in Login, can't write to socket" << Qt::endl;
+        return false;
+    }
+    return true;
 }
 
 

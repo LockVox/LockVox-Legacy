@@ -26,8 +26,8 @@
 
 #define MIPCONFIG_H
 
-#define EMIPLIB_IMPORT 
-#define EMIPLIB_EXPORT 
+#define EMIPLIB_IMPORT __declspec(dllimport)
+#define EMIPLIB_EXPORT __declspec(dllexport)
 #ifdef EMIPLIB_COMPILING
 	#define EMIPLIB_IMPORTEXPORT EMIPLIB_EXPORT
 #else
@@ -68,7 +68,7 @@
 
 // No OpenAL output support
 
-// No PortAudio support
+#define MIPCONFIG_SUPPORT_PORTAUDIO
 
 // No support for AudioTrack output component
 

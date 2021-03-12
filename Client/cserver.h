@@ -14,6 +14,7 @@
 #include "src/includes/cchannel.h"
 
 #include "src/includes/cpacket.h"
+#include "src/includes/cmessage.h"
 
 
 
@@ -70,15 +71,13 @@ class CServer : public AbstractServer
     signals:
         void changeState(int newState);
         void on_Authentification(int newValue);
-
         void updateMainWindow();
+
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
         bool Login(QString mail, QString passwd);               //Requests the server to authenticate
-
-        //bool Register(QString username, QString mail, QString password, QUuid uuid);
-
         bool Register(QString username, QString mail, QString password,QString password_confirm);
+        bool sendMessage(QString msg);
 
     private slots:
 

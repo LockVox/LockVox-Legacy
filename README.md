@@ -39,8 +39,8 @@ The project actually have :
 
 - [EMIPLIB](https://github.com/j0r1/EMIPLIB)
 - [MariaDB C & C++ Connector](https://mariadb.com/kb/en/mariadb-connector-c/)
-- [OpenSSL](https://www.openssl.org/)
 - [Zedwood C++ SHA256](http://www.zedwood.com/article/cpp-sha256-function)
+- [Qt Open Sources](https://www.qt.io/licensing/)
 
 ## Authors :
 

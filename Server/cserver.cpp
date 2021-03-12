@@ -508,6 +508,111 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     break;
                 }
 
+                case 2:
+                {
+                    //Text channel message
+                    CMessage msg = packet->Deserialize_Message();
+
+                    //Verify if it's a non private message
+                    if(msg.get_isPrivate() != false)
+                    {
+                        qDebug() << "Received a private message for a text channel ? Ignored." << Qt::endl;
+                        //Send error packet to client
+                        //TODO
+                        break;
+                    }
+                    msg.toXML();
+                    string filename = sha256(msg.toString().toStdString());
+
+                    QDir test;
+                    QString path = "storage/public/" +msg.get_to();
+
+                    if(!test.exists(path))
+                    {
+                        if(!test.mkpath(path))
+                        {
+                            qDebug() << "Directory doesn't exist and mkpath didn't worked properly" << Qt::endl;
+                        }
+                    }
+
+                    path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
+                    if(QFile::exists(path))
+                    {
+                        //Spamming copy paste drop the message
+                        //Send error packet to client
+                        //TODO
+                        break;
+                    }
+
+                    QFile file(path);
+
+                    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                    {
+                        qDebug() << "Can't save received message from :" << msg.get_from() << " to :" << msg.get_to() << Qt::endl;
+                        //Send error packet to client
+                        //TODO
+                        break;
+                    }
+
+                    QTextStream stream(&file);
+                    stream << msg.toString();
+                    file.close();
+
+                    path = "storage/public/" +  msg.get_to()  + "/" + "index.json";
+
+                    if(QFile::exists(path))
+                    {
+                        QList<QString> filename_list;
+                        filename_list = readChannelIndex(path);
+                        if(filename_list.isEmpty())
+                        {
+                            qDebug() << "Error in readChannelIndex for channel id:" << msg.get_to() << Qt::endl;
+                            //Send error packet to client
+                            //TODO
+                            break;
+                        }
+                        else
+                        {
+                            if(filename_list.first() == "no_index")
+                            {
+                                qDebug() << "No index in index.json from channel  id:" << msg.get_to() << Qt::endl;
+                                if(!createChannelIndex(filename,path))
+                                {
+                                    qDebug() << "Error in createChannelIndex from channel id:" << msg.get_to() << Qt::endl;
+
+                                    //Send error packet to  client
+                                    //TODO
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                filename_list.append(QString::fromStdString(filename));
+                                if(!insertChannelIndex(path,filename_list))
+                                {
+                                    qDebug() << "Error in insertChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                                    //Send error packet to client
+                                    //TODO
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(!createChannelIndex(filename,path))
+                        {
+                            qDebug() << "Error in createChannelIndex for channel n°" << msg.get_to() << Qt::endl;
+                            //Send error packet to  client
+                            //TODO
+                            break;
+                        }
+                    }
+
+                    //Send to all
+                    //TODO
+                    break;
+                }
+
                 case 5:
                 {
                     //Create chan voc
@@ -662,6 +767,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     //TODO
 
                     break;
+                }
+
+                case 6:
+                {
+                    //Private message
+                    //TODO
                 }
 
                 default:
@@ -863,6 +974,180 @@ void CServer::deserializeClients(QJsonArray & json_array)
         if(exist == false)
         {
             addClient(newClient);
+        }
+    }
+}
+
+// ///////////////////////////////////////////////////////// //
+//     Create an index.json for an empty channel and add     //
+//               the first message of it                     //
+//         filename should be the exacte file name           //
+//                  of the message file                      //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+// ///////////////////////////////////////////////////////// //
+bool CServer::createChannelIndex(string filename, QString path_to_index)
+{
+    QFile index(path_to_index);
+    if(!index.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel" << Qt::endl;
+        return false;
+    }
+
+    QJsonArray array;
+    QJsonObject obj;
+    obj.insert("id","0");
+    obj.insert("filename",QString::fromStdString(filename));
+    array.append(obj);
+
+    QJsonObject main;
+    main["index"] = array;
+
+    QJsonDocument jsonIndex;
+    jsonIndex.setObject(main);
+
+    QTextStream streamIndex(&index);
+    streamIndex << jsonIndex.toJson();
+    index.close();
+    return true;
+}
+
+// ///////////////////////////////////////////////////////// //
+//      returns the list of names of all messages files      //
+//             contained in the given index                  //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+// ///////////////////////////////////////////////////////// //
+QList<QString> CServer::readChannelIndex(QString path_to_index)
+{
+    QFile indexJson(path_to_index);
+    QList<QString> null;
+
+    if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel" << Qt::endl;
+        return null;
+    }
+
+    QByteArray json = indexJson.readAll();
+    indexJson.close();
+    QJsonDocument jsonIndex = QJsonDocument::fromJson(json);
+    QJsonObject jsonObj = jsonIndex.object();
+
+    if(jsonObj.contains("index"))
+    {
+        QJsonArray array = jsonObj.value("index").toArray();
+        int index = 0;
+        QList<QString> filename_list;
+
+        while(!array.isEmpty())
+        {
+            QJsonObject tmp = array.first().toObject();
+            if(tmp.value("id").toInt() == index)
+            {
+                filename_list.append(tmp.value("filename").toString());
+            }
+            else
+            {
+                qDebug() << "Error in index.json no containing correct index in channel"<< Qt::endl;
+                return null;
+            }
+            array.removeFirst();
+            index++;
+        }
+        return filename_list;
+    }
+    else
+    {
+        null.append("no_index");
+        return null;
+    }
+}
+
+// ///////////////////////////////////////////////////////// //
+//     Update index.json when inserting new message to it    //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+//    filename_list is the list of all filename of message   //
+// stored into for the given channel, can be exctracted with //
+//                     the above function                    //
+// ///////////////////////////////////////////////////////// //
+bool CServer::insertChannelIndex(QString path_to_index, QList<QString> filename_list)
+{
+    QFile indexJson(path_to_index);
+    if(!indexJson.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "Can't open index of channel" << Qt::endl;
+        return false;
+    }
+
+    QJsonArray array;
+    int index = 0;
+
+    while(!filename_list.isEmpty())
+    {
+        QJsonObject obj;
+        obj.insert("id", index);
+        obj.insert("filename", filename_list.first());
+        array.append(obj);
+        filename_list.removeFirst();
+        index++;
+    }
+
+    QJsonObject main;
+    main["index"] = array;
+
+    QJsonDocument jsonIndex;
+    jsonIndex.setObject(main);
+
+    QTextStream streamIndex(&indexJson);
+    streamIndex << jsonIndex.toJson();
+    indexJson.close();
+    return true;
+}
+
+// ///////////////////////////////////////////////////////// //
+// Create a QList of CMessage stored localy using index.json //
+//         path_to_index should be something like :          //
+//         storage/[public|private]/[id]/index.json          //
+//      id refers to id of channel or user for storage       //
+//     isPrivate tells if it's a private message or not      //
+// ///////////////////////////////////////////////////////// //
+QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bool isPrivate)
+{
+    QList<QString> filename_list = readChannelIndex(path_to_index);
+    QList<CMessage> message_list;
+    QString default_path, path;
+
+    if(isPrivate)
+    {
+        default_path = "storage/private/" + id + "/";
+    }
+    else
+    {
+        default_path = "storage/public/" + id + "/";
+    }
+
+    foreach(QString filename, filename_list)
+    {
+        path = default_path + filename + ".xml";
+        if(QFile::exists(path))
+        {
+            QFile file(path);
+            if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                qDebug() << "Can't open file message [" << filename << "]" <<Qt::endl;
+            }
+            else
+            {
+                CMessage tmp(QString::fromLocal8Bit(file.readAll()));
+                message_list.append(tmp);
+            }
+        }
+        else
+        {
+            qDebug() << "Message [" << filename << "] may have been deleted and not removed from index id [" << id << "]" << Qt::endl;
         }
     }
 }
