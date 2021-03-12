@@ -21,6 +21,7 @@ CServer::CServer()
     QString path = "storage/log/Server_log_" +  current.toString("dd_MMMM_yyyy_hh_mm_ss") + ".txt";
     log_file.setFileName(path);
 
+
     if(!log_file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         qDebug() << "[Log Error] Can't create log file" << Qt::endl;
@@ -347,6 +348,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                                         writeToLog("User [" + c->get_uuid().toString()  + "(" + c->get_pseudo() + ")] connected from [" + sender->get_socket()->peerAddress().toString() + "]",0);
                                         //mettre l'utilisateur authentifié
+                                        c->set_isOnline(true);
                                         c->set_isAuthenticate(true);
                                         c->set_socket(sender->get_socket());
                                         //Lui envoyer ses infos
@@ -1007,7 +1009,7 @@ void CServer::deserializeClients(QJsonArray & json_array)
         {
             if(c->get_uuid() == newClient->get_uuid())
             {
-                 exist = true; 
+                 exist = true;
             }
         }
 
@@ -1238,4 +1240,5 @@ void CServer::writeToLog(QString error, int level)
         }
         log << prefix << error << Qt::endl;
     }
+    return message_list;
 }
