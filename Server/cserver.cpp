@@ -1244,5 +1244,4 @@ void CServer::writeToLog(QString error, int level)
         }
         log << prefix << error << Qt::endl;
     }
-    return message_list;
 }
