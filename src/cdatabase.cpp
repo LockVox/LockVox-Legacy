@@ -11,50 +11,7 @@ CDatabase::CDatabase()
 
 }
 
-/*
- * Main Process
- */
-bool CDatabase::execMain() //test connexion bdd
-{
-    try {
-        // Format a MySQL object
-        conn = mysql_init(NULL);
-
-        // Establish a MySQL connection
-        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
-        {
-            cerr << mysql_error(conn) << endl;
-            return false;
-        }
-
-        // Execute a sql statement
-        if (mysql_query(conn, "SHOW TABLES"))
-        {
-            cerr << mysql_error(conn) << endl;
-            return false;
-        }
-
-        // Get a result set
-        res = mysql_use_result(conn);
-
-        // Fetch a result set
-        while ((row = mysql_fetch_row(res)) != NULL)
-            cout << row[0] << endl;
-
-        // Release memories
-        mysql_free_result(res);
-
-        // Close a MySQL connection
-        mysql_close(conn);
-    } catch (char *e)
-    {
-        cerr << "[EXCEPTION] " << e << endl;
-        return false;
-    }
-    return true;
-}
-
-string CDatabase::getHash(string mail)
+string CDatabase::getHash(string mail, QString * get_err)
 {
     string hash;
     try {
@@ -64,7 +21,7 @@ string CDatabase::getHash(string mail)
         // Establish a MySQL connection
         if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
         {
-            cerr << mysql_error(conn) << endl;
+            *get_err = QString::fromLocal8Bit(mysql_error(conn));
             return "false";
         }
 
@@ -78,19 +35,17 @@ string CDatabase::getHash(string mail)
 
         if (mysql_query(conn, query.c_str()))
         {
-            cerr << mysql_error(conn) << endl;
+            *get_err = QString::fromLocal8Bit(mysql_error(conn));
+            mysql_close(conn);
             return "false";
         }
 
         // Get a result set
         res = mysql_use_result(conn);
-        //hash += row[0];
-        while ((row = mysql_fetch_row(res)))
-            hash+=row[0];
 
         // Fetch a result set
-
-
+        row = mysql_fetch_row(res);
+        hash+=row[0];
 
         // Release memories
         mysql_free_result(res);
@@ -99,16 +54,16 @@ string CDatabase::getHash(string mail)
         mysql_close(conn);
     } catch (char *e)
     {
-        cerr << "[EXCEPTION] " << e << endl;
+        *get_err = QString::fromLocal8Bit(e);
         return "false";
     }
-    qDebug() << QString::fromStdString(hash);
     return hash;
 }
 
-string CDatabase::newUser(string uuid, string pseudo, string mail, string password)
+QString CDatabase::newUser(string uuid, string pseudo, string mail, string password)
 {
     try {
+        QString error;
         string existMail;
         // Format a MySQL object
         conn = mysql_init(NULL);
@@ -116,8 +71,8 @@ string CDatabase::newUser(string uuid, string pseudo, string mail, string passwo
         // Establish a MySQL connection
         if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
         {
-            cerr << mysql_error(conn) << endl;
-            return "sqlconn";
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            return error;
         }
 
         // Execute a sql statement
@@ -130,20 +85,16 @@ string CDatabase::newUser(string uuid, string pseudo, string mail, string passwo
 
         if (mysql_query(conn, query.c_str()))
         {
-            cerr << mysql_error(conn) << endl;
-            return "sqlquery";
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            mysql_close(conn);
+            return error;
         }
 
         // Get a result set
         res = mysql_use_result(conn);
 
         // Fetch a result set
-        while ((row = mysql_fetch_row(res)) != NULL)
-        {
-            existMail += row[0];
-        }
-
-        if(existMail == mail)
+        if((row = mysql_fetch_row(res)))
         {
             // Release memories
             mysql_free_result(res);
@@ -153,7 +104,6 @@ string CDatabase::newUser(string uuid, string pseudo, string mail, string passwo
 
             return "mailerror";
         }
-
         else
         {
             string hashed = sha256(password);
@@ -163,8 +113,13 @@ string CDatabase::newUser(string uuid, string pseudo, string mail, string passwo
 
             if (mysql_query(conn, query.c_str()))
             {
-                cerr << mysql_error(conn) << endl;
-                return "sqlquery";
+                error = QString::fromLocal8Bit(mysql_error(conn));
+                // Release memories
+                mysql_free_result(res);
+
+                // Close a MySQL connection
+                mysql_close(conn);
+                return error;
             }
             // Release memories
             mysql_free_result(res);
@@ -172,12 +127,11 @@ string CDatabase::newUser(string uuid, string pseudo, string mail, string passwo
             // Close a MySQL connection
             mysql_close(conn);
 
-            return "succes";
+            return "success";
         }
     } catch (char *e)
     {
-        cerr << "[EXCEPTION] " << e << endl;
-        return "false";
+        return QString::fromLocal8Bit(e);
     }
 }
 
@@ -326,7 +280,7 @@ QList<CClient*> CDatabase::parseClient()
         }
 }
 
-CClient* CDatabase::parseClient(string email)
+CClient* CDatabase::parseClient(string email, QString * get_err)
 {
     CClient* client;
     string query = "SELECT * FROM utilisateurs WHERE mail = '";
@@ -338,19 +292,16 @@ CClient* CDatabase::parseClient(string email)
         conn = mysql_init(NULL);
 
         // Establish a MySQL connection
-        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,
-                                MY_PASSWORD, MY_DATABASE,
-                                MY_PORT_NO, MY_SOCKET, MY_OPT))     //No connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))     //No connection
         {
-            cerr << mysql_error(conn) << endl;
+            *get_err = QString::fromLocal8Bit(mysql_error(conn));
             client = NULL;
             return client;
         }
-       ///////////////////////
 
         if(mysql_query(conn, query.c_str()))        //Bad query
         {
-            cerr << mysql_error(conn) << endl;
+            *get_err = QString::fromLocal8Bit(mysql_error(conn));
             client = NULL;
             return client;
         }
@@ -359,19 +310,21 @@ CClient* CDatabase::parseClient(string email)
         res = mysql_use_result(conn);
 
         // Fetch a result set
-       while((row = mysql_fetch_row(res)) != NULL)
-       {
 
-
-           tmp = (char*)row[0];
-           QUuid uuid = QUuid::fromString(QString::fromStdString(tmp));
-           qDebug() << tmp;
-
-           QString name(row[1]);
-           qDebug() << name;
-
-           client = new CClient(uuid,name,NULL,-1,false, ""); //A rework pour la description
-       }
+        if((row = mysql_fetch_row(res)))
+        {
+            QUuid uuid;
+            QString name;
+            tmp = (char*)row[0];
+            uuid = QUuid::fromString(QString::fromStdString(tmp));
+            name = row[1];
+            client = new CClient(uuid,name,NULL,-1,false, ""); //A rework pour la description
+        }
+        else
+        {
+            client = NULL;
+            *get_err =  "no_client";
+        }
 
         // Release memories
         mysql_free_result(res);
@@ -380,14 +333,12 @@ CClient* CDatabase::parseClient(string email)
         mysql_close(conn);
 
         return client;
-
-        //////////////////////
     }
-        catch (char *e)
-        {
-            cerr << "[EXCEPTION] " << e << endl;
-            client = NULL;
-            return client;
-            //Il faudra check la taille a la sortie pour un return NULL
-        }
+    catch (char *e)
+    {
+        *get_err = e;
+        client = NULL;
+        return client;
+        //Il faudra check la taille a la sortie pour un return NULL
+    }
 }

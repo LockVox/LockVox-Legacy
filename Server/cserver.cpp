@@ -6,26 +6,48 @@
 
 CServer::CServer()
 {
-    qDebug() << "Starting LockVox Server - \n";
-
-    // Gestion du serveur TCP
-    serveur = new QTcpServer(this);
-    if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
+    qDebug() << "Welcome to Lockvox Server !" << Qt::endl;
+    QDir test;
+    if(!test.exists("storage/log"))
     {
-        // Si le serveur n'a pas été démarré correctement
-        qDebug()<< "Le serveur n'a pas pu être démarré. Raison :" << serveur->errorString();
+        if(!test.mkpath("storage/log"))
+        {
+            qDebug() << "[Log error] Can't create log directory" << Qt::endl;
+        }
+    }
+
+    log_level = 0;
+    current = QDateTime::currentDateTime();
+    QString path = "storage/log/Server_log_" +  current.toString("dd_MMMM_yyyy_hh_mm_ss") + ".txt";
+    log_file.setFileName(path);
+
+    if(!log_file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "[Log Error] Can't create log file" << Qt::endl;
     }
     else
     {
-        // Si le serveur a été démarré correctement
-        qDebug() << "Le serveur a été démarré sur le port " << QString::number(serveur->serverPort())  << "Des clients peuvent maintenant se connecter.";
-        connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+        log.setDevice(&log_file);
+        writeToLog("Starting server...", 0);
+
+        // Gestion du serveur TCP
+        serveur = new QTcpServer(this);
+        if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
+        {
+            // Si le serveur n'a pas été démarré correctement
+            writeToLog(serveur->errorString(), 2);
+        }
+        else
+        {
+            // Si le serveur a été démarré correctement
+            writeToLog("Running on port :" + QString::number(serveur->serverPort()), 0);
+            connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+        }
+
+        m_db = new CDatabase();
+        set_channels(m_db->parseChannel());
+        set_clients(m_db->parseClient());
     }
-
-    m_db = new CDatabase();
-    set_channels(m_db->parseChannel());
-    set_clients(m_db->parseClient());
-
 }
 
 //Getters
@@ -50,7 +72,6 @@ int CServer::whichClient(QTcpSocket * s)
             return i;
         }
     }
-    //No client find
     return -1;
 }
 
@@ -58,7 +79,6 @@ void CServer::onNewConnection()
 {
     CClient * newClient = new CClient();
     newClient->set_socket(serveur->nextPendingConnection());
-
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
     connect(newClient->get_socket(), SIGNAL(disconnected()), this, SLOT(onDisconnectClient()));
 }
@@ -80,12 +100,15 @@ void CServer::onDisconnectClient()
             get_clientList()[i]->set_isOnline(false);
             get_clientList()[i]->set_isAuthenticate(false);
 
+            writeToLog("User [" + get_clientList()[i]->get_uuid().toString() + "(" + get_clientList()[i]->get_pseudo() + ")] disconnected", 0);
+
             //Say to everyone
             CPacket request("0","1");
             request.Serialize_newClient(get_clientList()[i]);
             sendToAll(request.GetByteArray());
         }
     }
+
     //send msg to everybody to say someone disconnect (id client)
 }
 
@@ -96,7 +119,8 @@ void CServer::onReceiveData(){
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) //Couldn't find sender
     {
-          return;
+        writeToLog("Received data from unknown client", 1);
+        return;
     }
 
     //Get data
@@ -117,40 +141,6 @@ void CServer::onReceiveData(){
     processIncomingData(get_clientList()[uid], *data);
 }
 
-
-void CServer::sendToChannel(const QString &message, int id_channel)
-{
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    //preparation of the packet
-    out << (quint16) 0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16) (packet.size() - sizeof(quint16));
-
-    //send msg to all client of the channel
-    for( int i = 0; i < get_channelList()[id_channel]->get_clients().size(); i++)
-    {
-        get_channelList()[id_channel]->get_clients()[i]->get_socket()->write(packet);
-    }
-}
-
-void CServer::sendToClient(const QString &message, CClient * client)
-{
-    QByteArray packet;
-    QDataStream out(&packet, QIODevice::WriteOnly);
-
-    //preparation of the packet
-    out << (quint16) 0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16) (packet.size() - sizeof(quint16));
-
-    //send msg to the client
-    client->get_socket()->write(packet);
-}
-
 void CServer::sendToAll(QByteArray out)
 {
       foreach(CClient * client, get_clientList())
@@ -168,25 +158,20 @@ void CServer::sendToClient(QByteArray out, CClient * client)
     client->get_socket()->waitForBytesWritten();
 }
 
-
-void CServer::SendObjectsToClient()
-{
-    //TODO
-    //ça sert a quoi au vue de la fct juste au dessus ?
-    CPacket * packet = new CPacket("0","1");
-    packet->Serialize(this);
-    sendToAll(packet->GetByteArray());
-}
-
 void CServer::AddBannedUser(CClient * client)
 {
     m_banned_users.push_back(client);
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has been banned", 0);
 }
 
 void CServer::RemoveBannedUser(CClient* client)
 {
-   if(!m_banned_users.removeOne(client))
-       qDebug() << "User : '" << client->get_pseudo() << "' is not banned" << Qt::endl;
+    if(!m_banned_users.removeOne(client))
+    {
+        writeToLog("Trying to unban user [" + client->get_uuid().toString() + "] who is not banned", 1);
+        return;
+    }
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is not banned anymore", 0);
 }
 
 QList<CClient*> CServer::GetBannedUserList()
@@ -194,16 +179,18 @@ QList<CClient*> CServer::GetBannedUserList()
     return m_banned_users;
 }
 
-
-void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats data received
+void CServer::processIncomingData(CClient *sender, QByteArray data) //Process received data
+{
         if(!sender)
+        {
+            writeToLog("Received data from unknown client", 1);
             return;
-
+        }
         CPacket* packet = new CPacket(data, sender);
 
-
-        if(packet->GetAction() == NULL || packet->GetType() == NULL){
-            qDebug() << "Unable to deserialize mainObj - Request Aborted";
+        if(packet->GetAction() == NULL | packet->GetType() == NULL)
+        {
+            writeToLog("Unable to deserialize received packet :\n" + packet->GetByteArray() + "\nRequest Aborted", 1);
             return;
         }
 
@@ -211,6 +198,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
         switch (packet->GetType().toInt())
         {
             case 0: //SERV
+            {
                 switch (packet->GetAction().toInt())
                 {
                     case 0:
@@ -260,11 +248,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                        break;
                    }
 
-                   case 2:
-                   {
+                    case 2:
+                    {
                         //PSEUDO UPDATE
                         CClient * client = packet->Deserialize_newClient();
 
+                        writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", 0);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
 
@@ -315,10 +304,11 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         //Kick user
                         CClient * client = packet->Deserialize_newClient();
 
-                        for(auto c : m_clients)
+                        foreach(CClient * c , m_clients)
                         {
                             if(client->get_uuid() == c->get_uuid())
                             {
+                                writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Has been kicked from server" ,0);
                                 sendToAll(packet->GetByteArray());
                                 m_clients.removeOne(c);
                                 c->get_socket()->close();
@@ -331,8 +321,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                     {
                         //Demande d'authentification
                         QList<QString> info = packet->Deserialize_auth();
-
-                        qDebug() << "Authentification request  - " << info[0] << " " << info[1];
                         CPacket* ans = new CPacket("0", "7");
 
                         //Hachage du password
@@ -340,20 +328,24 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                         hashed = sha256(hashed);
                         bool valid = false;
 
-                        if(hashed == m_db->getHash(info[0].toStdString()))  //Si le mdp correspond à l'utilisateur
+                        QString * err = new QString;
+                        CClient * tmp_client = m_db->parseClient(info[0].toStdString(), err);
+                        if(tmp_client) //Si l'utilisateur existe
                         {
-                            CClient * tmp_client = m_db->parseClient(info[0].toStdString());
-                            if(tmp_client) //Si l'utilisateur existe
+                            QString * err1 = new QString;
+                            if(hashed == m_db->getHash(info[0].toStdString(), err1))  //Si le mdp correspond à l'utilisateur
                             {
-                                for(auto c : m_clients) //Vérification de connexion déjà existante
+                                foreach(CClient *c, m_clients) //Vérification de connexion déjà existante
                                 {
                                     if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
                                         ans->Serialize_auth(NULL, 2);
-                                        qDebug() << "Already connected" << Qt::endl;
+                                        writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", 1);
                                     }
                                     if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {
+
+                                        writeToLog("User [" + c->get_uuid().toString()  + "(" + c->get_pseudo() + ")] connected from [" + sender->get_socket()->peerAddress().toString() + "]",0);
                                         //mettre l'utilisateur authentifié
                                         c->set_isAuthenticate(true);
                                         c->set_socket(sender->get_socket());
@@ -362,16 +354,42 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                                         valid = true;
                                     }
                                 }
+                                delete(err1);
+                            }
+                            else    //Bad password
+                            {
+                                if(hashed == "false")
+                                {
+                                    ans->Serialize_auth(NULL, 1);
+                                    writeToLog("Error with database when fetching password hash",2);
+                                    writeToLog(*err1, 3);
+                                    delete(err1);
+                                }
+                                else
+                                {
+                                    writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", 1);
+                                    ans->Serialize_auth(NULL, 3);
+                                }
+                            }
+                            delete(err);
+                        }
+                        else
+                        {
+                            if(*err == "no_client")
+                            {
+                                ans->Serialize_auth(NULL, 1);
+                                writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Trying to connect to a non-existing account", 1);
                             }
                             else
                             {
                                 ans->Serialize_auth(NULL, 1);
+                                writeToLog("Error with database when fetching client",2);
+                                writeToLog(*err,3);
+                                delete(err);
                             }
+
                         }
-                        else    //Bad password
-                        {
-                            ans->Serialize_auth(NULL, 3);
-                        }
+
 
                         sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
                         sender->get_socket()->waitForBytesWritten();
@@ -384,394 +402,435 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             sender->get_socket()->waitForBytesWritten();
                         }
                         break;
-                }
-
-                case 8 :
-                {
-                    //Get Information from request
-                    packet->Deserialize_regReq();
-
-                    //Check informations
-                    if(packet->get_RegisterInfo().email.isNull() || packet->get_RegisterInfo().password.isNull() || packet->get_RegisterInfo().name.isNull())
-                        break;
-
-                    QUuid uuid = QUuid::createUuid();
-
-                    string error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
-
-                    if(error == "mailerror")
-                    {
-                        //Mail already exist
-                        CPacket ans("0", "8");
-                        ans.Serialize_regAns(0);
-
-                        //Send register answer
-                        sender->get_socket()->write(ans.GetByteArray());
-                        sender->get_socket()->waitForBytesWritten();
-
-                        break;
                     }
 
-                    else
+                    case 8 :
                     {
-                        if(error == "sqlquerry")
+                        //Get Information from request
+                        packet->Deserialize_regReq();
+
+                        //Check informations
+                        if(packet->get_RegisterInfo().email.isNull() | packet->get_RegisterInfo().password.isNull() | packet->get_RegisterInfo().name.isNull())
                         {
-                            //Can't exec sql statement ?
+                            writeToLog("Received incomplete register information from [" + sender->get_socket()->peerAddress().toString() + "]", 1);
+                            //Send error to client
+                            //TODO
+                            break;
                         }
 
-                        else
+                        QUuid uuid = QUuid::createUuid();
+
+                        QString error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), packet->get_RegisterInfo().name.toStdString(), packet->get_RegisterInfo().email.toStdString(),packet->get_RegisterInfo().password.toStdString());
+
+                        if(error == "mailerror")
                         {
-                            CClient * client = new CClient(uuid, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
-                            addClient(client);
-
-                            //Send answer to the client
+                            //Mail already exist
+                            writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Trying to create account with existing mail address" ,1);
                             CPacket ans("0", "8");
-                            ans.Serialize_regAns(1);
-
-                            //Serialize here the client with the corresponding information
-                            ans.Serialize_myClient(client);
+                            ans.Serialize_regAns(0);
 
                             //Send register answer
                             sender->get_socket()->write(ans.GetByteArray());
                             sender->get_socket()->waitForBytesWritten();
-
-                            sender->get_socket()->write(Serialize());
-                            sender->get_socket()->waitForBytesWritten();
-                        }
-                    }
-                   break;
-                }
-
-                default:
-                    qDebug() << "Error invalid action" << Qt::endl;
-            }
-            break;
-
-            case 1: //CHAN
-                switch (packet->GetAction().toInt())
-                {
-                case 0:
-                {
-                    //JOIN CHANNEL
-                    packet->Deserialize_ID();
-
-                    QUuid tmp = packet->get_IdClient();
-                    CClient * client = get_clientById(tmp);
-                    CChannel * channel = get_channelById(packet->get_IdChannel());
-
-
-                    if(channel && client)
-                    {
-                        client->set_idChannel(channel->get_id());
-                        channel->addUser(client);
-                    }
-
-                    CPacket ans("1","0");
-                    ans.Serialize();
-                    ans.Serialize_ID(channel->get_id(),client->get_uuid());
-
-                    sendToAll(ans.GetByteArray());
-
-                    break;
-                }
-
-                case 1:
-                {
-                    //QUIT CHAN
-                    packet->Deserialize_ID();
-
-                    CClient * client = get_clientById(packet->get_IdClient());
-                    CChannel * channel = get_channelById(packet->get_IdChannel());
-
-                    if(channel && client)
-                    {
-                        client->set_idChannel(-1);
-                        channel->delUser(client->get_uuid());
-                    }
-
-                    CPacket ans("1","1");
-                    ans.Serialize();
-                    ans.Serialize_ID(channel->get_id(),client->get_uuid());
-
-                    sendToAll(ans.GetByteArray());
-
-                    break;
-                }
-
-                case 2:
-                {
-                    //Text channel message
-                    CMessage msg = packet->Deserialize_Message();
-
-                    //Verify if it's a non private message
-                    if(msg.get_isPrivate() != false)
-                    {
-                        qDebug() << "Received a private message for a text channel ? Ignored." << Qt::endl;
-                        //Send error packet to client
-                        //TODO
-                        break;
-                    }
-                    msg.toXML();
-                    string filename = sha256(msg.toString().toStdString());
-
-                    QDir test;
-                    QString path = "storage/public/" +msg.get_to();
-
-                    if(!test.exists(path))
-                    {
-                        if(!test.mkpath(path))
-                        {
-                            qDebug() << "Directory doesn't exist and mkpath didn't worked properly" << Qt::endl;
-                        }
-                    }
-
-                    path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
-                    if(QFile::exists(path))
-                    {
-                        //Spamming copy paste drop the message
-                        //Send error packet to client
-                        //TODO
-                        break;
-                    }
-
-                    QFile file(path);
-
-                    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
-                    {
-                        qDebug() << "Can't save received message from :" << msg.get_from() << " to :" << msg.get_to() << Qt::endl;
-                        //Send error packet to client
-                        //TODO
-                        break;
-                    }
-
-                    QTextStream stream(&file);
-                    stream << msg.toString();
-                    file.close();
-
-                    path = "storage/public/" +  msg.get_to()  + "/" + "index.json";
-
-                    if(QFile::exists(path))
-                    {
-                        QList<QString> filename_list;
-                        filename_list = readChannelIndex(path);
-                        if(filename_list.isEmpty())
-                        {
-                            qDebug() << "Error in readChannelIndex for channel id:" << msg.get_to() << Qt::endl;
-                            //Send error packet to client
-                            //TODO
                             break;
                         }
                         else
                         {
-                            if(filename_list.first() == "no_index")
+                            if(error != "success")
                             {
-                                qDebug() << "No index in index.json from channel  id:" << msg.get_to() << Qt::endl;
-                                if(!createChannelIndex(filename,path))
-                                {
-                                    qDebug() << "Error in createChannelIndex from channel id:" << msg.get_to() << Qt::endl;
-
-                                    //Send error packet to  client
-                                    //TODO
-                                    break;
-                                }
+                                writeToLog("Error in creating new user", 3);
+                                writeToLog(error,3);
+                                //Send error to client
+                                //TODO
+                                break;
                             }
                             else
                             {
-                                filename_list.append(QString::fromStdString(filename));
-                                if(!insertChannelIndex(path,filename_list))
-                                {
-                                    qDebug() << "Error in insertChannelIndex for channel n°" << msg.get_to() << Qt::endl;
-                                    //Send error packet to client
-                                    //TODO
-                                }
+                                writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Created new account [" + uuid.toString() + "(" + packet->get_RegisterInfo().name + ")] Successfully", 0);
+                                CClient * client = new CClient(uuid, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
+                                addClient(client);
+
+                                //Send answer to the client
+                                CPacket ans("0", "8");
+                                ans.Serialize_regAns(1);
+
+                                //Serialize here the client with the corresponding information
+                                ans.Serialize_myClient(client);
+
+                                //Send register answer
+                                sender->get_socket()->write(ans.GetByteArray());
+                                sender->get_socket()->waitForBytesWritten();
+
+                                sender->get_socket()->write(Serialize());
+                                sender->get_socket()->waitForBytesWritten();
                             }
                         }
+                        break;
                     }
-                    else
+
+                    default:
                     {
-                        if(!createChannelIndex(filename,path))
+                        writeToLog("Received invalid server action :\n" + packet->GetByteArray() +"\nIgnored", 1);
+                        break;
+                    }
+                }
+                break;
+            }
+
+            case 1: //CHAN
+            {
+                switch (packet->GetAction().toInt())
+                {
+                    case 0:
+                    {
+                        //JOIN CHANNEL
+                        packet->Deserialize_ID();
+                        QUuid tmp = packet->get_IdClient();
+                        CClient * client = get_clientById(tmp);
+                        CChannel * channel = get_channelById(packet->get_IdChannel());
+
+                        if(channel && client)
                         {
-                            qDebug() << "Error in createChannelIndex for channel n°" << msg.get_to() << Qt::endl;
-                            //Send error packet to  client
+                            client->set_idChannel(channel->get_id());
+                            channel->addUser(client);
+                            CPacket ans("1","0");
+                            ans.Serialize();
+                            ans.Serialize_ID(channel->get_id(),client->get_uuid());
+                            sendToAll(ans.GetByteArray());
+                            writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has joined channel id ["+ QString::number(packet->get_IdChannel()) + "]", 0);
+                        }
+                        else
+                        {
+                            if(!client)
+                            {
+                                writeToLog("A non-existing client is trying to join a channel ! packet UUID [" + tmp.toString() + "]", 2);
+                                //Send error packet
+                                //TODO
+                            }
+                            if(!channel)
+                            {
+                                writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is trying to join a non-existing channel id [" + QString::number(packet->get_IdChannel()) + "]", 1);
+                                //Send error packet
+                                //TODO
+                            }
+                        }
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        //QUIT CHAN
+                        packet->Deserialize_ID();
+
+                        CClient * client = get_clientById(packet->get_IdClient());
+                        CChannel * channel = get_channelById(packet->get_IdChannel());
+
+                        if(channel && client)
+                        {
+                            client->set_idChannel(-1);
+                            channel->delUser(client->get_uuid());
+                            CPacket ans("1","1");
+                            ans.Serialize();
+                            ans.Serialize_ID(channel->get_id(),client->get_uuid());
+                            sendToAll(ans.GetByteArray());
+                        }
+                        else
+                        {
+                            if(!client)
+                            {
+                                writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Try to exit a channel, but Client isn't in the list ???",2);
+                                break;
+                            }
+                            if(!channel)
+                            {
+                                writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Try to exit a non-existing channel ???",2);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        //Text channel message
+                        CMessage msg = packet->Deserialize_Message();
+
+                        //Verify if it's a non private message
+                        if(msg.get_isPrivate() != false)
+                        {
+                            writeToLog("[" + sender->get_socket()->peerAddress().toString() + "Received a private message for a text channel ? Ignored.", 1);
+                            //Send error packet to client
                             //TODO
                             break;
                         }
+                        msg.toXML();
+                        string filename = sha256(msg.toString().toStdString());
+
+                        QDir test;
+                        QString path = "storage/public/" +msg.get_to();
+
+                        if(!test.exists(path))
+                        {
+                            if(!test.mkpath(path))
+                            {
+                                writeToLog("Can't create path [" + path + "]",2);
+                                //Send error to client
+                                //TODO
+                                break;
+                            }
+                        }
+
+                        path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
+                        if(QFile::exists(path))
+                        {
+                            writeToLog("[" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] is spamming copy paste message in channel [" + msg.get_to() + "]",1);
+                            //Send error packet to client
+                            //TODO
+                            break;
+                        }
+
+                        QFile file(path);
+
+                        if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                        {
+                            writeToLog("Can't save received message from [" + msg.get_from() + "] to [" + msg.get_to() + "]",2);
+                            //Send error packet to client
+                            //TODO
+                            break;
+                        }
+
+                        QTextStream stream(&file);
+                        stream << msg.toString();
+                        file.close();
+
+                        path = "storage/public/" +  msg.get_to()  + "/" + "index.json";
+
+                        if(QFile::exists(path))
+                        {
+                            QList<QString> filename_list;
+                            filename_list = readChannelIndex(path);
+                            if(filename_list.isEmpty())
+                            {
+                                writeToLog("Error while reading channel index for channel [" + msg.get_to() + "]",2);
+                                //Send error packet to client
+                                //TODO
+                                break;
+                            }
+                            else
+                            {
+                                if(filename_list.first() == "no_index")
+                                {
+                                    writeToLog("No index in index.json from channel [" + msg.get_to() + "] Try to create one",1);
+                                    if(!createChannelIndex(filename,path))
+                                    {
+                                        writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",2);
+                                        //Send error packet to  client
+                                        //TODO
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        writeToLog("Index created successfully for channel [" + msg.get_to() + "]",0);
+                                    }
+                                }
+                                else
+                                {
+                                    filename_list.append(QString::fromStdString(filename));
+                                    if(!insertChannelIndex(path,filename_list))
+                                    {
+                                        writeToLog("Error while inserting in channel index for channel [" + msg.get_to() + "]",2);
+                                        //Send error packet to client
+                                        //TODO
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(!createChannelIndex(filename,path))
+                            {
+                                writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",2);
+                                //Send error packet to  client
+                                //TODO
+                                break;
+                            }
+                        }
+                        //Send to all
+                        //TODO
+                        break;
                     }
 
-                    //Send to all
-                    //TODO
-                    break;
+                    case 5:
+                    {
+                        //Create chan voc
+                        CChannel * c = packet->Deserialize_newChannel();
+                        addChannel(c);
+
+                        CPacket ans("1","5");
+                        ans.Serialize_newChannel(c);
+                        sendToAll(ans.GetByteArray());
+
+                        break;
+                    }
+
+                    case 6:
+                    {
+                        //Delete chan voc
+                        CChannel * c = packet->Deserialize_newChannel();
+                        CChannel * toDelChannel = get_channelById(c->get_id());
+                        DelChannel(toDelChannel);
+
+                        CPacket ans("1","6");
+                        ans.Serialize_newChannel(c);
+                        sendToAll(ans.GetByteArray());
+
+                        free(c);
+                        break;
+                    }
+
+                    case 7:
+                    {
+                        //Rename chan voc
+                        CChannel * c = packet->Deserialize_newChannel();
+
+                        CChannel * channel = get_channelById(c->get_id());
+                        channel->set_name(c->get_name());
+
+                        CPacket ans("1","7");
+                        ans.Serialize_newChannel(channel);
+                        sendToAll(ans.GetByteArray());
+                        free(c);
+
+                        break;
+                    }
+
+                    case 8:
+                    {
+                        //Modif max user (voc)
+                        CChannel * c = packet->Deserialize_newChannel();
+
+                        CChannel * channel = get_channelById(c->get_id());
+                        channel->set_maxUsers(c->get_maxUsers());
+
+                        CPacket ans("1","8");
+                        ans.Serialize_newChannel(channel);
+                        sendToAll(ans.GetByteArray());
+                        free(c);
+
+                        break;
+                    }
+
+                    case 9:
+                    {
+                        //kick user voc
+                        //TODO
+                        break;
+                    }
+
+                    case 10:
+                    {
+                        //Mute user voc (server side)
+                        //TODO
+                        break;
+                    }
+
+                    case 11:
+                    {
+                        //Create chan text --------> Qxmpp
+                        //TODO
+                        break;
+                    }
+
+                    case 12:
+                    {
+                        //Delete cahn text
+                        //TODO
+                        break;
+                    }
+
+                    case 13:
+                    {
+                        //Rename chan text
+                        //TODO
+                        break;
+                    }
+
+                    default:
+                    {
+                        writeToLog("Received invalid channel action :\n" + packet->GetByteArray() +"\nIgnored", 1);
+                        break;
+                    }
                 }
-
-                case 5:
-                {
-                    //Create chan voc
-                    CChannel * c = packet->Deserialize_newChannel();
-                    addChannel(c);
-
-                    CPacket ans("1","5");
-                    ans.Serialize_newChannel(c);
-                    sendToAll(ans.GetByteArray());
-
-                    break;
-                }
-
-                case 6:
-                {
-                    //Delete chan voc
-                    CChannel * c = packet->Deserialize_newChannel();
-                    CChannel * toDelChannel = get_channelById(c->get_id());
-                    DelChannel(toDelChannel);
-
-
-                    CPacket ans("1","6");
-                    ans.Serialize_newChannel(c);
-                    sendToAll(ans.GetByteArray());
-
-                    free(c);
-                    break;
-                }
-
-                case 7:
-                {
-                    //Rename chan voc
-                    CChannel * c = packet->Deserialize_newChannel();
-
-                    CChannel * channel = get_channelById(c->get_id());
-                    channel->set_name(c->get_name());
-
-                    CPacket ans("1","7");
-                    ans.Serialize_newChannel(channel);
-                    sendToAll(ans.GetByteArray());
-                    free(c);
-
-                    break;
-                }
-
-                case 8:
-                {
-                    //Modif max user (voc)
-                    CChannel * c = packet->Deserialize_newChannel();
-
-                    CChannel * channel = get_channelById(c->get_id());
-                    channel->set_maxUsers(c->get_maxUsers());
-
-                    CPacket ans("1","8");
-                    ans.Serialize_newChannel(channel);
-                    sendToAll(ans.GetByteArray());
-                    free(c);
-
-                    break;
-                }
-
-                case 9:
-                {
-                    //kick user voc
-                    //TODO
-
-                    break;
-                }
-
-                case 10:
-                {
-                    //Mute user voc (server side)
-                    //TODO
-
-                    break;
-                }
-
-                case 11:
-                {
-                    //Create chan text --------> Qxmpp
-                    //TODO
-
-                    break;
-                }
-
-                case 12:
-                {
-                    //Delete cahn text
-                    //TODO
-
-                    break;
-                }
-
-                case 13:
-                {
-                    //Rename chan text
-                    //TODO
-                    break;
-                }
-
-                default:
-                    qDebug() << "Error invalid action" << Qt::endl;
+                break;
             }
-            break;
 
             case 2: //USER
+            {
                 switch (packet->GetAction().toInt())
                 {
-                case 0:
-                {
-                    //Mute (user side) ?????
-                    //TODO
+                    case 0:
+                    {
+                        //Mute (user side) ?????
+                        //TODO
+                        break;
+                    }
 
-                    break;
+                    case 1:
+                    {
+                        //Add friend --> later
+                        //TODO
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        //Del friend
+                        //TODO
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        //Send msg to friend
+                        //TODO
+                        break;
+                    }
+
+                    case 4:
+                    {
+                        //Modif pseudo (update bdd)
+                        //TODO
+                        break;
+                    }
+
+                    case 5:
+                    {
+                        //Change right
+                        //TODO
+                        break;
+                    }
+
+                    case 6:
+                    {
+                        //Private message
+                        //TODO
+                        break;
+                    }
+
+                    default:
+                    {
+                        writeToLog("Received invalid user action :\n" + packet->GetByteArray() +"\nIgnored", 1);
+                        break;
+                    }
                 }
-
-                case 1:
-                {
-                    //Add friend --> later
-                    //TODO
-
-                    break;
-                }
-
-                case 2:
-                {
-                    //Del friend
-                    //TODO
-
-                    break;
-                }
-
-                case 3:
-                {
-                    //Send msg to friend
-                    //TODO
-
-                    break;
-                }
-
-                case 4:
-                {
-                    //Modif pseudo (update bdd)
-                    //TODO
-
-                    break;
-                }
-
-                case 5:
-                {
-                    //Change right
-                    //TODO
-
-                    break;
-                }
-
-                case 6:
-                {
-                    //Private message
-                    //TODO
-                }
-
-                default:
-                    qDebug() << "Error invalid action" << Qt::endl;
+                break;
             }
-            break;
 
-        default:
-            qDebug() << "Error invalid type" << Qt::endl;
+            default:
+            {
+                writeToLog("Received invalid request type :\n" + packet->GetByteArray() +"\nIgnored", 1);
+                break;
+            }
         }
         return;
  }
@@ -804,8 +863,6 @@ QByteArray CServer::Serialize()
     obj["clients"] = sArray;
 
     QJsonDocument jsonDoc(obj);
-    qDebug() << jsonDoc;
-
     return jsonDoc.toJson();
 }
 
@@ -821,7 +878,6 @@ void CServer::Deserialize(QByteArray in)
     deserializeClients(sArray);
 }
 
-
 QByteArray CServer::SerializeChannels()
 {
     QJsonArray jsonArray;
@@ -831,8 +887,6 @@ QByteArray CServer::SerializeChannels()
     }
 
     QJsonDocument jsonDoc(jsonArray);
-    qDebug() << jsonDoc;
-
     return jsonDoc.toJson();
 }
 
@@ -845,8 +899,6 @@ QByteArray CServer::SerializeClients()
     }
 
     QJsonDocument jsonDoc(jsonArray);
-    qDebug() << jsonDoc;
-
     return jsonDoc.toJson();
 }
 
@@ -857,7 +909,7 @@ void CServer::DeserializeChannels(QByteArray in)
 
         if(jsonDoc.isNull())
         {
-            qDebug() <<"JSON doc is invalid (null)" << Qt::endl;
+            writeToLog("JSON doc is invalid in channel deserialization",1);
         }
 
         QJsonArray jsonArray = jsonDoc.array();
@@ -868,7 +920,6 @@ void CServer::DeserializeChannels(QByteArray in)
             //Convert it to an json object then to a channel
             QJsonObject obj = value.toObject();
             CChannel * newChannel = deserializeToChannel(obj);
-            //qDebug() << "Channel : " << newChannel->get_id()<< newChannel->get_name()<< Qt::endl;
 
             //check if the channel already exist or not
             bool exist = false;
@@ -883,11 +934,10 @@ void CServer::DeserializeChannels(QByteArray in)
                 }
             }
 
-            //if the channel doesnt exist, we add it to the list of channel
+            //if the channel doesnt exist.
             if(get_channelList().isEmpty() || exist == false)
             {
-                qDebug() << "That channel doesnt exist, gonna create it " << Qt::endl;
-                addChannel(newChannel);
+                writeToLog("Requesting a non-exisiting channel.",1);
             }
         }
 
@@ -981,7 +1031,7 @@ bool CServer::createChannelIndex(string filename, QString path_to_index)
     QFile index(path_to_index);
     if(!index.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel" << Qt::endl;
+        writeToLog("Can't open index of channel",2);
         return false;
     }
 
@@ -1016,7 +1066,7 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
 
     if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel" << Qt::endl;
+        writeToLog("Can't open index of channel",2);
         return null;
     }
 
@@ -1040,7 +1090,7 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
             }
             else
             {
-                qDebug() << "Error in index.json no containing correct index in channel"<< Qt::endl;
+                writeToLog("Error in index.json no containing correct index in channel",2);
                 return null;
             }
             array.removeFirst();
@@ -1068,7 +1118,7 @@ bool CServer::insertChannelIndex(QString path_to_index, QList<QString> filename_
     QFile indexJson(path_to_index);
     if(!indexJson.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Can't open index of channel" << Qt::endl;
+        writeToLog("Can't open index of channel",2);
         return false;
     }
 
@@ -1127,7 +1177,7 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
             QFile file(path);
             if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
             {
-                qDebug() << "Can't open file message [" << filename << "]" <<Qt::endl;
+                writeToLog("Can't open message file [" + filename + "]",2);
             }
             else
             {
@@ -1137,7 +1187,55 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
         }
         else
         {
-            qDebug() << "Message [" << filename << "] may have been deleted and not removed from index id [" << id << "]" << Qt::endl;
+            writeToLog("Message [" + filename + "] may have been deleted and not removed from index [" + id + "]",2);
         }
+    }
+    return message_list;
+}
+
+// ///////////////////////////////////////////////////////// //
+//       Write the given error into the server log file      //
+//            error should be the given error                //
+//                  level should be :                        //
+//                    0 : Standard                           //
+//                  1 : Server Warning                       //
+//                   2 : Server Error                        //
+//                  3 : Database Error                       //
+// ///////////////////////////////////////////////////////// //
+void CServer::writeToLog(QString error, int level)
+{
+    if(level >= log_level)
+    {
+        QString prefix;
+        current = QDateTime::currentDateTime();
+        switch (level)
+        {
+            case 0:
+            {
+                prefix = "[" + current.toString("dd/mm/yy hh:mm:ss") + "][Server] :";
+                break;
+            }
+            case 1:
+            {
+                prefix = "[" + current.toString("dd/mm/yy hh:mm:ss") + "][Server Warning] :";
+                break;
+            }
+            case 2:
+            {
+                prefix = "[" + current.toString("dd/mm/yy hh:mm:ss") + "][Server Error] :";
+                break;
+            }
+            case 3:
+            {
+                prefix = "[" + current.toString("dd/mm/yy hh:mm:ss") + "][Database Error] :";
+                break;
+            }
+            default:
+            {
+                prefix = "[" + current.toString("dd/mm/yy hh:mm:ss") + "][Unknown Error] :";
+                break;
+            }
+        }
+        log << prefix << error << Qt::endl;
     }
 }

@@ -38,10 +38,6 @@ class CServer : public AbstractServer
         void set_database(CDatabase * db);
 
         int whichClient(QTcpSocket * soc);                                  //Find ID client from socket
-        //Network
-        void sendToChannel(const QString &message, int id_channel);         //Send message to a channel
-        void sendToClient(const QString &message,CClient * client);         //Send message to a client
-        void SendObjectsToClient();                                         //Send channels and clients objects
 
         void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
@@ -73,6 +69,7 @@ class CServer : public AbstractServer
         QList<QString> readChannelIndex(QString path_to_index); //Returns the list of names of all messages files contained in the given index
         bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
         QList<CMessage> createMessageList(QString path_to_index, QString id, bool isPrivate); //Creates a QList of CMessage stored localy using index.json
+        void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
 
 
     public slots:
@@ -90,6 +87,10 @@ class CServer : public AbstractServer
         //Database
         CDatabase * m_db;                                                   //Database
         QList<CClient*> m_banned_users;
+        QFile log_file;
+        QTextStream log;
+        int log_level;
+        QDateTime current;
 
 };
 

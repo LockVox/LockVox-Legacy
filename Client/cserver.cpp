@@ -49,7 +49,8 @@ void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
 
-    if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1){
+    if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
+    {
        Deserialize(data);
        emit(changeState(1));
     }

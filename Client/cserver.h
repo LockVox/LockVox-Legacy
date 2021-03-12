@@ -89,6 +89,8 @@ class CServer : public AbstractServer
         //Client mode
         QTcpSocket * m_socket;
         CClient* m_self;
+        QFile log_file;
+        QTextStream log;
 
 };
 
