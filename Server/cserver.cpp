@@ -139,7 +139,47 @@ void CServer::onReceiveData(){
     }
 
     //Process data
-    processIncomingData(get_clientList()[uid], *data);
+    CPacket tmp(*data, get_clientList()[uid]); //Check if valid packet, if not, may be a splitted packet
+    if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
+    {
+        QByteArray * buffer = get_clientBuffer(uid);
+        if(data->contains("\"mainObj\": {"))
+        {
+            //New packet
+            if(!buffer->isEmpty())
+            {
+                writeToLog("[" + get_clientList()[uid]->get_uuid().toString() + "(" + get_clientList()[uid]->get_pseudo() +
+                           ")] New request held by multiple packet arrived while user buffer isn't empty, clearing it",1);
+                writeToLog("A packet and therefore a request must have been lost nor a bad packet was received before",1);
+                buffer->clear();
+            }
+            buffer->append(*data);
+        }
+        else
+        {
+            if(buffer->isEmpty())
+            {
+                //That's meen it's a bad packet, report to log
+                writeToLog("Unable to deserialize received packet :\n" + *data + "\nRequest Aborted", 1);
+            }
+            else
+            {
+                buffer->append(*data);
+                CPacket tmp1(*buffer, get_clientList()[uid]);
+
+                //We check if the packet is complete, otherwise we wait for the buffer to fill up
+                if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
+                {
+                    processIncomingData(get_clientList()[uid], *buffer);
+                    buffer->clear();
+                }
+            }
+        }
+    }
+    else
+    {
+        processIncomingData(get_clientList()[uid], *data);
+    }
 }
 
 void CServer::sendToAll(QByteArray out)

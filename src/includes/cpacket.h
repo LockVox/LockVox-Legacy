@@ -43,7 +43,7 @@ public:
     //Convert m_obj to a byte array
     QByteArray GetByteArray(){
         QJsonDocument doc(m_obj);
-        qDebug() << doc;
+        //qDebug() << doc;
         m_ba = doc.toJson();
         return m_ba;
     }

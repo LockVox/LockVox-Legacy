@@ -73,7 +73,7 @@ QByteArray CPacket::Serialize(bool isActionValid){
    obj.insert("isActionValid", isActionValid);
 
    QJsonDocument jsonDoc(obj);
-   qDebug() << jsonDoc;
+   //qDebug() << jsonDoc;
 
    m_ba = jsonDoc.toJson();
    return m_ba;
@@ -115,7 +115,7 @@ void CPacket::Serialize_myClient(CClient * client){
 
 void CPacket::Deserialize(){
 
-    qDebug() << m_obj;
+    //qDebug() << m_obj;
     if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
@@ -123,8 +123,8 @@ void CPacket::Deserialize(){
             m_type = type.toString();
             m_action = action.toString();
 
-            qDebug() << "m_type = " << m_type;
-            qDebug() << "m_action = " << m_action;
+            //qDebug() << "m_type = " << m_type;
+            //qDebug() << "m_action = " << m_action;
         }
 }
 
@@ -143,7 +143,7 @@ CClient * CPacket::Deserialize_newClient(){
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            qDebug() << "Name " << name << "   ID " << id;
+            //qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
       }
@@ -192,7 +192,7 @@ CClient * CPacket::Deserialize_myClient(){
             description = myClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            qDebug() << "Name " << name << "   ID " << id;
+            //qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
       }

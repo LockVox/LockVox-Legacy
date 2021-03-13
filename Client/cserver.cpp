@@ -440,7 +440,8 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
 bool CServer::sendMessage(QString msg)
 {
-    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
+    QImage img("test.jpg", "JPG");
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,img,false);
     CPacket sendMessage;
     if(message.get_isPrivate() ==  true)
     {
@@ -458,11 +459,16 @@ bool CServer::sendMessage(QString msg)
     }
 
     sendMessage.Serialize_Message(message);
-
-    if(m_socket->write(sendMessage.GetByteArray()) == -1)
+    qint64 messageSize = sendMessage.GetByteArray().size();
+    qint64 sendedSize = m_socket->write(sendMessage.GetByteArray());
+    if(sendedSize == -1)
     {
         qDebug() << "Error in Login, can't write to socket" << Qt::endl;
         return false;
+    }
+    else
+    {
+        qDebug() << "sendedSize :" << sendedSize << Qt::endl << "messageSize :" << messageSize << Qt::endl;
     }
     return true;
 }
