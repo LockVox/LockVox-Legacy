@@ -7,6 +7,7 @@
 #include <QDate>
 #include <QFile>
 #include <QImage>
+#include <QDebug>
 
 class CMessage
 {
@@ -22,6 +23,7 @@ class CMessage
         QString get_message(); //return content of the message
         QString get_time(); //Return time when message was sent
         QString get_date(); //Return date when message was sent
+        QImage get_image();  //Return image in message if message got an image
         bool get_isPrivate(); //return if it's a private message
 
 

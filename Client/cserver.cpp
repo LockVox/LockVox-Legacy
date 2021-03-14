@@ -440,8 +440,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
 bool CServer::sendMessage(QString msg)
 {
-    QImage img("test.jpg", "JPG");
-    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,img,false);
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
     CPacket sendMessage;
     if(message.get_isPrivate() ==  true)
     {

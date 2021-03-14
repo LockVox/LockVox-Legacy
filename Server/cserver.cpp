@@ -625,7 +625,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 break;
                             }
                         }
-
                         path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
                         if(QFile::exists(path))
                         {

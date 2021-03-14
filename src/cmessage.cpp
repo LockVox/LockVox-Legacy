@@ -49,9 +49,8 @@ CMessage::CMessage(QString xml)
     tmp = tmp[1].split("</content>\n");
     message = tmp[0];
 
-
     tmp[1].remove("<private>");
-    tmp = tmp[1].split("</private>");
+    tmp = tmp[1].split("</private>\n");
 
     if(tmp[0] == "true")
     {
@@ -63,14 +62,14 @@ CMessage::CMessage(QString xml)
     }
 
     tmp[1].remove("<hasImg>");
-    tmp = tmp[1].split("</hasImg>");
+    tmp = tmp[1].split("</hasImg>\n");
 
     if(tmp[0] == "true")
     {
         hasImg = true;
 
         tmp[1].remove("<img>");
-        tmp = tmp[1].split("</img>");
+        tmp = tmp[1].split("</img>\n");
 
         QByteArray array = QByteArray::fromBase64(tmp[0].toLatin1());
         image.loadFromData(array);
@@ -117,6 +116,11 @@ QString CMessage::get_time()
 QString CMessage::get_date()
 {
     return date.toString("d MMM yyyy");
+}
+
+QImage CMessage::get_image()
+{
+        return image;
 }
 
 
