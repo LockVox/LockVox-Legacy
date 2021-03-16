@@ -68,7 +68,7 @@ class CServer : public AbstractServer
         bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it
         QList<QString> readChannelIndex(QString path_to_index); //Returns the list of names of all messages files contained in the given index
         bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
-        QList<CMessage> createMessageList(QString path_to_index, QString id, bool isPrivate); //Creates a QList of CMessage stored localy using index.json
+        QList<CMessage> createMessageList(QString path_to_index, QString id, bool isPrivate,int nb_msg_to_sync); //Creates a QList of CMessage stored localy using index.json
         void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
 
 

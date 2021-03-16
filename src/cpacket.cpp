@@ -12,8 +12,6 @@ m_type(type),m_action(action)
     Serialize();
 }
 
-
-
 CPacket::CPacket(QByteArray data, CClient * client){
     m_client = client;                                  //Client
 
@@ -48,7 +46,8 @@ void CPacket::SetAction(QString p_action)
     m_action = p_action;
 }
 
-void CPacket::Serialize(){
+void CPacket::Serialize()
+{
     QJsonObject mainObj;
 
     mainObj.insert("type", m_type);
@@ -61,7 +60,6 @@ QByteArray CPacket::Serialize(CServer* c){
       m_ba = c->Serialize();
       return m_ba;
 }
-
 
 //Answer to a client request
 QByteArray CPacket::Serialize(bool isActionValid){
@@ -79,7 +77,6 @@ QByteArray CPacket::Serialize(bool isActionValid){
    return m_ba;
 }
 
-
 //When a new client connected
 void CPacket::Serialize_newClient(CClient* client){
 
@@ -90,7 +87,6 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("description", client->get_description());
    m_obj["newClient"] = clientObj;
 }
-
 
 //When a new channel is created
 void CPacket::Serialize_newChannel(CChannel* channel){
@@ -202,6 +198,7 @@ CClient * CPacket::Deserialize_myClient(){
     }
     return NULL;
 }
+
 void CPacket::Serialize_ID(int chan, QUuid client){
 
     QJsonObject channelObj;
@@ -223,7 +220,6 @@ void CPacket::Deserialize_ID(){
         qDebug() << "Error in deserializeID : " << e << Qt::endl;
     }
 }
-
 
 void CPacket::Serialize_auth(CClient* info, int code)
 {
@@ -459,6 +455,7 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
     }
     m_obj["messagelist"] = msglist;
 }
+
 QList<CMessage> CPacket::Deserialize_MessageList()
 {
     QList<CMessage> null;
@@ -502,6 +499,59 @@ QList<CMessage> CPacket::Deserialize_MessageList()
         qDebug() << "Error in Deserialize_MessageList :" << e << Qt::endl;
     }
     return null;
+}
+
+void CPacket::Serialize_messageRequest(int id, int nb_msg_to_sync)
+{
+    QJsonObject msgReq;
+    msgReq.insert("id",id);
+    msgReq.insert("nb",nb_msg_to_sync);
+
+    m_obj["msgReq"] = msgReq;
+}
+
+void CPacket::Serialize_messageRequest(QUuid id, int nb_msg_to_sync)
+{
+    QJsonObject msgReq;
+    msgReq.insert("uuid",id.toString(QUuid::WithoutBraces));
+    msgReq.insert("nb",nb_msg_to_sync);
+
+    m_obj["msgReq"] = msgReq;
+}
+
+QList<QString> CPacket::deserialize_messageRequest()
+{
+    QList<QString> null;
+    null.append("null");
+    try
+    {
+        if(m_obj.contains("msgReq"))
+        {
+            QJsonObject msgReq = m_obj.value("msgReq").toObject();
+            if(msgReq.contains("uuid"))
+            {
+                QList<QString> res;
+                res.append("private");
+                res.append(msgReq.value("uuid").toString());
+                res.append(msgReq.value("nb").toString());
+                return res;
+            }
+            else
+            {
+                QList<QString> res;
+                res.append("public");
+                res.append(msgReq.value("uuid").toString());
+                res.append(msgReq.value("nb").toString());
+                return res;
+            }
+        }
+        return null;
+    }
+    catch (char* e)
+    {
+        qDebug() << "Error in deserialize_messageRequest" << Qt::endl;
+        return null;
+    }
 }
 
 //UI

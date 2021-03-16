@@ -705,6 +705,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         break;
                     }
 
+                    case 3:
+                    {
+                        //Request message list
+                        //TODO
+
+                    }
                     case 5:
                     {
                         //Create chan voc
@@ -1198,8 +1204,10 @@ bool CServer::insertChannelIndex(QString path_to_index, QList<QString> filename_
 //         storage/[public|private]/[id]/index.json          //
 //      id refers to id of channel or user for storage       //
 //     isPrivate tells if it's a private message or not      //
+//  nb_msg_to_sync to tell how much message you want to sync //
+//               should be -1 to retrieve all                //
 // ///////////////////////////////////////////////////////// //
-QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bool isPrivate)
+QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bool isPrivate, int nb_msg_to_sync)
 {
     QList<QString> filename_list = readChannelIndex(path_to_index);
     QList<CMessage> message_list;
@@ -1214,28 +1222,56 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
         default_path = "storage/public/" + id + "/";
     }
 
-    foreach(QString filename, filename_list)
+    if(nb_msg_to_sync >= filename_list.size() | nb_msg_to_sync == -1)
     {
-        path = default_path + filename + ".xml";
-        if(QFile::exists(path))
+        foreach(QString filename, filename_list)
         {
-            QFile file(path);
-            if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            path = default_path + filename + ".xml";
+            if(QFile::exists(path))
             {
-                writeToLog("Can't open message file [" + filename + "]",2);
+                QFile file(path);
+                if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                {
+                    writeToLog("Can't open message file [" + filename + "]",2);
+                }
+                else
+                {
+                    CMessage tmp(QString::fromLocal8Bit(file.readAll()));
+                    message_list.append(tmp);
+                }
             }
             else
             {
-                CMessage tmp(QString::fromLocal8Bit(file.readAll()));
-                message_list.append(tmp);
+                writeToLog("Message [" + filename + "] may have been deleted and not removed from index [" + id + "]",2);
             }
         }
-        else
-        {
-            writeToLog("Message [" + filename + "] may have been deleted and not removed from index [" + id + "]",2);
-        }
+        return message_list;
     }
-    return message_list;
+    else
+    {
+        for(int i = nb_msg_to_sync; i > 0; i--)
+        {
+            path = default_path + filename_list[filename_list.size() - i] + ".xml";
+            if(QFile::exists(path))
+            {
+                QFile file(path);
+                if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                {
+                    writeToLog("Can't open message file [" + filename_list[filename_list.size() - i] + "]",2);
+                }
+                else
+                {
+                    CMessage tmp(QString::fromLocal8Bit(file.readAll()));
+                    message_list.append(tmp);
+                }
+            }
+            else
+            {
+                writeToLog("Message [" + filename_list[filename_list.size() - i] + "] may have been deleted and not removed from index [" + id + "]",2);
+            }
+        }
+        return message_list;
+    }
 }
 
 // ///////////////////////////////////////////////////////// //
