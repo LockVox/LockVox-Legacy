@@ -225,9 +225,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                        client = packet->Deserialize_newClient();
                        addClient(client);
 
-                       if(get_clientById(client->get_uuid())->get_isOnline() == true)
+                       if(get_clientById(client->get_uuid())->get_isOnline() == false)
                        {
-                           get_clientById(client->get_uuid())->set_isOnline(false);
+                           get_clientById(client->get_uuid())->set_isOnline(true);
                        }
 
                        //Update info -
@@ -337,7 +337,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
 
                         qDebug() << "Authentification request  - " << info[0] << " " << info[1];
                         CPacket* ans = new CPacket("0", "7");
-
+                        CPacket newUser("0","0");
                         //Hachage du password
                         std::string hashed = info[1].toStdString();
                         hashed = sha256(hashed);
@@ -363,6 +363,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                                         c->set_socket(sender->get_socket());
                                         //Lui envoyer ses infos
                                         ans->Serialize_auth(c, 0);
+
+
+                                        newUser.Serialize_newClient(c);
+
                                         valid = true;
                                     }
                                 }
@@ -387,6 +391,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data){    //Treats
                             sender->get_socket()->write(packet->Serialize(this));
                             sender->get_socket()->waitForBytesWritten();
                         }
+
+                        sendToAll(newUser.GetByteArray());
+
                         break;
                 }
 

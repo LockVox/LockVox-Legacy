@@ -62,7 +62,6 @@ QByteArray CPacket::Serialize(CServer* c){
       return m_ba;
 }
 
-
 //Answer to a client request
 QByteArray CPacket::Serialize(bool isActionValid){
    //Create a JSON Document with m_type & m_action
@@ -73,7 +72,6 @@ QByteArray CPacket::Serialize(bool isActionValid){
    obj.insert("isActionValid", isActionValid);
 
    QJsonDocument jsonDoc(obj);
-   qDebug() << jsonDoc;
 
    m_ba = jsonDoc.toJson();
    return m_ba;
@@ -115,16 +113,12 @@ void CPacket::Serialize_myClient(CClient * client){
 
 void CPacket::Deserialize(){
 
-    qDebug() << m_obj;
     if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
-
-            qDebug() << "m_type = " << m_type;
-            qDebug() << "m_action = " << m_action;
         }
 }
 
@@ -137,13 +131,12 @@ CClient * CPacket::Deserialize_newClient(){
 
         if(m_obj.contains("newClient")){
             QJsonObject newClient = m_obj.value("newClient").toObject();
-            id = QUuid::fromString(newClient.value("id").toString());
+            id = QUuid::fromString(newClient.value("uuid").toString());
             name = newClient.value("pseudo").toString();
             isOnline = newClient.value("isOnline").toBool();
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
       }
@@ -202,6 +195,7 @@ CClient * CPacket::Deserialize_myClient(){
     }
     return NULL;
 }
+
 void CPacket::Serialize_ID(int chan, QUuid client){
 
     QJsonObject channelObj;
@@ -459,6 +453,7 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
     }
     m_obj["messagelist"] = msglist;
 }
+
 QList<CMessage> CPacket::Deserialize_MessageList()
 {
     QList<CMessage> null;
