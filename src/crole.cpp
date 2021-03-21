@@ -41,22 +41,26 @@ void crole::AddChild(crole *p_child)
 void crole::DelChild(QString p_name)
 {
     int i=0;
-    for(crole cur : m_childrens)
+    foreach(crole cur, m_childrens)
     {
         if(cur.m_name == p_name)
+        {
             m_childrens.removeAt(i);
-            i++;
+        }
+        i++;
     }
 }
 
 void crole::DelChild(int p_id)
 {
     int i=0;
-    for(crole cur : m_childrens)
+    foreach(crole cur, m_childrens)
     {
         if(cur.m_id == p_id)
+        {
             m_childrens.removeAt(i);
-            i++;
+        }
+        i++;
     }
 }
 

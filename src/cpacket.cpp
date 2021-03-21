@@ -12,8 +12,6 @@ m_type(type),m_action(action)
     Serialize();
 }
 
-
-
 CPacket::CPacket(QByteArray data, CClient * client){
     m_client = client;                                  //Client
 
@@ -48,7 +46,8 @@ void CPacket::SetAction(QString p_action)
     m_action = p_action;
 }
 
-void CPacket::Serialize(){
+void CPacket::Serialize()
+{
     QJsonObject mainObj;
 
     mainObj.insert("type", m_type);
@@ -72,11 +71,12 @@ QByteArray CPacket::Serialize(bool isActionValid){
    obj.insert("isActionValid", isActionValid);
 
    QJsonDocument jsonDoc(obj);
+   //qDebug() << jsonDoc;
+
 
    m_ba = jsonDoc.toJson();
    return m_ba;
 }
-
 
 //When a new client connected
 void CPacket::Serialize_newClient(CClient* client){
@@ -88,7 +88,6 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("description", client->get_description());
    m_obj["newClient"] = clientObj;
 }
-
 
 //When a new channel is created
 void CPacket::Serialize_newChannel(CChannel* channel){
@@ -113,12 +112,18 @@ void CPacket::Serialize_myClient(CClient * client){
 
 void CPacket::Deserialize(){
 
+    //qDebug() << m_obj;
+
     if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
+
+            //qDebug() << "m_type = " << m_type;
+            //qDebug() << "m_action = " << m_action;
+
         }
 }
 
@@ -137,6 +142,8 @@ CClient * CPacket::Deserialize_newClient(){
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
+            //qDebug() << "Name " << name << "   ID " << id;
+
             return client;
         }
       }
@@ -185,7 +192,7 @@ CClient * CPacket::Deserialize_myClient(){
             description = myClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            qDebug() << "Name " << name << "   ID " << id;
+            //qDebug() << "Name " << name << "   ID " << id;
             return client;
         }
       }
@@ -217,7 +224,6 @@ void CPacket::Deserialize_ID(){
         qDebug() << "Error in deserializeID : " << e << Qt::endl;
     }
 }
-
 
 void CPacket::Serialize_auth(CClient* info, int code)
 {
@@ -497,6 +503,63 @@ QList<CMessage> CPacket::Deserialize_MessageList()
         qDebug() << "Error in Deserialize_MessageList :" << e << Qt::endl;
     }
     return null;
+}
+
+void CPacket::Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index)
+{
+    QJsonObject msgReq;
+    msgReq.insert("id",id);
+    msgReq.insert("nb",nb_msg_to_sync);
+    msgReq.insert("start", start_index);
+
+    m_obj["msgReq"] = msgReq;
+}
+
+void CPacket::Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index)
+{
+    QJsonObject msgReq;
+    msgReq.insert("uuid",id.toString(QUuid::WithoutBraces));
+    msgReq.insert("nb",nb_msg_to_sync);
+    msgReq.insert("start", start_index);
+
+    m_obj["msgReq"] = msgReq;
+}
+
+QList<QString> CPacket::deserialize_messageRequest()
+{
+    QList<QString> null;
+    null.append("null");
+    try
+    {
+        if(m_obj.contains("msgReq"))
+        {
+            QJsonObject msgReq = m_obj.value("msgReq").toObject();
+            if(msgReq.contains("uuid"))
+            {
+                QList<QString> res;
+                res.append("private");
+                res.append(msgReq.value("uuid").toString());
+                res.append(msgReq.value("nb").toString());
+                res.append(msgReq.value("start").toString());
+                return res;
+            }
+            else
+            {
+                QList<QString> res;
+                res.append("public");
+                res.append(msgReq.value("id").toString());
+                res.append(msgReq.value("nb").toString());
+                res.append(msgReq.value("start").toString());
+                return res;
+            }
+        }
+        return null;
+    }
+    catch (char* e)
+    {
+        qDebug() << "Error in deserialize_messageRequest : " << e << Qt::endl;
+        return null;
+    }
 }
 
 //UI

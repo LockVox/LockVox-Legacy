@@ -32,14 +32,12 @@ class CDatabase
 public:
     CDatabase();           // Constructor
     bool execMain();  // Main Process
-    string getHash(string id);
-    string newUser(string uuid,string pseudo, string mail, string password);
+    string getHash(string id, QString * get_err);
+    QString newUser(string uuid,string pseudo, string mail, string password);
 
     QList<CChannel*> parseChannel();
     QList<CClient*> parseClient();
-    CClient* parseClient(string email);
-
-
+    CClient* parseClient(string email, QString * get_err);
 };
 
 #endif // CDATABASE_H

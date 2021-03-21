@@ -43,7 +43,7 @@ public:
     //Convert m_obj to a byte array
     QByteArray GetByteArray(){
         QJsonDocument doc(m_obj);
-        qDebug() << doc;
+        //qDebug() << doc;
         m_ba = doc.toJson();
         return m_ba;
     }
@@ -83,6 +83,8 @@ public:
     void Serialize_regAns(int code);
     void Serialize_Message(CMessage msg);
     void Serialize_MessageList(QList<CMessage> list);
+    void Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index);
+    void Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
@@ -96,6 +98,7 @@ public:
     int Deserialize_regAns();
     CMessage Deserialize_Message();
     QList<CMessage> Deserialize_MessageList();
+    QList<QString> deserialize_messageRequest();
 
 
 
