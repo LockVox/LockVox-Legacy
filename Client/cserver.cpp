@@ -75,6 +75,7 @@ void CServer::processIncomingData(QByteArray data){
 
                 break;
             }
+
             case 1:
             {
                 //User is now offline
@@ -89,6 +90,7 @@ void CServer::processIncomingData(QByteArray data){
 
                 break;
             }
+
             case 2:
             {
                 //PSEUDO UPDATE
@@ -97,24 +99,33 @@ void CServer::processIncomingData(QByteArray data){
                 client->set_pseudo(c->get_pseudo());
                 break;
             }
+
             case 3:
             {
                 //BIO UPDATE
                 break;
             }
+
             case 4:
+            {
                 //BAN USER
                 break;
-            case 5:{
+            }
+
+            case 5:
+            {
                 //BAN IP
                 //Rajouter système de gestion du temps
                 break;
-                }
-            case 6: {
+            }
+
+            case 6:
+            {
                 //Kick user
 
                 break;
-                }
+            }
+
             case 7:
             {
                 m_self = packet->Deserialize_authAns();
@@ -124,26 +135,29 @@ void CServer::processIncomingData(QByteArray data){
                     emit(on_Authentification(1));
                 }
             }
-             case 8: {
+
+            case 8:
+            {
                 int code = packet->Deserialize_regAns();
 
                 //Register successfully
-                if(code == 1){
+                if(code == 1)
+                {
                     m_self = packet->Deserialize_myClient();
-
                     if(m_self)
                     {
                         emit(on_Authentification(1));
                     }
                 }
-             }
+            }
         }
     }
 
     if(packet->GetType().toInt() == 1){
         switch (packet->GetAction().toInt())
         {
-                case 0: {
+                case 0:
+                {
                     //CONNECT CHAN
                     packet->Deserialize_ID();
 
@@ -158,7 +172,9 @@ void CServer::processIncomingData(QByteArray data){
                     qDebug() << client->get_pseudo() << " has join channel " << channel->get_name();
                     break;
                 }
-                case 1: {
+
+                case 1:
+                {
                     //QUIT CHAN
                     packet->Deserialize_ID();
 
@@ -171,21 +187,34 @@ void CServer::processIncomingData(QByteArray data){
                     }
                     break;
                 }
-                case 5: {
+
+                case 2:
+                {
+                    //Get message list
+                    QList<CMessage> messages_list = packet->Deserialize_MessageList();
+                    //appendChannelMessage(messages_list);
+                }
+
+                case 5:
+                {
                     //Create chan voc
                     CChannel * c = packet->Deserialize_newChannel();
                     addChannel(c);
 
                     break;
                 }
-                case 6: {
+
+                case 6:
+                {
                     //Delete chan voc
                     CChannel * c = packet->Deserialize_newChannel();
                     CChannel * toDelChannel = get_channelById(c->get_id());
                     DelChannel(toDelChannel);
                     break;
                 }
-                case 7: {
+
+                case 7:
+                {
                     //Rename chan voc
                     CChannel * c = packet->Deserialize_newChannel();
 
@@ -193,37 +222,54 @@ void CServer::processIncomingData(QByteArray data){
                     channel->set_name(c->get_name());
                     break;
                 }
-                case 8: {
+
+                case 8:
+                {
                     //Modif max user (voc)
                    CChannel * c = packet->Deserialize_newChannel();
                    CChannel * channel = get_channelById(c->get_id());
-                 channel->set_maxUsers(c->get_maxUsers());
+                   channel->set_maxUsers(c->get_maxUsers());
                     break;
                 }
-                case 9: {
+
+                case 9:
+                {
                     //kick user voc
 
                     break;
                 }
-                case 10: {
+
+                case 10:
+                {
                     //Mute user voc (server side)
 
                     break;
                 }
-                case 11:{
-                    //Create chan text --------> Qxmpp
+
+                case 11:
+                {
+                    //Create chan text
 
                     break;
                 }
+
                 case 12:
-                    //Delete cahn text
+                {
+                    //Delete chan text
                     break;
+                }
+
                 case 13:
+                {
                     //Rename chan text
                     break;
+                }
+
                 default:
+                {
                     qDebug() << "Error invalid action" << Qt::endl;
                     break;
+                }
             break;
         }
     }
@@ -231,26 +277,53 @@ void CServer::processIncomingData(QByteArray data){
     if(packet->GetType().toInt() == 2){
         switch (packet->GetAction().toInt())
         {
-        case 0:
-            //Mute (user side) ?????
-            break;
-        case 1:
-            //Add friend --> later
-            break;
-        case 2:
-            //Del friend
-            break;
-        case 3:
-            //Send msg to friend
-            break;
-        case 4:
-            //Modif pseudo (update bdd)
-            break;
-        case 5:
-            //Change right
-            break;
-        default:
-            qDebug() << "Error invalid action" << Qt::endl;
+            case 0:
+            {
+                //Mute (user side) ?????
+                break;
+            }
+
+            case 1:
+            {
+                //Add friend --> later
+                break;
+            }
+
+            case 2:
+            {
+                //Del friend
+                break;
+            }
+
+            case 3:
+            {
+                //Send msg to friend
+                break;
+            }
+
+            case 4:
+            {
+                //Modif pseudo (update bdd)
+                break;
+            }
+
+            case 5:
+            {
+                //Change right
+                break;
+            }
+
+            case 6:
+            {
+                //Get private message list
+                QList<CMessage> message_list = packet->Deserialize_MessageList();
+                //appendClientMessage(message_list)
+            }
+
+            default:
+            {
+                qDebug() << "Error invalid action" << Qt::endl;
+            }
         }
      }
     emit(updateMainWindow());
@@ -471,8 +544,6 @@ bool CServer::sendMessage(QString msg)
     }
     return true;
 }
-
-
 
 QByteArray CServer::Serialize(){
 

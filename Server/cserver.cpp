@@ -708,9 +708,29 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 3:
                     {
                         //Request message list
-                        //TODO
+                        QList<QString> info = packet->deserialize_messageRequest();
+                        QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
 
+                        if(messages_list.last().get_from() == "allIsSync")
+                        {
+                            //Tell to client there is no older message
+                            //TODO
+                            break;
+                        }
+                        if(messages_list.last().get_from() == "no_index")
+                        {
+                            //Tell the client there is no message saved
+                            //TODO
+                            break;
+                        }
+
+                        CPacket reqAns("1","2");
+
+                        reqAns.Serialize_MessageList(messages_list);
+                        sendToClient(reqAns.GetByteArray(), sender);
+                        break;
                     }
+
                     case 5:
                     {
                         //Create chan voc
@@ -863,8 +883,27 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                     case 6:
                     {
-                        //Private message
-                        //TODO
+                        //Request message list
+                        QList<QString> info = packet->deserialize_messageRequest();
+                        QList<CMessage> messages_list = createMessageList(info.at(1), true, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
+
+                        if(messages_list.last().get_from() == "allIsSync")
+                        {
+                            //Tell to client there is no older message
+                            //TODO
+                            break;
+                        }
+                        if(messages_list.last().get_from() == "no_index")
+                        {
+                            //Tell the client there is no message saved
+                            //TODO
+                            break;
+                        }
+
+                        CPacket reqAns("2","6");
+
+                        reqAns.Serialize_MessageList(messages_list);
+                        sendToClient(reqAns.GetByteArray(), sender);
                         break;
                     }
 
@@ -1141,7 +1180,7 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
             }
             else
             {
-                writeToLog("Error in index.json no containing correct index in channel",2);
+                writeToLog("Error in index.json not containing correct message index",2);
                 return null;
             }
             array.removeFirst();
@@ -1151,7 +1190,7 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
     }
     else
     {
-        null.append("no_index");
+        writeToLog(("Error while reading index.json, no field \"index\" found"), 2);
         return null;
     }
 }
@@ -1200,18 +1239,20 @@ bool CServer::insertChannelIndex(QString path_to_index, QList<QString> filename_
 
 // ///////////////////////////////////////////////////////// //
 // Create a QList of CMessage stored localy using index.json //
-//         path_to_index should be something like :          //
-//         storage/[public|private]/[id]/index.json          //
 //      id refers to id of channel or user for storage       //
 //     isPrivate tells if it's a private message or not      //
 //  nb_msg_to_sync to tell how much message you want to sync //
 //               should be -1 to retrieve all                //
+//             sender refere tu uuid of sender,              //
+//              used to gather private message               //
+//        start_index is used to retrieve older message      //
+//       should be 0 if no message has already been sync     //
 // ///////////////////////////////////////////////////////// //
-QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bool isPrivate, int nb_msg_to_sync)
+QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_msg_to_sync, QUuid sender, int start_index)
 {
-    QList<QString> filename_list = readChannelIndex(path_to_index);
-    QList<CMessage> message_list;
     QString default_path, path;
+    QList<CMessage> message_list;
+    int index;
 
     if(isPrivate)
     {
@@ -1219,10 +1260,44 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
     }
     else
     {
-        default_path = "storage/public/" + id + "/";
+        default_path = "storage/public/" + sender.toString(QUuid::WithoutBraces) + "/" + id + "/";
     }
 
-    if(nb_msg_to_sync >= filename_list.size() | nb_msg_to_sync == -1)
+    QList<QString> filename_list = readChannelIndex(default_path + "index.json");
+
+    if(filename_list.isEmpty() | filename_list.last() == "no_index")
+    {
+        CMessage noIndex("noIndex","null","null",false);
+        message_list.append(noIndex);
+        return message_list;
+    }
+
+    if(start_index == 0)
+    {
+        index = nb_msg_to_sync;
+    }
+    else
+    {
+        if(start_index >= filename_list.size())
+        {
+            CMessage allIsSync("allIsSync","null","null",false);
+            message_list.append(allIsSync);
+            return message_list;
+        }
+        else
+        {
+            if((start_index + nb_msg_to_sync) >= filename_list.size())
+            {
+                index = filename_list.size() - 1;
+            }
+            else
+            {
+                index = start_index + nb_msg_to_sync;
+            }
+        }
+    }
+
+    if((nb_msg_to_sync == -1) | (nb_msg_to_sync >= filename_list.size() && start_index == 0))
     {
         foreach(QString filename, filename_list)
         {
@@ -1249,7 +1324,7 @@ QList<CMessage> CServer::createMessageList(QString path_to_index, QString id, bo
     }
     else
     {
-        for(int i = nb_msg_to_sync; i > 0; i--)
+        for(int i = index; i >= start_index; i--)
         {
             path = default_path + filename_list[filename_list.size() - i] + ".xml";
             if(QFile::exists(path))

@@ -501,20 +501,22 @@ QList<CMessage> CPacket::Deserialize_MessageList()
     return null;
 }
 
-void CPacket::Serialize_messageRequest(int id, int nb_msg_to_sync)
+void CPacket::Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index)
 {
     QJsonObject msgReq;
     msgReq.insert("id",id);
     msgReq.insert("nb",nb_msg_to_sync);
+    msgReq.insert("start", start_index);
 
     m_obj["msgReq"] = msgReq;
 }
 
-void CPacket::Serialize_messageRequest(QUuid id, int nb_msg_to_sync)
+void CPacket::Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index)
 {
     QJsonObject msgReq;
     msgReq.insert("uuid",id.toString(QUuid::WithoutBraces));
     msgReq.insert("nb",nb_msg_to_sync);
+    msgReq.insert("start", start_index);
 
     m_obj["msgReq"] = msgReq;
 }
@@ -534,14 +536,16 @@ QList<QString> CPacket::deserialize_messageRequest()
                 res.append("private");
                 res.append(msgReq.value("uuid").toString());
                 res.append(msgReq.value("nb").toString());
+                res.append(msgReq.value("start").toString());
                 return res;
             }
             else
             {
                 QList<QString> res;
                 res.append("public");
-                res.append(msgReq.value("uuid").toString());
+                res.append(msgReq.value("id").toString());
                 res.append(msgReq.value("nb").toString());
+                res.append(msgReq.value("start").toString());
                 return res;
             }
         }
@@ -549,7 +553,7 @@ QList<QString> CPacket::deserialize_messageRequest()
     }
     catch (char* e)
     {
-        qDebug() << "Error in deserialize_messageRequest" << Qt::endl;
+        qDebug() << "Error in deserialize_messageRequest : " << e << Qt::endl;
         return null;
     }
 }

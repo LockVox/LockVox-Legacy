@@ -83,8 +83,8 @@ public:
     void Serialize_regAns(int code);
     void Serialize_Message(CMessage msg);
     void Serialize_MessageList(QList<CMessage> list);
-    void Serialize_messageRequest(int id, int nb_msg_to_sync);
-    void Serialize_messageRequest(QUuid id, int nb_msg_to_sync);
+    void Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index);
+    void Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
