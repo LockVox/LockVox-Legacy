@@ -88,6 +88,7 @@ void CServer::onReceiveData(){
     data->append(m_socket->readAll());
 
     //Process data
+    qDebug() << *data;
     processIncomingData(*data);
 
     delete data;
@@ -112,18 +113,26 @@ void CServer::processIncomingData(QByteArray data){
             case 0:
             {
                 //New User is now online
+
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
 
+                bool exist = true;
+
                 for(int i = 0; i < get_clientList().size(); i++)
                 {
-                    if(get_clientList()[i]->get_uuid() == client->get_uuid())
+                    if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
                     {
-                        get_clientById(client->get_uuid())->set_isOnline(true);
+                        client->set_isOnline(true);
+                        m_clientsList->setItem(client);
+                        exist=true;
                     }
                 }
-                free(client);
 
+                if(!exist)
+                {
+                    m_clientsList->addClient(client);
+                }
                 break;
             }
 
@@ -132,14 +141,16 @@ void CServer::processIncomingData(QByteArray data){
                 //User is now offline
                 CClient * client = packet->Deserialize_newClient();
 
-                for(int i = 0; i < get_clientList().size(); i++){
-                    if(get_clientList()[i]->get_uuid() == client->get_uuid()){
-                        get_clientById(client->get_uuid())->set_isOnline(false);
-                    }
+                for(int i = 0; i < get_clientList().size(); i++)
+                {
+                   if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
+                   {
+                       client->set_isOnline(false);
+                       m_clientsList->setItem(client);
+                   }
                 }
-                free(client);
-
-                break;
+             free(client);
+             break;
             }
 
             case 2:
@@ -179,12 +190,13 @@ void CServer::processIncomingData(QByteArray data){
 
             case 7:
             {
-                m_self = packet->Deserialize_authAns();
+                set_self(packet->Deserialize_authAns());
                 if(m_self)
                 {
-                    qDebug() << "Your UUID is :" << m_self->get_uuid().toString() << Qt::endl;
-                    emit(on_Authentification(1));
+                    CPacket ObjServRequest("-1","-1");
+                    sendToServer(ObjServRequest.GetByteArray());
                 }
+                break;
             }
 
             case 8:
@@ -194,12 +206,15 @@ void CServer::processIncomingData(QByteArray data){
                 //Register successfully
                 if(code == 1)
                 {
-                    m_self = packet->Deserialize_myClient();
+                    set_self(packet->Deserialize_myClient());
+
                     if(m_self)
                     {
-                        emit(on_Authentification(1));
+                        CPacket ObjServRequest("-1","-1");
+                        sendToServer(ObjServRequest.GetByteArray());
                     }
                 }
+                break;
             }
         }
     }
