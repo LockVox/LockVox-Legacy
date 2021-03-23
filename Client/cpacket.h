@@ -95,7 +95,7 @@ public:
     void Deserialize_regReq();
     int Deserialize_regAns();
     CMessage Deserialize_Message();
-    QList<CMessage> Deserialize_MessageList();
+    QVector<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();
 
 

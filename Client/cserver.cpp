@@ -87,9 +87,44 @@ void CServer::onReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
 
-    //Process data
-    processIncomingData(*data);
+    int bracket = 0;
+    bool ifTrueProccess = true;
+    CPacket tmp(*data,NULL);
+    if(tmp.GetAction().isNull() || tmp.GetType().isNull())
+    {
+        if(!data->isEmpty())
+        {
+            ifTrueProccess = false;
+            QTextStream stream(data);
+            QString buffer;
 
+            while(!stream.atEnd())
+            {
+                if(bracket == 0 && !buffer.isEmpty())
+                {
+                    QByteArray array(buffer.toLocal8Bit());
+                    processIncomingData(array);
+                    buffer.clear();
+                }
+
+                QString oneChar = stream.read(1);
+                buffer += oneChar;
+                if(oneChar == "{")
+                {
+                    bracket++;
+                }
+                if(oneChar == "}")
+                {
+                    bracket--;
+                }
+            }
+        }
+    }
+    //Process data
+    if(ifTrueProccess)
+    {
+        processIncomingData(*data);
+    }
     delete data;
 }
 
@@ -256,7 +291,7 @@ void CServer::processIncomingData(QByteArray data){
                 case 2:
                 {
                     //Get message list
-                    QList<CMessage> messages_list = packet->Deserialize_MessageList();
+                    QVector<CMessage> messages_list = packet->Deserialize_MessageList();
                     //appendChannelMessage(messages_list);
                 }
 
@@ -381,7 +416,7 @@ void CServer::processIncomingData(QByteArray data){
             case 6:
             {
                 //Get private message list
-                QList<CMessage> message_list = packet->Deserialize_MessageList();
+                QVector<CMessage> message_list = packet->Deserialize_MessageList();
                 //appendClientMessage(message_list)
             }
 

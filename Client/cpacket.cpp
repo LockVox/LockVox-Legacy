@@ -459,11 +459,11 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
     m_obj["messagelist"] = msglist;
 }
 
-QList<CMessage> CPacket::Deserialize_MessageList()
+QVector<CMessage> CPacket::Deserialize_MessageList()
 {
-    QList<CMessage> null;
+    QVector<CMessage> null;
     null.append(CMessage("null","null","null",true));
-    QList<CMessage> list;
+    QVector<CMessage> list;
     int index = 0;
 
     try
