@@ -295,6 +295,37 @@ void CServer::processIncomingData(QByteArray data){
                     //appendChannelMessage(messages_list);
                 }
 
+                case 3:
+                {
+                    //Send message error
+                    int code = packet->Deserialize_MessageError();
+                    switch (code)
+                    {
+                        case 1:
+                        {
+                            //Received private message in public channel
+                            qDebug() << "[Server] : Can't process a private message in a public channel. This error shouldn't append" << Qt::endl;
+                        }
+
+                        case 2:
+                        {
+                            //Spamming
+                            qDebug() << "[Server] Stop spamming copy past ! You don't want *ding*ding* constantly in your ears do you ?" << Qt::endl;
+                        }
+
+                        case 3:
+                        {
+                            //Server side error
+                            qDebug() << "[Server] Can't process your message. If this error does'nt appear for the first time, please contact your beloved moderator !" << Qt::endl;
+                        }
+
+                        default:
+                        {
+                            qDebug() << "Unknow error" << Qt::endl;
+                        }
+                    }
+                }
+
                 case 5:
                 {
                     //Create chan voc
@@ -465,36 +496,38 @@ bool CServer::Login(QString mail, QString passwd)
     return true;
 }
 
-bool CServer::sendMessage(QString msg)
+bool CServer::sendMessage(QString msg, int id)
 {
-    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),QString::number(id),msg,false);
     CPacket sendMessage;
-    if(message.get_isPrivate() ==  true)
-    {
-        sendMessage.SetType("2");
-        sendMessage.SetAction("6");
 
-        sendMessage.Serialize();
-    }
-    else
-    {
-        sendMessage.SetType("1");
-        sendMessage.SetAction("2");
-
-        sendMessage.Serialize();
-    }
+    sendMessage.SetType("1");
+    sendMessage.SetAction("2");
+    sendMessage.Serialize();
 
     sendMessage.Serialize_Message(message);
-    qint64 messageSize = sendMessage.GetByteArray().size();
-    qint64 sendedSize = m_socket->write(sendMessage.GetByteArray());
-    if(sendedSize == -1)
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {
         qDebug() << "Error in Login, can't write to socket" << Qt::endl;
         return false;
     }
-    else
+    return true;
+}
+
+bool CServer::sendMessage(QString msg, QUuid id)
+{
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),id.toString(QUuid::WithoutBraces),msg,true);
+    CPacket sendMessage;
+
+    sendMessage.SetType("2");
+    sendMessage.SetAction("6");
+    sendMessage.Serialize();
+
+    sendMessage.Serialize_Message(message);
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {
-        qDebug() << "sendedSize :" << sendedSize << Qt::endl << "messageSize :" << messageSize << Qt::endl;
+        qDebug() << "Error in Login, can't write to socket" << Qt::endl;
+        return false;
     }
     return true;
 }

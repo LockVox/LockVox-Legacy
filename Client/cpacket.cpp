@@ -561,4 +561,22 @@ QList<QString> CPacket::deserialize_messageRequest()
     }
 }
 
+int CPacket::Deserialize_MessageError()
+{
+    try
+    {
+        if(m_obj.contains("msgErr"))
+        {
+            QJsonObject msgErr = m_obj.value("msgErr").toObject();
+            return msgErr.value("code").toInt();
+        }
+        return -1;
+    }
+    catch (char *e)
+    {
+        qDebug() << "Error in deserialize_messageError : " << e << Qt::endl;
+        return -1;
+    }
+}
+
 //UI
