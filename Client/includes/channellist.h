@@ -49,6 +49,7 @@ public slots:
 private:
     QVector<int> m_roles;
     QVector<CChannel*> m_channels;
+    int m_currentIndex;
 };
 
 #endif // CHANNELLIST_H

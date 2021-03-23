@@ -93,6 +93,11 @@ void CServer::onReceiveData(){
     delete data;
 }
 
+void CServer::onCurrentIndexChanged(int index)
+{
+    qDebug() << "Current index of the list of channels has changed : " << index;
+}
+
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);

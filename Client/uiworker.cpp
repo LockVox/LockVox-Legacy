@@ -55,13 +55,15 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_connectServer = m_rootObject->findChild<QObject*>("connect_server");
     m_userinfo = m_rootObject->findChild<QObject*>("userInfo");
 
-
+    m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
 
     //Check if compenents has been load correctly
-    if(!m_login || !m_register || !m_connectServer){
+    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels){
         qDebug("Some objects hasn't been initialized correctly");
     }
 
+    QObject::connect(m_listChannels, SIGNAL(currentIndexChanged(int)),
+                     this, SLOT(onCurrentIndexChanged(int)));
     //Connect UI - Server
     QObject::connect(m_login, SIGNAL(login_request(QString,QString)),
              m_server, SLOT(Login(QString,QString)));
@@ -99,4 +101,9 @@ void UIWorker::onSelfChanged(CClient* c){
     //Access here to UserInfo Qml Element, modify it has u wish with CClient methods
     QObject * username = m_userinfo->findChild<QObject*>("username");
     username->setProperty("text", c->get_pseudo());
+}
+
+void UIWorker::onCurrentIndexChanged(int index)
+{
+    qDebug() << "Current Index has change : " << index << Qt::endl;
 }

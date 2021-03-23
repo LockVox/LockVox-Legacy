@@ -93,6 +93,7 @@ signals:
     private slots:
 
         void onReceiveData();
+        void onCurrentIndexChanged(int);
         void sendToServer(QByteArray ba);
         void sendToServer();
 

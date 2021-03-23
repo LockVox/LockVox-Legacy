@@ -10,7 +10,7 @@
 #endif
 
 
-//#define AUTO_LOGIN
+#define AUTO_LOGIN
 #ifdef AUTO_LOGIN
     #define USERNAME "test"
     #define PASSWORD "test"

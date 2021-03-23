@@ -49,6 +49,7 @@ public slots:
 private:
     QVector<int> m_roles;
     QVector<CClient*> m_clients;
+    int m_currentIndex;
 };
 
 #endif // CLIENTLIST_H

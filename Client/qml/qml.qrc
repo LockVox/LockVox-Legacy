@@ -12,5 +12,6 @@
         <file>AudioWindow.qml</file>
         <file>ParametersWidget.qml</file>
         <file>Delegate_Message.qml</file>
+        <file>Channels.qml</file>
     </qresource>
 </RCC>

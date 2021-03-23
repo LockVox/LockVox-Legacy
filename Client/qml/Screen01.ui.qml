@@ -17,7 +17,7 @@ Rectangle {
     color: "#1b1f21"
 
 
-    /*
+
     //Main Obj
     property alias login: login
     property alias listClient: listClient
@@ -28,11 +28,12 @@ Rectangle {
     //Compenent
     property alias loginButton: loginButton
     property alias registerButton: registerButton
+    property alias listChannel: listChannel
 
 
     //Layout
-    property alias regLog_layout: regLog_layout
-    */
+    //property alias regLog_layout: regLog_layout
+
     UserInfo {
         objectName: "userInfo"
         id: userInfo
@@ -162,20 +163,6 @@ Rectangle {
         delegate: Delegate_Client {}
     }
 
-    ListView {
-        id: listChannel
-        x: 940
-        y: 70
-        width: 154
-        height: 472
-        visible: false
-        clip: true
-        model: ChannelModel {
-            m_channelsList: channelsList
-        }
-
-        delegate: Delegate_Channel {}
-    }
 
     ListView {
         id: listMessage
@@ -183,7 +170,7 @@ Rectangle {
         y: 267
         width: 235
         height: 199
-        visible: true
+        visible: false
         clip: true
         model: MessageModel {
             m_messagesList: messagesList
@@ -194,6 +181,32 @@ Rectangle {
                 text: model.from
             }
         }
+    }
+
+
+    //property alias channel:channel
+    ListView {
+
+        signal currentIndexChanged(int index)
+
+        objectName: "listChannels"
+        id: listChannel
+
+
+        x: 940
+        y: 70
+        width: 154
+        height: 472
+        visible: false
+        clip: true
+        model: ChannelModel {
+            m_channelsList: channelsList
+        }
+
+        delegate: Delegate_Channel {
+
+        }
+
     }
 
     MessageWindow {
@@ -238,6 +251,16 @@ Rectangle {
         id: customQpushButton2
         x: 592
         y: 5
+    }
+
+
+
+    Channels {
+        objectName: "channels"
+        x: 6
+        y: 85
+        width: 188
+        height: 251
     }
 
     states: [
@@ -299,9 +322,9 @@ Rectangle {
 
             PropertyChanges {
                 target: listClient
-                x: 478
+                x: 495
                 y: 70
-                width: 162
+                width: 145
                 height: 410
                 visible: true
             }
@@ -364,7 +387,7 @@ Rectangle {
                 target: listMessage
                 x: 185
                 y: 79
-                width: 311
+                width: 304
                 height: 349
                 visible: true
             }

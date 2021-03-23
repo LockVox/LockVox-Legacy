@@ -48,6 +48,7 @@ public slots:
 private:
     QVector<int> m_roles;
     QVector<CMessage> m_messages;
+    int m_currentIndex;
 };
 
 #endif // MESSAGELIST_H
