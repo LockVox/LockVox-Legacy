@@ -4,7 +4,7 @@
 
 MessageList::MessageList(QObject *parent) : QObject(parent)
 {
-    CMessage * m = new CMessage("taga","test","Ceci est un message", false);
+    CMessage m("taga","test","Ceci est un message", false);
     for(int i = 0; i < 10; i++)
         m_messages.append(m);
 }
@@ -15,13 +15,13 @@ MessageList::~MessageList()
     disconnect(this);
 }
 
-QVector<CMessage *> MessageList::get_messages()
+QVector<CMessage> MessageList::get_messages()
 {
     return m_messages;
 }
 
 
-void MessageList::addMessage(CMessage *m)
+void MessageList::addMessage(CMessage m)
 {
     emit preItemAppended();
 
@@ -30,7 +30,7 @@ void MessageList::addMessage(CMessage *m)
     emit postItemAppended();
 }
 
-void MessageList::setItem(CMessage* c){
+void MessageList::setItem(CMessage c){
 
     //Get index
     int index = -1;
@@ -50,7 +50,7 @@ void MessageList::setItem(CMessage* c){
 
 
 
-bool MessageList::setItemAt(int index, CMessage *item)
+bool MessageList::setItemAt(int index, CMessage item)
 {
 
     if(index < 0 || index >= m_messages.size())

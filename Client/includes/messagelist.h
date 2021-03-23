@@ -17,19 +17,19 @@ public:
     ~MessageList();
 
    //Getter
-    Q_INVOKABLE QVector<CMessage *> get_messages();
+    Q_INVOKABLE QVector<CMessage> get_messages();
 
    //Setter
-    void set_messages(QVector<CMessage*> messages);
+    void set_messages(QVector<CMessage> messages);
 
 
    //Add / Delete clients
-   void addMessage(CMessage * client);
-   void removeMessage(CMessage * client);
-   void setItem(CMessage *c);
+   void addMessage(CMessage client);
+   void removeMessage(CMessage client);
+   void setItem(CMessage c);
 
    //Set client
-   bool setItemAt(int index, CMessage *item);
+   bool setItemAt(int index, CMessage item);
 
 signals:
    void dataChanged();
@@ -47,7 +47,7 @@ public slots:
 
 private:
     QVector<int> m_roles;
-    QVector<CMessage*> m_messages;
+    QVector<CMessage> m_messages;
 };
 
 #endif // MESSAGELIST_H

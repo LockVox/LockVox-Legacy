@@ -59,7 +59,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !m_messagesList)
         return QVariant();
 
-    CMessage c = *m_messagesList->get_messages().at(index.row());
+    CMessage c = m_messagesList->get_messages().at(index.row());
     switch(role){
         case FromRole:
                    return QVariant(c.get_from());
@@ -83,7 +83,7 @@ bool MessageModel::setData(const QModelIndex &index, const QVariant &value, int 
     if(!m_messagesList)
         return false;
 
-    CMessage * item = m_messagesList->get_messages().at(index.row());
+    CMessage item = m_messagesList->get_messages().at(index.row());
     switch(role){
         /*case FromRole:
 

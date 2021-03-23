@@ -88,7 +88,6 @@ void CServer::onReceiveData(){
     data->append(m_socket->readAll());
 
     //Process data
-    qDebug() << *data;
     processIncomingData(*data);
 
     delete data;
