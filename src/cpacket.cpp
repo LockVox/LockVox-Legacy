@@ -584,4 +584,12 @@ QList<QString> CPacket::deserialize_messageRequest()
     }
 }
 
+void CPacket::Serialize_MessageError(int code)
+{
+    QJsonObject msgErr;
+    msgErr.insert("code", code);
+
+    m_obj["msgErr"] = msgErr;
+}
+
 //UI
