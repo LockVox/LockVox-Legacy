@@ -199,6 +199,16 @@ void CServer::sendToClient(QByteArray out, CClient * client)
     client->get_socket()->waitForBytesWritten();
 }
 
+void CServer::sendToAllExecptClient(QByteArray out, CClient *client)
+{
+    foreach(CClient * c, m_clients){
+        if(c->get_uuid() == client->get_uuid())
+            break;
+        c->get_socket()->write(out);
+        c->get_socket()->waitForBytesWritten();
+    }
+}
+
 void CServer::AddBannedUser(CClient * client)
 {
     m_banned_users.push_back(client);
@@ -227,11 +237,22 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
             writeToLog("Received data from unknown client", 1);
             return;
         }
+
         CPacket* packet = new CPacket(data, sender);
 
         if(packet->GetAction() == NULL | packet->GetType() == NULL)
         {
             writeToLog("Unable to deserialize received packet :\n" + packet->GetByteArray() + "\nRequest Aborted", 1);
+            return;
+        }
+
+        if(packet->GetAction().toInt() == -1 | packet->GetType().toInt() == -1)
+        {
+            qDebug() << "Send server info to client\n";
+            CPacket * objServer = new CPacket("-1","-1");
+            objServer->Serialize(this);
+            sender->get_socket()->write(objServer->GetByteArray());
+            sender->get_socket()->waitForBytesWritten();
             return;
         }
 
@@ -433,22 +454,22 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 writeToLog(*err,3);
                                 delete(err);
                             }
-
                         }
 
-
+                        //qDebug() << "Send Auth answer to client\n";
                         sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
                         sender->get_socket()->waitForBytesWritten();
 
                         //If authentification suceed - Send Server Object to the client
                         if(valid)
                         {
-                            //CPacket * packet = new CPacket();
-                            sender->get_socket()->write(packet->Serialize(this));
-                            sender->get_socket()->waitForBytesWritten();
+                            /*qDebug() << "Send server info to client\n";
+                            CPacket * objServer = new CPacket();
+                            sender->get_socket()->write(objServer->Serialize(this));
+                            sender->get_socket()->waitForBytesWritten();*/
+                            //sendToAllExecptClient(newUser.GetByteArray(), sender);
                         }
 
-                        sendToAll(newUser.GetByteArray());
 
                         break;
                     }
@@ -934,33 +955,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
 QByteArray CServer::Serialize()
 {
+    QByteArray* ba = new QByteArray();
+    return *ba;
 
-    QJsonObject obj;
-
-    QJsonArray cArray, sArray;
-
-    QJsonObject mainObj;
-
-    mainObj.insert("type", "-1");
-    mainObj.insert("action", "-1");
-
-    obj["mainObj"] = mainObj;
-
-    foreach(CChannel * c, get_channelList())
-    {
-        cArray.append(c->serializeToObj());
-    }
-
-    foreach(CClient * c, get_clientList())
-    {
-       sArray.append(c->serializeToObj());
-    }
-
-    obj["channels"] = cArray;
-    obj["clients"] = sArray;
-
-    QJsonDocument jsonDoc(obj);
-    return jsonDoc.toJson();
 }
 
 void CServer::Deserialize(QByteArray in)

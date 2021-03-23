@@ -1,4 +1,4 @@
-#include "src/includes/cpacket.h"
+#include "Client/cpacket.h"
 
 CPacket::CPacket()
 {
@@ -56,31 +56,9 @@ void CPacket::Serialize()
     m_obj["mainObj"] = mainObj;
 }
 
-void CPacket::Serialize(CServer* c){
-
-      QJsonObject obj;
-
-      QJsonArray cArray, sArray;
-
-      QJsonObject mainObj;
-
-      mainObj.insert("type", "-1");
-      mainObj.insert("action", "-1");
-
-      m_obj["mainObj"] = mainObj;
-
-      foreach(CChannel * c, c->get_channelList())
-      {
-          cArray.append(c->serializeToObj());
-      }
-
-      foreach(CClient * c, c->get_clientList())
-      {
-         sArray.append(c->serializeToObj());
-      }
-
-      m_obj["channels"] = cArray;
-      m_obj["clients"] = sArray;
+QByteArray CPacket::Serialize(CServer* c){
+      m_ba = c->Serialize();
+      return m_ba;
 }
 
 //Answer to a client request
@@ -134,7 +112,6 @@ void CPacket::Serialize_myClient(CClient * client){
 
 void CPacket::Deserialize(){
 
-    //qDebug() << m_obj;
 
     if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();

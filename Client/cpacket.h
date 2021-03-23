@@ -9,7 +9,8 @@
 #include <QString>
 #include <QList>
 
-#include "Server/cserver.h"
+
+#include "Client/includes/cserver.h"
 
 class CServer;
 
@@ -64,7 +65,7 @@ public:
     //Serialiaze
     void Serialize();                                            //Server mainObj - Type & Action
     void Deserialize();                                          //Deserialize mainObj - Type & Action
-    void Serialize(CServer* c);                            //Serialize Object Server
+    QByteArray Serialize(CServer* c);                            //Serialize Object Server
     QByteArray Serialize(bool isActionValid);                    //Serialize - Is Action request is valid or not
 
 

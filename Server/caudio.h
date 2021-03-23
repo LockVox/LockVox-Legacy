@@ -4,7 +4,7 @@
 #include "abstractaudio.h"
 #include "emiplib/mipcomponentchain.h"
 #include "jrtplib3/rtpsession.h"
-#include "QList"
+#include <QList>
 #include <QObject>
 
 class CAudio :  public QObject

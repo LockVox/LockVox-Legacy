@@ -1,5 +1,5 @@
 #include <QDebug>
-#include <QtWidgets>
+#include <QObject>
 #include <QtNetwork>
 #include <QUuid>
 
@@ -12,7 +12,7 @@ class CClient;
 class CChannel;
 
 
-class AbstractServer : public QWidget
+class AbstractServer : public QObject
 {
     Q_OBJECT
     public:

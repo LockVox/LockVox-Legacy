@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Test.qml</file>
+        <file>Login.qml</file>
+        <file>CustomButton.qml</file>
+        <file>Register.qml</file>
+        <file>UserInfo.qml</file>
+        <file>MessageWindow.qml</file>
+        <file>Delegate_Client.qml</file>
+        <file>Delegate_Channel.qml</file>
+        <file>AudioWindow.qml</file>
+        <file>ParametersWidget.qml</file>
+        <file>Delegate_Message.qml</file>
+    </qresource>
+</RCC>

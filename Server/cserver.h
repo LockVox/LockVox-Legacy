@@ -4,19 +4,18 @@
 #include "libs/emiplib/include/emiplib/mipcomponentchain.h"
 #include "libs/emiplib/include/emiplib/mipcomponent.h"
 
-#include <QtWidgets>
-//#include <QtNetwork>
 #include <QDebug>
 #include <QRegExp>
 #include <QDir>
 
 
 #include "src/includes/AbstractServer.h"
-
 #include "src/includes/cchannel.h"
 #include "src/includes/cdatabase.h"
-
 #include "src/includes/cpacket.h"
+
+#include "Server/config.h"
+
 
 
 
@@ -25,8 +24,8 @@ class CChannel;
 
 class CServer : public AbstractServer
 {
-
     Q_OBJECT
+
     public:
 
         CServer();
@@ -41,6 +40,7 @@ class CServer : public AbstractServer
 
         void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
+        void sendToAllExecptClient(QByteArray out, CClient * client);
 
         //Admin
         void AddBannedUser(CClient * client);
