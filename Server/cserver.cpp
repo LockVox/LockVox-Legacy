@@ -758,14 +758,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                         if(messages_list.last().get_from() == "allIsSync")
                         {
-                            //Tell to client there is no older message
-                            //TODO
                             break;
                         }
                         if(messages_list.last().get_from() == "no_index")
                         {
-                            //Tell the client there is no message saved
-                            //TODO
                             break;
                         }
 
