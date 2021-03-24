@@ -80,7 +80,7 @@ bool CAudio::AddSession(CChannel m_chan)
         for(int i = 0 ; i <16 ; i++)
             tmpaddr[i] = c->get_socket()->peerAddress().toIPv6Address()[i];
         tmp->SetIP(tmpaddr);
-        tmp->SetPortW(AUDIO_PORTBASE+m_chan.get_id());
+        //tmp->SetPortW(AUDIO_PORTBASE+m_chan.get_id());
         //L'ajouter au RTP
         newSess->AddDestination(*tmp);
     }

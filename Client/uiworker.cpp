@@ -55,11 +55,12 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     m_connectServer = m_rootObject->findChild<QObject*>("connect_server");
     m_userinfo = m_rootObject->findChild<QObject*>("userInfo");
+    m_messageWindow = m_rootObject->findChild<QObject*>("message_window");
 
     m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
 
     //Check if compenents has been load correctly
-    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels){
+    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow){
         qDebug("Some objects hasn't been initialized correctly");
     }
 
@@ -80,7 +81,8 @@ UIWorker::UIWorker(QGuiApplication *app)
                      this, SLOT(onChangeState(QString)));
     QObject::connect(m_server, SIGNAL(selfChanged(CClient*)),
                      this, SLOT(onSelfChanged(CClient*)));
-
+    QObject::connect(m_messageWindow, SIGNAL(sendMessage(QString)),
+                     m_server,SLOT(sendMessage(QString)));
 //The code below is only for developement, ensure that this functionnality is disable when distributing the application
 #ifdef AUTO_CONNECT
     emit(connect_server(IP_ADDRESS));

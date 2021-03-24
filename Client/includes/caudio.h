@@ -1,4 +1,4 @@
-#ifndef CAUDIO_H
+/*#ifndef CAUDIO_H
 #define CAUDIO_H
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -58,3 +58,4 @@ private:
 };
 
 #endif // CAUDIO_H
+*/

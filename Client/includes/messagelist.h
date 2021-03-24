@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE QVector<CMessage> get_messages();
 
    //Setter
-    void set_messages(QVector<CMessage> messages);
+   void set_messages(QVector<CMessage> messages);
 
 
    //Add / Delete clients

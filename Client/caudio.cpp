@@ -1,4 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+/*#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "config.h"
 #include "caudio.h"
 // We'll be using an RTPSession instance from the JRTPLIB library. The following
@@ -39,6 +39,7 @@ void CAudio::onThreadExit(bool error, const std::string &errorComponent, const s
 
 int CAudio::SendSoundToRTP()
 {
+
 #ifdef WIN32
     WSADATA dat;
     WSAStartup(MAKEWORD(2,2),&dat);
@@ -193,7 +194,7 @@ int CAudio::SendSoundToRTP()
     return 0;
 }
 
-
+*/
 
 
 

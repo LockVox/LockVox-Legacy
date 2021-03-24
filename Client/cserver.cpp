@@ -526,8 +526,11 @@ bool CServer::Login(QString mail, QString passwd)
     return true;
 }
 
-bool CServer::sendMessage(QString msg, int id)
+bool CServer::sendMessage(QString msg)
 {
+    qDebug() << "Send message: " << msg << Qt::endl;
+    int id = getCurrentChannelIndex();
+
     CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),QString::number(id),msg,false);
     CPacket sendMessage;
 
