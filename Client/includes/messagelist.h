@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QModelIndex>
 
-#include "cmessage.h"
+#include "src/includes/cmessage.h"
 #include "Client/messagemodel.h"
 
 class CMessage;
@@ -38,6 +38,10 @@ signals:
 
    void preItemRemoved(int index);
    void postItemRemoved();
+
+   void beginChangeList();
+   void endChangeList();
+   void listChanged(MessageList * msgList);
 
 public slots:
     void appendItem();

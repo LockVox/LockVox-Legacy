@@ -1,6 +1,5 @@
-#include "messagelist.h"
-
-#include "clientlist.h"
+#include "Client/includes/messagelist.h"
+#include "Client/includes/clientlist.h"
 
 MessageList::MessageList(QObject *parent) : QObject(parent)
 {
@@ -18,6 +17,13 @@ MessageList::~MessageList()
 QVector<CMessage> MessageList::get_messages()
 {
     return m_messages;
+}
+
+void MessageList::set_messages(QVector<CMessage> messages)
+{
+    m_messages.clear();
+    m_messages = messages;
+
 }
 
 

@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QModelIndex>
 
-#include "cclient.h"
-#include "clientmodel.h"
+#include "src/includes/cclient.h"
+#include "Client/includes/clientmodel.h"
 
 class CClient;
 

@@ -12,7 +12,12 @@ ChannelList::~ChannelList()
 
 QVector<CChannel *> ChannelList::get_channels()
 {
-        return m_channels;
+    return m_channels;
+}
+
+CChannel *ChannelList::get_channelAt(int index)
+{
+    return m_channels[index];
 }
 
 void ChannelList::addChannel(CChannel *channel)

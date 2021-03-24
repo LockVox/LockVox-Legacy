@@ -12,6 +12,9 @@
 #include "cclient.h"
 #include "channellist.h"
 #include "cchannel.h"
+#include "cmessage.h"
+#include "messagelist.h"
+
 #include "Client/cpacket.h"
 #include "uiworker.h"
 
@@ -43,7 +46,9 @@ class CServer : public AbstractServer
         CClient * get_self(){return m_self;}
         void set_self(CClient *c);
 
-
+        //m_currentChannelIndex
+        int getCurrentChannelIndex() const;
+        void setCurrentChannelIndex(int currentChannelIndex);
 
 
 
@@ -75,6 +80,9 @@ class CServer : public AbstractServer
 
 
 
+        MessageList *getMessagesList() const;
+        void setMessagesList(MessageList *messagesList);
+
 signals:
         void changeState(QString);
         void on_Authentification(int newValue);
@@ -94,7 +102,6 @@ signals:
     private slots:
 
         void onReceiveData();
-        void onCurrentIndexChanged(int);
         void sendToServer(QByteArray ba);
         void sendToServer();
 
@@ -104,9 +111,13 @@ signals:
         CClient* m_self;
         ClientList * m_clientsList;
         ChannelList * m_channelsList;
+        MessageList * m_messagesList;
 
         QString m_name;
         bool m_state;
+
+        int m_currentChannelIndex;
+
 
         //Logging
         QFile log_file;

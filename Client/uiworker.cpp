@@ -14,7 +14,8 @@
 UIWorker::UIWorker(QGuiApplication *app)
 {
     m_server  = new CServer();
-    MessageList *m_messageList = new MessageList();
+
+
 
     qmlRegisterType<ClientModel>("Client", 1,0,"ClientModel");
     qmlRegisterUncreatableType<ClientList>("Client", 1,0, "ClientList",
@@ -30,7 +31,7 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     m_engine.rootContext()->setContextProperty("clientsList", m_server->getClientsList());
     m_engine.rootContext()->setContextProperty("channelsList", m_server->getChannelsList());
-    m_engine.rootContext()->setContextProperty("messagesList", m_messageList );
+    m_engine.rootContext()->setContextProperty("messagesList", m_server->getMessagesList() );
 
 
     //Load main.qml
@@ -105,5 +106,16 @@ void UIWorker::onSelfChanged(CClient* c){
 
 void UIWorker::onCurrentIndexChanged(int index)
 {
-    qDebug() << "Current Index has change : " << index << Qt::endl;
+
+    qDebug() << "Current Channel Index : " << index << Qt::endl;
+    if(m_server->getCurrentChannelIndex() == index){
+        return;
+    }
+
+    m_server->setCurrentChannelIndex(index);
+
+    emit m_server->getMessagesList()->listChanged(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+    //Change m_messagesList
+    //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+
 }

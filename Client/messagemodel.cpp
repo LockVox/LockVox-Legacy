@@ -37,9 +37,19 @@ void MessageModel::setMessagesList(MessageList *messagesList)
         connect(m_messagesList, &MessageList::postItemRemoved,this, [=](){
             endRemoveRows();
         });
+
+        connect(m_messagesList, &MessageList::beginChangeList, this, [=](){
+            beginResetModel();
+        });
+
+        connect(m_messagesList, &MessageList::endChangeList, this, [=](){
+            endResetModel();
+        });
+
     }
 
     connect(m_messagesList, SIGNAL(dataChanged()), this, SLOT(do_update()));
+    connect(m_messagesList, SIGNAL(listChanged(MessageList*)), this, SLOT(onListChanged(MessageList*)));
 
     endResetModel();
 }
@@ -148,3 +158,14 @@ void MessageModel::do_update()
     end_index = createIndex(m_messagesList->get_messages().size()-1,0);
     emit dataChanged(start_index,end_index);
 }
+
+void MessageModel::onListChanged(MessageList *msgList)
+{
+    beginResetModel();
+    qDebug("Current message list has changed");
+
+    m_messagesList = msgList;
+
+    endResetModel();
+}
+

@@ -21,7 +21,8 @@ SOURCES += \
     Server/main.cpp \
     Server/mainwindow.cpp \
     src/crole.cpp \
-    Server/sha256.cpp
+    Server/sha256.cpp \
+    Client/messagelist.cpp
 
 HEADERS += \
     Server/caudio.h \
@@ -37,7 +38,8 @@ HEADERS += \
     src/includes/cdatabase.h \
     src/includes/cpacket.h \
     src/includes/cmessage.h \
-    src/includes/crole.h
+    src/includes/crole.h \
+    Client/includes/messagelist.h
 
 
 FORMS += \

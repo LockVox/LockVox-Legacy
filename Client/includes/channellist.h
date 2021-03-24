@@ -20,7 +20,7 @@ public:
 
    //Getter
     Q_INVOKABLE QVector<CChannel *> get_channels();
-
+    CChannel * get_channelAt(int index);
    //Setter
 
 

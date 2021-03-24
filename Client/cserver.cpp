@@ -5,6 +5,10 @@ CServer::CServer()
         m_state = false;
         m_clientsList = new ClientList();
         m_channelsList = new ChannelList();
+        m_messagesList = new MessageList();
+
+        m_currentChannelIndex = 0;
+
         m_socket = new QTcpSocket();
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
@@ -59,6 +63,30 @@ void CServer::sendToServer(QByteArray ba)
 
 void CServer::sendToServer(){
 
+}
+
+MessageList *CServer::getMessagesList() const
+{
+    return m_messagesList;
+}
+
+void CServer::setMessagesList(MessageList *messagesList)
+{
+    emit m_messagesList->beginChangeList();
+
+    m_messagesList->set_messages(messagesList->get_messages());
+
+    emit m_messagesList->endChangeList();
+}
+
+int CServer::getCurrentChannelIndex() const
+{
+    return m_currentChannelIndex;
+}
+
+void CServer::setCurrentChannelIndex(int currentChannelIndex)
+{
+    m_currentChannelIndex = currentChannelIndex;
 }
 
 ChannelList *CServer::getChannelsList()
@@ -128,10 +156,7 @@ void CServer::onReceiveData(){
     delete data;
 }
 
-void CServer::onCurrentIndexChanged(int index)
-{
-    qDebug() << "Current index of the list of channels has changed : " << index;
-}
+
 
 void CServer::processIncomingData(QByteArray data){
 

@@ -11,6 +11,9 @@ CChannel::CChannel()
     m_id = 0;
     m_maxUsers = 5;
     m_nbClients = 0;
+
+    m_messagesLists = new MessageList();
+
 }
 
 /*
@@ -24,6 +27,9 @@ CChannel::CChannel(const CChannel & copy)
     m_nbClients = copy.m_nbClients;
     m_maxUsers = copy.m_maxUsers;
     m_id = copy.m_id;
+
+    m_messagesLists = copy.m_messagesLists;
+
 }
 
 /*
@@ -34,6 +40,7 @@ CChannel::CChannel(const CChannel & copy)
 CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name) , m_id(id) , m_maxUsers(maxUsers)
 {
     m_nbClients = 0;
+    m_messagesLists = new MessageList();
 }
 
 /*
@@ -46,6 +53,7 @@ CChannel::CChannel(QString name, int id)
     m_name = name;
     m_id = id;
     m_nbClients = 0;
+    m_messagesLists = new MessageList();
 }
 
 /*
@@ -59,6 +67,7 @@ CChannel::CChannel(QList<CClient*> clients, QString name, int id)
     m_name = name;
     m_id = id;
     m_nbClients = m_clients.size();
+    m_messagesLists = new MessageList();
 }
 
 
@@ -217,4 +226,15 @@ void CChannel::delUser(QUuid idUser){
        }
    }
    m_nbClients = m_clients.size();
+}
+
+
+MessageList *CChannel::getMessagesLists() const
+{
+    return m_messagesLists;
+}
+
+void CChannel::setMessagesLists(MessageList *messagesLists)
+{
+    m_messagesLists = messagesLists;
 }

@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QUuid>
 #include "src/includes/cclient.h"
+#include "Client/includes/messagelist.h"
 
 class CMessage;
 class CClient;
@@ -44,11 +45,16 @@ class CChannel
         void addUser(CClient * c);
         void delUser(QUuid idUser);
 
-    signals:
+        MessageList *getMessagesLists() const;
+        void setMessagesLists(MessageList *messagesLists);
+
+signals:
 
 
-    private:
+private:
         QList<CClient*> m_clients;                                  //List of clients in the channel
+        MessageList * m_messagesLists;
+
 
         QString m_name;                                             //Name of the channel
         int m_nbClients;                                            //Nuber of clients in the channel
