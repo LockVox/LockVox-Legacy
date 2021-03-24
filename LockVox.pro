@@ -17,6 +17,7 @@ SOURCES += \
         Client/uiworker.cpp \
         Client/main.cpp \
         Client/messagelist.cpp \
+        Client/caudio.cpp \
         src/abstractserver.cpp \
         src/cchannel.cpp \
         src/cclient.cpp  \
@@ -35,6 +36,7 @@ HEADERS += \
         Client/includes/config.h \
         Client/includes/messagelist.h \
         Client/messagemodel.h \
+        Client/includes/caudio.h \
         src/includes/abstractserver.h \
         src/includes/cchannel.h \
         src/includes/cclient.h  \
