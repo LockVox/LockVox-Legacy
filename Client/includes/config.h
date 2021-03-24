@@ -9,8 +9,10 @@
     #define IP_ADDRESS "127.0.0.1"  //@IP of the server you want to connect
 #endif
 
-
-#define AUTO_LOGIN
+#define AUDIO_PORTBASE 60000 //Baseport for the audio channels ; Just add channel id to portbase for all connections
+#define SERVER_PORTBASE 55000 //Baseport for connection and operation with the server
+#define DEFAULT_SAMP_RATE 8000 //Default sampling rate for audio
+//#define AUTO_LOGIN
 #ifdef AUTO_LOGIN
     #define USERNAME "test"
     #define PASSWORD "test"

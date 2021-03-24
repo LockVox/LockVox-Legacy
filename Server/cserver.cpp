@@ -213,6 +213,12 @@ void CServer::sendToAllExecptClient(QByteArray out, CClient *client)
     }
 }
 
+void CServer::AddChannel(CChannel *channel)
+{
+    m_channels.push_back(channel);
+    m_audio->AddSession(*channel);
+}
+
 void CServer::AddBannedUser(CClient * client)
 {
     m_banned_users.push_back(client);

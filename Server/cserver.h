@@ -1,6 +1,7 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
+#include "caudio.h"
 #include "libs/emiplib/include/emiplib/mipcomponentchain.h"
 #include "libs/emiplib/include/emiplib/mipcomponent.h"
 
@@ -41,7 +42,7 @@ class CServer : public AbstractServer
         void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
         void sendToAllExecptClient(QByteArray out, CClient * client);
-
+        void AddChannel(CChannel* channel);
         //Admin
         void AddBannedUser(CClient * client);
         void RemoveBannedUser(CClient* client);
@@ -91,6 +92,7 @@ class CServer : public AbstractServer
         QTextStream log;
         int log_level;
         QDateTime current;
+        CAudio* m_audio;
 
 };
 
