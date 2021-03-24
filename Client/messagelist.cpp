@@ -3,9 +3,7 @@
 
 MessageList::MessageList(QObject *parent) : QObject(parent)
 {
-    CMessage m("taga","test","Ceci est un message", false);
-    for(int i = 0; i < 10; i++)
-        m_messages.append(m);
+
 }
 
 
