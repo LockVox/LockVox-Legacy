@@ -491,6 +491,7 @@ QVector<CMessage> CPacket::Deserialize_MessageList()
                     indexstr = QString::number(index);
                 }
             }
+            return list;
         }
         else
         {

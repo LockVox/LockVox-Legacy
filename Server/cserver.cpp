@@ -744,7 +744,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             }
                         }
                         //Send to all
-                        CPacket msgToAll("1","2");
+                        CPacket msgToAll("1","4");
                         msgToAll.Serialize_Message(msg);
                         sendToAll(msgToAll.GetByteArray());
                         break;

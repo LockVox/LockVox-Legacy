@@ -328,10 +328,11 @@ void CServer::processIncomingData(QByteArray data){
 
                 case 2:
                 {
-                    //Get message list
+                    //received message list
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
                     int id = messages_list.first().get_to().toInt();
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
+                    break;
                 }
 
                 case 3:
@@ -363,6 +364,15 @@ void CServer::processIncomingData(QByteArray data){
                             qDebug() << "Unknow error" << Qt::endl;
                         }
                     }
+                    break;
+                }
+
+                case 4:
+                {
+                    //Received message
+                    CMessage tmp = packet->Deserialize_Message();
+                    getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
+                    break;
                 }
 
                 case 5:
