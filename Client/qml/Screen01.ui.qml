@@ -17,7 +17,7 @@ Rectangle {
     color: "#1b1f21"
 
 
-    /*
+
     //Main Obj
     property alias login: login
     property alias listClient: listClient
@@ -28,11 +28,22 @@ Rectangle {
     //Compenent
     property alias loginButton: loginButton
     property alias registerButton: registerButton
+    property alias listChannel: listChannel
 
 
     //Layout
-    property alias regLog_layout: regLog_layout
-    */
+    //property alias regLog_layout: regLog_layout
+
+    UserInfo {
+        objectName: "userInfo"
+        id: userInfo
+        x: 1
+        y: 0
+        width: 166
+        height: 90
+        visible: false
+    }
+
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -156,6 +167,67 @@ Rectangle {
 
         delegate: Delegate_Client {}
     }
+
+
+    ListView {
+        id: listMessage
+        x: 380
+        y: 267
+        width: 235
+        height: 199
+        visible: false
+        clip: true
+        model: MessageModel {
+            m_messagesList: messagesList
+        }
+
+        delegate: RowLayout {
+            Text {
+                text: model.from
+            }
+        }
+    }
+
+
+    //property alias channel:channel
+    ListView {
+
+        signal currentIndexChanged(int index)
+
+        objectName: "listChannels"
+        id: listChannel
+
+
+        x: 940
+        y: 70
+        width: 154
+        height: 472
+        visible: false
+        clip: true
+        model: ChannelModel {
+            m_channelsList: channelsList
+        }
+
+        delegate: Delegate_Channel {
+
+        }
+
+    }
+
+    MessageWindow {
+        id: messageWindow
+        x: 196
+        y: 25
+        visible: false
+    }
+
+    AudioWindow {
+        id: audioWindow
+        x: 150
+        y: 260
+        visible: false
+    }
+
 
     Rectangle {
         id: parameters_list
@@ -288,6 +360,16 @@ Rectangle {
         }
     }
 
+
+
+    Channels {
+        objectName: "channels"
+        x: 6
+        y: 85
+        width: 188
+        height: 251
+    }
+
     states: [
         State {
             name: "registerState"
@@ -347,9 +429,10 @@ Rectangle {
 
             PropertyChanges {
                 target: listClient
-                x: 486
+                x: 495
                 y: 70
-                width: 154
+                width: 145
+
                 height: 410
                 visible: true
                 anchors.rightMargin: 8
@@ -426,10 +509,11 @@ Rectangle {
 
             PropertyChanges {
                 target: listMessage
-                x: 180
-                y: 25
-                width: 292
-                height: 406
+                x: 185
+                y: 79
+                width: 304
+                height: 349
+
                 visible: true
                 anchors.topMargin: 33
                 anchors.bottomMargin: 48
@@ -570,4 +654,3 @@ Designer {
     D{i:0;autoSize:true;formeditorZoom:1.100000023841858;height:480;width:640}
 }
 ##^##*/
-

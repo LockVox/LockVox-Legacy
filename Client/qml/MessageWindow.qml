@@ -3,6 +3,11 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
 
 Item {
+
+    objectName: "message_window"
+
+    signal sendMessage(string text)
+
     width: 300
 
     Rectangle {
@@ -48,6 +53,11 @@ Item {
                 }
             }
         }
+    }
+
+    Connections {
+        target: sendMessageButton
+        onClicked: sendMessage(messageText.text)
     }
 
 }

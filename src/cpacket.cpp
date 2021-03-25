@@ -424,7 +424,10 @@ int CPacket::Deserialize_regAns()
 void CPacket::Serialize_Message(CMessage msg)
 {
     QJsonObject sendMsg;
-    msg.toXML();
+    if(msg.get_xmlmessage().isNull())
+    {
+        msg.toXML();
+    }
     if(msg.get_xmlmessage().isNull())
     {
         qDebug() << "Why would you send an empty message ?" << Qt::endl;
@@ -582,6 +585,14 @@ QList<QString> CPacket::deserialize_messageRequest()
         qDebug() << "Error in deserialize_messageRequest : " << e << Qt::endl;
         return null;
     }
+}
+
+void CPacket::Serialize_MessageError(int code)
+{
+    QJsonObject msgErr;
+    msgErr.insert("code", code);
+
+    m_obj["msgErr"] = msgErr;
 }
 
 //UI

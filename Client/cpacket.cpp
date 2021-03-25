@@ -459,11 +459,11 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
     m_obj["messagelist"] = msglist;
 }
 
-QList<CMessage> CPacket::Deserialize_MessageList()
+QVector<CMessage> CPacket::Deserialize_MessageList()
 {
-    QList<CMessage> null;
+    QVector<CMessage> null;
     null.append(CMessage("null","null","null",true));
-    QList<CMessage> list;
+    QVector<CMessage> list;
     int index = 0;
 
     try
@@ -491,6 +491,7 @@ QList<CMessage> CPacket::Deserialize_MessageList()
                     indexstr = QString::number(index);
                 }
             }
+            return list;
         }
         else
         {
@@ -558,6 +559,24 @@ QList<QString> CPacket::deserialize_messageRequest()
     {
         qDebug() << "Error in deserialize_messageRequest : " << e << Qt::endl;
         return null;
+    }
+}
+
+int CPacket::Deserialize_MessageError()
+{
+    try
+    {
+        if(m_obj.contains("msgErr"))
+        {
+            QJsonObject msgErr = m_obj.value("msgErr").toObject();
+            return msgErr.value("code").toInt();
+        }
+        return -1;
+    }
+    catch (char *e)
+    {
+        qDebug() << "Error in deserialize_messageError : " << e << Qt::endl;
+        return -1;
     }
 }
 

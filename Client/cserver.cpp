@@ -5,6 +5,10 @@ CServer::CServer()
         m_state = false;
         m_clientsList = new ClientList();
         m_channelsList = new ChannelList();
+        m_messagesList = new MessageList();
+
+        m_currentChannelIndex = 0;
+
         m_socket = new QTcpSocket();
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
@@ -61,6 +65,30 @@ void CServer::sendToServer(){
 
 }
 
+MessageList *CServer::getMessagesList() const
+{
+    return m_messagesList;
+}
+
+void CServer::setMessagesList(MessageList *messagesList)
+{
+    emit m_messagesList->beginChangeList();
+
+    m_messagesList->set_messages(messagesList->get_messages());
+
+    emit m_messagesList->endChangeList();
+}
+
+int CServer::getCurrentChannelIndex() const
+{
+    return m_currentChannelIndex;
+}
+
+void CServer::setCurrentChannelIndex(int currentChannelIndex)
+{
+    m_currentChannelIndex = currentChannelIndex;
+}
+
 ChannelList *CServer::getChannelsList()
 {
     return m_channelsList;
@@ -87,22 +115,67 @@ void CServer::onReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
 
-    //Process data
-    processIncomingData(*data);
+    int bracket = 0;
+    bool ifTrueProccess = true;
+    CPacket tmp(*data,NULL);
+    if(tmp.GetAction().isNull() || tmp.GetType().isNull())
+    {
+        if(!data->isEmpty())
+        {
+            ifTrueProccess = false;
+            QTextStream stream(data);
+            QString buffer;
 
+            while(!stream.atEnd())
+            {
+                if(bracket == 0 && !buffer.isEmpty())
+                {
+                    QByteArray array(buffer.toLocal8Bit());
+                    processIncomingData(array);
+                    buffer.clear();
+                }
+
+                QString oneChar = stream.read(1);
+                buffer += oneChar;
+                if(oneChar == "{")
+                {
+                    bracket++;
+                }
+                if(oneChar == "}")
+                {
+                    bracket--;
+                }
+            }
+        }
+    }
+    //Process data
+    if(ifTrueProccess)
+    {
+        processIncomingData(*data);
+    }
     delete data;
 }
+
+
 
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
     qDebug() << "m_type : " << packet->GetType() << " m_action : " << packet->GetAction() << Qt::endl;
 
-    if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1){
+    if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
+    {
        Deserialize(data);
        qDebug("Receive obj serv");
-       if(m_self && !m_channelsList->get_channels().isEmpty() && !m_clientsList->get_clients().isEmpty()){
+       if(m_self && !m_channelsList->get_channels().isEmpty() && !m_clientsList->get_clients().isEmpty())
+       {
            emit(changeState("Home"));
+           foreach(CChannel * c, m_channelsList->get_channels())
+           {
+               CPacket request("1","3");
+               request.Serialize_messageRequest(c->get_id(),20,0);
+               m_socket->write(request.GetByteArray());
+           }
        }
     }
 
@@ -255,9 +328,51 @@ void CServer::processIncomingData(QByteArray data){
 
                 case 2:
                 {
-                    //Get message list
-                    QList<CMessage> messages_list = packet->Deserialize_MessageList();
-                    //appendChannelMessage(messages_list);
+                    //received message list
+                    QVector<CMessage> messages_list = packet->Deserialize_MessageList();
+                    int id = messages_list.first().get_to().toInt();
+                    getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
+                    break;
+                }
+
+                case 3:
+                {
+                    //Send message error
+                    int code = packet->Deserialize_MessageError();
+                    switch (code)
+                    {
+                        case 1:
+                        {
+                            //Received private message in public channel
+                            qDebug() << "[Server] : Can't process a private message in a public channel. This error shouldn't append" << Qt::endl;
+                        }
+
+                        case 2:
+                        {
+                            //Spamming
+                            qDebug() << "[Server] Stop spamming copy past ! You don't want *ding*ding* constantly in your ears do you ?" << Qt::endl;
+                        }
+
+                        case 3:
+                        {
+                            //Server side error
+                            qDebug() << "[Server] Can't process your message. If this error does'nt appear for the first time, please contact your beloved moderator !" << Qt::endl;
+                        }
+
+                        default:
+                        {
+                            qDebug() << "Unknow error" << Qt::endl;
+                        }
+                    }
+                    break;
+                }
+
+                case 4:
+                {
+                    //Received message
+                    CMessage tmp = packet->Deserialize_Message();
+                    getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
+                    break;
                 }
 
                 case 5:
@@ -381,7 +496,7 @@ void CServer::processIncomingData(QByteArray data){
             case 6:
             {
                 //Get private message list
-                QList<CMessage> message_list = packet->Deserialize_MessageList();
+                QVector<CMessage> message_list = packet->Deserialize_MessageList();
                 //appendClientMessage(message_list)
             }
 
@@ -432,34 +547,39 @@ bool CServer::Login(QString mail, QString passwd)
 
 bool CServer::sendMessage(QString msg)
 {
-    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),"1",msg,false);
+    qDebug() << "Send message: " << msg << Qt::endl;
+    int id = getCurrentChannelIndex();
+
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),QString::number(id),msg,false);
     CPacket sendMessage;
-    if(message.get_isPrivate() ==  true)
-    {
-        sendMessage.SetType("2");
-        sendMessage.SetAction("6");
 
-        sendMessage.Serialize();
-    }
-    else
-    {
-        sendMessage.SetType("1");
-        sendMessage.SetAction("2");
-
-        sendMessage.Serialize();
-    }
+    sendMessage.SetType("1");
+    sendMessage.SetAction("2");
+    sendMessage.Serialize();
 
     sendMessage.Serialize_Message(message);
-    qint64 messageSize = sendMessage.GetByteArray().size();
-    qint64 sendedSize = m_socket->write(sendMessage.GetByteArray());
-    if(sendedSize == -1)
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {
         qDebug() << "Error in Login, can't write to socket" << Qt::endl;
         return false;
     }
-    else
+    return true;
+}
+
+bool CServer::sendMessage(QString msg, QUuid id)
+{
+    CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),id.toString(QUuid::WithoutBraces),msg,true);
+    CPacket sendMessage;
+
+    sendMessage.SetType("2");
+    sendMessage.SetAction("6");
+    sendMessage.Serialize();
+
+    sendMessage.Serialize_Message(message);
+    if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {
-        qDebug() << "sendedSize :" << sendedSize << Qt::endl << "messageSize :" << messageSize << Qt::endl;
+        qDebug() << "Error in Login, can't write to socket" << Qt::endl;
+        return false;
     }
     return true;
 }

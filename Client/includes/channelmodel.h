@@ -51,8 +51,8 @@ public:
 public slots:
     void do_update();
 
-
 signals:
+    void currentIndexChanged(int index);
 
 
 private slots:

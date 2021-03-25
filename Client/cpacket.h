@@ -91,12 +91,13 @@ public:
 
 
     QList<QString> Deserialize_auth();
-    void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
+    void Deserialize_ID();                                       //Deserialize ID Object (ID chan & ID client)
     void Deserialize_regReq();
     int Deserialize_regAns();
     CMessage Deserialize_Message();
-    QList<CMessage> Deserialize_MessageList();
+    QVector<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();
+    int Deserialize_MessageError();
 
 
     void Serialize_Register(struct register_info reg);           //Serialize Register

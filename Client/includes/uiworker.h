@@ -21,6 +21,7 @@ public slots:
     //void onUpdateWindow();
     void onChangeState(QString);
     void onSelfChanged(CClient*);
+    void onCurrentIndexChanged(int index);
 
 signals:
     void changeState(QString newState);
@@ -43,7 +44,12 @@ private:
 
     QObject * m_connectServer;
     QObject * m_userinfo;
+    QObject * m_messageWindow;
     QObject * m_userparameter;
+
+    QObject * m_listChannels;
+
+
 
     QQmlContext * m_context;
 

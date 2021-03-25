@@ -14,7 +14,8 @@
 UIWorker::UIWorker(QGuiApplication *app)
 {
     m_server  = new CServer();
-    MessageList *m_messageList = new MessageList();
+
+
 
     qmlRegisterType<ClientModel>("Client", 1,0,"ClientModel");
     qmlRegisterUncreatableType<ClientList>("Client", 1,0, "ClientList",
@@ -30,7 +31,7 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     m_engine.rootContext()->setContextProperty("clientsList", m_server->getClientsList());
     m_engine.rootContext()->setContextProperty("channelsList", m_server->getChannelsList());
-    m_engine.rootContext()->setContextProperty("messagesList", m_messageList );
+    m_engine.rootContext()->setContextProperty("messagesList", m_server->getMessagesList() );
 
 
     //Load main.qml
@@ -54,14 +55,18 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     m_connectServer = m_rootObject->findChild<QObject*>("connect_server");
     m_userinfo = m_rootObject->findChild<QObject*>("userInfo");
+    m_messageWindow = m_rootObject->findChild<QObject*>("message_window");
     m_userparameter = m_rootObject->findChild<QObject*>("user_parameters");
+    m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
 
 
     //Check if compenents has been load correctly
-    if(!m_login || !m_register || !m_connectServer){
+    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow){
         qDebug("Some objects hasn't been initialized correctly");
     }
 
+    QObject::connect(m_listChannels, SIGNAL(currentIndexChanged(int)),
+                     this, SLOT(onCurrentIndexChanged(int)));
     //Connect UI - Server
     QObject::connect(m_login, SIGNAL(login_request(QString,QString)),
              m_server, SLOT(Login(QString,QString)));
@@ -77,7 +82,8 @@ UIWorker::UIWorker(QGuiApplication *app)
                      this, SLOT(onChangeState(QString)));
     QObject::connect(m_server, SIGNAL(selfChanged(CClient*)),
                      this, SLOT(onSelfChanged(CClient*)));
-
+    QObject::connect(m_messageWindow, SIGNAL(sendMessage(QString)),
+                     m_server,SLOT(sendMessage(QString)));
 //The code below is only for developement, ensure that this functionnality is disable when distributing the application
 #ifdef AUTO_CONNECT
     emit(connect_server(IP_ADDRESS));
@@ -111,4 +117,20 @@ void UIWorker::onSelfChanged(CClient* c){
     username_label->setProperty("text",c->get_pseudo());
     qDebug()<< c->get_mail();
     email_label->setProperty("text",c->get_mail());
+}
+
+void UIWorker::onCurrentIndexChanged(int index)
+{
+
+    qDebug() << "Current Channel Index : " << index << Qt::endl;
+    if(m_server->getCurrentChannelIndex() == index){
+        return;
+    }
+
+    m_server->setCurrentChannelIndex(index);
+
+    emit m_server->getMessagesList()->listChanged(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+    //Change m_messagesList
+    //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+
 }

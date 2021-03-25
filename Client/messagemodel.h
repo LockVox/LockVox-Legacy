@@ -3,7 +3,7 @@
 
 
 #include <QAbstractListModel>
-#include "cmessage.h"
+#include "src/includes/cmessage.h"
 
 class MessageList;
 
@@ -52,7 +52,7 @@ class MessageModel : public QAbstractListModel
 
 public slots:
         void do_update();
-
+        void onListChanged(MessageList* msgList);
 
 signals:
 

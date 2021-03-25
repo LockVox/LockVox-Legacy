@@ -201,12 +201,22 @@ void CServer::sendToClient(QByteArray out, CClient * client)
 
 void CServer::sendToAllExecptClient(QByteArray out, CClient *client)
 {
-    foreach(CClient * c, m_clients){
-        if(c->get_uuid() == client->get_uuid())
-            break;
-        c->get_socket()->write(out);
-        c->get_socket()->waitForBytesWritten();
+    foreach(CClient * c, m_clients)
+    {
+        if(c->get_uuid() != client->get_uuid())
+        {
+            if(c->get_socket() != NULL)
+            {
+                    c->get_socket()->write(out);
+            }
+        }
     }
+}
+
+void CServer::AddChannel(CChannel *channel)
+{
+    m_channels.push_back(channel);
+    m_audio->AddSession(*channel);
 }
 
 void CServer::AddBannedUser(CClient * client)
@@ -463,11 +473,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //If authentification suceed - Send Server Object to the client
                         if(valid)
                         {
-                            /*qDebug() << "Send server info to client\n";
-                            CPacket * objServer = new CPacket();
-                            sender->get_socket()->write(objServer->Serialize(this));
-                            sender->get_socket()->waitForBytesWritten();*/
-                            //sendToAllExecptClient(newUser.GetByteArray(), sender);
+                            sendToAllExecptClient(newUser.GetByteArray(), tmp_client);
                         }
 
 
@@ -634,7 +640,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             writeToLog("[" + sender->get_socket()->peerAddress().toString() + "Received a private message for a text channel ? Ignored.", 1);
                             //Send error packet to client
-                            //TODO
+                            CPacket err("1","3");
+                            err.Serialize_MessageError(1);
+                            sendToClient(err.GetByteArray(),sender);
                             break;
                         }
                         msg.toXML();
@@ -658,7 +666,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             writeToLog("[" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] is spamming copy paste message in channel [" + msg.get_to() + "]",1);
                             //Send error packet to client
-                            //TODO
+                            CPacket err("1","3");
+                            err.Serialize_MessageError(2);
+                            sendToClient(err.GetByteArray(),sender);
                             break;
                         }
 
@@ -667,8 +677,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
                         {
                             writeToLog("Can't save received message from [" + msg.get_from() + "] to [" + msg.get_to() + "]",2);
-                            //Send error packet to client
-                            //TODO
+                            CPacket err("1","3");
+                            err.Serialize_MessageError(3);
+                            sendToClient(err.GetByteArray(),sender);
                             break;
                         }
 
@@ -685,8 +696,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             if(filename_list.isEmpty())
                             {
                                 writeToLog("Error while reading channel index for channel [" + msg.get_to() + "]",2);
-                                //Send error packet to client
-                                //TODO
+                                CPacket err("1","3");
+                                err.Serialize_MessageError(3);
+                                sendToClient(err.GetByteArray(),sender);
                                 break;
                             }
                             else
@@ -697,8 +709,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     if(!createChannelIndex(filename,path))
                                     {
                                         writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",2);
-                                        //Send error packet to  client
-                                        //TODO
+                                        CPacket err("1","3");
+                                        err.Serialize_MessageError(3);
+                                        sendToClient(err.GetByteArray(),sender);
                                         break;
                                     }
                                     else
@@ -712,8 +725,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     if(!insertChannelIndex(path,filename_list))
                                     {
                                         writeToLog("Error while inserting in channel index for channel [" + msg.get_to() + "]",2);
-                                        //Send error packet to client
-                                        //TODO
+                                        CPacket err("1","3");
+                                        err.Serialize_MessageError(3);
+                                        sendToClient(err.GetByteArray(),sender);
                                     }
                                 }
                             }
@@ -723,13 +737,16 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             if(!createChannelIndex(filename,path))
                             {
                                 writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",2);
-                                //Send error packet to  client
-                                //TODO
+                                CPacket err("1","3");
+                                err.Serialize_MessageError(3);
+                                sendToClient(err.GetByteArray(),sender);
                                 break;
                             }
                         }
                         //Send to all
-                        //TODO
+                        CPacket msgToAll("1","4");
+                        msgToAll.Serialize_Message(msg);
+                        sendToAll(msgToAll.GetByteArray());
                         break;
                     }
 
@@ -741,14 +758,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                         if(messages_list.last().get_from() == "allIsSync")
                         {
-                            //Tell to client there is no older message
-                            //TODO
                             break;
                         }
                         if(messages_list.last().get_from() == "no_index")
                         {
-                            //Tell the client there is no message saved
-                            //TODO
                             break;
                         }
 

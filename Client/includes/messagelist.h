@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QModelIndex>
 
-#include "cmessage.h"
+#include "src/includes/cmessage.h"
 #include "Client/messagemodel.h"
 
 class CMessage;
@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE QVector<CMessage> get_messages();
 
    //Setter
-    void set_messages(QVector<CMessage> messages);
+   void set_messages(QVector<CMessage> messages);
 
 
    //Add / Delete clients
@@ -39,6 +39,10 @@ signals:
    void preItemRemoved(int index);
    void postItemRemoved();
 
+   void beginChangeList();
+   void endChangeList();
+   void listChanged(MessageList * msgList);
+
 public slots:
     void appendItem();
     void removeItem(int index);
@@ -48,6 +52,7 @@ public slots:
 private:
     QVector<int> m_roles;
     QVector<CMessage> m_messages;
+    int m_currentIndex;
 };
 
 #endif // MESSAGELIST_H

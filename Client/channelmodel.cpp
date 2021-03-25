@@ -128,6 +128,7 @@ void ChannelModel::setChannelsList(ChannelList *channelsList)
 
     connect(m_channelsList, SIGNAL(dataChanged()), this, SLOT(do_update()));
 
+
     endResetModel();
 }
 

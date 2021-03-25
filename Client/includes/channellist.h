@@ -20,7 +20,7 @@ public:
 
    //Getter
     Q_INVOKABLE QVector<CChannel *> get_channels();
-
+    CChannel * get_channelAt(int index);
    //Setter
 
 
@@ -49,6 +49,7 @@ public slots:
 private:
     QVector<int> m_roles;
     QVector<CChannel*> m_channels;
+    int m_currentIndex;
 };
 
 #endif // CHANNELLIST_H
