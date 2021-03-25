@@ -108,6 +108,16 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("pseudo", client->get_pseudo());
    clientObj.insert("isOnline", client->get_isOnline());
    clientObj.insert("description", client->get_description());
+
+   if(!client->get_profilePic().isNull())
+   {
+        QByteArray array;
+        QBuffer buffer(&array);
+        client->get_profilePic().save(&buffer, "PNG");
+
+        clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
+   }
+
    m_obj["newClient"] = clientObj;
 }
 
@@ -122,13 +132,23 @@ void CPacket::Serialize_newChannel(CChannel* channel){
     m_obj["newChannel"] = channelObj;
 }
 
-void CPacket::Serialize_myClient(CClient * client){
+void CPacket::Serialize_myClient(CClient * client)
+{
     QJsonObject clientObj;
     clientObj.insert("uuid", client->get_uuid().toString());
     clientObj.insert("pseudo", client->get_pseudo());
     clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
-    clientObj.insert("uuid", client->get_uuid().toString());
+
+    if(!client->get_profilePic().isNull())
+    {
+         QByteArray array;
+         QBuffer buffer(&array);
+         client->get_profilePic().save(&buffer, "PNG");
+
+         clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
+    }
+
     m_obj["myClient"] = clientObj;
 }
 
@@ -136,7 +156,8 @@ void CPacket::Deserialize(){
 
     //qDebug() << m_obj;
 
-    if(m_obj.contains("mainObj")){
+    if(m_obj.contains("mainObj"))
+    {
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
             QJsonValue action = mainObj.value("action");
@@ -145,11 +166,11 @@ void CPacket::Deserialize(){
 
             //qDebug() << "m_type = " << m_type;
             //qDebug() << "m_action = " << m_action;
-
-        }
+    }
 }
 
-CClient * CPacket::Deserialize_newClient(){
+CClient * CPacket::Deserialize_newClient()
+{
     try{
         QString name;
         QUuid id;
@@ -164,7 +185,14 @@ CClient * CPacket::Deserialize_newClient(){
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            //qDebug() << "Name " << name << "   ID " << id;
+
+            if(newClient.contains("pp"))
+            {
+                QByteArray array = QByteArray::fromBase64(newClient.value("pp").toString().toLatin1());
+                QImage tmp;
+                tmp.loadFromData(array);
+                client->set_profilePic(tmp);
+            }
 
             return client;
         }
@@ -214,7 +242,14 @@ CClient * CPacket::Deserialize_myClient(){
             description = myClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            //qDebug() << "Name " << name << "   ID " << id;
+
+            if(myClient.contains("pp"))
+            {
+                QByteArray array = QByteArray::fromBase64(myClient.value("pp").toString().toLatin1());
+                QImage tmp;
+                tmp.loadFromData(array);
+                client->set_profilePic(tmp);
+            }
             return client;
         }
       }
@@ -561,6 +596,7 @@ QList<QString> CPacket::deserialize_messageRequest()
             QJsonObject msgReq = m_obj.value("msgReq").toObject();
             if(msgReq.contains("uuid"))
             {
+
                 QList<QString> res;
                 res.append("private");
                 res.append(msgReq.value("uuid").toString());
@@ -571,10 +607,11 @@ QList<QString> CPacket::deserialize_messageRequest()
             else
             {
                 QList<QString> res;
+                int id = msgReq.value("id").toInt() - 1;
                 res.append("public");
-                res.append(msgReq.value("id").toString());
-                res.append(msgReq.value("nb").toString());
-                res.append(msgReq.value("start").toString());
+                res.append(QString::number(id));
+                res.append(QString::number(msgReq.value("nb").toInt()));
+                res.append(QString::number(msgReq.value("start").toInt()));
                 return res;
             }
         }

@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QtNetwork>
 #include <QUuid>
+#include <QImage>
 
 #include "src/includes/cchannel.h"
 
@@ -34,6 +35,7 @@ class CClient
         bool get_isAuthenticate();
         QString get_description();
         QUuid get_uuid();
+        QImage get_profilePic();
 
         //Setters
         void set_pseudo(QString pseudo);
@@ -46,6 +48,7 @@ class CClient
         void set_isAuthenticate(bool Auth);
         void set_description(QString d);
         void set_uuid(QUuid uuid);
+        void set_profilePic(QImage img);
         //Optionnal
         QByteArray serialize();
         void deserialize(QByteArray & in);
@@ -69,6 +72,8 @@ class CClient
 
         bool m_isOnline;
         bool m_isAuthenticate;
+
+        QImage profilePic;
 };
 
 #endif // CCLIENT_H
