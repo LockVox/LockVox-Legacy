@@ -819,7 +819,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 3:
                     {
                         //Request message list
+
+
                         QList<QString> info = packet->deserialize_messageRequest();
+
                         QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
 
                         if(messages_list.last().get_from() == "allIsSync")
@@ -1345,7 +1348,7 @@ QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_ms
 
     QList<QString> filename_list = readChannelIndex(default_path + "index.json");
 
-    if(filename_list.isEmpty() | filename_list.last() == "no_index")
+    if(filename_list.isEmpty() || filename_list.last() == "no_index")
     {
         CMessage noIndex("noIndex","null","null",false);
         message_list.append(noIndex);
@@ -1404,7 +1407,7 @@ QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_ms
     }
     else
     {
-        for(int i = index; i >= start_index; i--)
+        for(int i = index; i > start_index; i--)
         {
             path = default_path + filename_list[filename_list.size() - i] + ".xml";
             if(QFile::exists(path))

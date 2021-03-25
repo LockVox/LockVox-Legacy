@@ -20,9 +20,15 @@ QVector<CMessage> MessageList::get_messages()
 void MessageList::set_messages(QVector<CMessage> messages)
 {
 
+    emit beginChangeList();
+
     m_messages.clear();
     m_messages = messages;
     m_hasBeenLoad = true;
+
+    emit endChangeList();
+
+    emit dataChanged();
 }
 
 

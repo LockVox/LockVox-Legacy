@@ -93,7 +93,6 @@ UIWorker::UIWorker(QGuiApplication *app)
     QObject::connect(m_messageWindow, SIGNAL(sendMessage(QString)),
                      m_server,SLOT(sendMessage(QString)));
 
-
     //Connect state server -
     QObject::connect(m_server, SIGNAL(connected()),
                      this, SLOT(onConnected()));

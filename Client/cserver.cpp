@@ -187,9 +187,9 @@ void CServer::loadAllCompenent(){
     if(!m_hasMessagesLoaded){
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == false){
-                CPacket request("1","3");
-                request.Serialize_messageRequest(c->get_id(),20,0);
-                sendToServer(request.GetByteArray());
+                //CPacket request("1","3");
+                //request.Serialize_messageRequest(c->get_id(),20,0);
+                //sendToServer(request.GetByteArray());
             }
         }
     }
@@ -215,7 +215,7 @@ void CServer::checkCompenents(){
 
     if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded){
     //Check if messages list has been load
-        /*int nb_list_messages_load;
+        int nb_list_messages_load;
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == true)
                 nb_list_messages_load++;
@@ -225,7 +225,7 @@ void CServer::checkCompenents(){
         }
         else{
             m_hasMessagesLoaded = false;
-        }*/
+        }
     }
 }
 
@@ -246,7 +246,9 @@ void CServer::processIncomingData(QByteArray data){
        if(!m_self){
            return;
        }
+
        Deserialize(data);
+       //checkCompenents();
 
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
@@ -257,11 +259,7 @@ void CServer::processIncomingData(QByteArray data){
                request.Serialize_messageRequest(c->get_id(),20,0);
                qDebug() << m_socket->write(request.GetByteArray());
            }
-
        }
-
-
-       checkCompenents();
     }
 
     //Récupération du type
@@ -594,7 +592,7 @@ void CServer::processIncomingData(QByteArray data){
             }
         }
      }
-
+/*
     if(!m_finishLoad && m_self){
         checkCompenents();
         checkFinishLoad();
@@ -602,12 +600,10 @@ void CServer::processIncomingData(QByteArray data){
             loadAllCompenent();
     }
 
-
-
     if(m_finishLoad & m_currentUIState != "home"){
-        emit(changeState("home"));
-        m_currentUIState = "home";
-    }
+        emit(changeState("Home"));
+        m_currentUIState = "Home";
+    }*/
 
 
 }
