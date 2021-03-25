@@ -131,7 +131,10 @@ void CServer::onReceiveData(){
                 if(bracket == 0 && !buffer.isEmpty())
                 {
                     QByteArray array(buffer.toLocal8Bit());
-                    processIncomingData(array);
+                    if(array != "\n")
+                    {
+                        processIncomingData(array);
+                    }
                     buffer.clear();
                 }
 
@@ -161,7 +164,7 @@ void CServer::onReceiveData(){
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    qDebug() << "m_type : " << packet->GetType() << " m_action : " << packet->GetAction() << Qt::endl;
+    qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
     {
@@ -174,7 +177,7 @@ void CServer::processIncomingData(QByteArray data){
            {
                CPacket request("1","3");
                request.Serialize_messageRequest(c->get_id(),20,0);
-               m_socket->write(request.GetByteArray());
+               qDebug() << m_socket->write(request.GetByteArray());
            }
        }
     }

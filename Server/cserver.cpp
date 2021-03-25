@@ -139,39 +139,76 @@ void CServer::onReceiveData(){
     }
 
     //Process data
-    CPacket tmp(*data, get_clientList()[uid]); //Check if valid packet, if not, may be a splitted packet
+    CPacket tmp(*data, get_clientList()[uid]); //Check if valid packet, if not, may be a splitted packet or multiple packet
     if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
     {
-        QByteArray * buffer = get_clientBuffer(uid);
-        if(data->contains("\"mainObj\": {"))
+        int bracket = 0;
+        bool ifTrueProccess = true;
+
+        if(!data->isEmpty())
         {
-            //New packet
-            if(!buffer->isEmpty())
+            QTextStream stream(data);
+            QString buffer;
+
+            while(!stream.atEnd())
             {
-                writeToLog("[" + get_clientList()[uid]->get_uuid().toString() + "(" + get_clientList()[uid]->get_pseudo() +
-                           ")] New request held by multiple packet arrived while user buffer isn't empty, clearing it",1);
-                writeToLog("A packet and therefore a request must have been lost nor a bad packet was received before",1);
-                buffer->clear();
+                if(bracket == 0 && !buffer.isEmpty())
+                {
+                    ifTrueProccess = false;
+                    QByteArray array(buffer.toLocal8Bit());
+                    if(array !="\n")
+                    {
+                        processIncomingData(get_clientList()[uid], array);
+                    }
+                    buffer.clear();
+                }
+
+                QString oneChar = stream.read(1);
+                buffer += oneChar;
+                if(oneChar == "{")
+                {
+                    bracket++;
+                }
+                if(oneChar == "}")
+                {
+                    bracket--;
+                }
             }
-            buffer->append(*data);
         }
-        else
+
+        if(ifTrueProccess)
         {
-            if(buffer->isEmpty())
+            QByteArray * buffer = get_clientBuffer(uid);
+            if(data->contains("\"mainObj\": {"))
             {
-                //That's meen it's a bad packet, report to log
-                writeToLog("Unable to deserialize received packet :\n" + *data + "\nRequest Aborted", 1);
+                //New packet
+                if(!buffer->isEmpty())
+                {
+                    writeToLog("[" + get_clientList()[uid]->get_uuid().toString() + "(" + get_clientList()[uid]->get_pseudo() +
+                               ")] New request held by multiple packet arrived while user buffer isn't empty, clearing it",1);
+                    writeToLog("A packet and therefore a request must have been lost nor a bad packet was received before",1);
+                    buffer->clear();
+                }
+                buffer->append(*data);
             }
             else
             {
-                buffer->append(*data);
-                CPacket tmp1(*buffer, get_clientList()[uid]);
-
-                //We check if the packet is complete, otherwise we wait for the buffer to fill up
-                if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
+                if(buffer->isEmpty())
                 {
-                    processIncomingData(get_clientList()[uid], *buffer);
-                    buffer->clear();
+                    //That's meen it's a bad packet, report to log
+                    writeToLog("Unable to deserialize received packet :\n" + *data + "\nRequest Aborted", 1);
+                }
+                else
+                {
+                    buffer->append(*data);
+                    CPacket tmp1(*buffer, get_clientList()[uid]);
+
+                    //We check if the packet is complete, otherwise we wait for the buffer to fill up
+                    if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
+                    {
+                        processIncomingData(get_clientList()[uid], *buffer);
+                        buffer->clear();
+                    }
                 }
             }
         }
@@ -250,13 +287,13 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
         CPacket* packet = new CPacket(data, sender);
 
-        if(packet->GetAction() == NULL | packet->GetType() == NULL)
+        if(packet->GetAction() == NULL || packet->GetType() == NULL)
         {
             writeToLog("Unable to deserialize received packet :\n" + packet->GetByteArray() + "\nRequest Aborted", 1);
             return;
         }
 
-        if(packet->GetAction().toInt() == -1 | packet->GetType().toInt() == -1)
+        if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
         {
             qDebug() << "Send server info to client\n";
             CPacket * objServer = new CPacket("-1","-1");
@@ -760,7 +797,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             break;
                         }
-                        if(messages_list.last().get_from() == "no_index")
+                        if(messages_list.last().get_from() == "noIndex")
                         {
                             break;
                         }
@@ -768,6 +805,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         CPacket reqAns("1","2");
 
                         reqAns.Serialize_MessageList(messages_list);
+                        qDebug() << reqAns.GetByteArray();
                         sendToClient(reqAns.GetByteArray(), sender);
                         break;
                     }
@@ -930,14 +968,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                         if(messages_list.last().get_from() == "allIsSync")
                         {
-                            //Tell to client there is no older message
-                            //TODO
                             break;
                         }
-                        if(messages_list.last().get_from() == "no_index")
+                        if(messages_list.last().get_from() == "noIndex")
                         {
-                            //Tell the client there is no message saved
-                            //TODO
                             break;
                         }
 
@@ -1173,6 +1207,7 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
 
     if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        qDebug() << path_to_index;
         writeToLog("Can't open index of channel",2);
         return null;
     }
@@ -1271,18 +1306,18 @@ QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_ms
     QList<CMessage> message_list;
     int index;
 
-    if(isPrivate)
+    if(!isPrivate)
     {
-        default_path = "storage/private/" + id + "/";
+        default_path = "storage/public/" + id + "/";
     }
     else
     {
-        default_path = "storage/public/" + sender.toString(QUuid::WithoutBraces) + "/" + id + "/";
+        default_path = "storage/private/" + sender.toString(QUuid::WithoutBraces) + "/" + id + "/";
     }
 
     QList<QString> filename_list = readChannelIndex(default_path + "index.json");
 
-    if(filename_list.isEmpty() | filename_list.last() == "no_index")
+    if(filename_list.isEmpty() || filename_list.last() == "no_index")
     {
         CMessage noIndex("noIndex","null","null",false);
         message_list.append(noIndex);

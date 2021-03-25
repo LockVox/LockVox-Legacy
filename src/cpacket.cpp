@@ -561,6 +561,7 @@ QList<QString> CPacket::deserialize_messageRequest()
             QJsonObject msgReq = m_obj.value("msgReq").toObject();
             if(msgReq.contains("uuid"))
             {
+
                 QList<QString> res;
                 res.append("private");
                 res.append(msgReq.value("uuid").toString());
@@ -571,10 +572,11 @@ QList<QString> CPacket::deserialize_messageRequest()
             else
             {
                 QList<QString> res;
+                int id = msgReq.value("id").toInt() - 1;
                 res.append("public");
-                res.append(msgReq.value("id").toString());
-                res.append(msgReq.value("nb").toString());
-                res.append(msgReq.value("start").toString());
+                res.append(QString::number(id));
+                res.append(QString::number(msgReq.value("nb").toInt()));
+                res.append(QString::number(msgReq.value("start").toInt()));
                 return res;
             }
         }
