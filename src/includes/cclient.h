@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QtNetwork>
 #include <QUuid>
+#include <QImage>
 
 #include "src/includes/cchannel.h"
 
@@ -69,6 +70,8 @@ class CClient
 
         bool m_isOnline;
         bool m_isAuthenticate;
+
+        QImage profilePic;
 };
 
 #endif // CCLIENT_H

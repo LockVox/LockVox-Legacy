@@ -1207,7 +1207,6 @@ QList<QString> CServer::readChannelIndex(QString path_to_index)
 
     if(!indexJson.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << path_to_index;
         writeToLog("Can't open index of channel",2);
         return null;
     }
