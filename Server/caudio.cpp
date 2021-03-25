@@ -22,6 +22,32 @@
 #include "Server/config.h"
 
 
+
+/***************************************************************/
+/***************************************************************/
+/************************SERVER CHAIN****************************/
+/***************************************************************/
+/***************************************************************/
+/***************************************************************/
+
+ServerChain::ServerChain() : MIPComponentChain("")
+{
+    MIPRTPComponent rtpComp;
+    MIPTime interval(DEFAULT_INTERVAL);
+}
+
+
+
+/***************************************************************/
+/***************************************************************/
+/************************AUDIO CLASS*****************************/
+/***************************************************************/
+/***************************************************************/
+/***************************************************************/
+
+
+
+
 using namespace jrtplib;
 
 void checkRet(bool ret,const MIPErrorBase &obj)
@@ -33,28 +59,8 @@ void checkRet(bool ret,const MIPErrorBase &obj)
     }
 }
 
-class MyAudioSession : public MIPAudioSession
-{
-protected:
-    void onInputThreadExit(bool err, const std::string &compName, const std::string &errStr)
-    {
-        if (err)
-        {
-            std::cerr << "Input chain thread exited due to an error" << std::endl;
-            std::cerr << "Component: " << compName << std::endl;
-            std::cerr << "Error: " << errStr << std::endl;
-        }
-    }
-    void onOutputThreadExit(bool err, const std::string &compName, const std::string &errStr)
-    {
-        if (err)
-        {
-            std::cerr << "Output chain thread exited due to an error" << std::endl;
-            std::cerr << "Component: " << compName << std::endl;
-            std::cerr << "Error: " << errStr << std::endl;
-        }
-    }
-};
+
+
 
 bool CAudio::AddSession(CChannel m_chan)
 {
