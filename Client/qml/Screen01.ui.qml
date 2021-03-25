@@ -30,16 +30,6 @@ Rectangle {
 
     //Layout
     //property alias regLog_layout: regLog_layout
-    UserInfo {
-        objectName: "userInfo"
-        id: userInfo
-        x: 1
-        y: 0
-        width: 166
-        height: 90
-        visible: false
-    }
-
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -173,31 +163,6 @@ Rectangle {
         delegate: Delegate_Client {}
     }
 
-    ListView {
-        id: listMessage
-        x: 380
-        y: 267
-        width: 235
-        height: 199
-        visible: false
-        clip: true
-        model: MessageModel {
-            m_messagesList: messagesList
-        }
-
-        verticalLayoutDirection: ListView.BottomToTop
-        delegate: RowLayout {
-            Text {
-                text: from
-            }
-            Text {
-                text: content
-            }
-
-            //Delegate_Message {}
-        }
-    }
-
     //property alias channel:channel
     ListView {
 
@@ -224,6 +189,33 @@ Rectangle {
         x: 196
         y: 25
         visible: false
+
+        ListView {
+            id: listMessage
+            x: 7
+            y: 79
+            width: 235
+            height: 199
+            visible: false
+            clip: true
+            model: MessageModel {
+                m_messagesList: messagesList
+            }
+
+            verticalLayoutDirection: ListView.BottomToTop
+            delegate: //RowLayout {
+                      Text {
+                text: from
+            }
+
+
+            /*Text {
+                text: content
+            }
+
+            //Delegate_Message {}
+        }*/
+        }
     }
 
     AudioWindow {
@@ -232,7 +224,6 @@ Rectangle {
         y: 260
         visible: false
     }
-
 
     Rectangle {
         id: parameters_list
@@ -270,41 +261,6 @@ Rectangle {
         }
     }
 
-    MessageWindow {
-        id: messageWindow
-        x: 415
-        y: 480
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.top: parent.top
-
-        visible: false
-    }
-
-    ListView {
-        id: listMessage
-        x: 180
-        y: 960
-        width: 235
-        height: 199
-        visible: false
-        clip: true
-
-        anchors.top: messageWindow.top
-        anchors.bottom: messageWindow.bottom
-
-        model: MessageModel {
-            m_messagesList: messagesList
-        }
-
-        delegate: RowLayout {
-            Text {
-                text: model.from
-            }
-        }
-    }
-
     Column {
         id: home
         x: 221
@@ -339,33 +295,11 @@ Rectangle {
                     }
                 }
             }
-
-            ListView {
-                id: listChannel
-                width: 154
-                height: 472
-                visible: false
-                clip: true
-
-                model: ChannelModel {
-                    m_channelsList: channelsList
-                }
-
-                delegate: Delegate_Channel {}
-            }
-
-            AudioWindow {
-                id: audioWindow
-                visible: false
-
-                anchors.left: parent.left
-
-                anchors.bottom: parent.bottom
-            }
         }
     }
 
     Channels {
+        id: channels
         objectName: "channels"
         x: 6
         y: 85
@@ -514,8 +448,8 @@ Rectangle {
                 target: listMessage
                 x: 185
                 y: 79
-                width: 304
-                height: 349
+                width: 271
+                height: 366
 
                 visible: true
                 anchors.topMargin: 33
@@ -552,6 +486,14 @@ Rectangle {
                 width: 77
                 height: 20
                 text: "parameter"
+            }
+
+            PropertyChanges {
+                target: channels
+                x: 0
+                y: 85
+                width: 179
+                height: 265
             }
         },
         State {
@@ -654,7 +596,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.100000023841858;height:480;width:640}
-
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/
+

@@ -59,7 +59,6 @@ Item {
         target: sendMessageButton
         onClicked: sendMessage(messageText.text)
     }
-
 }
 
 /*##^##
