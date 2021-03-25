@@ -16,8 +16,6 @@ Rectangle {
     anchors.fill: parent
     color: "#1b1f21"
 
-
-
     //Main Obj
     property alias login: login
     property alias listClient: listClient
@@ -30,10 +28,8 @@ Rectangle {
     property alias registerButton: registerButton
     property alias listChannel: listChannel
 
-
     //Layout
     //property alias regLog_layout: regLog_layout
-
     UserInfo {
         objectName: "userInfo"
         id: userInfo
@@ -116,10 +112,10 @@ Rectangle {
     Rectangle {
 
         id: rect_con_server
-        x: 387
+        x: 380
         y: 85
         width: 235
-        height: 165
+        height: 278
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 85
@@ -132,10 +128,19 @@ Rectangle {
         ConnectServer {
             objectName: "connect_server"
             id: connectServer
-            x: 41
-            y: 11
-            width: 142
-            height: 159
+            x: 50
+            y: 85
+            width: 137
+            height: 157
+        }
+
+        StateServer {
+            objectName: "stateServer"
+            id: stateServer
+            x: 18
+            y: 8
+            width: 200
+            height: 71
         }
     }
 
@@ -163,7 +168,6 @@ Rectangle {
         delegate: Delegate_Client {}
     }
 
-
     ListView {
         id: listMessage
         x: 380
@@ -176,13 +180,18 @@ Rectangle {
             m_messagesList: messagesList
         }
 
+        verticalLayoutDirection: ListView.BottomToTop
         delegate: RowLayout {
             Text {
-                text: model.from
+                text: from
             }
+            Text {
+                text: content
+            }
+
+            //Delegate_Message {}
         }
     }
-
 
     //property alias channel:channel
     ListView {
@@ -191,7 +200,6 @@ Rectangle {
 
         objectName: "listChannels"
         id: listChannel
-
 
         x: 940
         y: 70
@@ -203,10 +211,7 @@ Rectangle {
             m_channelsList: channelsList
         }
 
-        delegate: Delegate_Channel {
-
-        }
-
+        delegate: Delegate_Channel {}
     }
 
     MessageWindow {
@@ -252,8 +257,6 @@ Rectangle {
         x: 592
         y: 5
     }
-
-
 
     Channels {
         objectName: "channels"
@@ -491,7 +494,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.1;height:480;width:640}
 }
 ##^##*/
 

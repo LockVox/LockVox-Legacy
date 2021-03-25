@@ -372,6 +372,9 @@ void CServer::processIncomingData(QByteArray data){
                     //Received message
                     CMessage tmp = packet->Deserialize_Message();
                     getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
+                    if(tmp.get_to().toInt() == m_currentChannelIndex){
+                        getMessagesList()->addMessage(tmp);
+                    }
                     break;
                 }
 

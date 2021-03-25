@@ -162,7 +162,6 @@ void MessageModel::do_update()
 void MessageModel::onListChanged(MessageList *msgList)
 {
     beginResetModel();
-    qDebug("Current message list has changed");
 
     m_messagesList = msgList;
 

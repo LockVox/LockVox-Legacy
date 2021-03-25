@@ -13,5 +13,6 @@
         <file>ParametersWidget.qml</file>
         <file>Delegate_Message.qml</file>
         <file>Channels.qml</file>
+        <file>StateServer.qml</file>
     </qresource>
 </RCC>

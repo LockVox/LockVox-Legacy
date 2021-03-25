@@ -47,9 +47,11 @@ private:
     QObject * m_messageWindow;
 
     QObject * m_listChannels;
-
+    QObject * m_stateServer;
 
     QQmlContext * m_context;
+
+
 
 };
 

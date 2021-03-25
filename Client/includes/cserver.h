@@ -85,8 +85,8 @@ class CServer : public AbstractServer
 
 signals:
         void changeState(QString);
-        void on_Authentification(int newValue);
         void selfChanged(CClient*);
+        void connected(QString);
 
         //UI
 
