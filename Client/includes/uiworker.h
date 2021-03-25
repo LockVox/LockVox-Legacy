@@ -23,6 +23,9 @@ public slots:
     void onSelfChanged(CClient*);
     void onCurrentIndexChanged(int index);
 
+    void onConnected();
+    void onDisconnected();
+
 signals:
     void changeState(QString newState);
     void connect_server(QString);

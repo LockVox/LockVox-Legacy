@@ -123,6 +123,10 @@ QImage CMessage::get_image()
         return image;
 }
 
+QString CMessage::get_from_pseudo(){
+    return from_pseudo;
+}
+
 
 QDomDocument CMessage::get_xmlmessage()
 {
@@ -239,5 +243,13 @@ QString CMessage::toString()
     else
     {
         return xmlmessage.toString();
+    }
+}
+
+void CMessage::getSenderPseudo(QVector<CClient *> clients)
+{
+    foreach(CClient * c, clients){
+        if(c->get_uuid().toString() == from)
+            from_pseudo = c->get_pseudo();
     }
 }

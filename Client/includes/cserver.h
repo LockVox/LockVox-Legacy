@@ -50,11 +50,21 @@ class CServer : public AbstractServer
         int getCurrentChannelIndex() const;
         void setCurrentChannelIndex(int currentChannelIndex);
 
+        MessageList *getMessagesList() const;
+        void setMessagesList(MessageList *messagesList);
 
+        QString getName() const;
+        void setName(const QString &name);
 
         //Process
         void processIncomingData(QByteArray data);         //Process incoming data
 
+        //Request Server -
+        void loadAllCompenent();
+        void loadChannelsClientsList();
+        void loadMessages();
+        void checkCompenents();
+        void checkFinishLoad();
 
 
         //Server action - To develop
@@ -79,14 +89,12 @@ class CServer : public AbstractServer
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
 
-
-        MessageList *getMessagesList() const;
-        void setMessagesList(MessageList *messagesList);
-
 signals:
         void changeState(QString);
         void selfChanged(CClient*);
-        void connected(QString);
+
+        void connected();
+        void disconnected();
 
         //UI
 
@@ -108,15 +116,25 @@ signals:
     private:
         //Client mode
         QTcpSocket * m_socket;
+
         CClient* m_self;
+
         ClientList * m_clientsList;
         ChannelList * m_channelsList;
         MessageList * m_messagesList;
 
         QString m_name;
         bool m_state;
-
         int m_currentChannelIndex;
+
+        //Load server informations - message - clients - channels
+        bool m_hasSelfLoaded;
+        bool m_hasChannelsLoaded;
+        bool m_hasClientsLoaded;
+        bool m_hasMessagesLoaded;
+        bool m_finishLoad;
+        QString m_currentUIState;
+
 
 
         //Logging

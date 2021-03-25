@@ -9,6 +9,10 @@
 #include <QImage>
 #include <QDebug>
 
+#include "cclient.h"
+#include "cchannel.h"
+
+class CClient;
 class CMessage
 {
     public:
@@ -25,12 +29,14 @@ class CMessage
         QString get_date(); //Return date when message was sent
         QImage get_image();  //Return image in message if message got an image
         bool get_isPrivate(); //return if it's a private message
-
+        QString get_from_pseudo();
 
         QDomDocument get_xmlmessage(); //Return xmlmessage in QDomDocument Format, toXML() must be called first
 
         void toXML(); //Init QDomDocument xmlmessage from var
         QString toString(); //Convert QDomDocument xmlmessage in to string, toXML() must be called first
+
+        void getSenderPseudo(QVector<CClient*> clients);
 
     private:
 
@@ -46,7 +52,7 @@ class CMessage
         bool isPrivate; //if true private message if false chanel message
         bool hasImg; //if true message has an image
 
-
+        QString from_pseudo;    //From is an UUID - This is the pseudo of the sender
         //XML part
 
         QDomDocument xmlmessage; //XML Document containing message and information

@@ -8,6 +8,7 @@
 
 class CMessage;
 class CClient;
+class MessageList;
 
 class CChannel
 {

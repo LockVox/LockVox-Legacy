@@ -203,18 +203,18 @@ Rectangle {
             }
 
             verticalLayoutDirection: ListView.BottomToTop
-            delegate: //RowLayout {
+            delegate: RowLayout {
                       Text {
                 text: from
             }
 
 
-            /*Text {
+            Text {
                 text: content
             }
 
             //Delegate_Message {}
-        }*/
+        }
         }
     }
 
@@ -446,8 +446,8 @@ Rectangle {
 
             PropertyChanges {
                 target: listMessage
-                x: 185
-                y: 79
+                x: 9
+                y: 66
                 width: 271
                 height: 366
 

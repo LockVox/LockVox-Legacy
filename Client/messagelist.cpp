@@ -3,7 +3,7 @@
 
 MessageList::MessageList(QObject *parent) : QObject(parent)
 {
-
+    m_hasBeenLoad = false;
 }
 
 
@@ -19,9 +19,10 @@ QVector<CMessage> MessageList::get_messages()
 
 void MessageList::set_messages(QVector<CMessage> messages)
 {
+
     m_messages.clear();
     m_messages = messages;
-
+    m_hasBeenLoad = true;
 }
 
 
@@ -83,4 +84,14 @@ void MessageList::removeItem(int index)
     m_messages.removeAt(index);
 
     emit postItemRemoved();
+}
+
+bool MessageList::getHasBeenLoad() const
+{
+    return m_hasBeenLoad;
+}
+
+void MessageList::setHasBeenLoad(bool hasBeenLoad)
+{
+    m_hasBeenLoad = hasBeenLoad;
 }

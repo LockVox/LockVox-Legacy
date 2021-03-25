@@ -31,6 +31,9 @@ public:
    //Set client
    bool setItemAt(int index, CMessage item);
 
+   bool getHasBeenLoad() const;
+   void setHasBeenLoad(bool hasBeenLoad);
+
 signals:
    void dataChanged();
    void preItemAppended();
@@ -53,6 +56,8 @@ private:
     QVector<int> m_roles;
     QVector<CMessage> m_messages;
     int m_currentIndex;
+
+    bool m_hasBeenLoad;
 };
 
 #endif // MESSAGELIST_H

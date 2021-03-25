@@ -69,23 +69,38 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     QObject::connect(m_listChannels, SIGNAL(currentIndexChanged(int)),
                      this, SLOT(onCurrentIndexChanged(int)));
-    //Connect UI - Server
+
+//Connect UI - Server
+    //Connect Login - Register request
     QObject::connect(m_login, SIGNAL(login_request(QString,QString)),
              m_server, SLOT(Login(QString,QString)));
     QObject::connect(this, SIGNAL(login_request(QString,QString)),
              m_server, SLOT(Login(QString,QString)));
     QObject::connect(m_register, SIGNAL(register_request(QString,QString,QString,QString)),
              m_server, SLOT(Register(QString,QString,QString,QString)));
+
+    //Connect to the Server -
     QObject::connect(m_connectServer, SIGNAL(connect_server(QString)),
                      m_server, SLOT(connectServer(QString)));
     QObject::connect(this, SIGNAL(connect_server(QString)),
                      m_server, SLOT(connectServer(QString)));
+    //Connect state changement
     QObject::connect(m_server, SIGNAL(changeState(QString)),
                      this, SLOT(onChangeState(QString)));
     QObject::connect(m_server, SIGNAL(selfChanged(CClient*)),
                      this, SLOT(onSelfChanged(CClient*)));
+    //Connect Message
     QObject::connect(m_messageWindow, SIGNAL(sendMessage(QString)),
                      m_server,SLOT(sendMessage(QString)));
+
+
+    //Connect state server -
+    QObject::connect(m_server, SIGNAL(connected()),
+                     this, SLOT(onConnected()));
+    //Connect state server -
+    QObject::connect(m_server, SIGNAL(disconnected()),
+                     this, SLOT(onDisconnected()));
+
 
     //QObject::connect()
 
@@ -138,4 +153,26 @@ void UIWorker::onCurrentIndexChanged(int index)
     //Change m_messagesList
     //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
 
+}
+
+void UIWorker::onConnected()
+{
+    QObject * state = m_stateServer->findChild<QObject*>("state");
+    if(!state){
+        qDebug() << "Unable to load \"state\" object in m_stateServer" << Qt::endl;
+        return;
+    }
+    state->setProperty("text", "You are currently connect to " + m_server->getName());
+    return;
+}
+
+void UIWorker::onDisconnected()
+{
+    QObject * state = m_stateServer->findChild<QObject*>("state");
+    if(!state){
+        qDebug() << "Unable to load \"state\" object in m_stateServer" << Qt::endl;
+        return;
+    }
+    state->setProperty("text", "You are not connected to any server :'(");
+    return;
 }

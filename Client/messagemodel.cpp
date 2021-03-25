@@ -72,7 +72,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     CMessage c = m_messagesList->get_messages().at(index.row());
     switch(role){
         case FromRole:
-                   return QVariant(c.get_from());
+                   return QVariant(c.get_from_pseudo());
         case ToRole:
                    return QVariant(c.get_to());
         case TimeRole:

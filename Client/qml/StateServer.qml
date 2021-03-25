@@ -6,34 +6,16 @@ Item {
     height: 150
 
     TextEdit {
+        objectName: "state"
         id: textEdit
         x: 20
         y: 21
         width: 160
         height: 39
-        text: qsTr("None
-")
+        text: qsTr("You're no connected - Please connect to a server before trying to log in or register");
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
-    states: [
-        State {
-            name: "connected"
-
-            PropertyChanges {
-                target: textEdit
-                text: "Connected\n"
-            }
-        },
-        State {
-            name: "none"
-
-            PropertyChanges {
-                target: textEdit
-                text: qsTr("None")
-            }
-        }
-    ]
 
 }

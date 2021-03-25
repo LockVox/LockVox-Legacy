@@ -8,11 +8,16 @@ CServer::CServer()
         m_messagesList = new MessageList();
 
         m_currentChannelIndex = 0;
+         m_finishLoad = false;
+         m_hasChannelsLoaded = false;
+         m_hasClientsLoaded = false;
+         m_hasMessagesLoaded = false;
+         m_hasSelfLoaded = false;
+
 
         m_socket = new QTcpSocket();
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
-
 
 }
 
@@ -22,20 +27,21 @@ CServer::CServer(ClientList *clients, ChannelList *channels) : m_clientsList(cli
 }
 
 
-void CServer::connectServer(QString  test){
+void CServer::connectServer(QString  ip){
 
     m_socket->abort();
-    m_socket->connectToHost(test, 50885);
+    m_socket->connectToHost(ip, 50885);
 
     m_state = (m_socket->state() == QTcpSocket::ConnectingState);
-    qDebug() << m_state;
+
     if(m_state){
         connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
+        m_name = ip;
+        emit(connected());
     }
     else{
 
     }
-
 }
 
 //Getters
@@ -63,6 +69,16 @@ void CServer::sendToServer(QByteArray ba)
 
 void CServer::sendToServer(){
 
+}
+
+QString CServer::getName() const
+{
+    return m_name;
+}
+
+void CServer::setName(const QString &name)
+{
+    m_name = name;
 }
 
 MessageList *CServer::getMessagesList() const
@@ -156,27 +172,86 @@ void CServer::onReceiveData(){
     delete data;
 }
 
+void CServer::loadAllCompenent(){
 
+    checkCompenents();
+
+    if(!m_hasChannelsLoaded || !m_hasClientsLoaded){
+        CPacket p("-1","-1");
+        sendToServer(p.GetByteArray());
+    }
+
+    if(!m_hasMessagesLoaded){
+        foreach(CChannel * c, m_channelsList->get_channels()){
+            if(c->getMessagesLists()->getHasBeenLoad() == false){
+                CPacket request("1","3");
+                request.Serialize_messageRequest(c->get_id(),20,0);
+                sendToServer(request.GetByteArray());
+            }
+        }
+    }
+}
+
+void CServer::checkCompenents(){
+
+    //Check if channels list has been load
+    if(m_channelsList->get_channels().isEmpty()){
+        m_hasChannelsLoaded = false;
+    }
+    else{
+        m_hasChannelsLoaded = true;
+    }
+
+    //Check if clients list has been load
+    if(m_clientsList->get_clients().isEmpty()){
+        m_hasClientsLoaded = false;
+    }
+    else{
+        m_hasClientsLoaded = true;
+    }
+
+    if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded){
+    //Check if messages list has been load
+        /*int nb_list_messages_load;
+        foreach(CChannel * c, m_channelsList->get_channels()){
+            if(c->getMessagesLists()->getHasBeenLoad() == true)
+                nb_list_messages_load++;
+        }
+        if(nb_list_messages_load == m_channelsList->get_channels().size()){
+            m_hasMessagesLoaded = true;
+        }
+        else{
+            m_hasMessagesLoaded = false;
+        }*/
+    }
+}
+
+void CServer::checkFinishLoad()
+{
+    if(m_hasChannelsLoaded & m_hasClientsLoaded & m_hasSelfLoaded)
+        m_finishLoad = true;
+}
 
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
     qDebug() << "m_type : " << packet->GetType() << " m_action : " << packet->GetAction() << Qt::endl;
 
+
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
     {
+       if(!m_self){
+           return;
+       }
        Deserialize(data);
-       qDebug("Receive obj serv");
-       if(m_self && !m_channelsList->get_channels().isEmpty() && !m_clientsList->get_clients().isEmpty())
+
+       if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
            emit(changeState("Home"));
-           foreach(CChannel * c, m_channelsList->get_channels())
-           {
-               CPacket request("1","3");
-               request.Serialize_messageRequest(c->get_id(),20,0);
-               m_socket->write(request.GetByteArray());
-           }
        }
+
+
+       checkCompenents();
     }
 
     //Récupération du type
@@ -184,8 +259,8 @@ void CServer::processIncomingData(QByteArray data){
          switch (packet->GetAction().toInt()){
             case 0:
             {
+                qDebug() << packet->GetByteArray();
                 //New User is now online
-
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
 
@@ -282,8 +357,8 @@ void CServer::processIncomingData(QByteArray data){
 
                     if(m_self)
                     {
-                        CPacket ObjServRequest("-1","-1");
-                        sendToServer(ObjServRequest.GetByteArray());
+                        //CPacket ObjServRequest("-1","-1");
+                        //sendToServer(ObjServRequest.GetByteArray());
                     }
                 }
                 break;
@@ -509,6 +584,22 @@ void CServer::processIncomingData(QByteArray data){
             }
         }
      }
+
+    if(!m_finishLoad && m_self){
+        checkCompenents();
+        checkFinishLoad();
+        if(!m_finishLoad)
+            loadAllCompenent();
+    }
+
+
+
+    if(m_finishLoad & m_currentUIState != "home"){
+        emit(changeState("home"));
+        m_currentUIState = "home";
+    }
+
+
 }
 
 bool CServer::Register(QString username, QString mail, QString password,QString password_confirm)
