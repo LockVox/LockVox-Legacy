@@ -80,15 +80,23 @@ bool CAudio::AddSession(CChannel m_chan)
         for(int i = 0 ; i <16 ; i++)
             tmpaddr[i] = c->get_socket()->peerAddress().toIPv6Address()[i];
         tmp->SetIP(tmpaddr);
-        //tmp->SetPortW(AUDIO_PORTBASE+m_chan.get_id());
+        //tmp->SetPortW((uint16_t)(AUDIO_PORTBASE+m_chan.get_id()));
         //L'ajouter au RTP
         newSess->AddDestination(*tmp);
     }
-
-    //newSess->
+    if(newSess->IsActive())
+    {
+        m_session.push_back(newSess);
+        return true;
+    }
+    else
+    {
+        std::cerr << RTPGetErrorString(status);
+        return false;
+    }
 }
-/*
- * , AUDIO_PORTBASE + m_chan.get_id()
+
+/* , AUDIO_PORTBASE + m_chan.get_id()
 
 /*int main(void)
 {
@@ -159,4 +167,3 @@ int main(void)
 }*/
 
 #endif
-
