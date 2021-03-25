@@ -456,7 +456,7 @@ void CServer::processIncomingData(QByteArray data){
                     CMessage tmp = packet->Deserialize_Message();
                     getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
                     if(tmp.get_to().toInt() == m_currentChannelIndex){
-                        getMessagesList()->addMessage(tmp);
+                        getMessagesList()->set_messages(getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->get_messages());
                     }
                     break;
                 }

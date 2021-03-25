@@ -835,9 +835,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
 
                         CPacket reqAns("1","2");
-
                         reqAns.Serialize_MessageList(messages_list);
-                        qDebug() << reqAns.GetByteArray();
                         sendToClient(reqAns.GetByteArray(), sender);
                         break;
                     }
