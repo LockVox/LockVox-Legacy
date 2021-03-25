@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QRegExp>
 #include <QDir>
+#include <QRandomGenerator>
 
 
 #include "src/includes/AbstractServer.h"

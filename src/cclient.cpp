@@ -72,6 +72,11 @@ QUuid CClient::get_uuid()
     return m_uuid;
 }
 
+QImage CClient::get_profilePic()
+{
+    return profilePic;
+}
+
 bool CClient::get_isOnline()
 {
     return m_isOnline;
@@ -106,9 +111,6 @@ void CClient::set_idChannel(int id){
     m_idChannel = id;
 }
 
-/*void CClient::set_id(int id){
-    m_id = id;
-}*/
 
 void CClient::set_isOnline(bool online)
 {
@@ -128,6 +130,11 @@ void CClient::set_description(QString d)
 void CClient::set_uuid(QUuid uuid)
 {
     m_uuid = uuid;
+}
+
+void CClient::set_profilePic(QImage img)
+{
+    profilePic = img;
 }
 
 void CClient::set_all(CClient *c){

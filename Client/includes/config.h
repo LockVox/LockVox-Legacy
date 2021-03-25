@@ -13,7 +13,7 @@
 #define SERVER_PORTBASE 55000 //Baseport for connection and operation with the server
 #define DEFAULT_SAMP_RATE 8000 //Default sampling rate for audio
 
-#define AUTO_LOGIN
+//#define AUTO_LOGIN
 #ifdef AUTO_LOGIN
     #define USERNAME "test"
     #define PASSWORD "test"

@@ -48,6 +48,35 @@ CServer::CServer()
         m_db = new CDatabase();
         set_channels(m_db->parseChannel());
         set_clients(m_db->parseClient());
+
+        foreach(CClient *c, m_clients)
+        {
+            QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
+            if(QFile::exists(path))
+            {
+                QImage tmp(path);
+                c->set_profilePic(tmp);
+            }
+            else
+            {
+                int random = QRandomGenerator::global()->bounded(0,18);
+                path = "storage/server/pp/pp" + QString::number(random) + ".png";
+                if(QFile::exists(path))
+                {
+                    QImage tmp(path);
+                    c->set_profilePic(tmp);
+                    if(test.exists("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces)))
+                    {
+                        tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                    }
+                    else
+                    {
+                        test.mkpath("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces));
+                        tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                    }
+                }
+            }
+        }
     }
 }
 
