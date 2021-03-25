@@ -9,11 +9,7 @@
 #include <QList>
 #include <QObject>
 
-class ServerChain : MIPComponentChain
-{
-    ServerChain();
-    ~ServerChain();
-};
+
 
 class CAudio :  public QObject
 {
@@ -26,7 +22,7 @@ public:
 public slots:
     //void newChannel();
 private:
-    QList<ServerChain> m_chain;
+    //QList<ServerChain> m_chain;
     QList<jrtplib::RTPSession*> m_session;
 };
 

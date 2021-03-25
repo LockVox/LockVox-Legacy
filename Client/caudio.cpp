@@ -6,6 +6,7 @@
 
 CAudio::CAudio() : m_chain("MainAudio")
 {
+
 #ifdef WIN32
     WSADATA dat;
     WSAStartup(MAKEWORD(2,2),&dat);

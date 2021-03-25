@@ -769,7 +769,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             }
                             else
                             {
-                                if(filename_list.first() == "no_index")
+                                if(filename_list.first() == "noIndex")
                                 {
                                     writeToLog("No index in index.json from channel [" + msg.get_to() + "] Try to create one",1);
                                     if(!createChannelIndex(filename,path))
@@ -1345,7 +1345,7 @@ QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_ms
 
     QList<QString> filename_list = readChannelIndex(default_path + "index.json");
 
-    if(filename_list.isEmpty() || filename_list.last() == "no_index")
+    if(filename_list.isEmpty() | filename_list.last() == "no_index")
     {
         CMessage noIndex("noIndex","null","null",false);
         message_list.append(noIndex);
