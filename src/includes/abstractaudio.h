@@ -5,7 +5,7 @@
 class AbstractAudio
 {
 public:
-    AbstractAudio();
+    AbstractAudio(){};
 };
 
 #endif // ABSTRACTAUDIO_H
