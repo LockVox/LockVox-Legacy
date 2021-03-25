@@ -45,9 +45,11 @@ private:
     QObject * m_connectServer;
     QObject * m_userinfo;
     QObject * m_messageWindow;
+    QObject * m_userparameter;
 
     QObject * m_listChannels;
     QObject * m_stateServer;
+
 
     QQmlContext * m_context;
 

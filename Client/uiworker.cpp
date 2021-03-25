@@ -57,9 +57,10 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_stateServer = m_rootObject->findChild<QObject*>("stateServer");
     m_userinfo = m_rootObject->findChild<QObject*>("userInfo");
     m_messageWindow = m_rootObject->findChild<QObject*>("message_window");
-
+    m_userparameter = m_rootObject->findChild<QObject*>("user_parameters");
 
     m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
+
 
     //Check if compenents has been load correctly
     if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer){
@@ -107,8 +108,20 @@ void UIWorker::onChangeState(QString newState){
 
 void UIWorker::onSelfChanged(CClient* c){
     //Access here to UserInfo Qml Element, modify it has u wish with CClient methods
+    // home
     QObject * username = m_userinfo->findChild<QObject*>("username");
     username->setProperty("text", c->get_pseudo());
+
+
+    // in parameter widget
+    QObject * usernameParamBigTitle = m_userparameter->findChild<QObject*>("username");
+    QObject * username_label = m_userparameter->findChild<QObject*>("big_username");
+    QObject * email_label = m_userparameter->findChild<QObject*>("email");
+
+    usernameParamBigTitle->setProperty("text",c->get_pseudo());
+    username_label->setProperty("text",c->get_pseudo());
+    qDebug()<< c->get_mail();
+    email_label->setProperty("text",c->get_mail());
 }
 
 void UIWorker::onCurrentIndexChanged(int index)

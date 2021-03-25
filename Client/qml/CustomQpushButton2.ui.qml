@@ -46,19 +46,26 @@ T.Button {
             when: !control.down
             PropertyChanges {
                 target: buttonBackground
-                color: "#ffffff"
-                border.color: "#1393ac"
+                width: 20
+                color: "#003c4144"
+                border.color: "#92a0a9"
             }
 
             PropertyChanges {
                 target: control
-                width: 40
-                height: 40
+                width: 20
+                height: 20
             }
 
             PropertyChanges {
                 target: textItem
-                color: "#000000"
+                x: 0
+                y: 0
+                width: 20
+                height: 20
+                color: "#92a0a9"
+                text: "X"
+                font.pointSize: 10
             }
         },
         State {
@@ -66,19 +73,26 @@ T.Button {
             when: control.down
             PropertyChanges {
                 target: textItem
-                color: "#1393ac"
+                x: 0
+                y: 0
+                width: 20
+                height: 20
+                color: "#b8c1c6"
+                text: "X"
+                font.pointSize: 10
             }
 
             PropertyChanges {
                 target: control
-                width: 40
-                height: 40
+                width: 20
+                height: 20
             }
 
             PropertyChanges {
                 target: buttonBackground
-                color: "#ffffff"
-                border.color: "#1393ac"
+                width: 20
+                color: "#003c4144"
+                border.color: "#b8c1c6"
             }
         }
     ]
@@ -89,3 +103,4 @@ Designer {
     D{i:0;formeditorZoom:6}
 }
 ##^##*/
+
