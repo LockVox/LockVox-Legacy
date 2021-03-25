@@ -5,6 +5,7 @@
 #include "src/includes/cchannel.h"
 #include "emiplib/mipcomponentchain.h"
 #include "jrtplib3/rtpsession.h"
+#include "emiplib/miprtpcomponent.h"
 #include <QList>
 #include <QObject>
 
