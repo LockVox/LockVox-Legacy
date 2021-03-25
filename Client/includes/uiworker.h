@@ -43,6 +43,7 @@ private:
 
     QObject * m_connectServer;
     QObject * m_userinfo;
+    QObject * m_userparameter;
 
     QQmlContext * m_context;
 

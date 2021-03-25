@@ -33,16 +33,6 @@ Rectangle {
     //Layout
     property alias regLog_layout: regLog_layout
     */
-    UserInfo {
-        objectName: "userInfo"
-        id: userInfo
-        x: 1
-        y: 0
-        width: 166
-        height: 90
-        visible: false
-    }
-
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -155,59 +145,16 @@ Rectangle {
         height: 472
         visible: false
         clip: true
+
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
         model: ClientModel {
             m_clientsList: clientsList
         }
 
         delegate: Delegate_Client {}
-    }
-
-    ListView {
-        id: listChannel
-        x: 940
-        y: 70
-        width: 154
-        height: 472
-        visible: false
-        clip: true
-        model: ChannelModel {
-            m_channelsList: channelsList
-        }
-
-        delegate: Delegate_Channel {}
-    }
-
-    ListView {
-        id: listMessage
-        x: 380
-        y: 267
-        width: 235
-        height: 199
-        visible: true
-        clip: true
-        model: MessageModel {
-            m_messagesList: messagesList
-        }
-
-        delegate: RowLayout {
-            Text {
-                text: model.from
-            }
-        }
-    }
-
-    MessageWindow {
-        id: messageWindow
-        x: 196
-        y: 25
-        visible: false
-    }
-
-    AudioWindow {
-        id: audioWindow
-        x: 150
-        y: 260
-        visible: false
     }
 
     Rectangle {
@@ -235,9 +182,110 @@ Rectangle {
     }
 
     CustomQpushButton2 {
-        id: customQpushButton2
+        id: returnHomeBtn
         x: 592
         y: 5
+        visible: false
+
+        Connections {
+            target: returnHomeBtn
+            onClicked: window.state = "Home"
+        }
+    }
+
+    MessageWindow {
+        id: messageWindow
+        x: 415
+        y: 480
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
+
+        visible: false
+    }
+
+    ListView {
+        id: listMessage
+        x: 180
+        y: 960
+        width: 235
+        height: 199
+        visible: false
+        clip: true
+
+        anchors.top: messageWindow.top
+        anchors.bottom: messageWindow.bottom
+
+        model: MessageModel {
+            m_messagesList: messagesList
+        }
+
+        delegate: RowLayout {
+            Text {
+                text: model.from
+            }
+        }
+    }
+
+    Column {
+        id: home
+        x: 221
+        y: 0
+        width: 200
+        height: 400
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        Row {
+            id: leftSideHome
+            width: 200
+            height: 400
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+
+            UserInfo {
+                objectName: "userInfo"
+                id: userInfo
+                width: 166
+                height: 90
+                visible: false
+
+                CustomQpushButton {
+                    id: parameterButton
+                    x: 85
+                    y: 33
+
+                    Connections {
+                        target: parameterButton
+                        onClicked: window.state = "parameterState"
+                    }
+                }
+            }
+
+            ListView {
+                id: listChannel
+                width: 154
+                height: 472
+                visible: false
+                clip: true
+
+                model: ChannelModel {
+                    m_channelsList: channelsList
+                }
+
+                delegate: Delegate_Channel {}
+            }
+
+            AudioWindow {
+                id: audioWindow
+                visible: false
+
+                anchors.left: parent.left
+
+                anchors.bottom: parent.bottom
+            }
+        }
     }
 
     states: [
@@ -289,7 +337,7 @@ Rectangle {
 
             PropertyChanges {
                 target: userInfo
-                x: 0
+                x: 1
                 y: 0
                 width: 179
                 height: 73
@@ -299,11 +347,15 @@ Rectangle {
 
             PropertyChanges {
                 target: listClient
-                x: 478
+                x: 486
                 y: 70
-                width: 162
+                width: 154
                 height: 410
                 visible: true
+                anchors.rightMargin: 8
+                anchors.bottomMargin: 14
+                anchors.topMargin: 51
+                anchors.leftMargin: 489
             }
 
             PropertyChanges {
@@ -324,7 +376,15 @@ Rectangle {
 
             PropertyChanges {
                 target: messageWindow
+                x: 178
+                y: 0
+                width: 288
+                height: 480
                 visible: true
+                anchors.rightMargin: 168
+                anchors.bottomMargin: 0
+                anchors.leftMargin: 185
+                anchors.topMargin: 0
             }
 
             PropertyChanges {
@@ -335,10 +395,14 @@ Rectangle {
             PropertyChanges {
                 target: audioWindow
                 x: 0
-                y: 353
-                width: 179
-                height: 127
+                y: 356
+                width: 177
+                height: 124
                 visible: true
+                anchors.rightMargin: 461
+                anchors.bottomMargin: 0
+                anchors.leftMargin: 1
+                anchors.topMargin: 326
             }
 
             PropertyChanges {
@@ -362,11 +426,45 @@ Rectangle {
 
             PropertyChanges {
                 target: listMessage
-                x: 185
-                y: 79
-                width: 311
-                height: 349
+                x: 180
+                y: 25
+                width: 292
+                height: 406
                 visible: true
+                anchors.topMargin: 33
+                anchors.bottomMargin: 48
+                anchors.rightMargin: 168
+                anchors.leftMargin: 230
+            }
+
+            PropertyChanges {
+                target: leftSideHome
+                x: 1
+                y: 0
+                width: 180
+                height: 480
+                rightPadding: 2
+                leftPadding: 2
+                spacing: 0
+                topPadding: 0
+                layoutDirection: Qt.LeftToRight
+            }
+
+            PropertyChanges {
+                target: home
+                x: 0
+                y: 0
+                width: 640
+                height: 480
+            }
+
+            PropertyChanges {
+                target: parameterButton
+                x: 94
+                y: 53
+                width: 77
+                height: 20
+                text: "parameter"
             }
         },
         State {
@@ -458,9 +556,10 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: customQpushButton2
-                x: 592
-                y: 5
+                target: returnHomeBtn
+                x: 612
+                y: 8
+                visible: true
             }
         }
     ]
@@ -468,7 +567,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.100000023841858;height:480;width:640}
 }
 ##^##*/
 

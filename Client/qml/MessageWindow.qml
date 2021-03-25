@@ -11,8 +11,10 @@ Item {
         anchors.fill: parent
 
         ColumnLayout {
-            x: 8
-            y: 8
+            anchors.fill: parent
+
+
+            spacing: 420
 
             Text {
                 id: channelName
@@ -24,13 +26,12 @@ Item {
                 font.bold: true
             }
 
-            ScrollView {
-                id: scrollView
-                Layout.preferredHeight: 379
-                Layout.preferredWidth: 284
-            }
-
             RowLayout {
+                Layout.bottomMargin: 0
+                Layout.topMargin: 0
+                Layout.margins: 3
+                Layout.fillHeight: true
+                Layout.fillWidth: true
 
                 TextField {
                     id: messageText
@@ -53,6 +54,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.8999999761581421}D{i:1}
+    D{i:0;formeditorZoom:1.100000023841858}D{i:2}
 }
 ##^##*/
