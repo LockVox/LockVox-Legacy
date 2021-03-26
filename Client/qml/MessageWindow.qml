@@ -19,16 +19,16 @@ Item {
 
 
             anchors.bottom: parent.bottom
-            anchors.rightMargin: 8
-            anchors.bottomMargin: 17
+            anchors.rightMargin: 14
+            anchors.bottomMargin: 18
             anchors.leftMargin: 6
             anchors.left:messageText.right
             anchors.right:parent.right
 
             id: sendMessageButton
             x: 254
-            y: 432
-            height: 32
+            y: 435
+            height: 27
             text: "Send"
             Layout.preferredHeight: 33
             Layout.preferredWidth: 31
@@ -41,7 +41,7 @@ Item {
             font.hintingPreference: Font.PreferDefaultHinting
             anchors.rightMargin: 52
             anchors.bottomMargin: 20
-            anchors.leftMargin: 10
+            anchors.leftMargin: 51
             anchors.left: parent.left
             anchors.right:parent.right
 
@@ -86,6 +86,13 @@ Item {
             }
         }
 
+        CustomQpushButton2 {
+            id: customQpushButton2
+            x: 25
+            y: 438
+            text: "+"
+        }
+
 
 
     }
@@ -98,6 +105,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.659999966621399}
+    D{i:0;formeditorZoom:3}
 }
 ##^##*/
