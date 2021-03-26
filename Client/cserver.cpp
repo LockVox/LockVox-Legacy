@@ -44,10 +44,7 @@ void CServer::connectServer(QString  ip){
     }
 }
 
-void CServer::onQuit()
-{
-    qDebug() << "Quit";
-}
+
 
 //Getters
 QTcpSocket * CServer::get_socket(){

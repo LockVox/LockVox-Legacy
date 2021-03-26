@@ -329,8 +329,8 @@ Rectangle {
     property alias menuBar: menuBar
     property alias quit: quit
     property alias disconnect: disconnect
+    property alias change_server: change_server
 
-    //property alias change_server:change_server
     MenuBar {
         objectName: "menu_bar"
         id: menuBar
@@ -366,11 +366,15 @@ Rectangle {
             title: qsTr("Default")
 
             Action {
+                id: change_server
                 text: qsTr("Change Server")
             }
-            Action {
+
+
+            /*Action {
+                id:ping_server
                 text: qsTr("Ping server")
-            }
+            }*/
         }
 
         delegate: MenuBarItem {
@@ -395,6 +399,37 @@ Rectangle {
         }
 
         Menu {}
+    }
+
+    property alias quit_popup:quit_popup
+    property alias quit_confirm: quit_confirm
+    property alias quit_back: quit_back
+
+    Popup {
+        objectName: "quit_popup"
+        id: quit_popup
+
+        signal confirmQuit(int confirm)
+
+        x: 100
+        y: 100
+        width: 200
+        height: 300
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+        ColumnLayout{
+            Button {
+                id: quit_confirm
+                text: qsTr("Quit")
+            }
+
+            Button {
+                id: quit_back
+                text: qsTr("Come back to the application")
+            }
+        }
     }
 
     BusyIndicator {

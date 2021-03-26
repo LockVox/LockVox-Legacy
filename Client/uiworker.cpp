@@ -55,6 +55,7 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_login = m_rootObject->findChild<QObject*>("login");
     m_register = m_rootObject->findChild<QObject*>("register");
 
+    m_quitPopup = m_rootObject->findChild<QObject*>("quit_popup");
     m_connectServer = m_rootObject->findChild<QObject*>("connect_server");
     m_stateServer = m_rootObject->findChild<QObject*>("stateServer");
     m_userinfo = m_rootObject->findChild<QObject*>("userInfo");
@@ -102,7 +103,14 @@ UIWorker::UIWorker(QGuiApplication *app)
                      this, SLOT(onDisconnected()));
 
     QObject::connect(m_menuBar, SIGNAL(quit()),
-                     m_server, SLOT(onQuit()));
+                     this, SLOT(onQuit()));
+    QObject::connect(m_menuBar, SIGNAL(disconnect()),
+                     this, SLOT(onDisconnect()));
+    QObject::connect(m_menuBar, SIGNAL(change_server()),
+                     this, SLOT(onChangeServer()));
+
+    QObject::connect(m_quitPopup, SIGNAL(confirmQuit(int)),
+                     this, SLOT(onConfirmQuit(int)));
 
     //QObject::connect()
 
@@ -181,4 +189,38 @@ void UIWorker::onDisconnected()
     }
     state->setProperty("text", "You are not connected to any server :'(");
     return;
+}
+
+void UIWorker::onQuit()
+{
+    qDebug("Quit..");
+    m_quitPopup->setProperty("visible", true);
+
+
+
+}
+
+void UIWorker::onConfirmQuit(int q){
+    m_confirmQuit = q;
+
+    if(m_confirmQuit == 0){
+        qDebug() << "Cancel Quit";
+        m_quitPopup->setProperty("visible", false);
+    }
+    else if(m_confirmQuit == 1){
+        qDebug() << "Confirm Quit";
+        //Call here desctructor of CServer then UIWorker
+
+        m_engine.quit();
+    }
+}
+
+void UIWorker::onDisconnect()
+{
+    qDebug("Disconnecting..");
+}
+
+void UIWorker::onChangeServer()
+{
+    qDebug("Change server..");
 }

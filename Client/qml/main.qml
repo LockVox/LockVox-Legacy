@@ -10,6 +10,7 @@ import Message 1.0
 
 ApplicationWindow {
 
+    //flags: Qt.FramelessWindowHint
     width: 640
     height: 480
     visible: true
@@ -45,5 +46,11 @@ ApplicationWindow {
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
 
         quit.onTriggered: menuBar.quit()
+        disconnect.onTriggered: menuBar.disconnect()
+        change_server.onTriggered: menuBar.change_server()
+
+        quit_confirm.onClicked: quit_popup.confirmQuit(1)
+        quit_back.onClicked: quit_popup.confirmQuit(0)
+
     }
 }

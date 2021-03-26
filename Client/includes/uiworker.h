@@ -7,8 +7,10 @@
 #include <QQmlContext>
 #include <QQmlProperty>
 #include <QQuickItem>
+#include <QSignalSpy>
 
 #include "Client/includes/cserver.h"
+
 class CServer;
 class UIWorker : public QObject
 {
@@ -26,6 +28,11 @@ public slots:
     void onConnected();
     void onDisconnected();
 
+    void onQuit();
+    void onDisconnect();
+    void onChangeServer();
+
+    void onConfirmQuit(int);
 signals:
     void changeState(QString newState);
     void connect_server(QString);
@@ -47,6 +54,8 @@ private:
     QObject * m_login;
     QObject * m_register;
 
+    QObject * m_quitPopup;
+
     QObject * m_connectServer;
     QObject * m_userinfo;
     QObject * m_messageWindow;
@@ -55,7 +64,7 @@ private:
     QObject * m_listChannels;
     QObject * m_stateServer;
 
-
+    int m_confirmQuit;
 
     QQmlContext * m_context;
 
