@@ -4,6 +4,8 @@ import QtQuick.Templates 2.1 as T
 T.Button {
     id: control
 
+    onHoveredChanged:hovered ? buttonBackground.color = "#1781bd":buttonBackground.color = "#33a5e5";
+    highlighted: true
     implicitWidth: Math.max(
                        buttonBackground ? buttonBackground.implicitWidth : 0,
                        textItem.implicitWidth + leftPadding + rightPadding)
@@ -14,6 +16,7 @@ T.Button {
     rightPadding: 4
 
     text: "My Button"
+    flat: true
 
     background: buttonBackground
     Rectangle {
@@ -36,6 +39,19 @@ T.Button {
         verticalAlignment: Text.AlignVCenter
     }
 
+    MouseArea {
+        id: mouseArea
+        x: 0
+        y: 0
+        visible: false
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: buttonBackground.color = "#1781bd"
+        onExited: buttonBackground.color = "#33a5e5"
+        acceptedButtons: Qt.LeftButton
+        onClicked: control.down
+    }
+
     states: [
         State {
             name: "normal"
@@ -51,6 +67,17 @@ T.Button {
                 target: textItem
                 color: "#ffffff"
             }
+
+            PropertyChanges {
+                target: mouseArea
+                visible: false
+            }
+
+            PropertyChanges {
+                target: control
+                highlighted: false
+                flat: false
+            }
         },
         State {
             name: "down"
@@ -65,6 +92,11 @@ T.Button {
                 color: "#f46f68"
                 border.color: "#f5f4f4"
                 border.width: 0
+            }
+
+            PropertyChanges {
+                target: mouseArea
+                visible: false
             }
         }
     ]

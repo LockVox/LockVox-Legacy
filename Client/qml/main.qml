@@ -13,7 +13,7 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: "Lock-Vox" 
+    title: "Lock-Vox"
 /*
     ListView {
         objectName: "listChannels"
@@ -43,8 +43,7 @@ ApplicationWindow {
     Screen01{
         anchors.fill: parent
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
+
         quit.onTriggered: menuBar.quit()
     }
 }
-
-

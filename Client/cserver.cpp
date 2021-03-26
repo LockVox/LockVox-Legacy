@@ -261,13 +261,13 @@ void CServer::processIncomingData(QByteArray data){
 
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
-           /*emit(changeState("Home"));
+           emit(changeState("Home"));
            foreach(CChannel * c, m_channelsList->get_channels())
            {
                CPacket request("1","3");
                request.Serialize_messageRequest(c->get_id(),20,0);
                qDebug() << m_socket->write(request.GetByteArray());
-           }*/
+           }
        }
     }
 
@@ -608,9 +608,9 @@ void CServer::processIncomingData(QByteArray data){
     }
 
     if(m_finishLoad & m_currentUIState != "home"){
-        m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
-        emit(changeState("Home"));
-        m_currentUIState = "Home";
+        //m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
+        //emit(changeState("Home"));
+        //m_currentUIState = "Home";
     }
 }
 

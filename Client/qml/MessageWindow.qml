@@ -61,6 +61,8 @@ Item {
             color: "#676d76"
             text: qsTr("channel")
             font.pixelSize: 12
+            anchors.leftMargin: 10
+            anchors.topMargin: 8
             Layout.preferredHeight: 14
             Layout.preferredWidth: 140
             font.bold: true
