@@ -32,29 +32,29 @@ Rectangle {
 
     //Layout
     //property alias regLog_layout: regLog_layout
+    property alias moveWindowArea: moveWindowArea
 
-    property alias moveWindowArea:moveWindowArea
     //property alias leftArea:leftArea
     //property alias bottomArea:bottomArea
     //property alias rightArea:rightArea
-
-    MouseArea{
-        id:moveWindowArea
-        height:30
+    MouseArea {
+        id: moveWindowArea
+        height: 30
         width: parent.width
-        x:0
-        y:0
+        x: 0
+        y: 0
 
-        anchors{
-            top:parent.top
-            left:parent.left
-            right:parent.right
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
     }
 
+    //The following part is for resizing the window - it doesn't work correctly for now
 
-//The following part is for resizing the window - it doesn't work correctly for now
-/*
+
+    /*
     MouseArea {
         id: bottomArea
         height: 10
@@ -94,13 +94,6 @@ Rectangle {
             cursorShape:  Qt.SizeHorCursor
         }
 */
-
-
-
-
-
-
-
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -341,6 +334,30 @@ Rectangle {
         }
     }
 
+    UserInfo {
+        objectName: "userInfo"
+        id: userInfo
+
+        anchors.top: menuBar.bottom
+
+        x: 2
+        y: 0
+        width: 166
+        height: 90
+        visible: false
+
+        CustomQpushButton {
+            id: parameterButton
+            x: 85
+            y: 33
+
+            Connections {
+                target: parameterButton
+                onClicked: window.state = "parameterState"
+            }
+        }
+    }
+
     Column {
         id: home
         x: 221
@@ -354,27 +371,8 @@ Rectangle {
             id: leftSideHome
             width: 200
             height: 400
-            anchors.top: parent.top
+            anchors.top: parent.bottom
             anchors.bottom: parent.bottom
-
-            UserInfo {
-                objectName: "userInfo"
-                id: userInfo
-                width: 166
-                height: 90
-                visible: false
-
-                CustomQpushButton {
-                    id: parameterButton
-                    x: 85
-                    y: 33
-
-                    Connections {
-                        target: parameterButton
-                        onClicked: window.state = "parameterState"
-                    }
-                }
-            }
         }
     }
 
@@ -391,9 +389,9 @@ Rectangle {
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
-    property alias reduce_window:reduce_window
-    property alias maximize_window:maximize_window
-    property alias normal_window:normal_window
+    property alias reduce_window: reduce_window
+    property alias maximize_window: maximize_window
+    property alias normal_window: normal_window
 
     MenuBar {
         objectName: "menu_bar"
@@ -403,6 +401,9 @@ Rectangle {
         signal disconnect
         signal ping_server
         signal change_server
+        background: Rectangle {
+            color: "#1b1f21"
+        }
 
         x: 0
         y: 0
@@ -427,7 +428,7 @@ Rectangle {
             }
         }
 
-        MenuSeparator{}
+        MenuSeparator {}
 
         Menu {
             objectName: "menu_state_server"
@@ -447,24 +448,33 @@ Rectangle {
             }*/
         }
 
-        MenuSeparator{}
+        MenuSeparator {}
 
-        MenuBarItem{
-            id:reduce_window
-            text: qsTr("Reduce Window")
+        MenuBarItem {
+            id: reduce_window
+
+            Image {
+                //anchors.fill: parent.fill
+                id: lock_vox_logo_miniature1
+                x: 11
+                y: -2
+                source: "lock_vox_logo_miniature1.png"
+                fillMode: Image.PreserveAspectFit
+            }
+
+            //text: qsTr("Reduce Window")
         }
 
-        MenuBarItem{
-            id:maximize_window
-            text: qsTr("Maximize Window")
+        MenuBarItem {
+            id: maximize_window
+
+            text: qsTr("")
         }
 
-        MenuBarItem{
-            id:normal_window
-            text: qsTr("Normal Window")
+        MenuBarItem {
+            id: normal_window
+            text: qsTr("Normal BRu")
         }
-
-
 
         delegate: MenuBarItem {
             id: menuBarItem
@@ -473,7 +483,7 @@ Rectangle {
                 text: menuBarItem.text
                 font: menuBarItem.font
                 opacity: enabled ? 1.0 : 0.3
-                color: menuBarItem.highlighted ? "#ffffff" : "#21be2b"
+                color: menuBarItem.highlighted ? "red" : "#21be2b"
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
@@ -486,7 +496,6 @@ Rectangle {
                 color: menuBarItem.highlighted ? "#21be2b" : "transparent"
             }
         }
-
     }
 
     property alias quit_popup: quit_popup
@@ -600,12 +609,13 @@ Rectangle {
 
             PropertyChanges {
                 target: userInfo
-                x: 1
-                y: 0
+                x: 0
+                y: 29
                 width: 179
                 height: 73
                 visible: true
                 color: "#1b1f21"
+                border.width: 0
             }
 
             PropertyChanges {
@@ -648,7 +658,8 @@ Rectangle {
 
             PropertyChanges {
                 target: window
-                color: "#2e3538"
+                height: 503
+                color: "#282c2d"
             }
 
             PropertyChanges {
@@ -681,8 +692,8 @@ Rectangle {
                 width: 179
                 height: 287
                 visible: true
-                anchors.bottomMargin: -2
-                anchors.topMargin: 71
+                anchors.bottomMargin: 1
+                anchors.topMargin: 99
             }
 
             PropertyChanges {
@@ -706,7 +717,7 @@ Rectangle {
                 x: 1
                 y: 0
                 width: 180
-                height: 480
+                height: 456
                 rightPadding: 2
                 leftPadding: 2
                 spacing: 0
@@ -747,6 +758,33 @@ Rectangle {
             PropertyChanges {
                 target: lock_vox_logo11
                 visible: false
+            }
+
+            PropertyChanges {
+                target: maximize_window
+                x: 0
+                y: 0
+                width: 103
+                height: 30
+                text: qsTr("maximize")
+            }
+
+            PropertyChanges {
+                target: normal_window
+                height: 30
+            }
+
+            PropertyChanges {
+                target: reduce_window
+                height: 30
+            }
+
+            PropertyChanges {
+                target: lock_vox_logo_miniature1
+                x: 23
+                y: 4
+                width: 24
+                height: 23
             }
         },
         State {
@@ -988,7 +1026,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
+    D{i:0;formeditorZoom:3}
 }
 ##^##*/
 
