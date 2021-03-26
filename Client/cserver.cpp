@@ -65,6 +65,7 @@ void CServer::connectServer(QString  ip){
     if(m_state){
         //connect(m_socket, SIGNAL(encrypted()), this, SLOT(ready()));
         connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
+        connect(m_socket, SIGNAL(disconnected()),this,SLOT(onDisconnected()));
         m_name = ip;
         emit(connected());
     }
@@ -72,9 +73,13 @@ void CServer::connectServer(QString  ip){
 
     }
 
-
     qDebug() << "Socket state : " << m_socket->state();
     //qDebug() << "Encryption state : " << m_socket->isEncrypted();
+}
+
+void CServer::onDisconnected()
+{
+    qDebug() << "Socket has been disconnected";
 }
 
 

@@ -10,14 +10,12 @@ Item {
     width: 640
     height: 50
 
-
+    clip:true
 
 
     MouseArea
     {
         hoverEnabled: true
-
-
 
         //containsMouse: true
         id: mouse
@@ -30,7 +28,7 @@ Item {
         anchors.leftMargin: 0
         anchors.topMargin: 0
 
-        onEntered: {
+       /* onEntered: {
 
             rectangle.visible=true
 
@@ -39,14 +37,12 @@ Item {
 
             rectangle.visible=false
 
-        }
+        }*/
 
         onClicked: {
 
             listChannel.currentIndexChanged(index)
             listChannel.currentIndex = index
-
-
         }
 
 

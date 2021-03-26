@@ -53,6 +53,7 @@ Rectangle {
 
     //The following part is for resizing the window - it doesn't work correctly for now
 
+
     /*
     MouseArea {
         id: bottomArea
@@ -211,6 +212,18 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        currentIndex: 1
+
+        //preferredHighlightBegin:
+        highlightFollowsCurrentItem: true
+        highlight: Rectangle {
+            color: "grey"
+            height: parent.height
+            width: parent.width
+        }
+
+        focus: true
+
         model: ClientModel {
             m_clientsList: clientsList
         }
@@ -227,8 +240,19 @@ Rectangle {
         id: listChannel
 
         anchors.top: parent.top
-
         anchors.bottom: audioWindow.top
+
+        currentIndex: 1
+
+        //preferredHighlightBegin:
+        highlightFollowsCurrentItem: true
+        highlight: Rectangle {
+            color: "grey"
+            height: parent.height
+            width: parent.width
+        }
+
+        focus: true
 
         x: 940
         y: 70
@@ -379,7 +403,8 @@ Rectangle {
         height: 251
     }
 
-    property alias menuBar: menuBar
+    /*
+    property alias toolbar: toolbar
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
@@ -387,102 +412,10 @@ Rectangle {
     property alias maximize_window: maximize_window
     property alias normal_window: normal_window
 
-    MenuBar {
-        objectName: "menu_bar"
-        id: menuBar
-
-        signal quit
-        signal disconnect
-        signal ping_server
-        signal change_server
-
-        x: 0
-        y: 0
-        width: parent.width
-        height: 30
-        visible: false
-
-        Menu {
-            objectName: "menu_quit_button"
-            id: menu_quit_button
-            Image {}
-            spacing: 5
-
-            Action {
-                id: quit
-                text: qsTr("&Quit")
-                onTriggered: quit_popup.visible = true
-            }
-            Action {
-                text: qsTr("&Disconnect")
-                id: disconnect
-            }
-        }
-
-        MenuSeparator {}
-
-        Menu {
-            objectName: "menu_state_server"
-            id: menu_state_button
-
-            title: qsTr("Default")
-
-            Action {
-                id: change_server
-                text: qsTr("Change Server")
-            }
-
-
-            /*Action {
-                id:ping_server
-                text: qsTr("Ping server")
-            }*/
-        }
-
-        MenuSeparator {}
-
-        MenuBarItem {}
-
-        MenuBarItem {
-            id: reduce_window
-            text: qsTr("Reduce Window")
-        }
-
-        MenuBarItem {
-            id: maximize_window
-            text: qsTr("Maximize Window")
-        }
-
-        MenuBarItem {
-            id: normal_window
-            text: qsTr("Normal Window")
-        }
-
-        delegate: MenuBarItem {
-            id: menuBarItem
-
-            contentItem: Text {
-                text: menuBarItem.text
-                font: menuBarItem.font
-                opacity: enabled ? 1.0 : 0.3
-                color: menuBarItem.highlighted ? "#ffffff" : "#21be2b"
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: parent.width
-                implicitHeight: 30
-                opacity: enabled ? 1 : 0.3
-                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
-            }
-        }
-    }
 
     property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
-    property alias quit_back: quit_back
+    property alias quit_back: quit_back*/
 
     Popup {
         objectName: "quit_popup"
@@ -745,6 +678,31 @@ Rectangle {
                 color: "#55ff00"
                 active: false
             }
+
+            PropertyChanges {
+                target: reduce_window
+                x: -103
+                y: 0
+                width: 103
+                height: 36
+            }
+
+            PropertyChanges {
+                target: maximize_window
+                x: -282
+                y: 2
+                width: 86
+                height: 32
+                text: qsTr("Maximize Window")
+            }
+
+            PropertyChanges {
+                target: normal_window
+                x: -195
+                y: 0
+                width: 86
+                height: 14
+            }
         },
         State {
             name: "parameterState"
@@ -985,7 +943,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:3;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}
 }
 ##^##*/
 

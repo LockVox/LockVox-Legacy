@@ -93,7 +93,6 @@ class CServer : public AbstractServer
 signals:
         void changeState(QString);
         void selfChanged(CClient*);
-
         void connected();
         void disconnected();
 
@@ -111,6 +110,7 @@ signals:
 
     private slots:
 
+        void onDisconnected();
         void onReceiveData();
         void sendToServer(QByteArray ba);
         void sendToServer();

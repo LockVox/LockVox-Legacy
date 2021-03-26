@@ -45,11 +45,13 @@ HEADERS += \
 
 INCLUDEPATH += \
         src/includes \
-        Client/includes
+        Client/includes \
+        Client/qml
 
 DEPENDPATH += \
         src/includes \
         Client/includes \
+
 
 
 

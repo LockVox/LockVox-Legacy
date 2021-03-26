@@ -3,7 +3,8 @@ import QtQuick.Window 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.5
 
-import "./Client/qml"
+import "Client/qml"
+
 import Client 1.0
 import Channel 1.0
 import Message 1.0
@@ -11,8 +12,6 @@ import Message 1.0
 ApplicationWindow {
 
     id:mainWindow
-    flags: //Qt.FramelessWindowHint |
-           Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint
     width: 640
     height: 480
     visible: true
@@ -31,15 +30,15 @@ ApplicationWindow {
         anchors.fill: parent
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
 
-        disconnect.onTriggered: menuBar.disconnect()
-        change_server.onTriggered: menuBar.change_server()
+        //disconnect.onClicked: menuBar.disconnect()
+        //change_server.onClicked: menuBar.change_server()
 
-        quit_confirm.onClicked: quit_popup.confirmQuit(1)
-        quit_back.onClicked: quit_popup.confirmQuit(0)
+        //quit_confirm.onClicked: quit_popup.confirmQuit(1)
+        //quit_back.onClicked: quit_popup.confirmQuit(0)
 
-        reduce_window.onTriggered: mainWindow.showMinimized()
-        maximize_window.onTriggered: mainWindow.showMaximized()
-        normal_window.onTriggered: mainWindow.showNormal()
+        //reduce_window.onClicked: mainWindow.showMinimized()
+        //maximize_window.onClicked: mainWindow.showMaximized()
+        //normal_window.onClicked: mainWindow.showNormal()
 
 
         //Move Window
