@@ -136,15 +136,6 @@ Rectangle {
         }
     }
 
-    Image {
-        id: lock_vox_logo1
-        x: parent.width / 2 - lock_vox_logo1.width / 2
-        y: 0
-        source: "lock_vox_logo1.png"
-        width: 271
-        height: 71
-    }
-
     ListView {
         id: listClient
         x: 940
@@ -404,6 +395,16 @@ Rectangle {
         visible: false
     }
 
+    Image {
+        id: lock_vox_logo11
+        x: 172
+        y: 8
+        width: 295
+        height: 94
+        source: "lock_vox_logo1.png"
+        fillMode: Image.PreserveAspectFit
+    }
+
     states: [
         State {
             name: "registerState"
@@ -484,11 +485,6 @@ Rectangle {
                 target: rect_log_reg
                 visible: false
                 anchors.rightMargin: 319
-            }
-
-            PropertyChanges {
-                target: lock_vox_logo1
-                visible: false
             }
 
             PropertyChanges {
@@ -601,6 +597,11 @@ Rectangle {
                 target: menuBar
                 visible: true
             }
+
+            PropertyChanges {
+                target: lock_vox_logo11
+                visible: false
+            }
         },
         State {
             name: "parameterState"
@@ -642,11 +643,6 @@ Rectangle {
                 target: rect_log_reg
                 visible: false
                 anchors.rightMargin: 319
-            }
-
-            PropertyChanges {
-                target: lock_vox_logo1
-                visible: false
             }
 
             PropertyChanges {
@@ -696,6 +692,15 @@ Rectangle {
                 y: 8
                 visible: true
             }
+
+            PropertyChanges {
+                target: lock_vox_logo11
+                x: 172
+                y: 8
+                width: 295
+                height: 94
+                visible: false
+            }
         },
         State {
             name: "splashScreen"
@@ -726,11 +731,6 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: lock_vox_logo1
-                visible: false
-            }
-
-            PropertyChanges {
                 target: busyIndicator
                 x: 246
                 y: 202
@@ -739,10 +739,10 @@ Rectangle {
             }
         },
         State {
-            name: "registerState1"
+            name: "connectToServerState"
             PropertyChanges {
                 target: register
-                visible: true
+                visible: false
             }
 
             PropertyChanges {
@@ -769,13 +769,60 @@ Rectangle {
                 target: parametersWidget
                 visible: false
             }
+
+            PropertyChanges {
+                target: audioWindow
+                visible: false
+            }
+
+            PropertyChanges {
+                target: userInfo
+                visible: false
+            }
+
+            PropertyChanges {
+                target: registerButton
+                visible: false
+            }
+
+            PropertyChanges {
+                target: loginButton
+                visible: false
+            }
+
+            PropertyChanges {
+                target: rect_log_reg
+                visible: false
+            }
+
+            PropertyChanges {
+                target: rect_con_server
+                x: 203
+                anchors.rightMargin: 203
+                anchors.topMargin: 117
+            }
+
+            PropertyChanges {
+                target: lock_vox_logo11
+                x: 172
+                y: 8
+                width: 295
+                height: 94
+            }
+
+            PropertyChanges {
+                target: stateServer
+                x: 18
+                y: 0
+                visible: false
+            }
         }
     ]
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/
 
