@@ -8,3 +8,4 @@ Server.pro.user
 *.autosave
 LockVox.pro.user
 Server/config.h
+*.user
