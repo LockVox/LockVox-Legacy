@@ -310,7 +310,7 @@ Rectangle {
 
                     Connections {
                         target: parameterButton
-                        onClicked: window.state = "splashScreenState"
+                        onClicked: window.state = "parameterState"
                     }
                 }
             }
@@ -326,24 +326,19 @@ Rectangle {
         height: 251
     }
 
+    property alias menuBar: menuBar
+    property alias quit: quit
+    property alias disconnect: disconnect
 
-
-
-    property alias menuBar:menuBar
-    property alias quit:quit
-    property alias disconnect:disconnect
-    property alias change_server:change_server
-
-
+    //property alias change_server:change_server
     MenuBar {
-        objectName:"menu_bar"
+        objectName: "menu_bar"
         id: menuBar
 
-        signal quit()
-        signal disconnect()
-        signal ping_server()
-        signal change_server()
-
+        signal quit
+        signal disconnect
+        signal ping_server
+        signal change_server
 
         x: 0
         y: 0
@@ -356,12 +351,12 @@ Rectangle {
             Image {}
 
             Action {
-                id:quit
+                id: quit
                 text: qsTr("&Quit")
-
             }
             Action {
                 text: qsTr("&Disconnect")
+                id: disconnect
             }
         }
         Menu {
