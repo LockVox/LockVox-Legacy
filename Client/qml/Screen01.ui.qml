@@ -1,6 +1,7 @@
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
 import QtQuick 2.7
+import QtQuick.Extras 1.4
 
 import Client 1.0
 import Channel 1.0
@@ -317,6 +318,82 @@ Rectangle {
         height: 251
     }
 
+
+
+
+    property alias menuBar:menuBar
+    property alias quit:quit
+    property alias disconnect:disconnect
+    property alias change_server:change_server
+
+
+    MenuBar {
+        objectName:"menu_bar"
+        id: menuBar
+
+        signal quit()
+        signal disconnect()
+        signal ping_server()
+        signal change_server()
+
+
+        x: 0
+        y: 0
+        width: parent.width
+        height: 30
+        visible: false
+        Menu {
+            objectName: "menu_quit_button"
+            id: menu_quit_button
+            Image {}
+
+            Action {
+                id:quit
+                text: qsTr("&Quit")
+
+            }
+            Action {
+                text: qsTr("&Disconnect")
+            }
+        }
+        Menu {
+            objectName: "menu_state_server"
+            id: menu_state_button
+
+            title: qsTr("Default")
+
+            Action {
+                text: qsTr("Change Server")
+            }
+            Action {
+                text: qsTr("Ping server")
+            }
+        }
+
+        delegate: MenuBarItem {
+            id: menuBarItem
+
+            contentItem: Text {
+                text: menuBarItem.text
+                font: menuBarItem.font
+                opacity: enabled ? 1.0 : 0.3
+                color: menuBarItem.highlighted ? "#ffffff" : "#21be2b"
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+            }
+
+            background: Rectangle {
+                implicitWidth: parent.width
+                implicitHeight: 30
+                opacity: enabled ? 1 : 0.3
+                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+            }
+        }
+
+        Menu {}
+    }
+
     BusyIndicator {
         id: busyIndicator
         x: 291
@@ -514,6 +591,11 @@ Rectangle {
                 width: 179
                 height: 287
             }
+
+            PropertyChanges {
+                target: menuBar
+                visible: true
+            }
         },
         State {
             name: "parameterState"
@@ -611,7 +693,7 @@ Rectangle {
             }
         },
         State {
-            name: "splashScreenState"
+            name: "splashScreen"
 
             PropertyChanges {
                 target: loginButton

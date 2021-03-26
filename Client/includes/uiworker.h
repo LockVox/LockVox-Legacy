@@ -42,6 +42,8 @@ private:
     //Objects referencing to the different object of the engine
     QObject * m_window;
 
+    QObject * m_menuBar;
+
     QObject * m_login;
     QObject * m_register;
 
@@ -52,6 +54,7 @@ private:
 
     QObject * m_listChannels;
     QObject * m_stateServer;
+
 
 
     QQmlContext * m_context;

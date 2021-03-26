@@ -50,6 +50,8 @@ UIWorker::UIWorker(QGuiApplication *app)
     //Get all compenents in the window
     m_window = m_rootObject->findChild<QObject*>("window");
 
+    m_menuBar = m_rootObject->findChild<QObject*>("menu_bar");
+
     m_login = m_rootObject->findChild<QObject*>("login");
     m_register = m_rootObject->findChild<QObject*>("register");
 
@@ -96,10 +98,11 @@ UIWorker::UIWorker(QGuiApplication *app)
     //Connect state server -
     QObject::connect(m_server, SIGNAL(connected()),
                      this, SLOT(onConnected()));
-    //Connect state server -
     QObject::connect(m_server, SIGNAL(disconnected()),
                      this, SLOT(onDisconnected()));
 
+    QObject::connect(m_menuBar, SIGNAL(quit()),
+                     m_server, SLOT(onQuit()));
 
     //QObject::connect()
 
@@ -118,6 +121,10 @@ void UIWorker::onChangeState(QString newState){
     if(newState== "Home"){
         QQmlProperty(m_window, "state").write("Home");
     }
+    else if(newState == "splashScreen"){
+        QQmlProperty(m_window, "state").write("splashScreen");
+    }
+
 }
 
 void UIWorker::onSelfChanged(CClient* c){

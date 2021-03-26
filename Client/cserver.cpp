@@ -44,6 +44,11 @@ void CServer::connectServer(QString  ip){
     }
 }
 
+void CServer::onQuit()
+{
+    qDebug() << "Quit";
+}
+
 //Getters
 QTcpSocket * CServer::get_socket(){
     return m_socket;
@@ -352,8 +357,7 @@ void CServer::processIncomingData(QByteArray data){
                 set_self(packet->Deserialize_authAns());
                 if(m_self)
                 {
-                    CPacket ObjServRequest("-1","-1");
-                    sendToServer(ObjServRequest.GetByteArray());
+                     emit(changeState("splashScreen"));
                 }
                 break;
             }
@@ -369,8 +373,7 @@ void CServer::processIncomingData(QByteArray data){
 
                     if(m_self)
                     {
-                        //CPacket ObjServRequest("-1","-1");
-                        //sendToServer(ObjServRequest.GetByteArray());
+                        emit(changeState("splashScreen"));
                     }
                 }
                 break;
@@ -609,7 +612,6 @@ void CServer::processIncomingData(QByteArray data){
         emit(changeState("Home"));
         m_currentUIState = "Home";
     }
-
 }
 
 bool CServer::Register(QString username, QString mail, QString password,QString password_confirm)

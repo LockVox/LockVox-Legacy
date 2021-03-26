@@ -105,7 +105,7 @@ signals:
         bool sendMessage(QString msg); //For channel message
         bool sendMessage(QString msg, QUuid id); //For private message
         void connectServer(QString ip);
-
+        void onQuit();
 
     private slots:
 
