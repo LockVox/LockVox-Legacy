@@ -18,13 +18,13 @@ int main(int argc, char *argv[])
     w.show();
 
 
-    WSADATA Data;
+    /*WSADATA Data;
     WSAStartup(MAKEWORD(2,2), &Data);
     CChannel tmpchan("", 0);
     CAudio tmp;
     tmp.AddSession(tmpchan);
     getc(stdin);
-    WSACleanup();
+    WSACleanup();*/
     return a.exec();
 }
 

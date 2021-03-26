@@ -30,6 +30,7 @@ class CServer : public AbstractServer
         CServer();
         CServer(ClientList* clients, ChannelList * channels);
 
+        ~CServer();
         //m_socket
         QTcpSocket * get_socket();
         void set_socket(QTcpSocket* soc);

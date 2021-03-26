@@ -8,14 +8,16 @@ CServer::CServer()
         m_messagesList = new MessageList();
 
         m_currentChannelIndex = 0;
-         m_finishLoad = false;
-         m_hasChannelsLoaded = false;
-         m_hasClientsLoaded = false;
-         m_hasMessagesLoaded = false;
-         m_hasSelfLoaded = false;
+        m_finishLoad = false;
+        m_hasChannelsLoaded = false;
+        m_hasClientsLoaded = false;
+        m_hasMessagesLoaded = false;
+        m_hasSelfLoaded = false;
 
 
         m_socket = new QTcpSocket();
+
+
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
 
@@ -26,15 +28,42 @@ CServer::CServer(ClientList *clients, ChannelList *channels) : m_clientsList(cli
     getChannelsList()->get_channels();
 }
 
+CServer::~CServer()
+{
+    delete m_channelsList;
+    delete m_clientsList;
+    delete m_messagesList;
+
+    free(m_self);
+
+    m_currentChannelIndex = 0;
+
+    //Load server informations - message - clients - channels
+    m_hasSelfLoaded = false;
+    m_hasChannelsLoaded = false;
+    m_hasClientsLoaded = false;
+    m_hasMessagesLoaded = false;
+    m_finishLoad = false;
+    m_currentUIState = "";
+
+}
+
 
 void CServer::connectServer(QString  ip){
 
     m_socket->abort();
     m_socket->connectToHost(ip, 50885);
+    //m_socket->connectToHostEncrypted(ip, 50885);
 
+    /*if(!m_socket->waitForEncrypted()){
+        qDebug() << "Error when connecting/encrypting socket : " << m_socket->errorString();
+        return;
+    }*/
     m_state = (m_socket->state() == QTcpSocket::ConnectingState);
 
+
     if(m_state){
+        //connect(m_socket, SIGNAL(encrypted()), this, SLOT(ready()));
         connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
         m_name = ip;
         emit(connected());
@@ -42,6 +71,10 @@ void CServer::connectServer(QString  ip){
     else{
 
     }
+
+
+    qDebug() << "Socket state : " << m_socket->state();
+    //qDebug() << "Encryption state : " << m_socket->isEncrypted();
 }
 
 

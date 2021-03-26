@@ -32,6 +32,75 @@ Rectangle {
 
     //Layout
     //property alias regLog_layout: regLog_layout
+
+    property alias moveWindowArea:moveWindowArea
+    //property alias leftArea:leftArea
+    //property alias bottomArea:bottomArea
+    //property alias rightArea:rightArea
+
+    MouseArea{
+        id:moveWindowArea
+        height:30
+        width: parent.width
+        x:0
+        y:0
+
+        anchors{
+            top:parent.top
+            left:parent.left
+            right:parent.right
+        }
+    }
+
+
+//The following part is for resizing the window - it doesn't work correctly for now
+/*
+    MouseArea {
+        id: bottomArea
+        height: 10
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        cursorShape: Qt.SizeVerCursor
+    }
+
+    MouseArea {
+            id: leftArea
+            width: 5
+            x:0
+            y:0
+            height:parent.height
+
+            anchors {
+
+                left: parent.left
+            }
+            cursorShape: Qt.SizeHorCursor
+
+        }
+
+        MouseArea {
+            id: rightArea
+            width: 5
+            x:parent.width-5
+            y:0
+            height:parent.height
+
+            anchors {
+                right: parent.right
+            }
+            cursorShape:  Qt.SizeHorCursor
+        }
+*/
+
+
+
+
+
+
+
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -321,6 +390,9 @@ Rectangle {
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
+    property alias reduce_window:reduce_window
+    property alias maximize_window:maximize_window
+    property alias normal_window:normal_window
 
     MenuBar {
         objectName: "menu_bar"
@@ -336,20 +408,26 @@ Rectangle {
         width: parent.width
         height: 30
         visible: false
+
         Menu {
             objectName: "menu_quit_button"
             id: menu_quit_button
             Image {}
+            spacing: 5
 
             Action {
                 id: quit
                 text: qsTr("&Quit")
+                onTriggered: quit_popup.visible = true
             }
             Action {
                 text: qsTr("&Disconnect")
                 id: disconnect
             }
         }
+
+        MenuSeparator{}
+
         Menu {
             objectName: "menu_state_server"
             id: menu_state_button
@@ -367,6 +445,25 @@ Rectangle {
                 text: qsTr("Ping server")
             }*/
         }
+
+        MenuSeparator{}
+
+        MenuBarItem{
+            id:reduce_window
+            text: qsTr("Reduce Window")
+        }
+
+        MenuBarItem{
+            id:maximize_window
+            text: qsTr("Maximize Window")
+        }
+
+        MenuBarItem{
+            id:normal_window
+            text: qsTr("Normal Window")
+        }
+
+
 
         delegate: MenuBarItem {
             id: menuBarItem
@@ -389,10 +486,9 @@ Rectangle {
             }
         }
 
-        Menu {}
     }
 
-    property alias quit_popup:quit_popup
+    property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
     property alias quit_back: quit_back
 
@@ -410,7 +506,7 @@ Rectangle {
         focus: true
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
-        ColumnLayout{
+        ColumnLayout {
             Button {
                 id: quit_confirm
                 text: qsTr("Quit")
@@ -857,7 +953,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
 }
 ##^##*/
 

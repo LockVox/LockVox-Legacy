@@ -10,47 +10,85 @@ import Message 1.0
 
 ApplicationWindow {
 
-    //flags: Qt.FramelessWindowHint
+    id:mainWindow
+    flags: //Qt.FramelessWindowHint |
+           Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint
     width: 640
     height: 480
     visible: true
     title: "Lock-Vox"
-/*
-    ListView {
-        objectName: "listChannels"
-        id: listChannel
+
+    property int previousX
+    property int previousY
+
+    //maximumHeight: 1080
+    //maximumWidth: 1920
 
 
-        x: 940
-        y: 70
-        width: 154
-        height: 472
-        visible: false
-        clip: true
-        model: ChannelModel {
-            m_channelsList: channelsList
-        }
 
-        delegate: Delegate_Channel {
-
-        }
-
-        onCurrentIndexChanged: {
-            console.log(currentIndex)
-            //item.currentIndexChanged(currentIndex)
-           }
-    }*/
 
     Screen01{
         anchors.fill: parent
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
 
-        quit.onTriggered: menuBar.quit()
         disconnect.onTriggered: menuBar.disconnect()
         change_server.onTriggered: menuBar.change_server()
 
         quit_confirm.onClicked: quit_popup.confirmQuit(1)
         quit_back.onClicked: quit_popup.confirmQuit(0)
 
+        reduce_window.onTriggered: mainWindow.showMinimized()
+        maximize_window.onTriggered: mainWindow.showMaximized()
+        normal_window.onTriggered: mainWindow.showNormal()
+
+
+        //Move Window
+        moveWindowArea.onPressed: {
+            previousX = mouse.x
+            previousY = mouse.y
+        }
+
+        moveWindowArea.onMouseXChanged: {
+            var dx = mouse.x - previousX
+            mainWindow.setX(mainWindow.x + dx)
+        }
+
+        moveWindowArea.onMouseYChanged: {
+            var dy = mouse.y - previousY
+            mainWindow.setY(mainWindow.y + dy)
+        }
+/*
+        //LeftArea resizing
+        leftArea.onPressed: {
+            previousX = mouse.x
+        }
+
+        leftArea.onMouseXChanged: {
+            var dx = mouse.x - previousX
+            mainWindow.setWidth(mainWindow.width + dx)
+        }
+
+        //BottomArea resizing
+        bottomArea.onPressed: {
+            previousY = mouse.y
+        }
+
+        bottomArea.onMouseYChanged: {
+            var dy = mouse.y - previousY
+            mainWindow.setHeight(mainWindow.height + dy)
+        }
+
+        //RightArea resizing
+        rightArea.onPressed: {
+            previousX = mouse.x
+        }
+
+        rightArea.onMouseXChanged: {
+            var dx = mouse.x - previousX
+            mainWindow.setWidth(mainWindow.width + dx)
+        }
+*/
+
     }
+
 }

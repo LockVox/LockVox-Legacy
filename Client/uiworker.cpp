@@ -90,6 +90,8 @@ UIWorker::UIWorker(QGuiApplication *app)
     //Connect state changement
     QObject::connect(m_server, SIGNAL(changeState(QString)),
                      this, SLOT(onChangeState(QString)));
+
+
     QObject::connect(m_server, SIGNAL(selfChanged(CClient*)),
                      this, SLOT(onSelfChanged(CClient*)));
     //Connect Message
@@ -102,8 +104,8 @@ UIWorker::UIWorker(QGuiApplication *app)
     QObject::connect(m_server, SIGNAL(disconnected()),
                      this, SLOT(onDisconnected()));
 
-    QObject::connect(m_menuBar, SIGNAL(quit()),
-                     this, SLOT(onQuit()));
+    //QObject::connect(m_menuBar, SIGNAL(quit()),
+    //                this, SLOT(onQuit()));
     QObject::connect(m_menuBar, SIGNAL(disconnect()),
                      this, SLOT(onDisconnect()));
     QObject::connect(m_menuBar, SIGNAL(change_server()),
@@ -132,7 +134,9 @@ void UIWorker::onChangeState(QString newState){
     else if(newState == "splashScreen"){
         QQmlProperty(m_window, "state").write("splashScreen");
     }
-
+    else if(newState == "état de base"){
+         QQmlProperty(m_window, "state").write("état de base");
+    }
 }
 
 void UIWorker::onSelfChanged(CClient* c){
@@ -193,14 +197,13 @@ void UIWorker::onDisconnected()
 
 void UIWorker::onQuit()
 {
-    qDebug("Quit..");
-    m_quitPopup->setProperty("visible", true);
-
-
-
+    //qDebug("Quit..");
+    //m_quitPopup->setProperty("visible", true);
 }
 
 void UIWorker::onConfirmQuit(int q){
+
+
     m_confirmQuit = q;
 
     if(m_confirmQuit == 0){
@@ -218,6 +221,13 @@ void UIWorker::onConfirmQuit(int q){
 void UIWorker::onDisconnect()
 {
     qDebug("Disconnecting..");
+
+    //CPacket disconnect("0","2");
+    //m_server->get_socket()->write(disconnect.GetByteArray());
+
+    delete m_server;
+
+    onChangeState("état de base");
 }
 
 void UIWorker::onChangeServer()
