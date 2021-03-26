@@ -11,7 +11,8 @@ Rectangle {
         x: 71
         y: 17
         width: 121
-        height: 31
+        height: 18
+        color: "#33a5e5"
         text : qsTr("Username")
 
         font.pixelSize: 12
@@ -32,7 +33,8 @@ Rectangle {
         x: 71
         y: 35
         width: 121
-        height: 31
+        height: 16
+        color: "#707a7e"
         text: qsTr("Status")
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter

@@ -18,20 +18,20 @@
 #include <jrtplib3/rtpsessionparams.h>
 #include <jrtplib3/rtpsession.h>
 #include <jrtplib3/rtptransmitter.h>
-
+#include <emiplib/mipaudiosession.h>
 #include "Server/config.h"
+#include <QDebug>
+
+CAudio::CAudio()
+{
+
+}
 
 
+CAudio::~CAudio()
+{
 
-
-/***************************************************************/
-/***************************************************************/
-/************************AUDIO CLASS*****************************/
-/***************************************************************/
-/***************************************************************/
-/***************************************************************/
-
-
+}
 
 
 using namespace jrtplib;
@@ -56,15 +56,20 @@ bool CAudio::AddSession(CChannel m_chan)
     params.SetReceiveMode(RTPTransmitter::ReceiveMode::AcceptSome);
     params.SetNeedThreadSafety(true);
     RTPUDPv6TransmissionParams transparams;
-    transparams.SetPortbase(AUDIO_PORTBASE);
+    transparams.SetPortbase(AUDIO_PORTBASE+m_chan.get_id());
+    in6_addr add;
+    qDebug() << inet_pton(AF_INET6, "::1", &add);
+    transparams.SetBindIP(add);
     int status = newSess->Create(params, &transparams, RTPTransmitter::IPv6UDPProto);
     if(status<0)
     {
-        std::cerr << RTPGetErrorString(status) << std::endl;
+        std::cerr << "1" << RTPGetErrorString(status) << std::endl;
         return false;
     }
     uint8_t* tmpaddr;
     tmpaddr = (uint8_t*)malloc(16*sizeof(uint8_t));
+
+    //Ajout des clients
     for(auto c : m_chan.get_clients())
     {
         RTPIPv6Address* tmp = new RTPIPv6Address();
@@ -76,86 +81,22 @@ bool CAudio::AddSession(CChannel m_chan)
         //L'ajouter au RTP
         newSess->AddDestination(*tmp);
     }
+
     if(newSess->IsActive())
     {
         m_session.push_back(newSess);
+        qDebug() << "Session " << m_chan.get_id() << " succesfully created!" << Qt::endl;
+        qDebug() << "It is running on port : " << AUDIO_PORTBASE + m_chan.get_id() << Qt::endl;
         return true;
+        //Should be running
     }
     else
     {
-        std::cerr << RTPGetErrorString(status);
+        std::cerr << "2 " << RTPGetErrorString(status);
         return false;
     }
 }
 
-/* , AUDIO_PORTBASE + m_chan.get_id()
 
-/*int main(void)
-{
-#ifdef WIN32
-    WSADATA dat;
-    WSAStartup(MAKEWORD(2,2),&dat);
-#endif // WIN32
-#ifdef MIPCONFIG_SUPPORT_PORTAUDIO
-    std::string errStr;
 
-    if (!MIPPAInputOutput::initializePortAudio(errStr))
-    {
-        std::cerr << "Can't initialize PortAudio: " << errStr << std::endl;
-        return -1;
-    }
-#endif // MIPCONFIG_SUPPORT_PORTAUDIO
-
-    MIPAudioSessionParams Aparams;
-    MyAudioSession audioSess;
-    bool ret;
-
-    int audioPort = 6000;
-
-    Aparams.setPortbase(audioPort);
-//	Aparams.setCompressionType(MIPAudioSessionParams::Speex);
-//	Aparams.setAcceptOwnPackets(true);
-//	Aparams.setInputDevice("/dev/dsp1");
-//	Aparams.setOutputDevice("/dev/dsp");
-//	Aparams.setSpeexEncoding(MIPAudioSessionParams::UltraWideBand);
-//	Aparams.setSpeexOutgoingPayloadType(97);
-    Aparams.setSpeexIncomingPayloadType(97);
-    Aparams.setOpusIncomingPayloadType(98);
-
-    std::cout << "Starting audio session at portbase " << audioPort << std::endl;
-
-    ret = audioSess.init(&Aparams);
-    checkRet(ret, audioSess);
-
-    uint8_t ipLocal[4] = { 127, 0, 0, 1 };
-    ret = audioSess.addDestination(RTPIPv4Address(ipLocal, audioPort));
-
-    std::string dummy;
-    std::cout << "Type something to exit" << std::endl;
-    std::cin >> dummy;
-
-    std::cout << "Exiting..." << std::endl;
-
-    audioSess.destroy();
-
-#ifdef MIPCONFIG_SUPPORT_PORTAUDIO
-    MIPPAInputOutput::terminatePortAudio();
-#endif // MIPCONFIG_SUPPORT_PORTAUDIO
-#ifdef WIN32
-    WSACleanup();
-#endif // WIN32
-
-    return 0;
-}
-
-#else
-
-#include <iostream>
-
-int main(void)
-{
-    std::cerr << "Not all necessary components are available to run this example." << std::endl;
-    return 0;
-}*/
-
-#endif
+#endif //MIPCONFIG_SUPPORT_WINMM||MIPCONFIG_SUPPORT_OSS||MIPCONFIG_SUPPORT_PORTAUDIO

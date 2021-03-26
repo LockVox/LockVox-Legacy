@@ -41,9 +41,8 @@ HEADERS += \
         src/includes/cchannel.h \
         src/includes/cclient.h  \
         src/includes/cmessage.h \
-        src/includes/crole.h
+        src/includes/crole.h \
 
-v
 INCLUDEPATH += \
         src/includes \
         Client/includes

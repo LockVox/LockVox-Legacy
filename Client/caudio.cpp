@@ -149,7 +149,7 @@ CAudio::CAudio() : m_chain("MainAudio")
     // We'll wait until enter is pressed
     getc(stdin);
 #ifdef WIN32
-    WSACleanup();
+    //WSACleanup();
 #endif
 }
 
@@ -299,7 +299,7 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     checkError(returnValue, m_chain);
     // We'll wait until enter is pressed
     getc(stdin);
-}
+}       //Ne fonctionne pas no idea pk
 
 CAudio::~CAudio()
 {

@@ -6,6 +6,8 @@ T.Button {
     width: 40
     height: 40
 
+    onHoveredChanged: hovered ? buttonBackground.border.color
+                                = "#d4d4d4" : buttonBackground.border.color = "#33a5e5"
     implicitWidth: Math.max(
                        buttonBackground ? buttonBackground.implicitWidth : 0,
                        textItem.implicitWidth + leftPadding + rightPadding)
