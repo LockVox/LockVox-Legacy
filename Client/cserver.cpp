@@ -126,7 +126,6 @@ void CServer::setClientsList(ClientList *clientsList)
 }
 
 void CServer::onReceiveData(){
-    // On détermine quel client envoie le message (recherche du QTcpSocket du client)
 
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
@@ -184,18 +183,23 @@ void CServer::loadAllCompenent(){
         sendToServer(p.GetByteArray());
     }
 
-    if(!m_hasMessagesLoaded){
+    if(!m_hasMessagesLoaded & m_hasChannelsLoaded & m_hasClientsLoaded){
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == false){
-                //CPacket request("1","3");
-                //request.Serialize_messageRequest(c->get_id(),20,0);
-                //sendToServer(request.GetByteArray());
+                CPacket request("1","3");
+                request.Serialize_messageRequest(c->get_id(),20,0);
+                sendToServer(request.GetByteArray());
             }
         }
     }
 }
 
 void CServer::checkCompenents(){
+
+    //Check if current user informations has been load -
+    if(m_self){
+        m_hasSelfLoaded = true;
+    }
 
     //Check if channels list has been load
     if(m_channelsList->get_channels().isEmpty()){
@@ -211,7 +215,7 @@ void CServer::checkCompenents(){
     }
     else{
         m_hasClientsLoaded = true;
-    }
+    }   
 
     if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded){
     //Check if messages list has been load
@@ -231,7 +235,7 @@ void CServer::checkCompenents(){
 
 void CServer::checkFinishLoad()
 {
-    if(m_hasChannelsLoaded & m_hasClientsLoaded & m_hasSelfLoaded)
+    if(m_hasChannelsLoaded & m_hasClientsLoaded & m_hasSelfLoaded & m_hasMessagesLoaded)
         m_finishLoad = true;
 }
 
@@ -252,13 +256,13 @@ void CServer::processIncomingData(QByteArray data){
 
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
-           emit(changeState("Home"));
+           /*emit(changeState("Home"));
            foreach(CChannel * c, m_channelsList->get_channels())
            {
                CPacket request("1","3");
                request.Serialize_messageRequest(c->get_id(),20,0);
                qDebug() << m_socket->write(request.GetByteArray());
-           }
+           }*/
        }
     }
 
@@ -456,7 +460,7 @@ void CServer::processIncomingData(QByteArray data){
                     CMessage tmp = packet->Deserialize_Message();
                     getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
                     if(tmp.get_to().toInt() == m_currentChannelIndex){
-                        getMessagesList()->addMessage(tmp);
+                        getMessagesList()->set_messages(getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->get_messages());
                     }
                     break;
                 }
@@ -592,7 +596,7 @@ void CServer::processIncomingData(QByteArray data){
             }
         }
      }
-/*
+
     if(!m_finishLoad && m_self){
         checkCompenents();
         checkFinishLoad();
@@ -601,10 +605,10 @@ void CServer::processIncomingData(QByteArray data){
     }
 
     if(m_finishLoad & m_currentUIState != "home"){
+        m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
         emit(changeState("Home"));
         m_currentUIState = "Home";
-    }*/
-
+    }
 
 }
 

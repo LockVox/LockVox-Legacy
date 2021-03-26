@@ -39,8 +39,6 @@ void MessageList::addMessage(CMessage m)
     m_messages.append(m);
 
     emit postItemAppended();
-
-    emit dataChanged();
 }
 
 void MessageList::setItem(CMessage c){
