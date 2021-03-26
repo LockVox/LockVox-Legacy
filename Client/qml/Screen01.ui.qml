@@ -1026,7 +1026,6 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:3}
+    D{i:0;autoSize:true;formeditorZoom:3;height:480;width:640}
 }
 ##^##*/
-
