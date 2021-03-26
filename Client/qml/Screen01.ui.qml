@@ -14,6 +14,7 @@ Rectangle {
     y: 0
     visible: true
     anchors.fill: parent
+    property alias channels: channels
     color: "#1b1f21"
 
     //Main Obj
@@ -171,6 +172,10 @@ Rectangle {
         objectName: "listChannels"
         id: listChannel
 
+        anchors.top: parent.top
+
+        anchors.bottom: audioWindow.top
+
         x: 940
         y: 70
         width: 154
@@ -190,6 +195,10 @@ Rectangle {
         y: 25
         visible: false
 
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: parent.left
         ListView {
             id: listMessage
             x: 7
@@ -202,23 +211,24 @@ Rectangle {
                 m_messagesList: messagesList
             }
 
-            verticalLayoutDirection: ListView.BottomToTop
+            verticalLayoutDirection: ListView.TopToBottom
             delegate: RowLayout {
-                      Text {
-                text: from
+                Text {
+                    text: from
+                }
+
+                Text {
+                    text: content
+                }
+
+                //Delegate_Message {}
             }
-
-
-            Text {
-                text: content
-            }
-
-            //Delegate_Message {}
-        }
         }
     }
 
     AudioWindow {
+
+        anchors.bottom: parent.bottom
         id: audioWindow
         x: 150
         y: 260
@@ -291,7 +301,7 @@ Rectangle {
 
                     Connections {
                         target: parameterButton
-                        onClicked: window.state = "parameterState"
+                        onClicked: window.state = "splashScreenState"
                     }
                 }
             }
@@ -305,6 +315,13 @@ Rectangle {
         y: 85
         width: 188
         height: 251
+    }
+
+    BusyIndicator {
+        id: busyIndicator
+        x: 291
+        y: 215
+        visible: false
     }
 
     states: [
@@ -396,14 +413,14 @@ Rectangle {
 
             PropertyChanges {
                 target: messageWindow
-                x: 178
+                x: 176
                 y: 0
-                width: 288
+                width: 305
                 height: 480
                 visible: true
-                anchors.rightMargin: 168
+                anchors.rightMargin: 177
                 anchors.bottomMargin: 0
-                anchors.leftMargin: 185
+                anchors.leftMargin: 176
                 anchors.topMargin: 0
             }
 
@@ -438,16 +455,18 @@ Rectangle {
             PropertyChanges {
                 target: listChannel
                 x: 0
-                y: 79
+                y: 71
                 width: 179
-                height: 268
+                height: 287
                 visible: true
+                anchors.bottomMargin: -2
+                anchors.topMargin: 71
             }
 
             PropertyChanges {
                 target: listMessage
-                x: 9
-                y: 66
+                x: 17
+                y: 40
                 width: 271
                 height: 366
 
@@ -491,9 +510,9 @@ Rectangle {
             PropertyChanges {
                 target: channels
                 x: 0
-                y: 85
+                y: 71
                 width: 179
-                height: 265
+                height: 287
             }
         },
         State {
@@ -590,13 +609,54 @@ Rectangle {
                 y: 8
                 visible: true
             }
+        },
+        State {
+            name: "splashScreenState"
+
+            PropertyChanges {
+                target: loginButton
+                visible: false
+            }
+
+            PropertyChanges {
+                target: connectServer
+                visible: false
+            }
+
+            PropertyChanges {
+                target: stateServer
+                visible: false
+            }
+
+            PropertyChanges {
+                target: rect_con_server
+                visible: false
+            }
+
+            PropertyChanges {
+                target: rect_log_reg
+                visible: false
+            }
+
+            PropertyChanges {
+                target: lock_vox_logo1
+                visible: false
+            }
+
+            PropertyChanges {
+                target: busyIndicator
+                x: 246
+                y: 202
+                width: 148
+                height: 148
+            }
         }
     ]
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
 }
 ##^##*/
 
