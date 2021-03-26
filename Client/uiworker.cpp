@@ -222,10 +222,7 @@ void UIWorker::onDisconnect()
 {
     qDebug("Disconnecting..");
 
-    //CPacket disconnect("0","2");
-    //m_server->get_socket()->write(disconnect.GetByteArray());
-
-    delete m_server;
+    m_server->disconnectServer();
 
     onChangeState("état de base");
 }

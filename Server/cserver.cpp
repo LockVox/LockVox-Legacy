@@ -483,8 +483,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 {
                                     if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
-                                        ans->Serialize_auth(NULL, 2);
                                         writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", 1);
+                                        ans->Serialize_auth(NULL, 2);                 
+                                        sender->get_socket()->waitForBytesWritten();
+                                        sender->get_socket()->abort();
                                     }
                                     if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {
@@ -496,8 +498,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                         c->set_socket(sender->get_socket());
                                         //Lui envoyer ses infos
                                         ans->Serialize_auth(c, 0);
-
-
                                         newUser.Serialize_newClient(c);
 
                                         valid = true;
@@ -509,15 +509,19 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             {
                                 if(hashed == "false")
                                 {
-                                    ans->Serialize_auth(NULL, 1);
                                     writeToLog("Error with database when fetching password hash",2);
                                     writeToLog(*err1, 3);
+                                    ans->Serialize_auth(NULL, 1);     
+                                    sender->get_socket()->waitForBytesWritten();
+                                    sender->get_socket()->abort();
                                     delete(err1);
                                 }
                                 else
                                 {
                                     writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", 1);
                                     ans->Serialize_auth(NULL, 3);
+                                    sender->get_socket()->waitForBytesWritten();
+                                    sender->get_socket()->abort();
                                 }
                             }
                             delete(err);
@@ -526,14 +530,18 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             if(*err == "no_client")
                             {
-                                ans->Serialize_auth(NULL, 1);
                                 writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Trying to connect to a non-existing account", 1);
+                                ans->Serialize_auth(NULL, 1);
+                                sender->get_socket()->waitForBytesWritten();
+                                sender->get_socket()->abort();
                             }
                             else
                             {
-                                ans->Serialize_auth(NULL, 1);
                                 writeToLog("Error with database when fetching client",2);
                                 writeToLog(*err,3);
+                                ans->Serialize_auth(NULL, 1);
+                                sender->get_socket()->waitForBytesWritten();
+                                sender->get_socket()->abort();
                                 delete(err);
                             }
                         }

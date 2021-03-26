@@ -48,9 +48,13 @@ CServer::~CServer()
 
 }
 
+void CServer::connectServer(QString  ip)
+{
+    this->ip = ip;
+}
 
-void CServer::connectServer(QString  ip){
-
+void CServer::connectServer()
+{
     m_socket->abort();
     m_socket->connectToHost(ip, 50885);
     //m_socket->connectToHostEncrypted(ip, 50885);
@@ -72,12 +76,38 @@ void CServer::connectServer(QString  ip){
 
     }
 
-
     qDebug() << "Socket state : " << m_socket->state();
     //qDebug() << "Encryption state : " << m_socket->isEncrypted();
 }
 
+void CServer::disconnectServer()
+{
+    m_socket->disconnectFromHost();
+    delete(m_socket);
+    m_socket = new QTcpSocket();
 
+    m_self->~CClient();
+    m_self = NULL;
+
+    m_clientsList->~ClientList();
+    m_clientsList = new ClientList();
+    m_clients.clear();
+
+    m_channelsList->~ChannelList();
+    m_channelsList = new ChannelList();
+    m_channels.clear();
+
+    m_messagesList->~MessageList();
+    m_messagesList = new MessageList();
+
+    m_state = false;
+    m_currentChannelIndex = 0;
+    m_finishLoad = false;
+    m_hasChannelsLoaded = false;
+    m_hasClientsLoaded = false;
+    m_hasMessagesLoaded = false;
+    m_hasSelfLoaded = false;
+}
 
 //Getters
 QTcpSocket * CServer::get_socket(){
@@ -100,10 +130,6 @@ void CServer::sendToServer(QByteArray ba)
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
     m_socket->waitForBytesWritten();
-}
-
-void CServer::sendToServer(){
-
 }
 
 QString CServer::getName() const
@@ -212,7 +238,6 @@ void CServer::onReceiveData(){
 void CServer::loadAllCompenent(){
 
     checkCompenents();
-
     if(!m_hasChannelsLoaded || !m_hasClientsLoaded){
         CPacket p("-1","-1");
         sendToServer(p.GetByteArray());
@@ -277,7 +302,7 @@ void CServer::checkFinishLoad()
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
+    //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
@@ -288,7 +313,6 @@ void CServer::processIncomingData(QByteArray data){
 
        Deserialize(data);
        //checkCompenents();
-
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
            emit(changeState("Home"));
@@ -646,7 +670,7 @@ void CServer::processIncomingData(QByteArray data){
 
 bool CServer::Register(QString username, QString mail, QString password,QString password_confirm)
 {
-
+    connectServer();
     if(m_self){
         return false;
     }
@@ -666,6 +690,7 @@ bool CServer::Register(QString username, QString mail, QString password,QString 
 
 bool CServer::Login(QString mail, QString passwd)
 {
+    connectServer();
     if(m_self){
         return false;
     }
@@ -1006,6 +1031,7 @@ void CServer::deserializeChannel(QJsonArray & json_array){
         bool exist = false;
         foreach(CChannel * c, get_channelList()){
             if(c->get_id() == newChannel->get_id())
+                qDebug() << "exist";
                  exist = true;
         }
 
@@ -1018,7 +1044,9 @@ void CServer::deserializeChannel(QJsonArray & json_array){
 
 void CServer::deserializeClients(QJsonArray & json_array){
 
-    foreach( const QJsonValue & value, json_array){
+    foreach( const QJsonValue & value, json_array)
+    {
+        qDebug() << value;
         //Convert it to an json object then to a channel
         QJsonObject obj = value.toObject();
         CClient * newClient = deserializeToClient(obj);

@@ -10,6 +10,10 @@ MessageList::MessageList(QObject *parent) : QObject(parent)
 MessageList::~MessageList()
 {
     disconnect(this);
+    m_roles.clear();
+    m_messages.clear();
+    m_currentIndex = 0;
+    m_hasBeenLoad = false;
 }
 
 QVector<CMessage> MessageList::get_messages()

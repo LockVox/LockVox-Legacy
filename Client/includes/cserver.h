@@ -106,14 +106,13 @@ signals:
         bool sendMessage(QString msg); //For channel message
         bool sendMessage(QString msg, QUuid id); //For private message
         void connectServer(QString ip);
-
-
+        void connectServer();
+        void disconnectServer();
 
     private slots:
 
         void onReceiveData();
         void sendToServer(QByteArray ba);
-        void sendToServer();
 
     private:
         //Client mode
@@ -136,6 +135,7 @@ signals:
         bool m_hasMessagesLoaded;
         bool m_finishLoad;
         QString m_currentUIState;
+        QString ip;
 
 
 

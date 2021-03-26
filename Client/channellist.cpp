@@ -7,7 +7,10 @@ ChannelList::ChannelList(QObject *parent) : QObject(parent)
 
 ChannelList::~ChannelList()
 {
-     disconnect(this);
+    disconnect(this);
+    m_roles.clear();
+    m_channels.clear();
+    m_currentIndex = 0;
 }
 
 QVector<CChannel *> ChannelList::get_channels()
