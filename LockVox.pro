@@ -111,7 +111,8 @@ INCLUDEPATH += $$PWD/libs/emiplib/include/portaudio
 DEPENDPATH += $$PWD/libs/emiplib/include/portaudio
 
 DISTFILES += \
-    Client/qml/CustomQpushButton2.ui.qml
+    Client/qml/CustomQpushButton2.ui.qml \
+    MenuBar.qml
 
 
 
