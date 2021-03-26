@@ -1,4 +1,4 @@
-QT +=   quick xml  network sql
+QT +=   quick xml  network sql testlib
 CONFIG += c++11 console
 
 # You can make your code fail to compile if it uses deprecated APIs.

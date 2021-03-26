@@ -107,6 +107,12 @@ int CServer::whichClient(QTcpSocket * s)
 
 void CServer::onNewConnection()
 {
+    //qDebug() << "New connection - Socket descriptor: " << socketDescriptor;
+
+
+    //newClient->get_socket()->setSocketDescriptor(socketDescriptor);
+    //QObject::connect(newClient->get_socket(), SIGNAL(encrypted()), this, SLOT(ready()));
+
     CClient * newClient = new CClient();
     newClient->set_socket(serveur->nextPendingConnection());
     connect(newClient->get_socket(), SIGNAL(readyRead()), this, SLOT(onReceiveData()));
@@ -146,7 +152,7 @@ void CServer::onReceiveData(){
 
     //Process receiving data -
     //Get sender -
-    QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
     if (socket == 0) //Couldn't find sender
     {
         writeToLog("Received data from unknown client", 1);

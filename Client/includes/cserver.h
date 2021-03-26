@@ -30,6 +30,7 @@ class CServer : public AbstractServer
         CServer();
         CServer(ClientList* clients, ChannelList * channels);
 
+        ~CServer();
         //m_socket
         QTcpSocket * get_socket();
         void set_socket(QTcpSocket* soc);
@@ -105,7 +106,8 @@ signals:
         bool sendMessage(QString msg); //For channel message
         bool sendMessage(QString msg, QUuid id); //For private message
         void connectServer(QString ip);
-        void onQuit();
+
+
 
     private slots:
 
