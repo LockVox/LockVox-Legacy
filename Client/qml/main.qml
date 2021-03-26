@@ -43,6 +43,7 @@ ApplicationWindow {
     Screen01{
         anchors.fill: parent
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
+        //listMessage.onModelChanged: positionViewAtEnd()
     }
 }
 

@@ -189,6 +189,8 @@ Rectangle {
         delegate: Delegate_Channel {}
     }
 
+    //property alias MessageWindow: MessageWindow
+    property alias listMessage: listMessage
     MessageWindow {
         id: messageWindow
         x: 196
@@ -207,12 +209,18 @@ Rectangle {
             height: 199
             visible: false
             clip: true
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: messageWindow.left
+            anchors.right: messageWindow.right
+
             model: MessageModel {
                 m_messagesList: messagesList
             }
 
             verticalLayoutDirection: ListView.TopToBottom
-            delegate: RowLayout {
+            delegate: MessageWidget {
                 Text {
                     text: from
                 }
@@ -471,10 +479,12 @@ Rectangle {
                 height: 366
 
                 visible: true
-                anchors.topMargin: 33
-                anchors.bottomMargin: 48
-                anchors.rightMargin: 168
-                anchors.leftMargin: 230
+                keyNavigationWraps: true
+                snapMode: ListView.NoSnap
+                anchors.topMargin: 21
+                anchors.bottomMargin: 61
+                anchors.rightMargin: 47
+                anchors.leftMargin: 14
             }
 
             PropertyChanges {
@@ -649,6 +659,38 @@ Rectangle {
                 y: 202
                 width: 148
                 height: 148
+            }
+        },
+        State {
+            name: "registerState1"
+            PropertyChanges {
+                target: register
+                visible: true
+            }
+
+            PropertyChanges {
+                target: login
+                visible: false
+            }
+
+            PropertyChanges {
+                target: messageWindow
+                visible: false
+            }
+
+            PropertyChanges {
+                target: parameters_list
+                visible: false
+            }
+
+            PropertyChanges {
+                target: window
+                visible: true
+            }
+
+            PropertyChanges {
+                target: parametersWidget
+                visible: false
             }
         }
     ]
