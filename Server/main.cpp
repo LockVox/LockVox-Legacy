@@ -12,19 +12,19 @@
 
 int main(int argc, char *argv[])
 {
-   /* QApplication a(argc, argv);
+   QApplication a(argc, argv);
 
     MainWindow w;
     w.show();
 
-    return a.exec();*/
-    WSADATA Data;
+    return a.exec();
+    /*WSADATA Data;
     WSAStartup(MAKEWORD(2,2), &Data);
     CChannel tmpchan("", 0);
     CAudio tmp;
     tmp.AddSession(tmpchan);
     getc(stdin);
     WSACleanup();
-    return 0;
+    return 0;*/
 }
 

@@ -42,10 +42,10 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: 276
-        anchors.leftMargin: 20
-        anchors.bottomMargin: 14
-        anchors.topMargin: 85
+        anchors.rightMargin: 149
+        anchors.leftMargin: 148
+        anchors.bottomMargin: 0
+        anchors.topMargin: 99
 
         RowLayout {
             id: rowLayout
@@ -108,6 +108,7 @@ Rectangle {
         y: 85
         width: 235
         height: 278
+        visible: false
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 85
@@ -388,13 +389,6 @@ Rectangle {
         Menu {}
     }
 
-    BusyIndicator {
-        id: busyIndicator
-        x: 291
-        y: 215
-        visible: false
-    }
-
     Image {
         id: lock_vox_logo11
         x: 172
@@ -403,6 +397,14 @@ Rectangle {
         height: 94
         source: "lock_vox_logo1.png"
         fillMode: Image.PreserveAspectFit
+    }
+
+    ProgressBar {
+        id: progressBar
+        x: 221
+        y: 221
+        visible: false
+        value: 0.5
     }
 
     states: [
@@ -437,6 +439,19 @@ Rectangle {
             PropertyChanges {
                 target: parametersWidget
                 visible: false
+            }
+
+            PropertyChanges {
+                target: rect_con_server
+                visible: false
+            }
+
+            PropertyChanges {
+                target: rect_log_reg
+                anchors.leftMargin: 148
+                anchors.bottomMargin: 0
+                anchors.rightMargin: 149
+                anchors.topMargin: 99
             }
         },
         State {
@@ -731,11 +746,20 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: busyIndicator
-                x: 246
-                y: 202
-                width: 148
-                height: 148
+                target: progressBar
+                x: 125
+                y: 281
+                width: 391
+                height: 42
+                visible: true
+                font.pointSize: 8
+                value: 0
+            }
+
+            PropertyChanges {
+                target: lock_vox_logo11
+                x: 173
+                y: 177
             }
         },
         State {
@@ -798,6 +822,7 @@ Rectangle {
             PropertyChanges {
                 target: rect_con_server
                 x: 203
+                visible: true
                 anchors.rightMargin: 203
                 anchors.topMargin: 117
             }
@@ -815,6 +840,16 @@ Rectangle {
                 x: 18
                 y: 0
                 visible: false
+            }
+
+            PropertyChanges {
+                target: progressBar
+                visible: false
+            }
+
+            PropertyChanges {
+                target: connectServer
+                visible: true
             }
         }
     ]
