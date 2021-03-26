@@ -32,29 +32,28 @@ Rectangle {
 
     //Layout
     //property alias regLog_layout: regLog_layout
+    property alias moveWindowArea: moveWindowArea
 
-    property alias moveWindowArea:moveWindowArea
     //property alias leftArea:leftArea
     //property alias bottomArea:bottomArea
     //property alias rightArea:rightArea
-
-    MouseArea{
-        id:moveWindowArea
-        height:30
+    MouseArea {
+        id: moveWindowArea
+        height: 30
         width: parent.width
-        x:0
-        y:0
+        x: 0
+        y: 0
 
-        anchors{
-            top:parent.top
-            left:parent.left
-            right:parent.right
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
     }
 
+    //The following part is for resizing the window - it doesn't work correctly for now
 
-//The following part is for resizing the window - it doesn't work correctly for now
-/*
+    /*
     MouseArea {
         id: bottomArea
         height: 10
@@ -94,13 +93,6 @@ Rectangle {
             cursorShape:  Qt.SizeHorCursor
         }
 */
-
-
-
-
-
-
-
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
@@ -390,9 +382,9 @@ Rectangle {
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
-    property alias reduce_window:reduce_window
-    property alias maximize_window:maximize_window
-    property alias normal_window:normal_window
+    property alias reduce_window: reduce_window
+    property alias maximize_window: maximize_window
+    property alias normal_window: normal_window
 
     MenuBar {
         objectName: "menu_bar"
@@ -426,7 +418,7 @@ Rectangle {
             }
         }
 
-        MenuSeparator{}
+        MenuSeparator {}
 
         Menu {
             objectName: "menu_state_server"
@@ -446,24 +438,24 @@ Rectangle {
             }*/
         }
 
-        MenuSeparator{}
+        MenuSeparator {}
 
-        MenuBarItem{
-            id:reduce_window
+        MenuBarItem {}
+
+        MenuBarItem {
+            id: reduce_window
             text: qsTr("Reduce Window")
         }
 
-        MenuBarItem{
-            id:maximize_window
+        MenuBarItem {
+            id: maximize_window
             text: qsTr("Maximize Window")
         }
 
-        MenuBarItem{
-            id:normal_window
+        MenuBarItem {
+            id: normal_window
             text: qsTr("Normal Window")
         }
-
-
 
         delegate: MenuBarItem {
             id: menuBarItem
@@ -485,7 +477,6 @@ Rectangle {
                 color: menuBarItem.highlighted ? "#21be2b" : "transparent"
             }
         }
-
     }
 
     property alias quit_popup: quit_popup
@@ -733,6 +724,12 @@ Rectangle {
                 target: lock_vox_logo11
                 visible: false
             }
+
+            PropertyChanges {
+                target: statusIndicator
+                color: "#55ff00"
+                active: false
+            }
         },
         State {
             name: "parameterState"
@@ -953,7 +950,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.8999999761581421;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:3;height:480;width:640}
 }
 ##^##*/
 
