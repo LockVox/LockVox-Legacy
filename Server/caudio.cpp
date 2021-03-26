@@ -22,6 +22,11 @@
 #include "Server/config.h"
 #include <QDebug>
 
+CAudio::CAudio()
+{
+
+}
+
 
 CAudio::~CAudio()
 {

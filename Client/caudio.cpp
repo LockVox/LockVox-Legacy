@@ -149,7 +149,7 @@ CAudio::CAudio() : m_chain("MainAudio")
     // We'll wait until enter is pressed
     getc(stdin);
 #ifdef WIN32
-    WSACleanup();
+    //WSACleanup();
 #endif
 }
 
