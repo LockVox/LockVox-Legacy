@@ -9,6 +9,9 @@ ClientList::ClientList(QObject *parent) : QObject(parent)
 ClientList::~ClientList()
 {
     disconnect(this);
+    m_roles.clear();
+    m_clients.clear();
+    m_currentIndex = 0;
 }
 
 QVector<CClient *> ClientList::get_clients()

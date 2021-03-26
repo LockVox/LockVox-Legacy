@@ -357,6 +357,30 @@ Rectangle {
         }
     }
 
+    UserInfo {
+        objectName: "userInfo"
+        id: userInfo
+
+        anchors.top: menuBar.bottom
+
+        x: 2
+        y: 0
+        width: 166
+        height: 90
+        visible: false
+
+        CustomQpushButton {
+            id: parameterButton
+            x: 85
+            y: 33
+
+            Connections {
+                target: parameterButton
+                onClicked: window.state = "parameterState"
+            }
+        }
+    }
+
     Column {
         id: home
         x: 221
@@ -370,27 +394,8 @@ Rectangle {
             id: leftSideHome
             width: 200
             height: 400
-            anchors.top: parent.top
+            anchors.top: parent.bottom
             anchors.bottom: parent.bottom
-
-            UserInfo {
-                objectName: "userInfo"
-                id: userInfo
-                width: 166
-                height: 90
-                visible: false
-
-                CustomQpushButton {
-                    id: parameterButton
-                    x: 85
-                    y: 33
-
-                    Connections {
-                        target: parameterButton
-                        onClicked: window.state = "parameterState"
-                    }
-                }
-            }
         }
     }
 
@@ -412,6 +417,110 @@ Rectangle {
     property alias maximize_window: maximize_window
     property alias normal_window: normal_window
 
+    MenuBar {
+        objectName: "menu_bar"
+        id: menuBar
+
+        signal quit
+        signal disconnect
+        signal ping_server
+        signal change_server
+        background: Rectangle {
+            color: "#1b1f21"
+        }
+
+        x: 0
+        y: 0
+        width: parent.width
+        height: 30
+        visible: false
+
+        Menu {
+            objectName: "menu_quit_button"
+            id: menu_quit_button
+            Image {}
+            spacing: 5
+
+            Action {
+                id: quit
+                text: qsTr("&Quit")
+                onTriggered: quit_popup.visible = true
+            }
+            Action {
+                text: qsTr("&Disconnect")
+                id: disconnect
+            }
+        }
+
+        MenuSeparator {}
+
+        Menu {
+            objectName: "menu_state_server"
+            id: menu_state_button
+
+            title: qsTr("Default")
+
+            Action {
+                id: change_server
+                text: qsTr("Change Server")
+            }
+
+
+            /*Action {
+                id:ping_server
+                text: qsTr("Ping server")
+            }*/
+        }
+
+        MenuSeparator {}
+
+        MenuBarItem {
+            id: reduce_window
+
+            Image {
+                //anchors.fill: parent.fill
+                id: lock_vox_logo_miniature1
+                x: 11
+                y: -2
+                source: "lock_vox_logo_miniature1.png"
+                fillMode: Image.PreserveAspectFit
+            }
+
+            //text: qsTr("Reduce Window")
+        }
+
+        MenuBarItem {
+            id: maximize_window
+
+            text: qsTr("")
+        }
+
+        MenuBarItem {
+            id: normal_window
+            text: qsTr("Normal BRu")
+        }
+
+        delegate: MenuBarItem {
+            id: menuBarItem
+
+            contentItem: Text {
+                text: menuBarItem.text
+                font: menuBarItem.font
+                opacity: enabled ? 1.0 : 0.3
+                color: menuBarItem.highlighted ? "red" : "#21be2b"
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+            }
+
+            background: Rectangle {
+                implicitWidth: parent.width
+                implicitHeight: 30
+                opacity: enabled ? 1 : 0.3
+                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+            }
+        }
+    }
 
     property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
@@ -524,12 +633,13 @@ Rectangle {
 
             PropertyChanges {
                 target: userInfo
-                x: 1
-                y: 0
+                x: 0
+                y: 29
                 width: 179
                 height: 73
                 visible: true
                 color: "#1b1f21"
+                border.width: 0
             }
 
             PropertyChanges {
@@ -572,7 +682,8 @@ Rectangle {
 
             PropertyChanges {
                 target: window
-                color: "#2e3538"
+                height: 503
+                color: "#282c2d"
             }
 
             PropertyChanges {
@@ -605,8 +716,8 @@ Rectangle {
                 width: 179
                 height: 287
                 visible: true
-                anchors.bottomMargin: -2
-                anchors.topMargin: 71
+                anchors.bottomMargin: 1
+                anchors.topMargin: 99
             }
 
             PropertyChanges {
@@ -630,7 +741,7 @@ Rectangle {
                 x: 1
                 y: 0
                 width: 180
-                height: 480
+                height: 456
                 rightPadding: 2
                 leftPadding: 2
                 spacing: 0
@@ -674,9 +785,30 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: statusIndicator
-                color: "#55ff00"
-                active: false
+                target: maximize_window
+                x: 0
+                y: 0
+                width: 103
+                height: 30
+                text: qsTr("maximize")
+            }
+
+            PropertyChanges {
+                target: normal_window
+                height: 30
+            }
+
+            PropertyChanges {
+                target: reduce_window
+                height: 30
+            }
+
+            PropertyChanges {
+                target: lock_vox_logo_miniature1
+                x: 23
+                y: 4
+                width: 24
+                height: 23
             }
 
             PropertyChanges {
@@ -946,4 +1078,3 @@ Designer {
     D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}
 }
 ##^##*/
-

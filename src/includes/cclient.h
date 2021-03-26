@@ -21,7 +21,7 @@ class CClient
         CClient(QUuid id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description);
         CClient(QTcpSocket * soc);
 
-        ~CClient() {};                                      //Destructeur
+        ~CClient();                                      //Destructeur
 
 
 

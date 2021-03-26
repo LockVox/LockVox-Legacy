@@ -44,6 +44,26 @@ CClient::CClient( QTcpSocket * soc)
     m_soc = soc;
 }
 
+CClient::~CClient()
+{
+    if(m_soc != NULL)
+    {
+        m_soc->disconnectFromHost();
+        m_soc->~QTcpSocket();
+        m_soc = NULL;
+    }
+
+    m_pseudo.clear();
+    m_mail.clear();
+    m_description.clear();
+    m_uuid.~QUuid();
+    m_idChannel = -1;
+
+    m_isOnline = false;
+    m_isAuthenticate = false;
+
+    profilePic.~QImage();
+}
 QString CClient::get_pseudo()
 {
     return m_pseudo;
