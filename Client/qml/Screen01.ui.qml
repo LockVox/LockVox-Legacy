@@ -213,6 +213,14 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        ScrollBar.vertical: ScrollBar {
+            id: scrollBarClient
+            parent: listClient.parent
+            anchors.top: listClient.top
+            anchors.left: listClient.right
+            anchors.bottom: listClient.bottom
+        }
+
         currentIndex: 1
 
         //preferredHighlightBegin:
@@ -243,6 +251,14 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: audioWindow.top
 
+        ScrollBar.vertical: ScrollBar {
+            id: scrollBarChannel
+            parent: listChannel.parent
+            anchors.top: listChannel.top
+            anchors.left: listChannel.right
+            anchors.bottom: listChannel.bottom
+        }
+
         currentIndex: 1
 
         //preferredHighlightBegin:
@@ -271,6 +287,7 @@ Rectangle {
 
     //property alias MessageWindow: MessageWindow
     property alias listMessage: listMessage
+
     MessageWindow {
         id: messageWindow
         x: 196
@@ -281,7 +298,9 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.left: parent.left
+
         ListView {
+
             id: listMessage
             x: 7
             y: 79
@@ -294,6 +313,10 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.left: messageWindow.left
             anchors.right: messageWindow.right
+
+            ScrollBar.vertical: ScrollBar {
+                id: scrollBarMessage
+            }
 
             model: MessageModel {
                 m_messagesList: messagesList
@@ -718,11 +741,12 @@ Rectangle {
                 height: 366
 
                 visible: true
+                boundsBehavior: Flickable.StopAtBounds
                 keyNavigationWraps: true
                 snapMode: ListView.NoSnap
-                anchors.topMargin: 21
+                anchors.topMargin: 70
                 anchors.bottomMargin: 61
-                anchors.rightMargin: 47
+                anchors.rightMargin: 21
                 anchors.leftMargin: 14
             }
 
@@ -837,6 +861,12 @@ Rectangle {
             PropertyChanges {
                 target: menuSeparator
                 visible: true
+            }
+
+            PropertyChanges {
+                target: scrollBar
+                visible: true
+                active: true
             }
         },
         State {
@@ -1085,7 +1115,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.6600000262260437}
+    D{i:0;formeditorZoom:0.8999999761581421}
 }
 ##^##*/
 

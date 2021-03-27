@@ -44,6 +44,7 @@ ApplicationWindow {
         //normal_window.onClicked: mainWindow.showNormal()
 
 
+
         //Move Window
         moveWindowArea.onPressed: {
             previousX = mouse.x

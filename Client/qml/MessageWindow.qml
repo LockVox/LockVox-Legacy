@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.4
@@ -43,8 +44,8 @@ Item {
 
 
             placeholderTextColor:"#6f797f"
-            //Text.color: "white"
 
+            color:"white"
             background: Rectangle {
                 color:"#1f2325"
                 radius:5
@@ -67,24 +68,6 @@ Item {
             Layout.preferredWidth: 238
             placeholderText: qsTr("Send a message")
 
-            inputMethodHints: Qt.ImhNoPredictiveText
-
-            function _onEnterPressed(event)
-            {
-                if ((event.modifiers & Qt.ControlModifier))
-                {
-                    console.log("YAHSDHHD")
-                }
-                else
-                {
-                    event.accepted = false;
-                }
-            }
-
-            Keys.onReturnPressed: { _onEnterPressed(event) }
-            Keys.onEnterPressed: { _onEnterPressed(event) }
-
-
 
 
         }
@@ -96,8 +79,8 @@ Item {
             color: "#676d76"
             text: qsTr("channel")
             font.pixelSize: 12
-            anchors.leftMargin: 10
-            anchors.topMargin: 8
+            anchors.leftMargin: 8
+            anchors.topMargin: 38
             Layout.preferredHeight: 14
             Layout.preferredWidth: 140
             font.bold: true

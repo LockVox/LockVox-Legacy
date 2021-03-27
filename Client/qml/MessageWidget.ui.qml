@@ -29,41 +29,37 @@ T.Button {
         anchors.fill: parent
     }
 
-    ColumnLayout {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.topMargin: 8
-        anchors.leftMargin: 8
-        anchors.bottomMargin: 9
-        anchors.rightMargin: 8
+    Text {
+        id: username
+        x: 8
+        y: 0
+        text: content
+        font.pixelSize: 12
+        Layout.preferredHeight: 14
+        Layout.preferredWidth: 106
+    }
 
-        RowLayout {}
+    Text {
+        id: dateMsg
+        x: 81
+        y: 0
+        text: date
+        font.pixelSize: 12
+        Layout.preferredHeight: 14
+        Layout.preferredWidth: 105
+    }
 
-        Text {
-            id: text1
-            text: content
-            font.pixelSize: 12
-            Layout.preferredHeight: 114
-            Layout.preferredWidth: 234
-        }
-
-        Text {
-            id: dateMsg
-            text: date
-            font.pixelSize: 12
-            Layout.preferredHeight: 14
-            Layout.preferredWidth: 105
-        }
-
-        Text {
-            id: username
-            text: from
-            font.pixelSize: 12
-            Layout.preferredHeight: 14
-            Layout.preferredWidth: 106
-        }
+    Text {
+        id: text1
+        x: 8
+        y: 20
+        width: 234
+        height: 122
+        text: content
+        wrapMode: Text.WordWrap
+        font.pixelSize: 12
+        Layout.preferredHeight: 114
+        Layout.preferredWidth: 234
     }
 
     states: [
@@ -89,6 +85,14 @@ T.Button {
             PropertyChanges {
                 target: text1
                 color: "#6b7376"
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                fontSizeMode: Text.Fit
+            }
+
+            PropertyChanges {
+                target: dateMsg
+                color: "#e05141"
             }
         },
         State {
@@ -122,7 +126,7 @@ T.Button {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.3300000429153442}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/
 
