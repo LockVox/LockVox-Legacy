@@ -293,6 +293,7 @@ Rectangle {
         x: 196
         y: 25
         visible: false
+        focus:true
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -1118,4 +1119,3 @@ Designer {
     D{i:0;formeditorZoom:0.8999999761581421}
 }
 ##^##*/
-

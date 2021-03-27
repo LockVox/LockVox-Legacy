@@ -75,13 +75,13 @@ Item {
 
     Text {
         id: channel_activity
-        x: 8
-        y: 30
-        width: 188
-        height: 32
+        x: 128
+        y: 25
+        width: 52
+        height: 25
         visible: false
         color: "#11ff3a"
-        text:"0 people connected"
+        text:nbUsers+"/"+maxUsers
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         objectName: "title"
@@ -107,6 +107,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.75}
+    D{i:0;formeditorZoom:2}
 }
 ##^##*/
