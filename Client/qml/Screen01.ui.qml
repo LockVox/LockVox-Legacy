@@ -276,6 +276,7 @@ Rectangle {
         x: 196
         y: 25
         visible: false
+        focus:true
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom

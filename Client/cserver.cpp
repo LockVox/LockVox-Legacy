@@ -986,7 +986,7 @@ void CServer::DeserializeChannels(QByteArray in){
             //check if the channel already exist or not
             bool exist = false;
             //if the channel exist, we reload it with new value
-            foreach(CChannel * c, get_channelList()){
+            foreach(CChannel * c, getChannelsList()->get_channels()){
                 if(c->get_id() == newChannel->get_id()){
                     exist = true;
                     c->set_all(newChannel);
@@ -1037,7 +1037,6 @@ void CServer::deserializeChannel(QJsonArray & json_array){
         bool exist = false;
         foreach(CChannel * c, get_channelList()){
             if(c->get_id() == newChannel->get_id())
-                qDebug() << "exist";
                  exist = true;
         }
 

@@ -39,10 +39,10 @@ ApplicationWindow {
         quit_confirm.onClicked: quit_popup.confirmQuit(1)
         quit_back.onClicked: quit_popup.confirmQuit(0)
 
-        reduce_window.onTriggered: mainWindow.showMinimized()
-        maximize_window.onTriggered: mainWindow.showMaximized()
-        normal_window.onTriggered: mainWindow.showNormal()
-
+        //reduce_window.onTriggered: mainWindow.showMinimized()
+        //maximize_window.onTriggered: mainWindow.showMaximized()
+        //normal_window.onTriggered: mainWindow.showNormal()
+        listMessage.onCountChanged: listMessage.positionViewAtEnd()
 
         //Move Window
         moveWindowArea.onPressed: {
