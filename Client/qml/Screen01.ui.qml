@@ -2,6 +2,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
 import QtQuick 2.7
 import QtQuick.Extras 1.4
+import QtQuick.Window 2.2
 
 import Client 1.0
 import Channel 1.0
@@ -246,8 +247,9 @@ Rectangle {
 
         //preferredHighlightBegin:
         highlightFollowsCurrentItem: true
+
         highlight: Rectangle {
-            color: "grey"
+            color: "#33a5e5"
             height: parent.height
             width: parent.width
         }
@@ -408,15 +410,14 @@ Rectangle {
         height: 251
     }
 
-    /*
-    property alias toolbar: toolbar
+    //property alias toolbar: toolbar
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
-    property alias reduce_window: reduce_window
-    property alias maximize_window: maximize_window
-    property alias normal_window: normal_window
 
+    //property alias reduce_window: reduce_window
+    //property alias maximize_window: maximize_window
+    //property alias normal_window: normal_window
     MenuBar {
         objectName: "menu_bar"
         id: menuBar
@@ -436,6 +437,13 @@ Rectangle {
         visible: false
 
         Menu {
+
+            objectName: "logo"
+            id: logo
+        }
+
+        Menu {
+
             objectName: "menu_quit_button"
             id: menu_quit_button
             Image {}
@@ -465,67 +473,39 @@ Rectangle {
                 text: qsTr("Change Server")
             }
 
-
-            /*Action {
-                id:ping_server
+            Action {
+                id: ping_server
                 text: qsTr("Ping server")
-            }*/
-        }
-
-        MenuSeparator {}
-
-        MenuBarItem {
-            id: reduce_window
-
-            Image {
-                //anchors.fill: parent.fill
-                id: lock_vox_logo_miniature1
-                x: 11
-                y: -2
-                source: "lock_vox_logo_miniature1.png"
-                fillMode: Image.PreserveAspectFit
             }
 
-            //text: qsTr("Reduce Window")
-        }
+            MenuSeparator {}
 
-        MenuBarItem {
-            id: maximize_window
+            delegate: MenuBarItem {
+                id: menuBarItem
 
-            text: qsTr("")
-        }
+                contentItem: Text {
+                    text: menuBarItem.text
+                    font: menuBarItem.font
+                    opacity: enabled ? 1.0 : 0.3
+                    color: menuBarItem.highlighted ? "red" : "#21be2b"
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
 
-        MenuBarItem {
-            id: normal_window
-            text: qsTr("Normal BRu")
-        }
-
-        delegate: MenuBarItem {
-            id: menuBarItem
-
-            contentItem: Text {
-                text: menuBarItem.text
-                font: menuBarItem.font
-                opacity: enabled ? 1.0 : 0.3
-                color: menuBarItem.highlighted ? "red" : "#21be2b"
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: parent.width
-                implicitHeight: 30
-                opacity: enabled ? 1 : 0.3
-                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: 30
+                    opacity: enabled ? 1 : 0.3
+                    color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+                }
             }
         }
     }
 
     property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
-    property alias quit_back: quit_back*/
-
+    property alias quit_back: quit_back
     Popup {
         objectName: "quit_popup"
         id: quit_popup
@@ -684,6 +664,7 @@ Rectangle {
                 target: window
                 height: 503
                 color: "#282c2d"
+                border.width: 0
             }
 
             PropertyChanges {
@@ -834,6 +815,14 @@ Rectangle {
                 y: 0
                 width: 86
                 height: 14
+            }
+
+            PropertyChanges {
+                target: image
+                x: 0
+                y: 0
+                width: 49
+                height: 16
             }
         },
         State {
@@ -1075,6 +1064,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}
+    D{i:0;formeditorZoom:1.3300000429153442}
 }
 ##^##*/
+

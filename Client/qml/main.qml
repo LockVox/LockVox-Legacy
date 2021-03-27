@@ -16,6 +16,9 @@ ApplicationWindow {
     height: 480
     visible: true
     title: "Lock-Vox"
+    //:"Client/qml/lock_vox_logo1.png"
+    minimumHeight : 100
+    minimumWidth :200
 
     property int previousX
     property int previousY

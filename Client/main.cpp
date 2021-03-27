@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     #endif
 
     QGuiApplication app(argc,argv);
+    //app.setWindowIcon(QIcon("Client/qml/lock_vox_logo_miniature1.png"));
     UIWorker * ui  = new UIWorker(&app);
 
     app.exec();

@@ -110,6 +110,11 @@ void CServer::disconnectServer()
     m_hasSelfLoaded = false;
 }
 
+void CServer::onDisconnected()
+{
+
+}
+
 //Getters
 QTcpSocket * CServer::get_socket(){
     return m_socket;

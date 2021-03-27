@@ -43,7 +43,7 @@ T.Button {
 
             Text {
                 id: username
-                text: qsTr("Username")
+                text: from
                 font.pixelSize: 12
                 Layout.preferredHeight: 14
                 Layout.preferredWidth: 106
@@ -51,7 +51,7 @@ T.Button {
 
             Text {
                 id: date
-                text: qsTr("Date")
+                text: date
                 font.pixelSize: 12
                 Layout.preferredHeight: 14
                 Layout.preferredWidth: 105
@@ -60,7 +60,7 @@ T.Button {
 
         Text {
             id: text1
-            text: qsTr("Text")
+            text: content
             font.pixelSize: 12
             Layout.preferredHeight: 114
             Layout.preferredWidth: 234
@@ -123,6 +123,7 @@ T.Button {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.33}D{i:6}D{i:2}
+    D{i:0;formeditorZoom:1.3300000429153442}
 }
 ##^##*/
+
