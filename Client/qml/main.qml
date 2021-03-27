@@ -30,15 +30,15 @@ ApplicationWindow {
         anchors.fill: parent
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
 
-        //disconnect.onClicked: menuBar.disconnect()
-        //change_server.onClicked: menuBar.change_server()
+        disconnect.onTriggered:menuBar.disconnect()
+        change_server.onTriggered: menuBar.change_server()
 
-        //quit_confirm.onClicked: quit_popup.confirmQuit(1)
-        //quit_back.onClicked: quit_popup.confirmQuit(0)
+        quit_confirm.onClicked: quit_popup.confirmQuit(1)
+        quit_back.onClicked: quit_popup.confirmQuit(0)
 
-        //reduce_window.onClicked: mainWindow.showMinimized()
-        //maximize_window.onClicked: mainWindow.showMaximized()
-        //normal_window.onClicked: mainWindow.showNormal()
+        reduce_window.onTriggered: mainWindow.showMinimized()
+        maximize_window.onTriggered: mainWindow.showMaximized()
+        normal_window.onTriggered: mainWindow.showNormal()
 
 
         //Move Window

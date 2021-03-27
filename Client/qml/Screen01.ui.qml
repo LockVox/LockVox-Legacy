@@ -408,8 +408,7 @@ Rectangle {
         height: 251
     }
 
-    /*
-    property alias toolbar: toolbar
+
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
@@ -466,10 +465,10 @@ Rectangle {
             }
 
 
-            /*Action {
+            Action {
                 id:ping_server
                 text: qsTr("Ping server")
-            }*/
+            }
         }
 
         MenuSeparator {}
@@ -524,7 +523,7 @@ Rectangle {
 
     property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
-    property alias quit_back: quit_back*/
+    property alias quit_back: quit_back
 
     Popup {
         objectName: "quit_popup"
@@ -1073,8 +1072,4 @@ Rectangle {
     ]
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}
-}
-##^##*/
+
