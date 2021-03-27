@@ -218,7 +218,7 @@ Rectangle {
         //preferredHighlightBegin:
         highlightFollowsCurrentItem: true
         highlight: Rectangle {
-            color: "grey"
+            color: "#313539"
             height: parent.height
             width: parent.width
         }
@@ -344,6 +344,11 @@ Rectangle {
         id: parametersWidget
         x: 209
         y: 0
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
         visible: false
     }
 
@@ -352,6 +357,7 @@ Rectangle {
         x: 592
         y: 5
         visible: false
+        anchors.right: parent.right
 
         Connections {
             target: returnHomeBtn
@@ -460,7 +466,10 @@ Rectangle {
             }
         }
 
-        MenuSeparator {}
+        MenuSeparator {
+            id: menuSeparator
+            visible: false
+        }
 
         Menu {
             objectName: "menu_state_server"
@@ -663,7 +672,7 @@ Rectangle {
             PropertyChanges {
                 target: window
                 height: 503
-                color: "#282c2d"
+                color: "#1f2325"
                 border.width: 0
             }
 
@@ -740,10 +749,10 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 94
-                y: 53
-                width: 77
-                height: 20
+                x: 99
+                y: 51
+                width: 66
+                height: 17
                 text: "parameter"
             }
 
@@ -824,6 +833,11 @@ Rectangle {
                 width: 49
                 height: 16
             }
+
+            PropertyChanges {
+                target: menuSeparator
+                visible: true
+            }
         },
         State {
             name: "parameterState"
@@ -903,9 +917,15 @@ Rectangle {
 
             PropertyChanges {
                 target: parametersWidget
-                x: 196
+                x: 209
                 y: 85
+                width: 399
+                height: 278
                 visible: true
+                anchors.topMargin: 92
+                anchors.bottomMargin: 117
+                anchors.leftMargin: 185
+                anchors.rightMargin: 56
             }
 
             PropertyChanges {
@@ -913,6 +933,7 @@ Rectangle {
                 x: 612
                 y: 8
                 visible: true
+                anchors.rightMargin: 8
             }
 
             PropertyChanges {
@@ -1064,7 +1085,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.3300000429153442}
+    D{i:0;formeditorZoom:0.6600000262260437}
 }
 ##^##*/
 

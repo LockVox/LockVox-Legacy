@@ -13,7 +13,7 @@ Item {
 
     Rectangle {
         id: background
-        color: "#35373a"
+        color: "#313539"
         anchors.fill: parent
         anchors.rightMargin: 0
         anchors.bottomMargin: 0
@@ -46,7 +46,7 @@ Item {
             //Text.color: "white"
 
             background: Rectangle {
-                color:"#41494b"
+                color:"#1f2325"
                 radius:5
                 border.width: 0
             }

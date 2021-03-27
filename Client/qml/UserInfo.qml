@@ -14,9 +14,17 @@ Rectangle {
         height: 18
         color: "#33a5e5"
         text : qsTr("Username")
+        anchors.bottom:parent.bottom
+        anchors.top:parent.top
+        anchors.left:parent.left
+        anchors.right:parent.right
 
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        anchors.rightMargin: -10
+        anchors.bottomMargin: 63
+        anchors.leftMargin: 71
+        anchors.topMargin: 8
     }
 
     BorderImage {
@@ -36,8 +44,16 @@ Rectangle {
         height: 16
         color: "#707a7e"
         text: qsTr("Status")
+        anchors.bottom:parent.bottom
+        anchors.top:parent.top
+        anchors.left:parent.left
+        anchors.right:parent.right
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        anchors.leftMargin: 67
+        anchors.topMargin: 32
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 32
         objectName: "username"
     }
 }

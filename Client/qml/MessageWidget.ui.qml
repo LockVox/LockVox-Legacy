@@ -39,24 +39,7 @@ T.Button {
         anchors.bottomMargin: 9
         anchors.rightMargin: 8
 
-        RowLayout {
-
-            Text {
-                id: username
-                text: from
-                font.pixelSize: 12
-                Layout.preferredHeight: 14
-                Layout.preferredWidth: 106
-            }
-
-            Text {
-                id: date
-                text: date
-                font.pixelSize: 12
-                Layout.preferredHeight: 14
-                Layout.preferredWidth: 105
-            }
-        }
+        RowLayout {}
 
         Text {
             id: text1
@@ -64,6 +47,22 @@ T.Button {
             font.pixelSize: 12
             Layout.preferredHeight: 114
             Layout.preferredWidth: 234
+        }
+
+        Text {
+            id: dateMsg
+            text: date
+            font.pixelSize: 12
+            Layout.preferredHeight: 14
+            Layout.preferredWidth: 105
+        }
+
+        Text {
+            id: username
+            text: from
+            font.pixelSize: 12
+            Layout.preferredHeight: 14
+            Layout.preferredWidth: 106
         }
     }
 

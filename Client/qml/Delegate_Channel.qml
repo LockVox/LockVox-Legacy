@@ -57,7 +57,7 @@ Item {
         width: 638
         height: 50
         visible: false
-        color: listChannel.isCurrentItem ? "red" : "#53595b"
+        color: listChannel.isCurrentItem ? "red" : "#313539"
     }
 
     Text {
