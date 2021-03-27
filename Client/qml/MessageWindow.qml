@@ -13,8 +13,12 @@ Item {
 
     Rectangle {
         id: background
-        color: "#35373a"
+        color: "#313539"
         anchors.fill: parent
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
 
         CustomQpushButton {
 
@@ -42,10 +46,10 @@ Item {
             //Text.color: "white"
 
             background: Rectangle {
-                     color:"#41494b"
-                     radius:5
-                     border.width: 0
-                 }
+                color:"#1f2325"
+                radius:5
+                border.width: 0
+            }
             anchors.bottom: parent.bottom
             hoverEnabled: false
             font.hintingPreference: Font.PreferDefaultHinting
@@ -62,6 +66,27 @@ Item {
             Layout.preferredHeight: 25
             Layout.preferredWidth: 238
             placeholderText: qsTr("Send a message")
+
+            inputMethodHints: Qt.ImhNoPredictiveText
+
+            function _onEnterPressed(event)
+            {
+                if ((event.modifiers & Qt.ControlModifier))
+                {
+                    console.log("YAHSDHHD")
+                }
+                else
+                {
+                    event.accepted = false;
+                }
+            }
+
+            Keys.onReturnPressed: { _onEnterPressed(event) }
+            Keys.onEnterPressed: { _onEnterPressed(event) }
+
+
+
+
         }
 
         Text {
@@ -98,12 +123,16 @@ Item {
 
 
 
+
     }
 
     Connections {
         target: sendMessageButton
         onClicked: {sendMessage(messageText.text)
             messageText.clear()
+
+        target:messageText
+            Key.onEnterPressed
 
         }
     }

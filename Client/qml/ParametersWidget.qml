@@ -15,6 +15,12 @@ Item {
         color: "#1b1f21"
         radius: 4
 
+        anchors.bottom:parent.bottom
+        anchors.top:parent.top
+        anchors.left:parent.left
+        anchors.right:parent.right
+
+
         BorderImage {
             id: account_pic
             x: 8
@@ -33,7 +39,17 @@ Item {
             color: "#566369"
             text: qsTr("ACCOUNT INFORMATIONS")
             font.pixelSize: 12
+            anchors.leftMargin: 112
+            anchors.topMargin: 8
+            anchors.rightMargin: 126
+            anchors.bottomMargin: 252
             font.bold: true
+
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
+
         }
 
         Text {
@@ -45,7 +61,15 @@ Item {
             color: "#566369"
             text: qsTr("USERNAME")
             font.pixelSize: 10
+            anchors.rightMargin: 155
+            anchors.bottomMargin: 142
+            anchors.leftMargin: 14
+            anchors.topMargin: 114
             font.bold: true
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         Text {
@@ -57,7 +81,15 @@ Item {
             color: "#566369"
             text: qsTr("PASSWORD")
             font.pixelSize: 10
+            anchors.leftMargin: 14
+            anchors.topMargin: 218
+            anchors.rightMargin: 320
+            anchors.bottomMargin: 43
             font.bold: true
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         CustomQpushButton {
@@ -67,6 +99,15 @@ Item {
             width: 73
             height: 30
             text: "Modify"
+
+            anchors.bottom:parent.bottom
+            anchors.rightMargin: 69
+            anchors.bottomMargin: 123
+            anchors.leftMargin: 258
+            anchors.topMargin: 123
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
 
             Connections {
                 target: changeUsernameBtn
@@ -82,6 +123,15 @@ Item {
             height: 30
             text: "Modify"
 
+            anchors.bottom:parent.bottom
+            anchors.rightMargin: 69
+            anchors.bottomMargin: 70
+            anchors.leftMargin: 258
+            anchors.topMargin: 177
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
+
             Connections {
                 target: changeEmailBtn
                 onClicked: item1.state = "changeEmailState"
@@ -93,12 +143,23 @@ Item {
             objectName: "big_username"
             x: 89
             y: 55
-            width: 258
+            width: 248
             height: 21
             color: "#ffffff"
             text: qsTr("Username")
             font.pixelSize: 15
+            anchors.rightMargin: 69
+            anchors.bottomMargin: 203
+            anchors.leftMargin: 87
+            anchors.topMargin: 50
             font.bold: true
+
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
+
+
         }
 
         Text {
@@ -110,6 +171,14 @@ Item {
             color: "#ffffff"
             text: qsTr("password")
             font.pixelSize: 12
+            anchors.rightMargin: 155
+            anchors.bottomMargin: 25
+            anchors.leftMargin: 14
+            anchors.topMargin: 235
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         Text {
@@ -122,6 +191,16 @@ Item {
             color: "#ffffff"
             text: qsTr("username")
             font.pixelSize: 12
+            anchors.leftMargin: 14
+            anchors.topMargin: 130
+            anchors.rightMargin: 171
+            anchors.bottomMargin: 130
+
+
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         CustomQpushButton {
@@ -132,6 +211,14 @@ Item {
             height: 30
             visible: true
             text: "Modify"
+            anchors.bottom:parent.bottom
+            anchors.rightMargin: 69
+            anchors.bottomMargin: 16
+            anchors.leftMargin: 258
+            anchors.topMargin: 231
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         Text {
@@ -143,7 +230,15 @@ Item {
             color: "#566369"
             text: qsTr("EMAIL")
             font.pixelSize: 10
+            anchors.leftMargin: 14
+            anchors.topMargin: 167
+            anchors.rightMargin: 306
+            anchors.bottomMargin: 94
             font.bold: true
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         Text {
@@ -156,6 +251,14 @@ Item {
             color: "#ffffff"
             text: qsTr("email@email.com")
             font.pixelSize: 12
+            anchors.leftMargin: 14
+            anchors.topMargin: 184
+            anchors.rightMargin: 148
+            anchors.bottomMargin: 77
+            anchors.bottom:parent.bottom
+            anchors.top:parent.top
+            anchors.left:parent.left
+            anchors.right:parent.right
         }
 
         CustomQpushButton {
@@ -376,6 +479,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:2}
+    D{i:0;formeditorZoom:0.75}
 }
 ##^##*/

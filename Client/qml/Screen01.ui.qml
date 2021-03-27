@@ -2,6 +2,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
 import QtQuick 2.7
 import QtQuick.Extras 1.4
+import QtQuick.Window 2.2
 
 import Client 1.0
 import Channel 1.0
@@ -217,7 +218,7 @@ Rectangle {
         //preferredHighlightBegin:
         highlightFollowsCurrentItem: true
         highlight: Rectangle {
-            color: "grey"
+            color: "#313539"
             height: parent.height
             width: parent.width
         }
@@ -246,8 +247,9 @@ Rectangle {
 
         //preferredHighlightBegin:
         highlightFollowsCurrentItem: true
+
         highlight: Rectangle {
-            color: "grey"
+            color: "#33a5e5"
             height: parent.height
             width: parent.width
         }
@@ -342,6 +344,11 @@ Rectangle {
         id: parametersWidget
         x: 209
         y: 0
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
         visible: false
     }
 
@@ -350,6 +357,7 @@ Rectangle {
         x: 592
         y: 5
         visible: false
+        anchors.right: parent.right
 
         Connections {
             target: returnHomeBtn
@@ -408,14 +416,14 @@ Rectangle {
         height: 251
     }
 
-
+    //property alias toolbar: toolbar
     property alias quit: quit
     property alias disconnect: disconnect
     property alias change_server: change_server
-    property alias reduce_window: reduce_window
-    property alias maximize_window: maximize_window
-    property alias normal_window: normal_window
 
+    //property alias reduce_window: reduce_window
+    //property alias maximize_window: maximize_window
+    //property alias normal_window: normal_window
     MenuBar {
         objectName: "menu_bar"
         id: menuBar
@@ -435,6 +443,13 @@ Rectangle {
         visible: false
 
         Menu {
+
+            objectName: "logo"
+            id: logo
+        }
+
+        Menu {
+
             objectName: "menu_quit_button"
             id: menu_quit_button
             Image {}
@@ -451,7 +466,10 @@ Rectangle {
             }
         }
 
-        MenuSeparator {}
+        MenuSeparator {
+            id: menuSeparator
+            visible: false
+        }
 
         Menu {
             objectName: "menu_state_server"
@@ -464,59 +482,32 @@ Rectangle {
                 text: qsTr("Change Server")
             }
 
-
             Action {
-                id:ping_server
+                id: ping_server
                 text: qsTr("Ping server")
             }
-        }
 
-        MenuSeparator {}
+            MenuSeparator {}
 
-        MenuBarItem {
-            id: reduce_window
+            delegate: MenuBarItem {
+                id: menuBarItem
 
-            Image {
-                //anchors.fill: parent.fill
-                id: lock_vox_logo_miniature1
-                x: 11
-                y: -2
-                source: "lock_vox_logo_miniature1.png"
-                fillMode: Image.PreserveAspectFit
-            }
+                contentItem: Text {
+                    text: menuBarItem.text
+                    font: menuBarItem.font
+                    opacity: enabled ? 1.0 : 0.3
+                    color: menuBarItem.highlighted ? "red" : "#21be2b"
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
 
-            //text: qsTr("Reduce Window")
-        }
-
-        MenuBarItem {
-            id: maximize_window
-
-            text: qsTr("")
-        }
-
-        MenuBarItem {
-            id: normal_window
-            text: qsTr("Normal BRu")
-        }
-
-        delegate: MenuBarItem {
-            id: menuBarItem
-
-            contentItem: Text {
-                text: menuBarItem.text
-                font: menuBarItem.font
-                opacity: enabled ? 1.0 : 0.3
-                color: menuBarItem.highlighted ? "red" : "#21be2b"
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: parent.width
-                implicitHeight: 30
-                opacity: enabled ? 1 : 0.3
-                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: 30
+                    opacity: enabled ? 1 : 0.3
+                    color: menuBarItem.highlighted ? "#21be2b" : "transparent"
+                }
             }
         }
     }
@@ -524,7 +515,6 @@ Rectangle {
     property alias quit_popup: quit_popup
     property alias quit_confirm: quit_confirm
     property alias quit_back: quit_back
-
     Popup {
         objectName: "quit_popup"
         id: quit_popup
@@ -682,7 +672,8 @@ Rectangle {
             PropertyChanges {
                 target: window
                 height: 503
-                color: "#282c2d"
+                color: "#1f2325"
+                border.width: 0
             }
 
             PropertyChanges {
@@ -758,10 +749,10 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 94
-                y: 53
-                width: 77
-                height: 20
+                x: 99
+                y: 51
+                width: 66
+                height: 17
                 text: "parameter"
             }
 
@@ -833,6 +824,19 @@ Rectangle {
                 y: 0
                 width: 86
                 height: 14
+            }
+
+            PropertyChanges {
+                target: image
+                x: 0
+                y: 0
+                width: 49
+                height: 16
+            }
+
+            PropertyChanges {
+                target: menuSeparator
+                visible: true
             }
         },
         State {
@@ -913,9 +917,15 @@ Rectangle {
 
             PropertyChanges {
                 target: parametersWidget
-                x: 196
+                x: 209
                 y: 85
+                width: 399
+                height: 278
                 visible: true
+                anchors.topMargin: 92
+                anchors.bottomMargin: 117
+                anchors.leftMargin: 185
+                anchors.rightMargin: 56
             }
 
             PropertyChanges {
@@ -923,6 +933,7 @@ Rectangle {
                 x: 612
                 y: 8
                 visible: true
+                anchors.rightMargin: 8
             }
 
             PropertyChanges {
@@ -1072,4 +1083,8 @@ Rectangle {
     ]
 }
 
-
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.6600000262260437}
+}
+##^##*/
