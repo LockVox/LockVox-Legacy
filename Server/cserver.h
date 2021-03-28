@@ -18,7 +18,10 @@
 
 #include "Server/config.h"
 
-
+#define SERVER 0
+#define SERVER_WARN 1
+#define SERVER_ERR 2
+#define DB_ERR 3
 
 
 class CClient;
