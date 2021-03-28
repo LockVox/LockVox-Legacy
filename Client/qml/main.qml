@@ -44,6 +44,7 @@ ApplicationWindow {
         //normal_window.onTriggered: mainWindow.showNormal()
         listMessage.onCountChanged: listMessage.positionViewAtEnd()
 
+
         //Move Window
         moveWindowArea.onPressed: {
             previousX = mouse.x
