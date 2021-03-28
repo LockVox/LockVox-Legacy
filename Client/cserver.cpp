@@ -110,6 +110,11 @@ void CServer::disconnectServer()
     m_hasSelfLoaded = false;
 }
 
+void CServer::onDisconnected()
+{
+
+}
+
 //Getters
 QTcpSocket * CServer::get_socket(){
     return m_socket;
@@ -477,6 +482,7 @@ void CServer::processIncomingData(QByteArray data){
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
                     int id = messages_list.first().get_to().toInt();
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
+
                     break;
                 }
 
@@ -934,6 +940,42 @@ void CServer::Deserialize(QByteArray in){
     deserializeChannel(cArray);
     deserializeClients(sArray);
 
+
+    QDir test;
+    if(!test.exists("storage/log"))
+    {
+        if(!test.mkpath("storage/log"))
+        {
+            qDebug() << "[Log error] Can't create log directory" << Qt::endl;
+        }
+    }
+
+    foreach(CClient *c, m_clients)
+    {
+        QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
+        if(QFile::exists(path))
+        {
+            QImage tmp(path);
+            c->set_profilePic(tmp);
+        }
+        else
+        {
+            path = "storage/server/pp/pp0.png";
+            if(QFile::exists(path))
+            {
+                QImage tmp(path);
+                c->set_profilePic(tmp);
+
+                QByteArray array;
+                QBuffer buffer(&array);
+                c->get_profilePic().save(&buffer, "PNG");
+
+                c->setImgPath(path);
+                qDebug() << path;
+
+            }
+        }
+    }
 }
 
 QByteArray CServer::SerializeChannels(){
@@ -981,7 +1023,7 @@ void CServer::DeserializeChannels(QByteArray in){
             //check if the channel already exist or not
             bool exist = false;
             //if the channel exist, we reload it with new value
-            foreach(CChannel * c, get_channelList()){
+            foreach(CChannel * c, getChannelsList()->get_channels()){
                 if(c->get_id() == newChannel->get_id()){
                     exist = true;
                     c->set_all(newChannel);
@@ -1016,6 +1058,7 @@ CChannel * CServer::deserializeToChannel(QJsonObject json_obj){
 CClient * CServer::deserializeToClient(QJsonObject json_obj){
     CClient * client = new CClient();
     client->deserialize(json_obj);
+
     return client;
 }
 
@@ -1032,7 +1075,6 @@ void CServer::deserializeChannel(QJsonArray & json_array){
         bool exist = false;
         foreach(CChannel * c, get_channelList()){
             if(c->get_id() == newChannel->get_id())
-                qDebug() << "exist";
                  exist = true;
         }
 

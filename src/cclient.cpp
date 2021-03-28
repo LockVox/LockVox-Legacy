@@ -224,6 +224,16 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_isOnline(json_obj["isOnline"].toBool());
 }
 
+QString CClient::getImgPath() const
+{
+    return imgPath;
+}
+
+void CClient::setImgPath(const QString &value)
+{
+    imgPath = value;
+}
+
 
 
 

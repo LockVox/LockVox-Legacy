@@ -28,7 +28,7 @@ Item {
         anchors.leftMargin: 0
         anchors.topMargin: 0
 
-       /* onEntered: {
+        onEntered: {
 
             rectangle.visible=true
 
@@ -37,11 +37,12 @@ Item {
 
             rectangle.visible=false
 
-        }*/
+        }
 
         onClicked: {
 
             listChannel.currentIndexChanged(index)
+            channel_activity.visible=true
             listChannel.currentIndex = index
         }
 
@@ -56,7 +57,7 @@ Item {
         width: 638
         height: 50
         visible: false
-        color: listChannel.isCurrentItem ? "cyan" : "lightblue"
+        color: listChannel.isCurrentItem ? "red" : "#313539"
     }
 
     Text {
@@ -66,10 +67,24 @@ Item {
         y: 10
         width: 188
         height: 32
-        color: "red"
+        color: "#6f797f"
         text: model.name
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+    }
+
+    Text {
+        id: channel_activity
+        x: 128
+        y: 25
+        width: 52
+        height: 25
+        visible: false
+        color: "#11ff3a"
+        text:nbUsers+"/"+maxUsers
+        font.pixelSize: 12
+        horizontalAlignment: Text.AlignHCenter
+        objectName: "title"
     }
 
 
@@ -89,3 +104,9 @@ Item {
 }
 
 
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:2}
+}
+##^##*/

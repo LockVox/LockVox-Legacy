@@ -16,6 +16,8 @@ public:
     enum ModelRoles{
         PseudoRole = Qt::UserRole+1,
         isOnlineRole,
+        imageRole,
+        descriptionRole
     };
 
     explicit ClientModel(QObject *parent = nullptr);

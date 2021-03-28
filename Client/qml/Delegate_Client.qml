@@ -30,10 +30,8 @@ Item {
         anchors.topMargin: 0
 
         onClicked: {
-
             listClient.currentIndexChanged(index)
             listClient.currentIndex = index
-            console.log(listClient.currentIndex)
         }
     }
 
@@ -66,8 +64,14 @@ Item {
         height: 30
         color: "#ffffff"
         radius: 7
-
     }
+
+
+    Image{
+        source:imgPath
+    }
+
+
 
 }
 
