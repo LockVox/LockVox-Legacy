@@ -380,6 +380,16 @@ void CServer::processIncomingData(QByteArray data){
             case 2:
             {
                 //PSEUDO UPDATE
+             CClient* c = packet->Deserialize_newClient();
+                 if(c->get_pseudo()=="")
+                 {
+                     if(c->get_description()=="Server side error.")
+                     {
+                         qDebug() << c->get_description();
+                         //Traiter l'erreur
+                     }
+                 }
+
                 CClient * c = packet->Deserialize_newClient();
                 CClient * client = get_clientById(c->get_uuid());
                 client->set_pseudo(c->get_pseudo());
