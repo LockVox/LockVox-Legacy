@@ -119,7 +119,7 @@ UIWorker::UIWorker(QGuiApplication *app)
     //Connect change username :
 
      QObject::connect(m_changeusername, SIGNAL(change_username(QString)),
-                     m_server, SLOT(user_parameters(QString)));
+                     m_server, SLOT(changeUserName(QString)));
 
 
 
