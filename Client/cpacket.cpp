@@ -580,4 +580,20 @@ int CPacket::Deserialize_MessageError()
     }
 }
 
+QList<QString> CPacket::Deserialize_ppAns()
+{
+    try
+    {
+        if(m_obj.contains("ppAns"))
+        {
+            QJsonObject ppAns = m_obj.value("ppAns").toObject();
+        }
+    }
+    catch (char *e)
+    {
+        qDebug() << "Error in deserialize_ppAns :" << e << Qt::endl;
+        return nullptr;
+    }
+}
+
 //UI
