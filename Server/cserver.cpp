@@ -395,13 +395,20 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 2:
                     {
                         //PSEUDO UPDATE
-                        CClient * client = packet->Deserialize_newClient();
+                        CClient * client = packet->Deserialize_myClient();
 
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", 0);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
+
+
+                        //Send update
+                        CPacket ans("0","2");
+                        ans.Serialize_newClient(sender);
+                        sendToAll(ans.GetByteArray());
+
                         //BDD
-                        if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
+                        /*if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
                         {
                             //Send update
                             CPacket ans("2","0");
@@ -414,7 +421,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             CClient * errClient = new CClient();
                             errClient->set_description("Error in database");//De la merde à rework
                             ans.Serialize_newClient(errClient);
-                        }
+                        }*/
+
                         free(client);
 
                         break;
@@ -429,7 +437,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         sender->set_description(client->get_description());
 
                         //Send update
-                        CPacket ans("2","0");
+                        CPacket ans("0","3");
                         ans.Serialize_newClient(sender);
                         sendToAll(ans.GetByteArray());
                         break;

@@ -56,6 +56,8 @@ bool ClientList::setItemAt(int index, CClient *item)
         return false;
 
     m_clients[index] = item;
+
+      emit dataChanged();
     return true;
 }
 

@@ -235,7 +235,7 @@ CClient * CPacket::Deserialize_myClient(){
         bool isOnline;
 
         if(m_obj.contains("myClient")){
-            QJsonObject myClient = m_obj.value("newClient").toObject();
+            QJsonObject myClient = m_obj.value("myClient").toObject();
             id = QUuid::fromString(myClient.value("uuid").toString());
             name = myClient.value("pseudo").toString();
             isOnline = myClient.value("isOnline").toBool();
