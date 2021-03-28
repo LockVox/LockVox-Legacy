@@ -34,7 +34,6 @@ public:
     bool execMain();  // Main Process
     string getHash(string id, QString * get_err);
     QString newUser(string uuid,string pseudo, string mail, string password);
-    QString updateUser(string uuid, string pseudo, string mail, string description);
 
     QList<CChannel*> parseChannel();
     QList<CClient*> parseClient();

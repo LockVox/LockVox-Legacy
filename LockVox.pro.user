@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.3, 2021-03-28T14:15:20. -->
+<!-- Written by QtCreator 4.13.3, 2021-03-27T18:04:44. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -336,7 +336,6 @@
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/Git/LockVox/build-LockVox-Desktop_Qt_5_15_2_MSVC2019_64bit-Debug</value>
    </valuemap>

@@ -76,7 +76,7 @@ QString CDatabase::newUser(string uuid, string pseudo, string mail, string passw
         }
 
         // Execute a sql statement
-        //Check that user doesn't exist
+
         string query = "SELECT mail FROM utilisateurs WHERE mail = '";
 
         query += mail + "';";
@@ -340,44 +340,5 @@ CClient* CDatabase::parseClient(string email, QString * get_err)
         client = NULL;
         return client;
         //Il faudra check la taille a la sortie pour un return NULL
-    }
-}
-
-QString CDatabase::updateUser(string uuid, string pseudo, string mail, string description)
-{
-    try {
-        QString error;
-        string existMail;
-        // Format a MySQL object
-        conn = mysql_init(NULL);
-
-        // Establish a MySQL connection
-        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
-        {
-            error = QString::fromLocal8Bit(mysql_error(conn));
-            return error;
-        }
-
-        // Execute a sql statement
-        string query = "UPDATE utilisateurs SET username = '" + pseudo + "', mail = '" + mail + "', description = '" + description + "' WHERE uuid = '" + uuid + "';";
-
-
-        qDebug() << QString::fromStdString(query);
-
-        if (mysql_query(conn, query.c_str()))
-        {
-            error = QString::fromLocal8Bit(mysql_error(conn));
-            mysql_close(conn);
-            return error;
-        }
-
-            // Close a MySQL connection
-            mysql_close(conn);
-
-            return "success";
-        }
-        catch (char *e)
-    {
-        return QString::fromLocal8Bit(e);
     }
 }
