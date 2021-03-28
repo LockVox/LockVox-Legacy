@@ -608,6 +608,11 @@ void CServer::processIncomingData(QByteArray data){
                     break;
                 }
 
+                case 14:
+                {
+                    //pp request answer
+                }
+
                 default:
                 {
                     qDebug() << "Error invalid action" << Qt::endl;

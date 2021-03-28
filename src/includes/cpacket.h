@@ -83,6 +83,7 @@ public:
     void Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index);
     void Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index);
     void Serialize_MessageError(int code);
+    void Serialize_ppAnswer(QImage pp,QUuid uuid);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
@@ -97,6 +98,7 @@ public:
     CMessage Deserialize_Message();
     QList<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();
+    QUuid deserialize_ppRequest();
 
 
     void Serialize_Register(struct register_info reg);           //Serialize Register

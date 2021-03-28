@@ -98,6 +98,7 @@ public:
     QVector<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();
     int Deserialize_MessageError();
+    QList<QString> Deserialize_ppAns();
 
 
     void Serialize_Register(struct register_info reg);           //Serialize Register

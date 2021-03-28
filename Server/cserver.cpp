@@ -863,6 +863,20 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         break;
                     }
 
+                    case 4:
+                    {
+                        //Request profile picture
+                        QUuid requested = packet->deserialize_ppRequest();
+                        QString path = "storage/private/" + requested.toString(QUuid::WithoutBraces) + "/pp.png";
+                        if(QFile::exists(path))
+                        {
+                            QImage tmp(path);
+                            CPacket ppAns("1","14");
+                            ppAns.Serialize_ppAnswer(tmp,requested);
+                        }
+
+                    }
+
                     case 5:
                     {
                         //Create chan voc
