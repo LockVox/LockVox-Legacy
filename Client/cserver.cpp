@@ -51,6 +51,7 @@ CServer::~CServer()
 void CServer::connectServer(QString  ip)
 {
     this->ip = ip;
+    connectServer();
 }
 
 void CServer::connectServer()

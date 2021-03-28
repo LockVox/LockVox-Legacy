@@ -72,7 +72,7 @@ class CServer : public AbstractServer
         bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
         QList<CMessage> createMessageList(QString id, bool isPrivate,int nb_msg_to_sync, QUuid sender, int start_index); //Creates a QList of CMessage stored localy using index.json
         void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
-
+        bool IsAdmin(CClient* client){return true;};    //Used to know if the client can do admin stuff
 
     public slots:
 

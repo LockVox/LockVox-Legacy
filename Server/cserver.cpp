@@ -230,7 +230,7 @@ void CServer::onReceiveData(){
             {
                 if(buffer->isEmpty())
                 {
-                    //That's meen it's a bad packet, report to log
+                    //That means it's a bad packet, report to log
                     writeToLog("Unable to deserialize received packet :\n" + *data + "\nRequest Aborted", 1);
                 }
                 else
@@ -400,13 +400,22 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", 0);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
-
-                        //Send update
-                        CPacket ans("2","0");
-                        ans.Serialize_newClient(sender);
-                        sendToAll(ans.GetByteArray());
-
-                        free(client);
+                        if(m_db->updateUser(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString()) == "succes")    //Request bdd
+                       {
+                            //Send update
+                            CPacket ans("2","0");
+                            ans.Serialize_newClient(sender);
+                            sendToAll(ans.GetByteArray());
+                       }
+                       else
+                       {
+                            CPacket ans("2","0");
+                            CClient * res = new CClient();
+                            res->set_description("Database error");
+                            ans.Serialize_newClient(res);
+                            sendToClient(ans.GetByteArray(), sender);   //On prévient l'utilisateur que sa requête a échoué
+                       }
+                       free(client);
 
                         break;
                     }
@@ -431,7 +440,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //BAN USER
                         //Il faudra check si le sender a l'autorisation
                         //TODO
+                       /* CClient* client = packet->Deserialize_newClient();
+                        if(IsAdmin(sender))
+                        {
+                            client->get_socket();
+                        }
+                        else
+                        {
 
+                        }*/
                         break;
                     }
 
