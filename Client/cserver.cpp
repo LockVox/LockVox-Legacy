@@ -482,6 +482,7 @@ void CServer::processIncomingData(QByteArray data){
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
                     int id = messages_list.first().get_to().toInt();
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
+
                     break;
                 }
 
@@ -939,6 +940,42 @@ void CServer::Deserialize(QByteArray in){
     deserializeChannel(cArray);
     deserializeClients(sArray);
 
+
+    QDir test;
+    if(!test.exists("storage/log"))
+    {
+        if(!test.mkpath("storage/log"))
+        {
+            qDebug() << "[Log error] Can't create log directory" << Qt::endl;
+        }
+    }
+
+    foreach(CClient *c, m_clients)
+    {
+        QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
+        if(QFile::exists(path))
+        {
+            QImage tmp(path);
+            c->set_profilePic(tmp);
+        }
+        else
+        {
+            path = "storage/server/pp/pp0.png";
+            if(QFile::exists(path))
+            {
+                QImage tmp(path);
+                c->set_profilePic(tmp);
+
+                QByteArray array;
+                QBuffer buffer(&array);
+                c->get_profilePic().save(&buffer, "PNG");
+
+                c->setImgPath(path);
+                qDebug() << path;
+
+            }
+        }
+    }
 }
 
 QByteArray CServer::SerializeChannels(){
@@ -1021,6 +1058,7 @@ CChannel * CServer::deserializeToChannel(QJsonObject json_obj){
 CClient * CServer::deserializeToClient(QJsonObject json_obj){
     CClient * client = new CClient();
     client->deserialize(json_obj);
+
     return client;
 }
 

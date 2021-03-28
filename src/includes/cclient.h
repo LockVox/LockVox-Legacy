@@ -37,6 +37,7 @@ class CClient
         QUuid get_uuid();
         QImage get_profilePic();
 
+
         //Setters
         void set_pseudo(QString pseudo);
         void set_mail(QString mail);
@@ -57,10 +58,13 @@ class CClient
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
 
-    private slots:
+        QString getImgPath() const;
+        void setImgPath(const QString &value);
+
+private slots:
 
 
-    private:
+private:
         QString m_pseudo;
         QString m_mail;
         QString m_description;
@@ -74,6 +78,7 @@ class CClient
         bool m_isAuthenticate;
 
         QImage profilePic;
+        QString imgPath;
 };
 
 #endif // CCLIENT_H
