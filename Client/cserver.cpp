@@ -380,18 +380,20 @@ void CServer::processIncomingData(QByteArray data){
             case 2:
             {
                 //PSEUDO UPDATE
-             CClient* c = packet->Deserialize_newClient();
-                 if(c->get_pseudo()=="")
-                 {
-                         qDebug() << c->get_description();
-                         //Traiter l'erreur
+                qDebug() << "Receive pseudo update";
+                CClient * client = packet->Deserialize_newClient();
+                int index = 0;
+                foreach(CClient * c, getClientsList()->get_clients()){
+                    if(c->get_uuid() == client->get_uuid())
+                        break;
+                    index++;
+                }
 
-                 }
-                 else
-                 {
-                    CClient * client = get_clientById(c->get_uuid());
-                    client->set_pseudo(c->get_pseudo());
-                 }
+                getClientsList()->setItemAt(index,client);
+
+
+
+                        //client->set_pseudo(c->get_pseudo());
                 break;
             }
 
@@ -924,10 +926,12 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
 bool CServer::changeUserName(QString pseudo)
 {
-        CClient * tmp = new CClient(*m_self);
+        qDebug() << "New pseudo : " << pseudo << "\n";
+        CClient * tmp = m_self;
         tmp->set_pseudo(pseudo);
+        selfChanged(m_self);
         CPacket packet("0", "2");
-        packet.Serialize_newClient(tmp);
+        packet.Serialize_myClient(m_self);
         sendToServer(packet.GetByteArray());
         return true;
 }
