@@ -395,13 +395,20 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 2:
                     {
                         //PSEUDO UPDATE
-                        CClient * client = packet->Deserialize_newClient();
+                        CClient * client = packet->Deserialize_myClient();
 
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", SERVER);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
+
+
+                        //Send update
+                        CPacket ans("0","2");
+                        ans.Serialize_newClient(sender);
+                        sendToAll(ans.GetByteArray());
+
                         //BDD
-                        if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
+                        /*if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
                         {
                             //Send update
                             CPacket ans("2","0");
@@ -410,11 +417,16 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
                         else
                         {
+
+                            writeToLog("Error while trying to update user", SERVER_ERR);
+                            writeToLog(retErr,DB_ERR);
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
-                            errClient->set_description("Error in database");//De la merde à rework
+                            errClient->set_description("Server side error."); //De la merde à rework
+
                             ans.Serialize_newClient(errClient);
-                        }
+                        }*/
+
                         free(client);
 
                         break;
@@ -429,7 +441,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         sender->set_description(client->get_description());
 
                         //Send update
-                        CPacket ans("2","0");
+                        CPacket ans("0","3");
                         ans.Serialize_newClient(sender);
                         sendToAll(ans.GetByteArray());
                         break;
@@ -493,7 +505,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
                                         writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
-                                        ans->Serialize_auth(NULL, 2);                 
+                                        ans->Serialize_auth(NULL, 2);
                                         sender->get_socket()->waitForBytesWritten();
                                         sender->get_socket()->abort();
                                     }
@@ -520,7 +532,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 {
                                     writeToLog("Error with database when fetching password hash",SERVER_ERR);
                                     writeToLog(*err1, DB_ERR);
-                                    ans->Serialize_auth(NULL, 1);     
+                                    ans->Serialize_auth(NULL, 1);
                                     sender->get_socket()->waitForBytesWritten();
                                     sender->get_socket()->abort();
                                     delete(err1);
