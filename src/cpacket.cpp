@@ -632,17 +632,4 @@ void CPacket::Serialize_MessageError(int code)
     m_obj["msgErr"] = msgErr;
 }
 
-void CPacket::Serialize_ppAnswer(QImage pp, QUuid uuid)
-{
-    QJsonObject ppAns;
-    ppAns.insert("uuid",uuid.toString());
-
-    QByteArray array;
-    QBuffer buffer(&array);
-    pp.save(&buffer, "PNG");
-    ppAns.insert("img",QString::fromLatin1(array.toBase64()));
-
-    m_obj["ppAns"] = ppAns;
-}
-
 //UI

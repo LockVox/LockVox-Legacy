@@ -417,13 +417,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
                         else
                         {
-
-                            writeToLog("Error while trying to update user", SERVER_ERR);
-                            writeToLog(retErr,DB_ERR);
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
-                            errClient->set_description("Server side error."); //De la merde à rework
-
+                            errClient->set_description("Error in database");//De la merde à rework
                             ans.Serialize_newClient(errClient);
                         }*/
 
@@ -505,7 +501,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
                                     {
                                         writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
-                                        ans->Serialize_auth(NULL, 2);
+                                        ans->Serialize_auth(NULL, 2);                 
                                         sender->get_socket()->waitForBytesWritten();
                                         sender->get_socket()->abort();
                                     }
@@ -532,7 +528,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 {
                                     writeToLog("Error with database when fetching password hash",SERVER_ERR);
                                     writeToLog(*err1, DB_ERR);
-                                    ans->Serialize_auth(NULL, 1);
+                                    ans->Serialize_auth(NULL, 1);     
                                     sender->get_socket()->waitForBytesWritten();
                                     sender->get_socket()->abort();
                                     delete(err1);
@@ -873,20 +869,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         reqAns.Serialize_MessageList(messages_list);
                         sendToClient(reqAns.GetByteArray(), sender);
                         break;
-                    }
-
-                    case 4:
-                    {
-                        //Request profile picture
-                        QUuid requested = packet->deserialize_ppRequest();
-                        QString path = "storage/private/" + requested.toString(QUuid::WithoutBraces) + "/pp.png";
-                        if(QFile::exists(path))
-                        {
-                            QImage tmp(path);
-                            CPacket ppAns("1","14");
-                            ppAns.Serialize_ppAnswer(tmp,requested);
-                        }
-
                     }
 
                     case 5:
