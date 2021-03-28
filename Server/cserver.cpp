@@ -400,8 +400,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", SERVER);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
-                        //BDD
-                        if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
+                        //BDD                   
+                        QString retErr = m_db->updateUser(sender->get_uuid().toString(QUuid::WithoutBraces).toStdString(), client->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString());
+                        if(retErr=="success")
                         {
                             //Send update
                             CPacket ans("2","0");
@@ -410,9 +411,13 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
                         else
                         {
+
+                            writeToLog("Error while trying to update user", SERVER_ERR);
+                            writeToLog(retErr,DB_ERR);
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
-                            errClient->set_description("Error in database");//De la merde à rework
+                            errClient->set_description("Server side error."); //De la merde à rework
+
                             ans.Serialize_newClient(errClient);
                         }
                         free(client);
