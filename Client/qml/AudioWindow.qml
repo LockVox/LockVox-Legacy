@@ -38,23 +38,6 @@ Item {
                 height: 1
                 color: "#2e3538"
             }
-
-            CustomQpushButton {
-                id: customQpushButton
-                x: 102
-                y: -16
-                width: 20
-                height: 12
-                text: " "
-                Image {
-                    id: name
-                    x: 0
-                    y: 6
-                    width: 29
-                    height: 12
-                    source: "lock_vox_logo1.png"
-                }
-            }
         }
     }
 
@@ -62,6 +45,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:4}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/

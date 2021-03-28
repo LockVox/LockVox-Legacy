@@ -137,7 +137,11 @@ T.Button {
         },
         State {
             name: "down"
-            when: control.down
+            PropertyChanges {
+                target: buttonBackground
+                visible: false
+                color: "#d2d2d2"
+            }
 
             PropertyChanges {
                 target: username
@@ -151,14 +155,46 @@ T.Button {
 
             PropertyChanges {
                 target: text1
+                x: 8
+                y: 44
+                width: 234
+                height: 118
                 color: "#6b7376"
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                fontSizeMode: Text.Fit
             }
 
             PropertyChanges {
-                target: buttonBackground
-                visible: true
-                color: "#374040"
-                radius: 6
+                target: dateMsg
+                x: 171
+                y: 16
+                color: "#e05141"
+            }
+
+            PropertyChanges {
+                target: control
+                height: 170
+            }
+
+            PropertyChanges {
+                target: usernamemsg
+                x: 55
+                y: 16
+                color: "#33a5e5"
+                font.bold: true
+            }
+
+            PropertyChanges {
+                target: rectangle
+                x: 8
+                y: 8
+                width: 30
+                height: 30
+                color: "#676d76"
+                radius: 7
+                border.color: "#313539"
+                border.width: 1
             }
         }
     ]

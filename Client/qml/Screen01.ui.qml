@@ -589,7 +589,7 @@ Rectangle {
         x: 508
         y: 48
 
-        text: "MEMBERS :" + nbUsers + "/" + maxUsers
+        text: "MEMBERS"
         anchors.right: parent.right
 
         font.pixelSize: 12
@@ -883,8 +883,8 @@ Rectangle {
 
             PropertyChanges {
                 target: membersText
-                x: 473
-                y: 36
+                x: 469
+                y: 43
                 width: 65
                 height: 14
                 color: "#676d76"
@@ -893,7 +893,7 @@ Rectangle {
                 font.bold: true
                 anchors.leftMargin: 487
                 anchors.topMargin: 48
-                anchors.rightMargin: 102
+                anchors.rightMargin: 106
                 anchors.bottomMargin: 443
             }
         },
@@ -1143,7 +1143,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.25}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/
 
