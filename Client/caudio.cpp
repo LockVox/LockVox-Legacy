@@ -155,10 +155,6 @@ CAudio::CAudio() : m_chain("MainAudio")
 
 CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
 {
-#ifdef WIN32
-    WSADATA dat;
-    WSAStartup(MAKEWORD(2,2),&dat);
-#endif // WIN32
     std::string err;
     MIPTime interval(0.05); // We'll use 20 millisecond intervals.
     MIPAverageTimer timer(interval);
@@ -181,10 +177,10 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     jrtplib::RTPSession rtpSession;
     bool returnValue;
     // We'll open the sndCardIn.
-    returnValue = sndFileInput.open(8000,1,interval, MIPPAInputOutput::ReadOnly);
+    returnValue = sndFileInput.open(DEFAULT_SAMP_RATE,1,interval, MIPPAInputOutput::ReadOnly);
     checkError(returnValue, sndFileInput);
     // We'll convert to a sampling rate of 8000Hz and mono sound.
-    int samplingRate = 8000;
+    int samplingRate = DEFAULT_SAMP_RATE;
     int numChannels = 1;
     returnValue = sampConv.init(samplingRate, numChannels);
     checkError(returnValue, sampConv);
@@ -233,7 +229,7 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     returnValue = sampConv2.init(samplingRate, numChannels);
     checkError(returnValue, sampConv2);
     // Initialize the mixer.
-    returnValue = mixer.init(samplingRate, numChannels, interval);
+    returnValue = mixer.init(samplingRate, numChannels, interval, true);
     checkError(returnValue, mixer);
     // Initialize the soundcard output.
     returnValue = sndCardOutput.open(samplingRate, numChannels, interval);

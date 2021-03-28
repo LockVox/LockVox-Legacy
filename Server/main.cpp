@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
     /*WSADATA Data;
     WSAStartup(MAKEWORD(2,2), &Data);
     CChannel tmpchan("", 0);
+    tmpchan.addUser(new CClient(NULL, "c1", NULL, 0, true, "eaze1"));
+    tmpchan.addUser(new CClient(NULL, "c2", NULL, 0, true, "eaze2"));
     CAudio tmp;
     tmp.AddSession(tmpchan);
     getc(stdin);
