@@ -46,8 +46,7 @@ Item {
             anchors.bottomMargin: 252
             font.bold: true
 
-            anchors.bottom:parent.bottom
-            anchors.top:parent.top
+
             anchors.left:parent.left
             anchors.right:parent.right
 
@@ -480,6 +479,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}
+    D{i:0;formeditorZoom:1.100000023841858}
 }
 ##^##*/

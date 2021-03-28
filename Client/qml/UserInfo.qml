@@ -21,6 +21,7 @@ Rectangle {
 
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        font.bold: true
         anchors.rightMargin: -10
         anchors.bottomMargin: 63
         anchors.leftMargin: 71
@@ -50,6 +51,8 @@ Rectangle {
         anchors.right:parent.right
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        font.italic: false
+        font.bold: true
         anchors.leftMargin: 67
         anchors.topMargin: 32
         anchors.rightMargin: 0
