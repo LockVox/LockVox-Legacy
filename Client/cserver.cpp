@@ -197,7 +197,7 @@ void CServer::onReceiveData(){
 
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
-
+    qDebug() << data;
     int bracket = 0;
     bool ifTrueProccess = true;
     CPacket tmp(*data,NULL);
