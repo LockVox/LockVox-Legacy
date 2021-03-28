@@ -904,7 +904,15 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
     }
 }
 
-
+bool CServer::changeUserName(QString pseudo)
+{
+        CClient * tmp = new CClient(*m_self);
+        tmp->set_pseudo(pseudo);
+        CPacket packet("0", "2");
+        packet.Serialize_newClient(tmp);
+        sendToServer(packet.GetByteArray());
+        return true;
+}
 
 QByteArray CServer::Serialize(){
 

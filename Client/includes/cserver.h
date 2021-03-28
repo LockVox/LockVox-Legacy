@@ -107,7 +107,7 @@ signals:
         void connectServer(QString ip);
         void connectServer();
         void disconnectServer();
-
+        bool changeUserName(QString pseudo);
     private slots:
 
         void onDisconnected();

@@ -63,7 +63,9 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_userparameter = m_rootObject->findChild<QObject*>("user_parameters");
 
     m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
-
+    m_changeusername = m_rootObject->findChild<QObject*>("user_parameters");
+    QObject::connect(m_changeusername, SIGNAL(change_username),
+                     m_server, SLOT(changeUserName(QString)));
 
     //Check if compenents has been load correctly
     if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer){

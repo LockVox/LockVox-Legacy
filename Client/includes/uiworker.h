@@ -64,6 +64,7 @@ private:
     QObject * m_listChannels;
     QObject * m_stateServer;
 
+    QObject * m_changeusername;
     int m_confirmQuit;
 
     QQmlContext * m_context;

@@ -342,3 +342,131 @@ CClient* CDatabase::parseClient(string email, QString * get_err)
         //Il faudra check la taille a la sortie pour un return NULL
     }
 }
+
+QString CDatabase::updateUser(string uuid, string pseudo, string mail, string description)
+{
+    try {
+        QString error;
+        // Format a MySQL object
+        conn = mysql_init(NULL);
+
+        // Establish a MySQL connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            return error;
+        }
+
+        // Execute a sql statement
+        string query = "UPDATE utilisateurs SET username = '" + pseudo + "', mail = '" + mail + "', description = '" + description + "' WHERE uuid = '" + uuid + "';";
+
+
+        qDebug() << QString::fromStdString(query);
+
+        if (mysql_query(conn, query.c_str()))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            mysql_close(conn);
+            return error;
+        }
+
+            // Close a MySQL connection
+            mysql_close(conn);
+
+            return "success";
+        }
+        catch (char *e)
+    {
+        return QString::fromLocal8Bit(e);
+    }
+}
+
+QString CDatabase::changePassword(string mail, string uuid, string password, string newPass)
+{
+    try {
+        QString error;
+        conn = mysql_init(NULL);
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))  //Establish SQL connection
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            throw(error);
+        }
+    //Il doit rentrer son mdp aussi
+    if(getHash(mail, &error) == sha256(password))   //On vérifie que l'ancien mdp est correct
+    {
+        string query = "UPDATE utilisateur SET password = '" + sha256(newPass) + "' WHERE uuid = " + uuid + ";";
+        if(mysql_query(conn, query.c_str()))
+        {
+            throw(error);
+        }
+
+        return "success";
+    }
+    }
+    catch (QString e) {
+        cerr <<"Error occured in change password function : " << mysql_error(conn) << endl;
+        return e;
+    }
+}
+
+QString CDatabase::updateChannel(string id, string name, string maxuser)
+{
+    try {
+        QString error;
+        // Format a MySQL object
+        conn = mysql_init(NULL);
+
+        // Establish a MySQL connection
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            return error;
+        }
+
+        // Execute a sql statement
+        string query = "UPDATE channel SET name = '" + name + "', max_users = '" + maxuser + "' WHERE ID_channel = '" + id + "';";
+
+
+        qDebug() << QString::fromStdString(query);
+
+        if (mysql_query(conn, query.c_str()))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            mysql_close(conn);
+            return error;
+        }
+
+            // Close a MySQL connection
+            mysql_close(conn);
+
+            return "success";
+        }
+        catch (char *e)
+    {
+        return QString::fromLocal8Bit(e);
+    }
+
+}
+
+QString CDatabase::deleteUser(string uuid)
+{
+/*    try {
+        QString error;
+        conn = mysql_init(NULL);
+
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            return error;
+        }
+    }
+    catch () {
+
+    }*/
+    return "";
+}
+
+QString CDatabase::deleteChannel(string id)
+{
+return "";
+}

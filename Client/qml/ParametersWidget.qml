@@ -6,6 +6,7 @@ Item {
     width: 400
     height: 275
     objectName: "user_parameters"
+    signal login_request(string email, string password)
     Rectangle {
         id: rectangle
         x: 0
