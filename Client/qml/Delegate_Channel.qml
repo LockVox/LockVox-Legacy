@@ -31,18 +31,20 @@ Item {
         onEntered: {
 
             rectangle.visible=true
+            channel_activity.visible=true
 
         }
         onExited: {
 
             rectangle.visible=false
+            channel_activity.visible=false
 
         }
 
         onClicked: {
 
             listChannel.currentIndexChanged(index)
-            channel_activity.visible=true
+
             listChannel.currentIndex = index
         }
 
@@ -75,13 +77,13 @@ Item {
 
     Text {
         id: channel_activity
-        x: 128
+        x: 62
         y: 25
-        width: 52
+        width: 81
         height: 25
         visible: false
         color: "#11ff3a"
-        text:nbUsers+"/"+maxUsers
+        text:nbUsers+"/"+maxUsers+" persons connected"
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         objectName: "title"
@@ -107,6 +109,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:2}
+    D{i:0;formeditorZoom:3}
 }
 ##^##*/

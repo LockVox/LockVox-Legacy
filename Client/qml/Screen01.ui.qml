@@ -293,7 +293,7 @@ Rectangle {
         x: 196
         y: 25
         visible: false
-        focus:true
+        focus: true
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -584,6 +584,17 @@ Rectangle {
         value: 0.5
     }
 
+    Text {
+        id: membersText
+        x: 508
+        y: 48
+
+        text: "MEMBERS :" + nbUsers + "/" + maxUsers
+        anchors.right: parent.right
+
+        font.pixelSize: 12
+    }
+
     states: [
         State {
             name: "registerState"
@@ -657,7 +668,7 @@ Rectangle {
 
             PropertyChanges {
                 target: listClient
-                x: 495
+                x: 487
                 y: 70
                 width: 145
 
@@ -665,7 +676,7 @@ Rectangle {
                 visible: true
                 anchors.rightMargin: 8
                 anchors.bottomMargin: 14
-                anchors.topMargin: 51
+                anchors.topMargin: 71
                 anchors.leftMargin: 489
             }
 
@@ -868,6 +879,22 @@ Rectangle {
                 target: scrollBar
                 visible: true
                 active: true
+            }
+
+            PropertyChanges {
+                target: membersText
+                x: 473
+                y: 36
+                width: 65
+                height: 14
+                color: "#676d76"
+                font.pixelSize: 9
+                minimumPixelSize: 9
+                font.bold: true
+                anchors.leftMargin: 487
+                anchors.topMargin: 48
+                anchors.rightMargin: 102
+                anchors.bottomMargin: 443
             }
         },
         State {
@@ -1116,6 +1143,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.8999999761581421}
+    D{i:0;formeditorZoom:1.25}
 }
 ##^##*/
+

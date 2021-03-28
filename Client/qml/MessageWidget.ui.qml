@@ -30,10 +30,10 @@ T.Button {
     }
 
     Text {
-        id: username
+        id: usernamemsg
         x: 8
         y: 0
-        text: content
+        text: username
         font.pixelSize: 12
         Layout.preferredHeight: 14
         Layout.preferredWidth: 106
@@ -62,6 +62,15 @@ T.Button {
         Layout.preferredWidth: 234
     }
 
+    Rectangle {
+        id: rectangle
+        x: 42
+        y: 36
+        width: 200
+        height: 200
+        color: "#ffffff"
+    }
+
     states: [
         State {
             name: "normal"
@@ -84,6 +93,10 @@ T.Button {
 
             PropertyChanges {
                 target: text1
+                x: 8
+                y: 44
+                width: 234
+                height: 118
                 color: "#6b7376"
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.Wrap
@@ -92,7 +105,34 @@ T.Button {
 
             PropertyChanges {
                 target: dateMsg
+                x: 171
+                y: 16
                 color: "#e05141"
+            }
+
+            PropertyChanges {
+                target: control
+                height: 170
+            }
+
+            PropertyChanges {
+                target: usernamemsg
+                x: 55
+                y: 16
+                color: "#33a5e5"
+                font.bold: true
+            }
+
+            PropertyChanges {
+                target: rectangle
+                x: 8
+                y: 8
+                width: 30
+                height: 30
+                color: "#676d76"
+                radius: 7
+                border.color: "#313539"
+                border.width: 1
             }
         },
         State {
@@ -126,7 +166,7 @@ T.Button {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.659999966621399}
+    D{i:0;formeditorZoom:1.75}
 }
 ##^##*/
 

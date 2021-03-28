@@ -27,6 +27,11 @@ Item {
         TextField {
             id: passwordField
             placeholderText: qsTr("Password")
+            echoMode:TextInput.Password
+
+            //TextField.passwordCharacter: true
+
+
         }
 
     }

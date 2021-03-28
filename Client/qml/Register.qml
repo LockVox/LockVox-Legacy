@@ -30,11 +30,13 @@ Item {
         TextField {
             id: passwordField
             placeholderText: qsTr("Password")
+            echoMode:TextInput.Password
         }
 
         TextField {
             id: verifyPasswordField
             placeholderText: qsTr("Verify password")
+            echoMode:TextInput.Password
         }
 
     }
