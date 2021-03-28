@@ -2,11 +2,11 @@ import QtQuick 2.0
 import QtQuick.Controls 2.15
 
 Item {
-    id: item1
+    id: user_parameters
     width: 400
     height: 275
     objectName: "user_parameters"
-    signal login_request(string email, string password)
+    signal change_username(string new_pseudo)
     Rectangle {
         id: rectangle
         x: 0
@@ -134,7 +134,7 @@ Item {
 
             Connections {
                 target: changeEmailBtn
-                onClicked: item1.state = "changeEmailState"
+                onClicked: user_parameters.state = "changeUsernameState"
             }
         }
 
@@ -269,6 +269,14 @@ Item {
             height: 30
             visible: false
             text: "Modify"
+
+            Connections {
+                        target: applyUsernameBtn
+                        onClicked: user_parameters.change_username(changeEmailTextField.text)
+
+            }
+
+
         }
 
         CustomQpushButton {
@@ -303,6 +311,10 @@ Item {
                 target: changeEmailBtn
                 x: 258
                 y: 206
+                anchors.rightMargin: 69
+                anchors.leftMargin: 258
+                anchors.topMargin: 184
+                anchors.bottomMargin: 99
             }
 
             PropertyChanges {
@@ -375,6 +387,10 @@ Item {
                 target: changePasswordBtn
                 x: 258
                 y: 260
+                anchors.rightMargin: 69
+                anchors.bottomMargin: 55
+                anchors.leftMargin: 258
+                anchors.topMargin: 230
             }
         },
         State {
@@ -476,6 +492,8 @@ Item {
     ]
 
 }
+
+
 
 /*##^##
 Designer {

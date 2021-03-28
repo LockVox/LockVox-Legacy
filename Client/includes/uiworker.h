@@ -37,6 +37,7 @@ signals:
     void changeState(QString newState);
     void connect_server(QString);
     void login_request(QString,QString);
+    void change_username(QString);
 
 private:
     //Server

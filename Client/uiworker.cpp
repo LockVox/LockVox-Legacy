@@ -64,13 +64,13 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
     m_changeusername = m_rootObject->findChild<QObject*>("user_parameters");
-    QObject::connect(m_changeusername, SIGNAL(change_username),
-                     m_server, SLOT(changeUserName(QString)));
+
 
     //Check if compenents has been load correctly
-    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer){
+    if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer ||  ! m_changeusername){
         qDebug("Some objects hasn't been initialized correctly");
     }
+
 
     QObject::connect(m_listChannels, SIGNAL(currentIndexChanged(int)),
                      this, SLOT(onCurrentIndexChanged(int)));
@@ -115,6 +115,13 @@ UIWorker::UIWorker(QGuiApplication *app)
 
     QObject::connect(m_quitPopup, SIGNAL(confirmQuit(int)),
                      this, SLOT(onConfirmQuit(int)));
+
+    //Connect change username :
+
+     QObject::connect(m_changeusername, SIGNAL(change_username(QString)),
+                     m_server, SLOT(changeUserName(QString)));
+
+
 
     //QObject::connect()
 

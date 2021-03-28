@@ -42,17 +42,20 @@ Item {
         y: 18
         width: 59
         height: 15
-        color: "#000000"
+        color: "#33a5e5"
         text: pseudo
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        font.bold: true
     }
 
     StatusIndicator {
         id: statusIndicator
-        x: 114
-        y: 12
-        color: "#1e7e1b"
+        x: 121
+        y: 15
+        width: 18
+        height: 20
+        color: "#52f34c"
         active: isOnline
     }
 
@@ -77,6 +80,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:3}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/
