@@ -468,7 +468,7 @@ QString CDatabase::deleteUser(string uuid)
 
 QString CDatabase::deleteChannel(string id)
 {
-    string query = "DELETE FROM 'utilisateurs' WHERE uuid = '" +uuid + "';";
+    /*string query = "DELETE FROM 'channel' WHERE uuid = '" +  id + "';";
     qDebug() <<"deleteUser request : " <<  QString::fromStdString(query);
 
     if (mysql_query(conn, query.c_str()))
@@ -486,5 +486,6 @@ QString CDatabase::deleteChannel(string id)
     catch (char *e)
     {
         return QString::fromLocal8Bit(e);
-    }
+    }*/
+    return"";
 }
