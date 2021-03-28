@@ -450,7 +450,7 @@ QString CDatabase::updateChannel(string id, string name, string maxuser)
 
 QString CDatabase::deleteUser(string uuid)
 {
-    try {
+/*    try {
         QString error;
         conn = mysql_init(NULL);
 
@@ -459,61 +459,32 @@ QString CDatabase::deleteUser(string uuid)
             error = QString::fromLocal8Bit(mysql_error(conn));
             return error;
         }
-
-        string query = "DELETE FROM 'utilisateurs' WHERE uuid = '" +uuid + "';";
-        qDebug() <<"deleteUser request : " <<  QString::fromStdString(query);
-
-        if (mysql_query(conn, query.c_str()))
-        {
-            error = QString::fromLocal8Bit(mysql_error(conn));
-            mysql_close(conn);
-            return error;
-        }
-
-            // Close a MySQL connection
-            mysql_close(conn);
-
-            return "success";
-        }
-        catch (char *e)
-    {
-        return QString::fromLocal8Bit(e);
     }
+    catch () {
 
+    }*/
     return "";
 }
 
 QString CDatabase::deleteChannel(string id)
 {
-    try {
-        QString error;
-        conn = mysql_init(NULL);
+    string query = "DELETE FROM 'utilisateurs' WHERE uuid = '" +uuid + "';";
+    qDebug() <<"deleteUser request : " <<  QString::fromStdString(query);
 
-        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
-        {
-            error = QString::fromLocal8Bit(mysql_error(conn));
-            return error;
-        }
+    if (mysql_query(conn, query.c_str()))
+    {
+        error = QString::fromLocal8Bit(mysql_error(conn));
+        mysql_close(conn);
+        return error;
+    }
 
-        string query = "DELETE FROM 'channel' WHERE id = '" + id + "';";
-        qDebug() <<"deleteChannel request : " <<  QString::fromStdString(query);
+        // Close a MySQL connection
+        mysql_close(conn);
 
-        if (mysql_query(conn, query.c_str()))
-        {
-            error = QString::fromLocal8Bit(mysql_error(conn));
-            mysql_close(conn);
-            throw(error);
-        }
-
-            // Close a MySQL connection
-            mysql_close(conn);
-
-            return "success";
-        }
-        catch (char *e)
+        return "success";
+    }
+    catch (char *e)
     {
         return QString::fromLocal8Bit(e);
     }
-
-    return "";
 }
