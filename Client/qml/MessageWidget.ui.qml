@@ -33,7 +33,7 @@ T.Button {
         id: usernamemsg
         x: 8
         y: 0
-        text: username
+        text: from
         font.pixelSize: 12
         Layout.preferredHeight: 14
         Layout.preferredWidth: 106

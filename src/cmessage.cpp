@@ -249,7 +249,9 @@ QString CMessage::toString()
 void CMessage::getSenderPseudo(QVector<CClient *> clients)
 {
     foreach(CClient * c, clients){
-        if(c->get_uuid().toString() == from)
+        if(c->get_uuid() == from){
             from_pseudo = c->get_pseudo();
+            return;
+        }
     }
 }

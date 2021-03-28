@@ -481,7 +481,13 @@ void CServer::processIncomingData(QByteArray data){
                     //received message list
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
                     int id = messages_list.first().get_to().toInt();
+                    for(int i = 0; i < messages_list.size(); i++){
+                        messages_list[i].getSenderPseudo(getClientsList()->get_clients());
+                    }
+
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
+
+
 
                     break;
                 }
@@ -522,7 +528,10 @@ void CServer::processIncomingData(QByteArray data){
                 {
                     //Received message
                     CMessage tmp = packet->Deserialize_Message();
+                    tmp.getSenderPseudo(getClientsList()->get_clients());
                     getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
+
+
                     if(tmp.get_to().toInt() == m_currentChannelIndex){
                         getMessagesList()->set_messages(getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->get_messages());
                     }

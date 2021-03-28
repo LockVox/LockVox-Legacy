@@ -325,15 +325,6 @@ Rectangle {
 
             verticalLayoutDirection: ListView.TopToBottom
             delegate: MessageWidget {
-                Text {
-                    text: from
-                }
-
-                Text {
-                    text: content
-                }
-
-                //Delegate_Message {}
             }
         }
     }
