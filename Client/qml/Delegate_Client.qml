@@ -76,7 +76,11 @@ Item {
 
 
     Image{
-        source:imgPath
+        x: 0
+        y: 0
+        width: 50
+        height: 50
+        source:"image://ImageProvider/"+pseudo
     }
 
 

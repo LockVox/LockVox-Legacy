@@ -33,7 +33,7 @@ CServer::CServer()
 
         // Gestion du serveur TCP
         serveur = new QTcpServer(this);
-        if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 5SERVER885
+        if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
         {
             // Si le serveur n'a pas été démarré correctement
             writeToLog(serveur->errorString(), SERVER_ERR);
@@ -406,9 +406,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         CPacket ans("0","2");
                         ans.Serialize_newClient(sender);
                         sendToAll(ans.GetByteArray());
-
+                        QString res = m_db->updateUser(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString());
                         //BDD
-                        /*if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
+                        if(res=="succes")
                         {
                             //Send update
                             CPacket ans("2","0");
@@ -417,11 +417,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
                         else
                         {
+                            writeToLog(res, DB_ERR);
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
                             errClient->set_description("Error in database");//De la merde à rework
                             ans.Serialize_newClient(errClient);
-                        }*/
+                        }
 
                         free(client);
 
@@ -611,7 +612,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             if(error != "success")
                             {
-                                writeToLog("Error in creating new user", DB_ERR);
+                                writeToLog("Error in creating new user", SERVER_ERR);
                                 writeToLog(error,DB_ERR);
                                 //Send error to client
                                 //TODO
@@ -1465,10 +1466,10 @@ QList<CMessage> CServer::createMessageList(QString id, bool isPrivate, int nb_ms
 //       Write the given error into the server log file      //
 //            error should be the given error                //
 //                  level should be :                        //
-//                [SERVER|0] : Standard                      //
-//           [SERVER_WARN|1] : Server Warning                //
-//            [SERVER_ERR|2] : Server Error                  //
-//                [DB_ERR|3] : Database Error                //
+//                    0 : Standard                           //
+//                  1 : Server Warning                       //
+//                   2 : Server Error                        //
+//                  3 : Database Error                       //
 // ///////////////////////////////////////////////////////// //
 void CServer::writeToLog(QString error, int level)
 {

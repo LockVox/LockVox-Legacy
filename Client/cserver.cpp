@@ -213,8 +213,9 @@ void CServer::onReceiveData(){
                 if(bracket == 0 && !buffer.isEmpty())
                 {
                     QByteArray array(buffer.toLocal8Bit());
-                    if(array != "\n")
+                    if(array != "\n" & array !="{\n}\n")
                     {
+                        qDebug() << "Process :" << array << Qt::endl;
                         processIncomingData(array);
                     }
                     buffer.clear();
@@ -236,7 +237,15 @@ void CServer::onReceiveData(){
     //Process data
     if(ifTrueProccess)
     {
-        processIncomingData(*data);
+        if(*data == "{\n}\n" || *data =="\n")
+        {
+
+            qDebug() << "Empty packet ignored" << Qt::endl;
+        }
+        else
+        {
+            processIncomingData(*data);
+        }
     }
     delete data;
 }
@@ -308,7 +317,7 @@ void CServer::checkFinishLoad()
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
+    //() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
@@ -318,6 +327,7 @@ void CServer::processIncomingData(QByteArray data){
        }
 
        Deserialize(data);
+       emit(m_clientsList->dataChanged());
        //checkCompenents();
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
@@ -990,7 +1000,7 @@ void CServer::Deserialize(QByteArray in){
         }
         else
         {
-            path = "storage/server/pp/pp0.png";
+            path = "storage/server/pp/pp11.png";
             if(QFile::exists(path))
             {
                 QImage tmp(path);

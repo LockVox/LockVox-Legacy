@@ -33,6 +33,10 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_engine.rootContext()->setContextProperty("channelsList", m_server->getChannelsList());
     m_engine.rootContext()->setContextProperty("messagesList", m_server->getMessagesList() );
 
+    QImage img("storage/server/pp/pp0.png");
+
+    m_imgProvider = new ImageProvider(m_server->getClientsList(),img);
+    m_engine.addImageProvider("ImageProvider", m_imgProvider);
 
     //Load main.qml
     const QUrl url(QStringLiteral("qrc:/main.qml"));

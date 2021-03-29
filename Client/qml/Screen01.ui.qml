@@ -1182,7 +1182,6 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.75}
+    D{i:0;formeditorZoom:0.8999999761581421}
 }
 ##^##*/
-
