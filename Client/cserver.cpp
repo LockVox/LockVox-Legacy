@@ -420,7 +420,7 @@ void CServer::processIncomingData(QByteArray data){
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
 
-                bool exist = true;
+                bool exist = false;
 
                 for(int i = 0; i < get_clientList().size(); i++)
                 {
@@ -435,6 +435,7 @@ void CServer::processIncomingData(QByteArray data){
                 if(!exist)
                 {
                     m_clientsList->addClient(client);
+                    emit m_clientsList->dataChanged();
                 }
                 break;
             }
@@ -450,6 +451,8 @@ void CServer::processIncomingData(QByteArray data){
                    {
                        client->set_isOnline(false);
                        m_clientsList->setItem(client);
+                       emit m_clientsList->dataChanged();
+                       break;
                    }
                 }
              free(client);

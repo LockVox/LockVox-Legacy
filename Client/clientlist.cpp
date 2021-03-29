@@ -27,6 +27,8 @@ void ClientList::addClient(CClient * c)
     m_clients.append(c);
 
     emit postItemAppended();
+
+    emit dataChanged();
 }
 
 void ClientList::setItem(CClient* c){
