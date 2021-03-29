@@ -76,10 +76,10 @@ Item {
 
 
     Image{
-        x: 0
-        y: 0
-        width: 50
-        height: 50
+        x: 4
+        y: 4
+        width: 42
+        height: 42
         source:"image://ImageProvider/"+pseudo
     }
 
@@ -89,6 +89,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.100000023841858}
+    D{i:0;formeditorZoom:3}
 }
 ##^##*/

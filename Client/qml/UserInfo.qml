@@ -43,7 +43,7 @@ Rectangle {
         y: 0
         width: 72
         height: 72
-        source: "lock_vox_logo_miniature1.png"
+        source: "image://imageprovider"+username.text
         fillMode: Image.PreserveAspectFit
     }
 
