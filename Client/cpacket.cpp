@@ -107,7 +107,6 @@ void CPacket::Serialize_myClient(CClient * client){
     clientObj.insert("pseudo", client->get_pseudo());
     clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
-    clientObj.insert("uuid", client->get_uuid().toString());
     m_obj["myClient"] = clientObj;
 }
 
@@ -349,6 +348,13 @@ void CPacket::Serialize_regAns(int code)
     m_obj["ansReg"] = regAnsObj;
 }
 
+void CPacket::Serialize_MessageListInfo(int index)
+{
+    QJsonObject msgInfo;
+    msgInfo.insert("index",index);
+    m_obj["msgInfo"] = msgInfo;
+}
+
 int CPacket::Deserialize_regAns()
 {
     try {
@@ -364,6 +370,27 @@ int CPacket::Deserialize_regAns()
         qDebug() << "Error in Deserialize_regAns :" << e << Qt::endl;
         return NULL;
     }
+}
+
+int CPacket::Deserialize_MessageListInfo()
+{
+    try
+    {
+        if(m_obj.contains("msgInfo"))
+        {
+            QJsonObject msgInfo = m_obj.value("msgInfo").toObject();
+            int index = msgInfo.value("index").toInt();
+            qDebug() << "Index HERE : " << index;
+            return index;
+        }
+
+        return -1;
+    }
+    catch (char* e)
+    {
+        qDebug() << "Error in Deserialize_Message :" << e << Qt::endl;
+    }
+    return -1;
 }
 
 void CPacket::Serialize_Message(CMessage msg)
@@ -406,6 +433,8 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
 {
     int index = 0;
     QJsonArray msglist;
+    QJsonObject msgInfo;
+
     foreach(CMessage m, list)
     {
         m.toXML();
@@ -424,6 +453,8 @@ void CPacket::Serialize_MessageList(QList<CMessage> list)
             index++;
         }
     }
+
+
     m_obj["messagelist"] = msglist;
 }
 

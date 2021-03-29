@@ -495,6 +495,33 @@ CMessage CPacket::Deserialize_Message()
     return null;
 }
 
+void CPacket::Serialize_MessageListInfo(int index)
+{
+    QJsonObject msgInfo;
+    msgInfo.insert("index",index);
+    m_obj["msgInfo"] = msgInfo;
+}
+
+int CPacket::Deserialize_MessageListInfo()
+{
+    try
+    {
+        if(m_obj.contains("msgInfo"))
+        {
+            int index = m_obj.value("index").toInt();
+
+            return index;
+        }
+
+        return -1;
+    }
+    catch (char* e)
+    {
+        qDebug() << "Error in Deserialize_Message :" << e << Qt::endl;
+    }
+    return -1;
+}
+
 void CPacket::Serialize_MessageList(QList<CMessage> list)
 {
     int index = 0;

@@ -213,17 +213,29 @@ void CServer::setClientsList(ClientList *clientsList)
     m_clientsList = clientsList;
 }
 
-void CServer::onReceiveData(){
 
+int checkPacketIntegrity(QByteArray ba){
+    CPacket p(ba, NULL);
+
+    if(p.GetAction() == NULL && p.GetType() == NULL){
+        return 0;
+    }
+    return 1;
+}
+
+
+
+
+
+void CServer::onReceiveData(){
+static int nb_receive_packet;
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
 
+    nb_receive_packet++;
+    qDebug() << "Packet " << nb_receive_packet << " : " << *data << Qt::endl;
 
     CPacket tmp(*data,NULL);
-    if(tmp.GetByteArray() == "{\n}\n")
-    {
-        return;
-    }
 
     bool ifTrueProccess = true;
 
@@ -241,6 +253,9 @@ void CServer::onReceiveData(){
                 QByteArray array(buffer.toLocal8Bit());
                 if(array !="\n" & array !="{\n}\n")
                 {
+                    //qDebug() << "Separate packets\n";
+                    //qDebug() << "m_action : " << tmp.GetAction() << " m_type : " << tmp.GetType();
+                    //qDebug() << array;
                     processIncomingData(array);
                 }
                 buffer.clear();
@@ -300,12 +315,32 @@ void CServer::onReceiveData(){
             processIncomingData(*data);
         }
     }
+    /*if(tmp.GetByteArray() == "{\n}\n")
+    {
+        qDebug() << "packet malformé\n";
+        return;
+    }*/
+
+    if(!m_finishLoad && m_self){
+
+        checkCompenents();
+        checkFinishLoad();
+        if(!m_finishLoad)
+            loadAllCompenent();
+    }
+
+    if(m_finishLoad && m_currentUIState != "Home"){
+        //m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
+        emit(changeState("Home"));
+        m_currentUIState = "Home";
+    }
+
+
     delete data;
 }
 
 void CServer::loadAllCompenent(){
 
-    checkCompenents();
     if(!m_hasChannelsLoaded || !m_hasClientsLoaded){
         CPacket p("-1","-1");
         sendToServer(p.GetByteArray());
@@ -365,7 +400,7 @@ void CServer::checkCompenents(){
             if(c->getMessagesLists()->getHasBeenLoad() == true)
                 nb_list_messages_load++;
         }
-        if(nb_list_messages_load == m_channelsList->get_channels().size()-1){
+        if(nb_list_messages_load == m_channelsList->get_channels().size()){
             m_hasMessagesLoaded = true;
         }
     }
@@ -380,7 +415,7 @@ void CServer::checkFinishLoad()
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    //() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
+    qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
@@ -389,25 +424,25 @@ void CServer::processIncomingData(QByteArray data){
            return;
        }
        Deserialize(data);
-       emit(m_clientsList->dataChanged());
-       //checkCompenents();
-       if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
+
+       /*if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
-           emit(changeState("Home"));
+           //emit(changeState("Home"));
            foreach(CChannel * c, m_channelsList->get_channels())
            {
                CPacket request("1","3");
                request.Serialize_messageRequest(c->get_id(),20,0);
                m_socket->write(request.GetByteArray());
            }
-       }
+       }*/
+        /*
        foreach(CClient * c, m_clientsList->get_clients())
        {
            CPacket ppRequest("1","4");
            ppRequest.Serialize_ppRequest(c->get_uuid().toString());
            qDebug() << ppRequest.GetByteArray();
            m_socket->write(ppRequest.GetByteArray());
-       }
+       }*/
     }
 
     //Récupération du type
@@ -577,14 +612,20 @@ void CServer::processIncomingData(QByteArray data){
                 {
                     //received message list
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
+
+                    //Case empty messages list
+                    if(messages_list.isEmpty()){
+                        int index = packet->Deserialize_MessageListInfo();
+                        getChannelsList()->get_channelAt(index)->getMessagesLists()->setHasBeenLoad(true);
+                        break;
+                    }
+
                     int id = messages_list.first().get_to().toInt();
                     for(int i = 0; i < messages_list.size(); i++){
                         messages_list[i].getSenderPseudo(getClientsList()->get_clients());
                     }
 
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
-
-
 
                     break;
                 }
@@ -708,6 +749,7 @@ void CServer::processIncomingData(QByteArray data){
                 case 14:
                 {
                     //pp request answer
+                    static int nb_img;
                     QList<QString> request = packet->Deserialize_ppAns();
                     if(request.first() == "error")
                     {
@@ -727,9 +769,11 @@ void CServer::processIncomingData(QByteArray data){
                             if(c->get_uuid() == uuid)
                             {
                                 c->set_profilePic(img);
+                                nb_img++;
+                                qDebug() << "Nb img load : " << nb_img;
+                                break;
                             }
                         }
-
                     }
                     break;
                 }
@@ -796,18 +840,6 @@ void CServer::processIncomingData(QByteArray data){
         }
      }
 
-    if(!m_finishLoad && m_self){
-        checkCompenents();
-        checkFinishLoad();
-        if(!m_finishLoad)
-            loadAllCompenent();
-    }
-
-    if(m_finishLoad & m_currentUIState != "home"){
-        m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
-        emit(changeState("Home"));
-        m_currentUIState = "Home";
-    }
 }
 
 bool CServer::Register(QString username, QString mail, QString password,QString password_confirm)
@@ -1085,7 +1117,7 @@ void CServer::Deserialize(QByteArray in){
     deserializeChannel(cArray);
     deserializeClients(sArray);
 
-
+    /*
     QDir test;
     if(!test.exists("storage/log"))
     {
@@ -1120,7 +1152,7 @@ void CServer::Deserialize(QByteArray in){
 
             }
         }
-    }
+    }*/
 }
 
 QByteArray CServer::SerializeChannels(){

@@ -180,8 +180,8 @@ void UIWorker::onCurrentIndexChanged(int index)
 
     m_server->setCurrentChannelIndex(index);
 
-
-    emit m_server->getMessagesList()->listChanged(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+    m_server->getMessagesList()->set_messages(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists()->get_messages());
+    //emit m_server->getMessagesList()->listChanged(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
 
 
 
