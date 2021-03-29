@@ -450,27 +450,28 @@ QString CDatabase::updateChannel(string id, string name, string maxuser)
 
 QString CDatabase::deleteUser(string uuid)
 {
-/*    try {
+    try {
         QString error;
         conn = mysql_init(NULL);
 
         if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
         {
             error = QString::fromLocal8Bit(mysql_error(conn));
-            return error;
+            throw(error);
         }
     }
-    catch () {
-
-    }*/
-    return "";
+    catch (QString err) {
+        return err;
+    }
+    return "success";
 }
 
 QString CDatabase::deleteChannel(string id)
 {
-    /*string query = "DELETE FROM 'channel' WHERE uuid = '" +  id + "';";
+    try{
+    string query = "DELETE FROM 'channel' WHERE uuid = '" +  id + "';";
     qDebug() <<"deleteUser request : " <<  QString::fromStdString(query);
-
+    QString error;
     if (mysql_query(conn, query.c_str()))
     {
         error = QString::fromLocal8Bit(mysql_error(conn));
@@ -486,6 +487,6 @@ QString CDatabase::deleteChannel(string id)
     catch (char *e)
     {
         return QString::fromLocal8Bit(e);
-    }*/
+    }
     return"";
 }

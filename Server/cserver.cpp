@@ -406,9 +406,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         CPacket ans("0","2");
                         ans.Serialize_newClient(sender);
                         sendToAll(ans.GetByteArray());
-
+                        QString res = m_db->updateUser(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString());
                         //BDD
-                        /*if(m_db->updateUser(client->get_uuid().toString().toStdString(), client->get_pseudo().toStdString(), client->get_mail().toStdString(), client->get_description().toStdString())=="succes")
+                        if(res=="succes")
                         {
                             //Send update
                             CPacket ans("2","0");
@@ -417,11 +417,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
                         else
                         {
+                            writeToLog(res, DB_ERR);
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
                             errClient->set_description("Error in database");//De la merde à rework
                             ans.Serialize_newClient(errClient);
-                        }*/
+                        }
 
                         free(client);
 
