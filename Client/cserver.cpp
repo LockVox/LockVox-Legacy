@@ -318,6 +318,7 @@ void CServer::processIncomingData(QByteArray data){
        }
 
        Deserialize(data);
+       emit(m_clientsList->dataChanged());
        //checkCompenents();
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
@@ -990,7 +991,7 @@ void CServer::Deserialize(QByteArray in){
         }
         else
         {
-            path = "storage/server/pp/pp0.png";
+            path = "storage/server/pp/pp11.png";
             if(QFile::exists(path))
             {
                 QImage tmp(path);

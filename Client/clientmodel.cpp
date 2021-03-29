@@ -24,6 +24,8 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
 
     CClient c = *m_clientsList->get_clients().at(index.row());
     switch(role){
+        case uuidRole:
+                    return QVariant(c.get_uuid());
         case PseudoRole:
                    return QVariant(c.get_pseudo());
         case isOnlineRole:
@@ -95,6 +97,7 @@ QHash<int, QByteArray> ClientModel::roleNames() const
     roles[isOnlineRole] = "isOnline";
     roles[imageRole] = "imgPath";
     roles[descriptionRole] = "description";
+    roles[uuidRole] = "uuid";
     return roles;
 }
 

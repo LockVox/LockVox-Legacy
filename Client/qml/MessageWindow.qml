@@ -68,6 +68,18 @@ Item {
             Layout.preferredWidth: 238
             placeholderText: qsTr("Send a message")
 
+            Keys.onPressed: {
+
+                if(event.key == Qt.Key_Return){
+                            sendMessage(messageText.text)
+                            messageText.clear()
+
+
+                }
+
+            }
+
+
 
 
         }
@@ -114,8 +126,7 @@ Item {
         onClicked: {sendMessage(messageText.text)
             messageText.clear()
 
-        target:messageText
-            Key.onEnterPressed
+
 
         }
     }

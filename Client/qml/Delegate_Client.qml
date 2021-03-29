@@ -10,11 +10,12 @@ Item {
     width: 640
     height: 50
 
+
     clip:true
     MouseArea
     {
 
-        //hoverEnabled: true
+        hoverEnabled: true
         //containsMouse: true
         id: mouse
         width: rectangle.width
@@ -28,6 +29,10 @@ Item {
         anchors.bottomMargin: 0
         anchors.leftMargin: 0
         anchors.topMargin: 0
+
+        onEntered: username.color="#f46f68"
+
+        onExited: username.color="#33a5e5"
 
         onClicked: {
             listClient.currentIndexChanged(index)
@@ -71,7 +76,11 @@ Item {
 
 
     Image{
-        source:imgPath
+        x: 0
+        y: 0
+        width: 50
+        height: 50
+        source:"image://ImageProvider/"+pseudo
     }
 
 
@@ -80,6 +89,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.659999966621399}
+    D{i:0;formeditorZoom:1.100000023841858}
 }
 ##^##*/

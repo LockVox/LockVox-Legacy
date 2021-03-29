@@ -17,7 +17,8 @@ public:
         PseudoRole = Qt::UserRole+1,
         isOnlineRole,
         imageRole,
-        descriptionRole
+        descriptionRole,
+        uuidRole
     };
 
     explicit ClientModel(QObject *parent = nullptr);

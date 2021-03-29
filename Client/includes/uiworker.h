@@ -10,6 +10,7 @@
 #include <QSignalSpy>
 
 #include "Client/includes/cserver.h"
+#include "imageprovider.h"
 
 class CServer;
 class UIWorker : public QObject
@@ -67,6 +68,8 @@ private:
 
     QObject * m_changeusername;
     int m_confirmQuit;
+
+    ImageProvider * m_imgProvider;
 
     QQmlContext * m_context;
 
