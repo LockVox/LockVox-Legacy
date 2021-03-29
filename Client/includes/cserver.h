@@ -132,7 +132,9 @@ signals:
         bool m_hasSelfLoaded;
         bool m_hasChannelsLoaded;
         bool m_hasClientsLoaded;
+        bool m_hasPictureLoaded;
         bool m_hasMessagesLoaded;
+
         bool m_finishLoad;
         QString m_currentUIState;
         QString ip;
