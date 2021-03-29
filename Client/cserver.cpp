@@ -223,6 +223,7 @@ void CServer::onReceiveData(){
                     QByteArray array(buffer.toLocal8Bit());
                     if(array != "\n" & array !="{\n}\n")
                     {
+                        qDebug() << "Process :" << array << Qt::endl;
                         processIncomingData(array);
                     }
                     buffer.clear();
@@ -244,8 +245,9 @@ void CServer::onReceiveData(){
     //Process data
     if(ifTrueProccess)
     {
-        if(*data == "{\n}\n")
+        if(*data == "{\n}\n" || *data =="\n")
         {
+
             qDebug() << "Empty packet ignored" << Qt::endl;
         }
         else
@@ -333,7 +335,7 @@ void CServer::checkFinishLoad()
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
+    //() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
