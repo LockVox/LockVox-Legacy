@@ -12,7 +12,8 @@ m_type(type),m_action(action)
     Serialize();
 }
 
-CPacket::CPacket(QByteArray data, CClient * client){
+CPacket::CPacket(QByteArray data, CClient * client)
+{
     m_client = client;                                  //Client
 
     m_data = QJsonDocument::fromJson(data);             //JSON Doc
@@ -578,6 +579,38 @@ int CPacket::Deserialize_MessageError()
         qDebug() << "Error in deserialize_messageError : " << e << Qt::endl;
         return -1;
     }
+}
+
+QList<QString> CPacket::Deserialize_ppAns()
+{
+    QList<QString> err;
+    err.append("error");
+    try
+    {
+        if(m_obj.contains("ppAns"))
+        {
+            QJsonObject ppAns = m_obj.value("ppAns").toObject();
+            QList<QString> ret;
+            ret.append(ppAns.value("uuid").toString());
+            ret.append(ppAns.value("img").toString());
+            return ret;
+        }
+        return err;
+    }
+    catch (char *e)
+    {
+        qDebug() << "Error in deserialize_ppAns :" << e << Qt::endl;
+
+        return err;
+    }
+}
+
+void CPacket::Serialize_ppRequest(QUuid uuid)
+{
+    QJsonObject ppReq;
+    ppReq.insert("uuid",uuid.toString());
+
+    m_obj["ppReq"] = ppReq;
 }
 
 //UI

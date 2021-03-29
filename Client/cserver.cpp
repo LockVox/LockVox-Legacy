@@ -197,52 +197,84 @@ void CServer::onReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(m_socket->readAll());
 
-    int bracket = 0;
-    bool ifTrueProccess = true;
+
     CPacket tmp(*data,NULL);
-    if(tmp.GetAction().isNull() || tmp.GetType().isNull())
+    if(tmp.GetByteArray() == "{\n}\n")
     {
-        if(!data->isEmpty())
+        return;
+    }
+
+    bool ifTrueProccess = true;
+
+    if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
+    {
+        int bracket = 0;
+        QTextStream stream(data);
+        QString buffer;
+
+        while(!stream.atEnd())
         {
-            ifTrueProccess = false;
-            QTextStream stream(data);
-            QString buffer;
-
-            while(!stream.atEnd())
+            if(bracket == 0 && !buffer.isEmpty())
             {
-                if(bracket == 0 && !buffer.isEmpty())
+                ifTrueProccess = false;
+                QByteArray array(buffer.toLocal8Bit());
+                if(array !="\n" & array !="{\n}\n")
                 {
-                    QByteArray array(buffer.toLocal8Bit());
-                    if(array != "\n" & array !="{\n}\n")
-                    {
-                        qDebug() << "Process :" << array << Qt::endl;
-                        processIncomingData(array);
-                    }
-                    buffer.clear();
+                    processIncomingData(array);
                 }
+                buffer.clear();
+            }
 
-                QString oneChar = stream.read(1);
-                buffer += oneChar;
-                if(oneChar == "{")
+            QString oneChar = stream.read(1);
+            buffer += oneChar;
+            if(oneChar == "{")
+            {
+                bracket++;
+            }
+            if(oneChar == "}")
+            {
+                bracket--;
+            }
+        }
+
+        if(ifTrueProccess)
+        {
+            if(data->contains("\"mainObj\": {"))
+            {
+                //New packet
+                if(!this->buffer.isEmpty())
                 {
-                    bracket++;
+                    qDebug() << "New request held by multiple packet arrived while user buffer isn't empty, clearing it";
+                    qDebug() << "A packet and therefore a request must have been lost nor a bad packet was received before";
+                    this->buffer.clear();
                 }
-                if(oneChar == "}")
+                this->buffer.append(*data);
+            }
+            else
+            {
+                if(this->buffer.isEmpty())
                 {
-                    bracket--;
+                    //That's meen it's a bad packet, report to log
+                    qDebug() << "Unable to deserialize received packet :" << Qt::endl << *data << Qt::endl << "Request Aborted" << Qt::endl;
+                }
+                else
+                {
+                    buffer.append(*data);
+                    CPacket tmp1(this->buffer,NULL);
+
+                    //We check if the packet is complete, otherwise we wait for the buffer to fill up
+                    if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
+                    {
+                        processIncomingData(this->buffer);
+                        buffer.clear();
+                    }
                 }
             }
         }
     }
-    //Process data
-    if(ifTrueProccess)
+    else
     {
-        if(*data == "{\n}\n" || *data =="\n")
-        {
-
-            qDebug() << "Empty packet ignored" << Qt::endl;
-        }
-        else
+        if(ifTrueProccess & *data != "\n" & *data !="{\n}\n")
         {
             processIncomingData(*data);
         }
@@ -336,8 +368,15 @@ void CServer::processIncomingData(QByteArray data){
            {
                CPacket request("1","3");
                request.Serialize_messageRequest(c->get_id(),20,0);
-               qDebug() << m_socket->write(request.GetByteArray());
+               m_socket->write(request.GetByteArray());
            }
+       }
+       foreach(CClient * c, m_clientsList->get_clients())
+       {
+           CPacket ppRequest("1","4");
+           ppRequest.Serialize_ppRequest(c->get_uuid().toString());
+           qDebug() << ppRequest.GetByteArray();
+           m_socket->write(ppRequest.GetByteArray());
        }
     }
 
@@ -626,6 +665,35 @@ void CServer::processIncomingData(QByteArray data){
                 case 13:
                 {
                     //Rename chan text
+                    break;
+                }
+
+                case 14:
+                {
+                    //pp request answer
+                    QList<QString> request = packet->Deserialize_ppAns();
+                    if(request.first() == "error")
+                    {
+                        //error
+                        break;
+                    }
+                    else
+                    {
+                        QUuid uuid(request.first());
+                        qDebug() << "Arrived request pp for user : " << uuid << Qt::endl;
+                        QImage img;
+                        QByteArray array = QByteArray::fromBase64(request.last().toLatin1());
+                        img.loadFromData(array);
+
+                        foreach(CClient * c, getClientsList()->get_clients())
+                        {
+                            if(c->get_uuid() == uuid)
+                            {
+                                c->set_profilePic(img);
+                            }
+                        }
+
+                    }
                     break;
                 }
 

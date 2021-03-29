@@ -632,4 +632,36 @@ void CPacket::Serialize_MessageError(int code)
     m_obj["msgErr"] = msgErr;
 }
 
+void CPacket::Serialize_ppAnswer(QImage pp, QUuid uuid)
+{
+    QJsonObject ppAns;
+    ppAns.insert("uuid",uuid.toString());
+
+    QByteArray array;
+    QBuffer buffer(&array);
+    pp.save(&buffer, "PNG");
+    ppAns.insert("img",QString::fromLatin1(array.toBase64()));
+
+    m_obj["ppAns"] = ppAns;
+}
+
+QString CPacket::deserialize_ppRequest()
+{
+    QString err;
+    try
+    {
+        if(m_obj.contains("ppReq"))
+        {
+            QJsonObject ppReq = m_obj.value("ppReq").toObject();
+            return ppReq.value("uuid").toString();
+        }
+        return "Error while trying to deserialize profile picture request, no correct field \"ppReq\" found.";
+    }
+    catch (char *e)
+    {
+        err.append(e);
+        return err;
+    }
+}
+
 //UI

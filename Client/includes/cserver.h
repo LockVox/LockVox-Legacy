@@ -142,6 +142,7 @@ signals:
         //Logging
         QFile log_file;
         QTextStream log;
+        QByteArray buffer;
 
 };
 

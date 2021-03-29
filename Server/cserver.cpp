@@ -175,39 +175,36 @@ void CServer::onReceiveData(){
 
     //Process data
     CPacket tmp(*data, get_clientList()[uid]); //Check if valid packet, if not, may be a splitted packet or multiple packet
+    bool ifTrueProccess = true;
+
     if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
     {
         int bracket = 0;
-        bool ifTrueProccess = true;
+        QTextStream stream(data);
+        QString buffer;
 
-        if(!data->isEmpty())
+        while(!stream.atEnd())
         {
-            QTextStream stream(data);
-            QString buffer;
-
-            while(!stream.atEnd())
+            if(bracket == 0 && !buffer.isEmpty())
             {
-                if(bracket == 0 && !buffer.isEmpty())
+                ifTrueProccess = false;
+                QByteArray array(buffer.toLocal8Bit());
+                if(array !="\n")
                 {
-                    ifTrueProccess = false;
-                    QByteArray array(buffer.toLocal8Bit());
-                    if(array !="\n")
-                    {
-                        processIncomingData(get_clientList()[uid], array);
-                    }
-                    buffer.clear();
+                    processIncomingData(get_clientList()[uid], array);
                 }
+                buffer.clear();
+            }
 
-                QString oneChar = stream.read(1);
-                buffer += oneChar;
-                if(oneChar == "{")
-                {
-                    bracket++;
-                }
-                if(oneChar == "}")
-                {
-                    bracket--;
-                }
+            QString oneChar = stream.read(1);
+            buffer += oneChar;
+            if(oneChar == "{")
+            {
+                bracket++;
+            }
+            if(oneChar == "}")
+            {
+                bracket--;
             }
         }
 
@@ -250,7 +247,10 @@ void CServer::onReceiveData(){
     }
     else
     {
-        processIncomingData(get_clientList()[uid], *data);
+        if(ifTrueProccess & *data != "\n")
+        {
+            processIncomingData(get_clientList()[uid], *data);
+        }
     }
 }
 
@@ -869,6 +869,30 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         CPacket reqAns("1","2");
                         reqAns.Serialize_MessageList(messages_list);
                         sendToClient(reqAns.GetByteArray(), sender);
+                        break;
+                    }
+
+                    case 4:
+                    {
+                        //Request profile picture
+                        QString tmp = packet->deserialize_ppRequest();
+                        if(tmp.size() != 38)
+                        {
+                            writeToLog("[" + sender->get_uuid().toString(QUuid::WithoutBraces) + "(" + sender->get_pseudo() + ")] Error in request :", SERVER_ERR);
+                            writeToLog(tmp, SERVER_ERR);
+                            break;
+                        }
+                        QUuid requested(tmp);
+
+                        QString path = "storage/private/" + requested.toString(QUuid::WithoutBraces) + "/pp.png";
+                        if(QFile::exists(path))
+                        {
+                            QImage img(path);
+                            CPacket ppAns("1","14");
+                            ppAns.Serialize_ppAnswer(img,requested);
+                            qDebug() << ppAns.GetByteArray().size();
+                            sendToClient(ppAns.GetByteArray(), sender);
+                        }
                         break;
                     }
 

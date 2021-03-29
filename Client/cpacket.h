@@ -83,6 +83,7 @@ public:
     void Serialize_MessageList(QList<CMessage> list);
     void Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index);
     void Serialize_messageRequest(QUuid id, int nb_msg_to_sync, int start_index);
+    void Serialize_ppRequest(QUuid uuid);
 
     //Deserialize specific object
     CClient * Deserialize_myClient();
@@ -98,6 +99,7 @@ public:
     QVector<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();
     int Deserialize_MessageError();
+    QList<QString> Deserialize_ppAns();
 
 
     void Serialize_Register(struct register_info reg);           //Serialize Register
