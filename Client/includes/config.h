@@ -15,8 +15,8 @@
 
 //#define AUTO_LOGIN
 #ifdef AUTO_LOGIN
-    #define USERNAME "test3"
-    #define PASSWORD "test"
+    #define USERNAME "hugo"
+    #define PASSWORD "hugo"
 #endif
 
 

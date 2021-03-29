@@ -6,14 +6,6 @@ Server.pro.user
 
 #Compiled autosave for ui
 *.autosave
-<<<<<<< Updated upstream
-LockVox.pro.user
 Server/config.h
-*.user
-=======
 
 
-LockVox.pro.user
-LockVox.pro.user
-LockVox.pro.user.23c3c4f
->>>>>>> Stashed changes
