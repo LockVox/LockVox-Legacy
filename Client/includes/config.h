@@ -4,7 +4,7 @@
 
 #define LOCKVOX_CLIENT      //Use for common file between server and client
 
-#define AUTO_CONNECT        //Use to be automatically connect to the server @IP_ADDRESS
+//#define AUTO_CONNECT        //Use to be automatically connect to the server @IP_ADDRESS
 #ifdef AUTO_CONNECT
     #define IP_ADDRESS "127.0.0.1"  //@IP of the server you want to connect
 #endif
@@ -18,6 +18,5 @@
     #define USERNAME "hugo"
     #define PASSWORD "hugo"
 #endif
-
 
 #endif // CONFIG_H

@@ -108,8 +108,8 @@ QString CDatabase::newUser(string uuid, string pseudo, string mail, string passw
         {
             string hashed = sha256(password);
 
-            query = "INSERT INTO utilisateurs (uuid,username,password,mail) VALUES ('";
-            query += uuid + "','" + pseudo + "','" + hashed + "','" + mail + "');";
+            query = "INSERT INTO utilisateurs (uuid,username,password,mail,description) VALUES ('";
+            query += uuid + "','" + pseudo + "','" + hashed + "','" + mail + "','This is a default description');";
 
             if (mysql_query(conn, query.c_str()))
             {

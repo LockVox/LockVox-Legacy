@@ -100,6 +100,13 @@ Item {
         anchors.bottomMargin: 23
         anchors.horizontalCenter:parent.horizontalCenter
 
+        onClicked: {
+
+            login.login_request(emailField.text,passwordField.text)
+            passwordField.clear()
+
+        }
+
     }
 }
 

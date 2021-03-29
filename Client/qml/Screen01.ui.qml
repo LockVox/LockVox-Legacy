@@ -16,6 +16,7 @@ Rectangle {
     y: 0
     visible: true
     anchors.fill: parent
+    property alias stateServer: stateServer
     property alias channels: channels
     color: "#1b1f21"
 
@@ -105,10 +106,10 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: 149
-        anchors.leftMargin: 148
-        anchors.bottomMargin: 0
-        anchors.topMargin: 99
+        anchors.rightMargin: 272
+        anchors.leftMargin: 25
+        anchors.bottomMargin: 8
+        anchors.topMargin: 91
 
         RowLayout {
             id: rowLayout
@@ -181,11 +182,11 @@ Rectangle {
     Rectangle {
 
         id: rect_con_server
-        x: 380
+        x: 383
         y: 85
-        width: 235
+        width: 232
         height: 278
-        visible: false
+        visible: true
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 85
@@ -202,6 +203,7 @@ Rectangle {
             y: 85
             width: 137
             height: 157
+            visible: true
         }
 
         StateServer {
@@ -211,6 +213,7 @@ Rectangle {
             y: 8
             width: 200
             height: 71
+            visible: true
         }
     }
 
@@ -575,12 +578,12 @@ Rectangle {
     Image {
         id: lock_vox_logo11
         x: 172
-        y: 8
+        y: 6
         width: 295
-        height: 94
+        height: 79
         source: "lock_vox_logo1.png"
-        anchors.rightMargin: 174
-        anchors.leftMargin: 174
+        anchors.rightMargin: 211
+        anchors.leftMargin: 211
         fillMode: Image.PreserveAspectFit
 
         anchors.left: parent.left
@@ -608,7 +611,7 @@ Rectangle {
     }
 
     AddChannelButton {
-        id: addChannelButton
+        id: add_channel_btn
         x: 0
         y: 99
         visible: false
@@ -685,10 +688,11 @@ Rectangle {
                 x: 0
                 y: 29
                 width: 179
-                height: 73
+                height: 80
                 visible: true
                 color: "#1b1f21"
                 border.width: 0
+                anchors.topMargin: -3
             }
 
             PropertyChanges {
@@ -766,8 +770,8 @@ Rectangle {
                 width: 179
                 height: 287
                 visible: true
-                anchors.bottomMargin: 1
-                anchors.topMargin: 149
+                anchors.bottomMargin: 8
+                anchors.topMargin: 157
             }
 
             PropertyChanges {
@@ -810,8 +814,8 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 99
-                y: 51
+                x: 98
+                y: 37
                 width: 66
                 height: 17
                 text: "parameter"
@@ -924,7 +928,7 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: addChannelButton
+                target: add_channel_btn
                 x: 0
                 y: 99
                 width: 179
@@ -932,7 +936,7 @@ Rectangle {
                 visible: true
                 text: "+ Add a channel"
                 anchors.leftMargin: 0
-                anchors.topMargin: 99
+                anchors.topMargin: 108
             }
         },
         State {
@@ -1184,4 +1188,3 @@ Designer {
     D{i:0;formeditorZoom:0.8999999761581421}
 }
 ##^##*/
-

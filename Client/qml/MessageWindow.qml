@@ -90,9 +90,11 @@ Item {
             y: 8
             color: "#676d76"
             text: qsTr("channel")
-            font.pixelSize: 12
+            objectName: "channel_name"
+            font.pixelSize: 14
+            font.underline: true
             anchors.leftMargin: 8
-            anchors.topMargin: 38
+            anchors.topMargin: 47
             Layout.preferredHeight: 14
             Layout.preferredWidth: 140
             font.bold: true
@@ -116,6 +118,27 @@ Item {
             }
         }
 
+        Text {
+            id: channel_members
+            objectName: "channel_members"
+            x: 220
+            y: 16
+            color: "#33a5e5"
+            text: pseudo
+            anchors.right: parent.right
+            anchors.top: parent.top
+            font.pixelSize: 14
+            minimumPixelSize: 8
+            anchors.rightMargin: 26
+
+            anchors.leftMargin: 232
+            font.underline: false
+            Layout.preferredHeight: 14
+            anchors.topMargin: 47
+            Layout.preferredWidth: 140
+            font.bold: false
+        }
+
 
 
 
@@ -134,6 +157,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.100000023841858}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/

@@ -7,13 +7,21 @@ CServer::CServer()
         m_channelsList = new ChannelList();
         m_messagesList = new MessageList();
 
-        m_currentChannelIndex = 0;
+        //Welcome message list display at Authentification on LockVox
+
+        QString content = "Welcome! Enjoy your time on LockVox !";
+        CMessage welcome("Founder", "You",content,false);
+
+        m_messagesList->addMessage(welcome);
+
+        m_currentChannelIndex = -1;
         m_finishLoad = false;
         m_hasChannelsLoaded = false;
         m_hasClientsLoaded = false;
         m_hasMessagesLoaded = false;
         m_hasSelfLoaded = false;
-
+        m_hasPictureLoaded = false;
+        m_currentUIState = "";
 
         m_socket = new QTcpSocket();
 
@@ -36,7 +44,7 @@ CServer::~CServer()
 
     free(m_self);
 
-    m_currentChannelIndex = 0;
+    m_currentChannelIndex = -1;
 
     //Load server informations - message - clients - channels
     m_hasSelfLoaded = false;
@@ -50,13 +58,16 @@ CServer::~CServer()
 
 void CServer::connectServer(QString  ip)
 {
-    this->ip = ip;
+    if(!ip.isEmpty()){
+        this->m_ip = ip;
+        emit(connected());
+    }
 }
 
 void CServer::connectServer()
 {
     m_socket->abort();
-    m_socket->connectToHost(ip, 50885);
+    m_socket->connectToHost(m_ip, 50885);
     //m_socket->connectToHostEncrypted(ip, 50885);
 
     /*if(!m_socket->waitForEncrypted()){
@@ -70,8 +81,8 @@ void CServer::connectServer()
         //connect(m_socket, SIGNAL(encrypted()), this, SLOT(ready()));
         connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
         connect(m_socket, SIGNAL(disconnected()),this,SLOT(onDisconnected()));
-        m_name = ip;
-        emit(connected());
+        m_name = m_ip;
+
     }
     else{
 
@@ -102,7 +113,7 @@ void CServer::disconnectServer()
     m_messagesList = new MessageList();
 
     m_state = false;
-    m_currentChannelIndex = 0;
+    m_currentChannelIndex = -1;
     m_finishLoad = false;
     m_hasChannelsLoaded = false;
     m_hasClientsLoaded = false;
@@ -136,6 +147,16 @@ void CServer::sendToServer(QByteArray ba)
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
     m_socket->waitForBytesWritten();
+}
+
+QString CServer::getIp() const
+{
+    return m_ip;
+}
+
+void CServer::setIp(const QString &ip)
+{
+    m_ip = ip;
 }
 
 QString CServer::getName() const
@@ -324,18 +345,28 @@ void CServer::checkCompenents(){
         m_hasClientsLoaded = true;
     }
 
+
+    int nb_pic_load = 0;
+    foreach(CClient * c, getClientsList()->get_clients()){
+        if(!c->get_profilePic().isNull()){
+            nb_pic_load++;
+        }
+    }
+
+    if(nb_pic_load == getClientsList()->get_clients().size()){
+        m_hasPictureLoaded = true;
+    }
+
+    int nb_list_messages_load = 0;
     if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded){
     //Check if messages list has been load
-        int nb_list_messages_load;
+
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == true)
                 nb_list_messages_load++;
         }
-        if(nb_list_messages_load == m_channelsList->get_channels().size()){
+        if(nb_list_messages_load == m_channelsList->get_channels().size()-1){
             m_hasMessagesLoaded = true;
-        }
-        else{
-            m_hasMessagesLoaded = false;
         }
     }
 }
@@ -357,7 +388,6 @@ void CServer::processIncomingData(QByteArray data){
        if(!m_self){
            return;
        }
-
        Deserialize(data);
        emit(m_clientsList->dataChanged());
        //checkCompenents();
@@ -468,15 +498,19 @@ void CServer::processIncomingData(QByteArray data){
             case 6:
             {
                 //Kick user
-
                 break;
             }
 
             case 7:
             {
-                set_self(packet->Deserialize_authAns());
-                if(m_self)
+                CClient * c = packet->Deserialize_authAns();
+                if(c == NULL){
+                    //Emit error_login here -
+                    return;
+                }
+                if(c != NULL)
                 {
+                    m_self = c;
                      emit(changeState("splashScreen"));
                 }
                 break;
@@ -591,10 +625,10 @@ void CServer::processIncomingData(QByteArray data){
                     tmp.getSenderPseudo(getClientsList()->get_clients());
                     getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->addMessage(tmp);
 
-
                     if(tmp.get_to().toInt() == m_currentChannelIndex){
                         getMessagesList()->set_messages(getChannelsList()->get_channelAt(tmp.get_to().toInt())->getMessagesLists()->get_messages());
                     }
+
                     break;
                 }
 
@@ -767,9 +801,9 @@ void CServer::processIncomingData(QByteArray data){
     }
 
     if(m_finishLoad & m_currentUIState != "home"){
-        //m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
-        //emit(changeState("Home"));
-        //m_currentUIState = "Home";
+        m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
+        emit(changeState("Home"));
+        m_currentUIState = "Home";
     }
 }
 

@@ -15,8 +15,6 @@ UIWorker::UIWorker(QGuiApplication *app)
 {
     m_server  = new CServer();
 
-
-
     qmlRegisterType<ClientModel>("Client", 1,0,"ClientModel");
     qmlRegisterUncreatableType<ClientList>("Client", 1,0, "ClientList",
          QStringLiteral("ClientLit should not be created in QML"));
@@ -164,10 +162,12 @@ void UIWorker::onSelfChanged(CClient* c){
     QObject * username_label = m_userparameter->findChild<QObject*>("big_username");
     QObject * email_label = m_userparameter->findChild<QObject*>("email");
 
+
     usernameParamBigTitle->setProperty("text",c->get_pseudo());
     username_label->setProperty("text",c->get_pseudo());
     qDebug()<< c->get_mail();
     email_label->setProperty("text",c->get_mail());
+
 }
 
 void UIWorker::onCurrentIndexChanged(int index)
@@ -180,7 +180,24 @@ void UIWorker::onCurrentIndexChanged(int index)
 
     m_server->setCurrentChannelIndex(index);
 
+
     emit m_server->getMessagesList()->listChanged(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
+
+
+
+    QObject * channel_title = m_messageWindow->findChild<QObject*>("channel_name");
+    QObject * nb_channel_member = m_messageWindow->findChild<QObject*>("channel_members");
+
+    //QString channel = m_server->getChannelsList()->get_channelAt(index)->get_name();
+
+
+    // get the number of connected persons on channel
+    QString nb_members = (QString) m_server->getChannelsList()->get_channelAt(index)->get_nbClients() +"/"
+            +(QString)m_server->getChannelsList()->get_channelAt(index)->get_maxUsers()+" online";
+
+
+    nb_channel_member->setProperty("text",nb_members);
+    channel_title->setProperty("text",m_server->getChannelsList()->get_channelAt(index)->get_name());
     //Change m_messagesList
     //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
 
@@ -193,7 +210,7 @@ void UIWorker::onConnected()
         qDebug() << "Unable to load \"state\" object in m_stateServer" << Qt::endl;
         return;
     }
-    state->setProperty("text", "You are currently connect to " + m_server->getName());
+    state->setProperty("text", "You are currently connect to " + m_server->getIp());
     return;
 }
 
