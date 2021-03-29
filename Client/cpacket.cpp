@@ -295,45 +295,12 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
         {
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             code = newAuth.value("code").toInt();
-            switch(code)
-            {
-                case 0:
-                {
-                    CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
-                    return tmp;         //On renvoie les infos client
-                    break;
-                }
+            if(code ==0){
+                  CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
+                  return tmp;         //On renvoie les infos client
 
-                case 1:
-                {
-                    err = newAuth.value("reason").toString();
-                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
-                    return error;
-                    break;
-                }
-
-                case 2:
-                {
-                    err = newAuth.value("reason").toString();
-                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
-                    return error;
-                    break;
-                }
-
-                case 3:
-                {
-                    err = newAuth.value("reason").toString();
-                    CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
-                    return error;
-                    break;
-                }
-
-                default:
-                {
-                    return NULL;    //bad packet
-                    break;
-                }
-            }
+             }
+             return NULL;    //bad packet
         }
     }
     catch(char* e)

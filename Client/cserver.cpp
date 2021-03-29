@@ -58,13 +58,16 @@ CServer::~CServer()
 
 void CServer::connectServer(QString  ip)
 {
-    this->ip = ip;
+    if(!ip.isEmpty()){
+        this->m_ip = ip;
+        emit(connected());
+    }
 }
 
 void CServer::connectServer()
 {
     m_socket->abort();
-    m_socket->connectToHost(ip, 50885);
+    m_socket->connectToHost(m_ip, 50885);
     //m_socket->connectToHostEncrypted(ip, 50885);
 
     /*if(!m_socket->waitForEncrypted()){
@@ -78,8 +81,8 @@ void CServer::connectServer()
         //connect(m_socket, SIGNAL(encrypted()), this, SLOT(ready()));
         connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
         connect(m_socket, SIGNAL(disconnected()),this,SLOT(onDisconnected()));
-        m_name = ip;
-        emit(connected());
+        m_name = m_ip;
+
     }
     else{
 
@@ -144,6 +147,16 @@ void CServer::sendToServer(QByteArray ba)
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
     m_socket->waitForBytesWritten();
+}
+
+QString CServer::getIp() const
+{
+    return m_ip;
+}
+
+void CServer::setIp(const QString &ip)
+{
+    m_ip = ip;
 }
 
 QString CServer::getName() const
@@ -439,9 +452,14 @@ void CServer::processIncomingData(QByteArray data){
 
             case 7:
             {
-                set_self(packet->Deserialize_authAns());
-                if(m_self)
+                CClient * c = packet->Deserialize_authAns();
+                if(c == NULL){
+                    //Emit error_login here -
+                    return;
+                }
+                if(c != NULL)
                 {
+                    m_self = c;
                      emit(changeState("splashScreen"));
                 }
                 break;

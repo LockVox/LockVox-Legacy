@@ -15,8 +15,6 @@ UIWorker::UIWorker(QGuiApplication *app)
 {
     m_server  = new CServer();
 
-
-
     qmlRegisterType<ClientModel>("Client", 1,0,"ClientModel");
     qmlRegisterUncreatableType<ClientList>("Client", 1,0, "ClientList",
          QStringLiteral("ClientLit should not be created in QML"));
@@ -212,7 +210,7 @@ void UIWorker::onConnected()
         qDebug() << "Unable to load \"state\" object in m_stateServer" << Qt::endl;
         return;
     }
-    state->setProperty("text", "You are currently connect to " + m_server->getName());
+    state->setProperty("text", "You are currently connect to " + m_server->getIp());
     return;
 }
 

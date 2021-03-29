@@ -508,7 +508,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     }
                                     if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
                                     {
-
                                         writeToLog("User [" + c->get_uuid().toString()  + "(" + c->get_pseudo() + ")] connected from [" + sender->get_socket()->peerAddress().toString() + "]",SERVER);
                                         //mettre l'utilisateur authentifié
                                         c->set_isOnline(true);
@@ -517,7 +516,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                         //Lui envoyer ses infos
                                         ans->Serialize_auth(c, 0);
                                         newUser.Serialize_newClient(c);
-
                                         valid = true;
                                     }
                                 }
@@ -531,7 +529,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     writeToLog(*err1, DB_ERR);
                                     ans->Serialize_auth(NULL, 1);     
                                     sender->get_socket()->waitForBytesWritten();
-                                    sender->get_socket()->abort();
+                                    //sender->get_socket()->abort();
                                     delete(err1);
                                 }
                                 else
@@ -539,7 +537,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", SERVER_WARN);
                                     ans->Serialize_auth(NULL, 3);
                                     sender->get_socket()->waitForBytesWritten();
-                                    sender->get_socket()->abort();
+                                    //sender->get_socket()->abort();
                                 }
                             }
                             delete(err);
@@ -551,7 +549,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Trying to connect to a non-existing account", SERVER_WARN);
                                 ans->Serialize_auth(NULL, 1);
                                 sender->get_socket()->waitForBytesWritten();
-                                sender->get_socket()->abort();
+                                //sender->get_socket()->abort();
                             }
                             else
                             {
@@ -559,7 +557,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 writeToLog(*err,DB_ERR);
                                 ans->Serialize_auth(NULL, 1);
                                 sender->get_socket()->waitForBytesWritten();
-                                sender->get_socket()->abort();
+                                //sender->get_socket()->abort();
                                 delete(err);
                             }
                         }

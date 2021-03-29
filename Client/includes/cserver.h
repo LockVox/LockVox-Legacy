@@ -57,6 +57,9 @@ class CServer : public AbstractServer
         QString getName() const;
         void setName(const QString &name);
 
+        QString getIp() const;
+        void setIp(const QString &ip);
+
         //Process
         void processIncomingData(QByteArray data);         //Process incoming data
 
@@ -88,6 +91,7 @@ class CServer : public AbstractServer
 
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
+
 
 
 signals:
@@ -137,7 +141,7 @@ signals:
 
         bool m_finishLoad;
         QString m_currentUIState;
-        QString ip;
+        QString m_ip;
 
 
 

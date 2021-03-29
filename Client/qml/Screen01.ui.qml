@@ -16,6 +16,7 @@ Rectangle {
     y: 0
     visible: true
     anchors.fill: parent
+    property alias stateServer: stateServer
     property alias channels: channels
     color: "#1b1f21"
 
@@ -105,10 +106,10 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.rightMargin: 149
-        anchors.leftMargin: 148
-        anchors.bottomMargin: 0
-        anchors.topMargin: 99
+        anchors.rightMargin: 272
+        anchors.leftMargin: 25
+        anchors.bottomMargin: 8
+        anchors.topMargin: 91
 
         RowLayout {
             id: rowLayout
@@ -181,11 +182,11 @@ Rectangle {
     Rectangle {
 
         id: rect_con_server
-        x: 380
+        x: 383
         y: 85
-        width: 235
+        width: 232
         height: 278
-        visible: false
+        visible: true
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 85
@@ -202,6 +203,7 @@ Rectangle {
             y: 85
             width: 137
             height: 157
+            visible: true
         }
 
         StateServer {
@@ -211,6 +213,7 @@ Rectangle {
             y: 8
             width: 200
             height: 71
+            visible: true
         }
     }
 
@@ -575,12 +578,12 @@ Rectangle {
     Image {
         id: lock_vox_logo11
         x: 172
-        y: 8
+        y: 6
         width: 295
-        height: 94
+        height: 79
         source: "lock_vox_logo1.png"
-        anchors.rightMargin: 174
-        anchors.leftMargin: 174
+        anchors.rightMargin: 211
+        anchors.leftMargin: 211
         fillMode: Image.PreserveAspectFit
 
         anchors.left: parent.left

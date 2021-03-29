@@ -26,7 +26,7 @@ Item {
         TextField {
             id: emailField
             height: 40
-            placeholderText: qsTr("Email")
+            placeholderText: qsTr("Username")
             anchors.left:parent.left
             anchors.right:parent.right
             color:"white"
@@ -40,7 +40,7 @@ Item {
         TextField {
             id: usernameField
             height: 40
-            placeholderText: qsTr("Username")
+            placeholderText: qsTr("Password")
             anchors.left:parent.left
             anchors.right:parent.right
             color:"white"
