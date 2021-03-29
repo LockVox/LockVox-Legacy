@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.0
 
 T.Button {
     id: control
-    width: 250
     height: 150
 
     implicitWidth: Math.max(
@@ -60,6 +59,8 @@ T.Button {
         font.pixelSize: 12
         Layout.preferredHeight: 114
         Layout.preferredWidth: 234
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
     Rectangle {
@@ -93,21 +94,25 @@ T.Button {
 
             PropertyChanges {
                 target: text1
-                x: 8
+                x: 13
                 y: 44
-                width: 234
+                width: 611
                 height: 118
                 color: "#6b7376"
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.Wrap
+                anchors.rightMargin: 19
+                anchors.leftMargin: 20
                 fontSizeMode: Text.Fit
             }
 
             PropertyChanges {
                 target: dateMsg
-                x: 171
-                y: 16
+                x: 293
+                y: 17
                 color: "#e05141"
+                font.pixelSize: 11
+                font.italic: true
             }
 
             PropertyChanges {
@@ -202,7 +207,7 @@ T.Button {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.75}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/
 

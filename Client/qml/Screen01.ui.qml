@@ -338,10 +338,13 @@ Rectangle {
 
             model: MessageModel {
                 m_messagesList: messagesList
+
             }
 
             verticalLayoutDirection: ListView.TopToBottom
-            delegate: MessageWidget {}
+            delegate: MessageWidget {
+            width: parent.width
+            }
         }
     }
 
@@ -814,8 +817,8 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 98
-                y: 37
+                x: 97
+                y: 63
                 width: 66
                 height: 17
                 text: "parameter"
@@ -1185,6 +1188,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.8999999761581421}
+    D{i:0;formeditorZoom:0.6600000262260437}
 }
 ##^##*/
+

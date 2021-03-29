@@ -37,14 +37,29 @@ Rectangle {
         source: "qrc:/qtquickplugin/images/template_image.png"
     }
 
-    Image {
-        id: lock_vox_logo_miniature1
-        x: 8
-        y: 0
-        width: 72
-        height: 72
-        source: "image://imageprovider"+username.text
-        fillMode: Image.PreserveAspectFit
+    Text {
+        id: description
+        objectName: "description"
+        x: 71
+        y: 13
+        width: 121
+        height: 18
+        color: "#687075"
+        text: qsTr("Description")
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        font.pixelSize: 11
+        horizontalAlignment: Text.AlignLeft
+        wrapMode: Text.Wrap
+        font.italic: false
+        anchors.topMargin: 30
+        anchors.leftMargin: 104
+        anchors.rightMargin: 0
+
+        anchors.bottomMargin: 28
+        font.bold: false
     }
 
 

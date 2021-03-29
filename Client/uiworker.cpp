@@ -68,6 +68,8 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_changeusername = m_rootObject->findChild<QObject*>("user_parameters");
 
 
+
+
     //Check if compenents has been load correctly
     if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer ||  ! m_changeusername){
         qDebug("Some objects hasn't been initialized correctly");
@@ -124,6 +126,18 @@ UIWorker::UIWorker(QGuiApplication *app)
                      m_server, SLOT(changeUserName(QString)));
 
 
+     //connect change email
+     QObject::connect(m_changeusername,SIGNAL(change_email(QString)),
+
+                      m_server,SLOT(changeEmail(QString)));
+
+     // connect change description
+
+     QObject::connect(m_changeusername,SIGNAL(change_description(QString)),
+
+                      m_server,SLOT(changeDescription(QString)));
+
+
 
     //QObject::connect()
 
@@ -154,19 +168,42 @@ void UIWorker::onSelfChanged(CClient* c){
     //Access here to UserInfo Qml Element, modify it has u wish with CClient methods
     // home
     QObject * username = m_userinfo->findChild<QObject*>("username");
+    QObject * description = m_userinfo->findChild<QObject*>("description");
+
     username->setProperty("text", c->get_pseudo());
+    description->setProperty("text",c->get_description());
+
+    if(c->get_description().isEmpty())
+    {
+        description->setProperty("text","no description");
+    }
 
 
     // in parameter widget
     QObject * usernameParamBigTitle = m_userparameter->findChild<QObject*>("username");
     QObject * username_label = m_userparameter->findChild<QObject*>("big_username");
     QObject * email_label = m_userparameter->findChild<QObject*>("email");
+    QObject * description_label = m_userparameter->findChild<QObject*>("big_description");
 
+
+
+
+    description_label->setProperty("text",c->get_description());
+
+    if(c->get_description().isEmpty())
+    {
+        description_label->setProperty("text","no description type one");
+
+    }
 
     usernameParamBigTitle->setProperty("text",c->get_pseudo());
     username_label->setProperty("text",c->get_pseudo());
-    qDebug()<< c->get_mail();
-    email_label->setProperty("text",c->get_mail());
+
+
+    //email_label->setProperty("text",c->get_mail());
+    email_label->setProperty("text","WESH");
+    qDebug()<< "USER mail :"<< c->get_mail();
+
 
 }
 
@@ -192,11 +229,14 @@ void UIWorker::onCurrentIndexChanged(int index)
 
 
     // get the number of connected persons on channel
-    QString nb_members = (QString) m_server->getChannelsList()->get_channelAt(index)->get_nbClients() +"/"
-            +(QString)m_server->getChannelsList()->get_channelAt(index)->get_maxUsers()+" online";
+    QString nb_members =  QString::number(m_server->getChannelsList()->get_channelAt(index)->get_nbClients());
+    QString nb_max = QString::number(m_server->getChannelsList()->get_channelAt(index)->get_maxUsers());
+
+    QString nb_person_online_on_channel = nb_members+"/"+nb_max+" members";
 
 
-    nb_channel_member->setProperty("text",nb_members);
+
+    nb_channel_member->setProperty("text",nb_person_online_on_channel);
     channel_title->setProperty("text",m_server->getChannelsList()->get_channelAt(index)->get_name());
     //Change m_messagesList
     //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());

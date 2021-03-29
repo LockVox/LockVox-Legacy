@@ -40,9 +40,10 @@ Item {
         TextField {
             id: usernameField
             height: 40
-            placeholderText: qsTr("Password")
+            placeholderText: qsTr("Email")
             anchors.left:parent.left
             anchors.right:parent.right
+            hoverEnabled: true
             color:"white"
             background: Rectangle {
                 color:"#313639"

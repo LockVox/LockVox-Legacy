@@ -394,6 +394,7 @@ void CServer::processIncomingData(QByteArray data){
        if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
        {
            emit(changeState("Home"));
+           emit(selfChanged(m_self));
            foreach(CChannel * c, m_channelsList->get_channels())
            {
                CPacket request("1","3");
@@ -803,9 +804,10 @@ void CServer::processIncomingData(QByteArray data){
             loadAllCompenent();
     }
 
-    if(m_finishLoad & m_currentUIState != "home"){
+    if(m_finishLoad && m_currentUIState != "home"){
         m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
         emit(changeState("Home"));
+        emit(selfChanged(m_self));
         m_currentUIState = "Home";
     }
 }
@@ -1049,6 +1051,33 @@ bool CServer::changeUserName(QString pseudo)
         packet.Serialize_myClient(m_self);
         sendToServer(packet.GetByteArray());
         return true;
+}
+
+bool CServer::changeEmail(QString email)
+{
+        qDebug() << "New email : " << email << "\n";
+        CClient * tmp = m_self;
+        tmp->set_mail(email);
+        selfChanged(m_self);
+        CPacket packet("0", "2");
+        packet.Serialize_myClient(m_self);
+        sendToServer(packet.GetByteArray());
+        return true;
+}
+
+bool CServer::changeDescription(QString description)
+{
+
+    qDebug() << "New description : " << description << "\n";
+    CClient * tmp = m_self;
+    tmp->set_description(description);
+    selfChanged(m_self);
+    CPacket packet("0", "2");
+    packet.Serialize_myClient(m_self);
+    sendToServer(packet.GetByteArray());
+    return true;
+
+
 }
 
 QByteArray CServer::Serialize(){

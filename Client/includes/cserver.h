@@ -112,6 +112,8 @@ signals:
         void connectServer();
         void disconnectServer();
         bool changeUserName(QString pseudo);
+        bool changeEmail(QString email);
+        bool changeDescription(QString description);
     private slots:
 
         void onDisconnected();

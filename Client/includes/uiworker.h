@@ -67,6 +67,7 @@ private:
     QObject * m_stateServer;
 
     QObject * m_changeusername;
+
     int m_confirmQuit;
 
     ImageProvider * m_imgProvider;

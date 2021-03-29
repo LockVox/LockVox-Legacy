@@ -7,6 +7,8 @@ Item {
     height: 275
     objectName: "user_parameters"
     signal change_username(string new_pseudo)
+    signal change_email(string new_email)
+    signal change_description(string new_description)
     Rectangle {
         id: rectangle
         x: 0
@@ -301,6 +303,23 @@ Item {
             anchors.bottom: parent.bottom
 
             anchors.right:parent.right
+
+            Connections {
+                        target: applyEmailBtn
+                        onClicked: {
+
+                            user_parameters.change_email(changeEmailTextField.text)
+                            changeEmailTextField.clear()
+                            user_parameters.state = ""
+
+
+                        }
+            }
+
+
+
+
+
         }
         
         CustomQpushButton {
@@ -314,6 +333,74 @@ Item {
             anchors.bottom: parent.bottom
 
             anchors.right:parent.right
+        }
+
+        Text {
+            id: big_description_title
+             objectName: "big_description"
+            x: 88
+            y: 64
+            width: 248
+            height: 21
+            color: "#33a5e5"
+            text: qsTr("Description")
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            font.pixelSize: 15
+            anchors.leftMargin: 87
+            anchors.rightMargin: 155
+            anchors.topMargin: 79
+            anchors.bottomMargin: 203
+            font.bold: true
+        }
+
+        CustomQpushButton {
+            id: changeDescriptionBtn
+            x: 258
+            y: 79
+            width: 73
+            height: 30
+            text: "Modify"
+            anchors.left: big_description_title.right
+            anchors.top: parent.top
+
+            Connections {
+                target: changeDescriptionBtn
+            }
+
+            Connections {
+                target: changeDescriptionBtn
+                onClicked: user_parameters.state = "changeDescriptionState"
+            }
+            anchors.leftMargin: 13
+            anchors.rightMargin: 69
+            anchors.topMargin: 75
+            anchors.bottomMargin: 168
+        }
+
+        CustomQpushButton {
+            id: applyDescriptionBtn
+            x: 162
+            y: 142
+            width: 73
+            height: 30
+            visible: false
+            text: "Modify"
+            anchors.right: parent.right
+            anchors.top: parent.top
+            Connections {
+                target: applyDescriptionBtn
+
+                onClicked: {
+
+                    user_parameters.change_description(changeDescriptionTextField.text)
+                    changeDescriptionTextField.clear()
+                    user_parameters.state = ""
+
+
+                }
+            }
         }
     }
 
@@ -333,6 +420,19 @@ Item {
             color:"#313639"
             radius:0
             border.width: 0
+        }
+
+        Keys.onPressed: {
+
+            if(event.key == Qt.Key_Return){
+
+                user_parameters.change_email(changeEmailTextField.text)
+                changeEmailTextField.clear()
+                user_parameters.state = ""
+
+
+            }
+
         }
     }
 
@@ -396,6 +496,40 @@ Item {
 
         Connections {
             target: cancelBtn
+            onClicked: user_parameters.state = ""
+        }
+    }
+
+    TextField {
+        id: changeDescriptionTextField
+        x: 23
+        y: 125
+        visible: false
+        color: "#ffffff"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        background: Rectangle {
+            color: "#313639"
+            radius: 0
+            border.width: 0
+        }
+        placeholderText: qsTr("Text Field")
+    }
+
+    CustomQpushButton2 {
+        id: cancelBtn2
+        x: 350
+        y: 176
+        visible: false
+        anchors.right: parent.right
+        anchors.top: parent.top
+        Connections {
+            target: cancelBtn2
+        }
+
+        Connections {
+            target: cancelBtn2
             onClicked: user_parameters.state = ""
         }
     }
@@ -812,6 +946,63 @@ Item {
                 anchors.topMargin: 8
                 anchors.leftMargin: 128
             }
+        },
+        State {
+            name: "changeDescriptionState"
+
+            PropertyChanges {
+                target: cancelBtn
+                x: 342
+                y: 82
+                visible: false
+                anchors.rightMargin: 38
+                anchors.bottomMargin: 173
+            }
+
+            PropertyChanges {
+                target: changeDescriptionBtn
+                visible: false
+            }
+
+            PropertyChanges {
+                target: changeDescriptionTextField
+                y: 77
+                height: 25
+                visible: true
+                anchors.topMargin: 80
+                placeholderText: qsTr("Type a description")
+                anchors.leftMargin: 84
+                anchors.rightMargin: 154
+                anchors.bottomMargin: 173
+            }
+
+            PropertyChanges {
+                target: big_description_title
+                visible: false
+            }
+
+            PropertyChanges {
+                target: applyDescriptionBtn
+                x: 258
+                y: 77
+                visible: true
+                text: "Apply"
+                anchors.topMargin: 77
+                anchors.rightMargin: 69
+                anchors.bottomMargin: 168
+            }
+
+            PropertyChanges {
+                target: cancelBtn2
+                x: 342
+                y: 85
+                width: 20
+                height: 20
+                visible: true
+                anchors.topMargin: 82
+                anchors.rightMargin: 38
+                anchors.bottomMargin: 170
+            }
         }
     ]
 
@@ -821,6 +1012,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.25}
+    D{i:0;formeditorZoom:1.659999966621399}
 }
 ##^##*/
