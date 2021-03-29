@@ -312,6 +312,14 @@ QList<CClient*> CServer::GetBannedUserList()
     return m_banned_users;
 }
 
+
+void delay()
+{
+    QTime dieTime= QTime::currentTime().addMSecs(10);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
 void CServer::processIncomingData(CClient *sender, QByteArray data) //Process received data
 {
         if(!sender)
@@ -731,6 +739,11 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Text channel message
                         CMessage msg = packet->Deserialize_Message();
 
+                        if(msg.get_to().toInt() <= -1 || msg.get_to().toInt() > m_channels.size()){
+                            writeToLog("[" + sender->get_socket()->peerAddress().toString() + " Received a message for an unknown channel ("+msg.get_to() +") ? Ignored.", SERVER_ERR);
+                            return;
+                        }
+
                         //Verify if it's a non private message
                         if(msg.get_isPrivate() != false)
                         {
@@ -849,11 +862,18 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 3:
                     {
                         //Request message list
-
-
+                        //qDebug() << "Receive msg list request from " << sender->get_pseudo()
                         QList<QString> info = packet->deserialize_messageRequest();
 
                         QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
+
+                        if(messages_list.isEmpty()){
+                            CPacket reqAns("1","2");
+                            reqAns.Serialize_MessageListInfo(info.at(1).toInt());
+                            reqAns.Serialize_MessageList(messages_list);
+                            sendToClient(reqAns.GetByteArray(), sender);
+                            return;
+                        }
 
                         if(messages_list.last().get_from() == "allIsSync")
                         {
@@ -865,6 +885,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
 
                         CPacket reqAns("1","2");
+                        reqAns.Serialize_MessageListInfo(info.at(1).toInt());
                         reqAns.Serialize_MessageList(messages_list);
                         sendToClient(reqAns.GetByteArray(), sender);
                         break;
@@ -890,7 +911,16 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             ppAns.Serialize_ppAnswer(img,requested);
                             qDebug() << ppAns.GetByteArray().size();
                             sendToClient(ppAns.GetByteArray(), sender);
+                        }else{
+                            path = "storage/private/pp/pp0.png";
+                            QImage img(path);
+                            CPacket ppAns("1","14");
+                            ppAns.Serialize_ppAnswer(img,requested);
+                            qDebug() << ppAns.GetByteArray().size();
+                            sendToClient(ppAns.GetByteArray(), sender);
                         }
+                        //delay();
+
                         break;
                     }
 
@@ -1083,6 +1113,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
         }
         return;
  }
+
+
 
 QByteArray CServer::Serialize()
 {

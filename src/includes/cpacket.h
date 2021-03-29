@@ -78,6 +78,7 @@ public:
     void Serialize_ID(int chan, QUuid client);                     //Serialize ID Object (ID chan & ID client)
     void Serialize_regReq(QString username, QString mail, QString password,QString password_confirm);
     void Serialize_regAns(int code);
+    void Serialize_MessageListInfo(int index);
     void Serialize_Message(CMessage msg);
     void Serialize_MessageList(QList<CMessage> list);
     void Serialize_messageRequest(int id, int nb_msg_to_sync, int start_index);
@@ -95,6 +96,7 @@ public:
     void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
     void Deserialize_regReq();
     int Deserialize_regAns();
+    int Deserialize_MessageListInfo();
     CMessage Deserialize_Message();
     QList<CMessage> Deserialize_MessageList();
     QList<QString> deserialize_messageRequest();

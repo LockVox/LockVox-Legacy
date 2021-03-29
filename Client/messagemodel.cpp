@@ -166,5 +166,11 @@ void MessageModel::onListChanged(MessageList *msgList)
     m_messagesList = msgList;
 
     endResetModel();
+
+    start_index = createIndex(0,0);
+    end_index = createIndex(m_messagesList->get_messages().size()-1,0);
+    emit dataChanged(start_index,end_index);
+
+
 }
 
