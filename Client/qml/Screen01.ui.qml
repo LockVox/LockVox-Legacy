@@ -151,16 +151,30 @@ Rectangle {
             x: 73
             y: 66
             visible: false
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
         }
 
         Login {
             objectName: "login"
             id: login
             x: 73
-            y: 88
+            y: 66
             width: 200
-            height: 257
+            height: 300
             visible: true
+
+            anchors.bottom: parent.bottom
+            anchors.topMargin: 59
+            anchors.top: parent.top
+            anchors.bottomMargin: 0
+            anchors.leftMargin: 73
+            anchors.rightMargin: 70
+            anchors.left: parent.left
+            anchors.right: parent.right
         }
     }
 
@@ -249,7 +263,7 @@ Rectangle {
         id: listChannel
 
         anchors.top: parent.top
-        anchors.bottom: audioWindow.top
+        anchors.bottom: parent.bottom
 
         ScrollBar.vertical: ScrollBar {
             id: scrollBarChannel
@@ -324,8 +338,7 @@ Rectangle {
             }
 
             verticalLayoutDirection: ListView.TopToBottom
-            delegate: MessageWidget {
-            }
+            delegate: MessageWidget {}
         }
     }
 
@@ -412,6 +425,8 @@ Rectangle {
         height: 400
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.topMargin: 245
 
         Row {
             id: leftSideHome
@@ -564,7 +579,12 @@ Rectangle {
         width: 295
         height: 94
         source: "lock_vox_logo1.png"
+        anchors.rightMargin: 174
+        anchors.leftMargin: 174
         fillMode: Image.PreserveAspectFit
+
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
     ProgressBar {
@@ -579,11 +599,21 @@ Rectangle {
         id: membersText
         x: 508
         y: 48
+        visible: false
 
         text: "MEMBERS"
         anchors.right: parent.right
 
         font.pixelSize: 12
+    }
+
+    AddChannelButton {
+        id: add_channel_btn
+        x: 0
+        y: 99
+        visible: false
+        anchors.left: parent.left
+        anchors.top: parent.top
     }
 
     states: [
@@ -593,6 +623,10 @@ Rectangle {
             PropertyChanges {
                 target: register
                 visible: true
+                anchors.bottomMargin: 0
+                anchors.leftMargin: 73
+                anchors.topMargin: 59
+                anchors.rightMargin: 68
             }
 
             PropertyChanges {
@@ -651,10 +685,11 @@ Rectangle {
                 x: 0
                 y: 29
                 width: 179
-                height: 73
+                height: 80
                 visible: true
                 color: "#1b1f21"
                 border.width: 0
+                anchors.topMargin: -3
             }
 
             PropertyChanges {
@@ -708,7 +743,7 @@ Rectangle {
                 y: 356
                 width: 177
                 height: 124
-                visible: true
+                visible: false
                 anchors.rightMargin: 461
                 anchors.bottomMargin: 0
                 anchors.leftMargin: 1
@@ -732,8 +767,8 @@ Rectangle {
                 width: 179
                 height: 287
                 visible: true
-                anchors.bottomMargin: 1
-                anchors.topMargin: 99
+                anchors.bottomMargin: 8
+                anchors.topMargin: 157
             }
 
             PropertyChanges {
@@ -776,8 +811,8 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 99
-                y: 51
+                x: 98
+                y: 37
                 width: 66
                 height: 17
                 text: "parameter"
@@ -878,6 +913,7 @@ Rectangle {
                 y: 43
                 width: 65
                 height: 14
+                visible: true
                 color: "#676d76"
                 font.pixelSize: 9
                 minimumPixelSize: 9
@@ -886,6 +922,18 @@ Rectangle {
                 anchors.topMargin: 48
                 anchors.rightMargin: 106
                 anchors.bottomMargin: 443
+            }
+
+            PropertyChanges {
+                target: add_channel_btn
+                x: 0
+                y: 99
+                width: 179
+                height: 50
+                visible: true
+                text: "+ Add a channel"
+                anchors.leftMargin: 0
+                anchors.topMargin: 108
             }
         },
         State {
@@ -1134,7 +1182,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.659999966621399}
+    D{i:0;formeditorZoom:1.75}
 }
 ##^##*/
 
