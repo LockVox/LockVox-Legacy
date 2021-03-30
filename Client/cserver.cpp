@@ -224,109 +224,224 @@ int checkPacketIntegrity(QByteArray ba){
 }
 
 
-void CServer::onReceiveData(){
-static int nb_receive_packet;
-    QByteArray *data = new QByteArray();
-    data->append(m_socket->readAll());
+void CServer::onReceiveData()
+{
+    QByteArray data;
+    data.append(m_socket->readAll());
 
-    nb_receive_packet++;
-    qDebug() << "Packet " << nb_receive_packet << " : " << *data << Qt::endl;
+    QTextStream stream(&data);
+    QString buff;
 
-    CPacket tmp(*data,NULL);
+    int bracket = 0;
+    bool ifTrueProcess = true;
 
-    bool ifTrueProccess = true;
-
-    if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
+    while(!stream.atEnd())
     {
-        int bracket = 0;
-        QTextStream stream(data);
-        QString buffer;
-
-        while(!stream.atEnd())
+        if(bracket < 0)
         {
-            if(bracket == 0 && !buffer.isEmpty())
-            {
-                ifTrueProccess = false;
-                QByteArray array(buffer.toLocal8Bit());
-                if(array !="\n" & array !="{\n}\n")
-                {
-                    //qDebug() << "Separate packets\n";
-                    //qDebug() << "m_action : " << tmp.GetAction() << " m_type : " << tmp.GetType();
-                    //qDebug() << array;
-                    processIncomingData(array);
-                }
-                buffer.clear();
-            }
-
-            QString oneChar = stream.read(1);
-            buffer += oneChar;
-            if(oneChar == "{")
-            {
-                bracket++;
-            }
-            if(oneChar == "}")
-            {
-                bracket--;
-            }
+            //on a la fin d'une request au debut de data
+            break;
         }
 
-        if(ifTrueProccess)
+        if(bracket == 0 && !buff.isEmpty())
         {
-            if(data->contains("\"mainObj\": {"))
+            if(buff.contains("\"mainObj\": {"))
             {
-                //New packet
-                if(!this->buffer.isEmpty())
+                ifTrueProcess = false;
+                QByteArray array(buff.toLocal8Bit());
+                processIncomingData(array);
+            }
+            buff.clear();
+        }
+
+        QString oneChar = stream.read(1);
+        buff += oneChar;
+        if(oneChar == "{")
+        {
+            bracket++;
+        }
+        if(oneChar == "}")
+        {
+            bracket--;
+        }
+    }
+
+    if(ifTrueProcess)
+    {
+        if(data.contains("\"mainObj\": {"))
+        {
+            //New packet
+            if(!buffer.isEmpty())
+            {
+                buffer.append(data);
+
+                QTextStream stream1(&buffer);
+                QString buff1;
+
+                bracket = 0;
+
+                while(!stream1.atEnd())
                 {
-                    qDebug() << "New request held by multiple packet arrived while user buffer isn't empty, clearing it";
-                    qDebug() << "A packet and therefore a request must have been lost nor a bad packet was received before";
-                    this->buffer.clear();
+                    if(bracket == 0 && !buff1.isEmpty())
+                    {
+                        if(buff1.contains("\"mainObj\": {"))
+                        {
+                            QByteArray array(buff1.toLocal8Bit());
+                            processIncomingData(array);
+                        }
+                        buff1.clear();
+                    }
+
+                    QString oneChar = stream1.read(1);
+                    buff1 += oneChar;
+                    if(oneChar == "{")
+                    {
+                        bracket++;
+                    }
+                    if(oneChar == "}")
+                    {
+                        bracket--;
+                    }
                 }
-                this->buffer.append(*data);
+                buffer.clear();
+
+                if(!buff1.isEmpty())
+                {
+                    buffer += buff1.toLocal8Bit();
+                }
             }
             else
             {
-                if(this->buffer.isEmpty())
-                {
-                    //That's meen it's a bad packet, report to log
-                    qDebug() << "Unable to deserialize received packet :" << Qt::endl << *data << Qt::endl << "Request Aborted" << Qt::endl;
-                }
-                else
-                {
-                    buffer.append(*data);
-                    CPacket tmp1(this->buffer,NULL);
+                buffer.append(data);
+            }
+        }
+        else
+        {
+            if(buffer.isEmpty())
+            {
+                //That's meen it's a bad packet, report to log
+                qDebug() << "Unable to deserialize received packet :" << Qt::endl << *data << Qt::endl << "Request Aborted" << Qt::endl;
+                return;
+            }
+            else
+            {
+                buffer.append(data);
 
-                    //We check if the packet is complete, otherwise we wait for the buffer to fill up
-                    if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
+                QTextStream stream1(&buffer);
+                QString buff1;
+
+                bracket = 0;
+                bool processed = false;
+
+                while(!stream1.atEnd())
+                {
+                    if(bracket == 0 && !buff1.isEmpty())
                     {
-                        processIncomingData(this->buffer);
-                        buffer.clear();
+                        if(buff1.contains("\"mainObj\": {"))
+                        {
+                            processed = true;
+                            QByteArray array(buff1.toLocal8Bit());
+                            processIncomingData(array);
+                        }
+                        else
+                        {
+                            qDebug() << "Trying to process incomplet packet :" << Qt::endl << buff1 << Qt::endl;
+                        }
+                        buff1.clear();
+                    }
+
+                    QString oneChar = stream1.read(1);
+                    buff1 += oneChar;
+                    if(oneChar == "{")
+                    {
+                        bracket++;
+                    }
+                    if(oneChar == "}")
+                    {
+                        bracket--;
+                    }
+                }
+                if(processed)
+                {
+                    buffer.clear();
+                    if(!buff1.isEmpty() && buff1.size() > 2)
+                    {
+                        buffer += buff1.toLocal8Bit();
                     }
                 }
             }
         }
     }
+
     else
     {
-        if(ifTrueProccess & *data != "\n" & *data !="{\n}\n")
+        if(bracket != 0)
         {
-            processIncomingData(*data);
+            if(!buff.isEmpty() && buff.contains("\"mainObj\": {"))
+            {
+                if(!buffer.isEmpty())
+                {
+                    buffer += buff.toLocal8Bit();
+
+                    QTextStream stream1(&buffer);
+                    QString buff1;
+
+                    bracket = 0;
+
+                    while(!stream1.atEnd())
+                    {
+                        if(bracket == 0 && !buff1.isEmpty())
+                        {
+                            if(buff1.contains("\"mainObj\": {"))
+                            {
+                                QByteArray array(buff1.toLocal8Bit());
+                                processIncomingData(array);
+                            }
+                            else
+                            {
+                                qDebug() << "Trying to process incomplet packet :" << Qt::endl << buff1 << Qt::endl;
+                            }
+                            buff1.clear();
+                        }
+
+                        QString oneChar = stream1.read(1);
+                        buff1 += oneChar;
+                        if(oneChar == "{")
+                        {
+                            bracket++;
+                        }
+                        if(oneChar == "}")
+                        {
+                            bracket--;
+                        }
+                    }
+                    buffer.clear();
+
+                    if(!buff1.isEmpty())
+                    {
+                        buffer += buff1.toLocal8Bit();
+                    }
+                }
+                else
+                {
+                    buffer += buff.toLocal8Bit();
+                }
+            }
         }
     }
-    /*if(tmp.GetByteArray() == "{\n}\n")
+
+    if(!m_finishLoad && m_self)
     {
-        qDebug() << "packet malformé\n";
-        return;
-    }*/
-
-    if(!m_finishLoad && m_self){
-
         checkCompenents();
         checkFinishLoad();
         if(!m_finishLoad)
+        {
             loadAllCompenent();
+        }
     }
 
-    if(m_finishLoad && m_currentUIState != "Home"){
+    if(m_finishLoad && m_currentUIState != "Home")
+    {
         //m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
         emit picturesLoad();
         emit m_clientsList->dataChanged();
@@ -335,9 +450,6 @@ static int nb_receive_packet;
         emit(changeState("Home"));
         m_currentUIState = "Home";
     }
-
-
-    delete data;
 }
 
 void CServer::loadAllCompenent(){
@@ -426,10 +538,17 @@ void CServer::processIncomingData(QByteArray data){
        }
        Deserialize(data);
 
-       CPacket ppRequest("1","4");
+       foreach(CClient * c, getClientsList()->get_clients())
+       {
+           CPacket ppRequest("1","4");
+           ppRequest.Serialize_ppRequest(c->get_uuid().toString());
+           m_socket->write(ppRequest.GetByteArray());
+       }
+
+       /*CPacket ppRequest("1","4");
        ppRequest.Serialize_ppRequest(getClientsList()->get_clients()[0]->get_uuid().toString());
        qDebug() << ppRequest.GetByteArray();
-       m_socket->write(ppRequest.GetByteArray());
+       m_socket->write(ppRequest.GetByteArray());*/
     }
 
     //Récupération du type
@@ -1073,6 +1192,7 @@ bool CServer::changeEmail(QString email)
         sendToServer(packet.GetByteArray());
         return true;
     */
+    return false;
 }
 
 bool CServer::changeDescription(QString description)
@@ -1132,9 +1252,9 @@ void CServer::Deserialize(QByteArray in){
         {
             qDebug() << "[Log error] Can't create log directory" << Qt::endl;
         }
-    }
+    }*/
 
-    foreach(CClient *c, m_clients)
+    /*foreach(CClient *c, m_clients)
     {
         QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
         if(QFile::exists(path))

@@ -905,18 +905,36 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             QImage img(path);
                             CPacket ppAns("1","14");
                             ppAns.Serialize_ppAnswer(img,requested);
-                            qDebug() << ppAns.GetByteArray().size();
-                            sendToClient(ppAns.GetByteArray(), sender);
-                        }else{
-                            path = "storage/private/pp/pp0.png";
-                            QImage img(path);
-                            CPacket ppAns("1","14");
-                            ppAns.Serialize_ppAnswer(img,requested);
-                            qDebug() << ppAns.GetByteArray().size();
+                            ppAns.GetByteArray().size();
                             sendToClient(ppAns.GetByteArray(), sender);
                         }
-                        //delay();
+                        else
+                        {
+                            writeToLog("Unable to find profile pic for user [" + requested.toString(QUuid::WithoutBraces) + "] Random new one generated" , SERVER_WARN);
 
+                            int random = QRandomGenerator::global()->bounded(0,18);
+                            path = "storage/server/pp/pp" + QString::number(random) + ".png";
+                            if(QFile::exists(path))
+                            {
+                                QImage tmp(path);
+                                QDir test;
+
+                                if(test.exists("storage/private/" + requested.toString(QUuid::WithoutBraces)))
+                                {
+                                    tmp.save("storage/private/" + requested.toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                                }
+                                else
+                                {
+                                    test.mkpath("storage/private/" + requested.toString(QUuid::WithoutBraces));
+                                    tmp.save("storage/private/" + requested.toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                                }
+
+                                CPacket ppAns("1","14");
+                                ppAns.Serialize_ppAnswer(tmp,requested);
+                                ppAns.GetByteArray().size();
+                                sendToClient(ppAns.GetByteArray(), sender);
+                            }
+                        }
                         break;
                     }
 
