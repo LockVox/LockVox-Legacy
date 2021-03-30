@@ -12,6 +12,7 @@ Item {
         y: 21
         width: 160
         height: 110
+        color: "#687075"
         text: qsTr("Please specify the @IP of the serve you want to connect")
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter

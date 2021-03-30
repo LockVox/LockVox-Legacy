@@ -404,13 +404,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     {
                         //PSEUDO UPDATE
                         CClient * client = packet->Deserialize_myClient();
+                        qDebug() << "Receive description update from " << sender->get_pseudo();
 
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", SERVER);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
 
-                        QString res = m_db->updateUser(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString());
+                        QString res = m_db->updateUsername(sender->get_uuid().toString(QUuid::WithoutBraces).toStdString(), sender->get_pseudo().toStdString());
                         //BDD
+                        qDebug() << "BDD Update description : " << res << "\n";
                         if(res=="success")
                         {
                             //Send update
@@ -436,15 +438,34 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 3:
                     {
                         //BIO UPDATE
-                        CClient * client = packet->Deserialize_newClient();
+                        CClient * client = packet->Deserialize_myClient();
 
+                        qDebug() << "Receive description update from " << sender->get_pseudo();
                         //Apply changement
                         sender->set_description(client->get_description());
 
                         //Send update
-                        CPacket ans("0","3");
-                        ans.Serialize_newClient(sender);
-                        sendToAll(ans.GetByteArray());
+                        QString res = m_db->updateDescription(sender->get_uuid().toString(QUuid::WithoutBraces).toStdString(), sender->get_description().toStdString());
+                        //BDD
+                        qDebug() << "BDD Update description : " << res << "\n";
+                        if(res=="success")
+                        {
+                            //Send update
+                            CPacket ans("0","3");
+                            ans.Serialize_newClient(sender);
+                            sendToAll(ans.GetByteArray());
+                        }
+                        else
+                        {
+                            writeToLog(res, DB_ERR);
+                            /*
+                            CPacket ans("2","0");
+                            CClient * errClient = new CClient();
+                            errClient->set_description("Error in database");//De la merde à rework
+                            ans.Serialize_newClient(errClient);
+                            */
+                        }
+
                         break;
                     }
 

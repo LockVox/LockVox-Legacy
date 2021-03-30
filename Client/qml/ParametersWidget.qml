@@ -74,26 +74,6 @@ Item {
             anchors.right:parent.right
         }
 
-        Text {
-            id: password_title
-            x: 14
-            y: 218
-            width: 185
-            height: 14
-            color: "#566369"
-            text: qsTr("PASSWORD")
-            font.pixelSize: 10
-            anchors.leftMargin: 14
-            anchors.topMargin: 218
-            anchors.rightMargin: 320
-            anchors.bottomMargin: 43
-            font.bold: true
-            anchors.bottom:parent.bottom
-
-            anchors.left:parent.left
-            anchors.right:parent.right
-        }
-
         CustomQpushButton {
             id: changeUsernameBtn
             x: 258
@@ -163,25 +143,6 @@ Item {
         }
 
         Text {
-            id: password_label
-            x: 14
-            y: 238
-            width: 185
-            height: 14
-            color: "#ffffff"
-            text: qsTr("password")
-            font.pixelSize: 12
-            anchors.rightMargin: 155
-            anchors.bottomMargin: 25
-            anchors.leftMargin: 14
-            anchors.topMargin: 235
-            anchors.bottom:parent.bottom
-
-            anchors.left:parent.left
-            anchors.right:parent.right
-        }
-
-        Text {
             id: username_label
             objectName: "username"
             x: 14
@@ -201,28 +162,6 @@ Item {
 
             anchors.left:parent.left
             anchors.right:parent.right
-        }
-
-        CustomQpushButton {
-            id: changePasswordBtn
-            x: 258
-            y: 230
-            width: 73
-            height: 30
-            visible: true
-            text: "Modify"
-            anchors.bottom:parent.bottom
-            anchors.rightMargin: 69
-            anchors.bottomMargin: 19
-            anchors.leftMargin: 258
-            anchors.topMargin: 229
-
-            anchors.right:parent.right
-
-            Connections {
-                target: changePasswordBtn
-                onClicked: user_parameters.state = "changePasswordState"
-            }
         }
 
         Text {
@@ -320,19 +259,6 @@ Item {
 
 
 
-        }
-        
-        CustomQpushButton {
-            id: applyPasswordBtn
-            x: 153
-            y: 158
-            width: 73
-            height: 30
-            visible: false
-            text: "Modify"
-            anchors.bottom: parent.bottom
-
-            anchors.right:parent.right
         }
 
         Text {
@@ -538,12 +464,6 @@ Item {
             name: "changeUsernameState"
 
             PropertyChanges {
-                target: password_title
-                x: 14
-                y: 248
-            }
-
-            PropertyChanges {
                 target: changeEmailBtn
                 x: 258
                 y: 206
@@ -551,12 +471,6 @@ Item {
                 anchors.leftMargin: 258
                 anchors.topMargin: 178
                 anchors.bottomMargin: 71
-            }
-
-            PropertyChanges {
-                target: password_label
-                x: 14
-                y: 268
             }
 
             PropertyChanges {
@@ -631,16 +545,6 @@ Item {
             }
 
             PropertyChanges {
-                target: changePasswordBtn
-                x: 258
-                y: 260
-                anchors.rightMargin: 69
-                anchors.bottomMargin: 25
-                anchors.leftMargin: 258
-                anchors.topMargin: 223
-            }
-
-            PropertyChanges {
                 target: changeUsernameTextField
                 x: 15
                 y: 133
@@ -671,23 +575,12 @@ Item {
         },
         State {
             name: "changeEmailState"
-            PropertyChanges {
-                target: password_title
-                x: 14
-                y: 233
-            }
             
             PropertyChanges {
                 target: changeEmailBtn
                 x: 258
                 y: 237
                 visible: false
-            }
-            
-            PropertyChanges {
-                target: password_label
-                x: 14
-                y: 253
             }
             
             PropertyChanges {
@@ -777,16 +670,6 @@ Item {
                 anchors.bottomMargin: 70
                 anchors.leftMargin: 258
             }
-            
-            PropertyChanges {
-                target: changePasswordBtn
-                x: 258
-                y: 245
-                anchors.rightMargin: 69
-                anchors.bottomMargin: 25
-                anchors.leftMargin: 258
-                anchors.topMargin: 223
-            }
 
             PropertyChanges {
                 target: changePasswordTextField
@@ -802,149 +685,6 @@ Item {
                 anchors.rightMargin: -19
                 anchors.bottomMargin: 106
                 anchors.leftMargin: 19
-            }
-        },
-        State {
-            name: "changePasswordState"
-            PropertyChanges {
-                target: password_title
-                x: 14
-                y: 233
-            }
-
-            PropertyChanges {
-                target: changeEmailBtn
-                x: 258
-                y: 237
-                visible: true
-            }
-            
-            PropertyChanges {
-                target: password_label
-                x: 14
-                y: 253
-                visible: false
-            }
-
-            PropertyChanges {
-                target: cancelBtn
-                x: 340
-                y: 242
-                width: 20
-                height: 20
-                visible: true
-                anchors.rightMargin: 40
-                anchors.bottomMargin: 13
-            }
-
-            PropertyChanges {
-                target: email_title
-                x: 14
-                y: 155
-                anchors.rightMargin: 306
-                anchors.topMargin: 164
-                anchors.leftMargin: 14
-                anchors.bottomMargin: 97
-            }
-
-            PropertyChanges {
-                target: email_label
-                x: 14
-                y: 175
-                visible: true
-            }
-            
-            PropertyChanges {
-                target: item1
-                height: 316
-            }
-
-            PropertyChanges {
-                target: rectangle
-                x: 0
-                y: 0
-                width: 400
-                height: 317
-            }
-
-            PropertyChanges {
-                target: username_label
-                visible: true
-            }
-
-            PropertyChanges {
-                target: changeUsernameBtn
-                visible: true
-            }
-
-            PropertyChanges {
-                target: changeEmailTextField
-                x: 15
-                y: 245
-                width: 200
-                height: 30
-                visible: false
-                anchors.rightMargin: 190
-                placeholderText: qsTr("Type a new email")
-            }
-
-            PropertyChanges {
-                target: applyUsernameBtn
-                x: 258
-                y: 138
-                visible: false
-                text: "Apply"
-            }
-
-            PropertyChanges {
-                target: applyEmailBtn
-                x: 258
-                y: 177
-                visible: false
-                text: "Apply"
-            }
-
-            PropertyChanges {
-                target: changePasswordBtn
-                x: 258
-                y: 245
-                visible: false
-                anchors.rightMargin: 69
-                anchors.topMargin: 223
-                anchors.leftMargin: 258
-                anchors.bottomMargin: 25
-            }
-            
-            PropertyChanges {
-                target: changePasswordTextField
-                x: 15
-                y: 237
-                width: 200
-                height: 30
-                visible: true
-                anchors.rightMargin: 206
-                anchors.bottomMargin: 8
-                anchors.leftMargin: 15
-                placeholderText: qsTr("new password")
-            }
-            
-            PropertyChanges {
-                target: applyPasswordBtn
-                x: 258
-                y: 236
-                height: 30
-                visible: true
-                text: "Apply"
-                anchors.rightMargin: 69
-                anchors.bottomMargin: 9
-                anchors.leftMargin: 258
-            }
-
-            PropertyChanges {
-                target: page_title
-                anchors.rightMargin: 110
-                anchors.topMargin: 8
-                anchors.leftMargin: 128
             }
         },
         State {
