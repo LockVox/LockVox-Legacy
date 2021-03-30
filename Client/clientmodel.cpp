@@ -23,6 +23,21 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     CClient *c = m_clientsList->get_clients().at(index.row());
+
+    bool exist = false;
+    foreach(CClient * tmp, m_clientsList->get_clients()){
+        if(c->get_uuid() == tmp->get_uuid()){
+            exist = true;
+        }
+    }
+
+    if(!exist){
+         qDebug() << "Trying to access unexisting clients from Client model\n";
+         return QVariant();
+    }
+
+
+
     if(c == NULL){
         return QVariant("0");
     }
