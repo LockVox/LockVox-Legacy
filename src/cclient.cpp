@@ -11,10 +11,12 @@ CClient::CClient()
 
 CClient::CClient( const CClient & copy)
 {
+    /*
     m_pseudo = copy.m_pseudo;
     m_idChannel = copy.m_idChannel;
     m_soc = copy.m_soc;
     m_isOnline = copy.m_isOnline;
+    */
 }
 
 /*CClient::CClient(int id, QString name, QTcpSocket * soc, int idChannel, bool online, QString description)

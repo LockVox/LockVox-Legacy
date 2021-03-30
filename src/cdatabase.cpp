@@ -385,11 +385,74 @@ QString CDatabase::updateUser(string uuid, string pseudo, string mail, string de
 
 QString CDatabase::updateDescription(string uuid, string description)
 {
+    try{
+        conn = mysql_init(NULL);
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            throw(QString::fromLocal8Bit(mysql_error(conn)));
+        }
+
+        if(uuid =="" || description == "")
+            throw("Missing paramater");
+        string query = "UPDATE utilisateurs SET description = '" + description + "' WHERE uuid = '" +  uuid + "';";
+        qDebug() <<"UpdateUsername request : " <<  QString::fromStdString(query);
+        QString error;
+        if (mysql_query(conn, query.c_str()))
+        {
+            error = QString::fromLocal8Bit(mysql_error(conn));
+            mysql_close(conn);
+            return error;
+        }
+
+        // Close a MySQL connection
+        mysql_close(conn);
+
+        return "success";
+    }
+    catch (char *e)
+    {
+        return QString::fromLocal8Bit(e);
+
+        // Close a MySQL connection
+        mysql_close(conn);
+    }
     return "error";
 }
 
 QString CDatabase::updateUsername(string uuid, string username)
 {
+    try{
+        conn = mysql_init(NULL);
+        if (!mysql_real_connect(conn,MY_HOSTNAME, MY_USERNAME,MY_PASSWORD, MY_DATABASE,MY_PORT_NO, MY_SOCKET, MY_OPT))
+        {
+            throw(QString::fromLocal8Bit(mysql_error(conn)));
+        }
+
+        if(uuid =="" || username == "")
+            throw("Missing paramater");
+    string query = "UPDATE utilisateurs SET username = " + username + "WHERE uuid = '" +  uuid + "';";
+    qDebug() <<"UpdateUsername request : " <<  QString::fromStdString(query);
+    QString error;
+    if (mysql_query(conn, query.c_str()))
+    {
+        error = QString::fromLocal8Bit(mysql_error(conn));
+        mysql_close(conn);
+        return error;
+    }
+
+        // Close a MySQL connection
+        mysql_close(conn);
+
+        return "success";
+    }
+    catch (char *e)
+
+    {
+        return QString::fromLocal8Bit(e);
+        // Close a MySQL connection
+        mysql_close(conn);
+
+    }
     return "error";
 }
 
