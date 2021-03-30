@@ -1073,6 +1073,7 @@ bool CServer::changeEmail(QString email)
         sendToServer(packet.GetByteArray());
         return true;
     */
+    return true;
 }
 
 bool CServer::changeDescription(QString description)

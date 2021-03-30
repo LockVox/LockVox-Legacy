@@ -367,6 +367,8 @@ Rectangle {
         height: 200
         visible: false
         color: "#ffffff"
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
     }
 
     CustomQpushButton {
@@ -508,7 +510,9 @@ Rectangle {
             visible: false
         }
 
-        MenuSeparator {}
+        MenuSeparator {
+            id: menuSeparator1
+        }
 
         delegate: MenuBarItem {
             id: menuBarItem
@@ -583,6 +587,9 @@ Rectangle {
         y: 221
         visible: false
         value: 0.5
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 50
     }
 
     Text {
@@ -595,15 +602,6 @@ Rectangle {
         anchors.right: parent.right
 
         font.pixelSize: 12
-    }
-
-    AddChannelButton {
-        id: add_channel_btn
-        x: 0
-        y: 99
-        visible: false
-        anchors.left: parent.left
-        anchors.top: parent.top
     }
 
     states: [
@@ -758,7 +756,7 @@ Rectangle {
                 height: 287
                 visible: true
                 anchors.bottomMargin: 8
-                anchors.topMargin: 157
+                anchors.topMargin: 113
             }
 
             PropertyChanges {
@@ -913,18 +911,6 @@ Rectangle {
                 anchors.rightMargin: 106
                 anchors.bottomMargin: 443
             }
-
-            PropertyChanges {
-                target: add_channel_btn
-                x: 0
-                y: 99
-                width: 179
-                height: 50
-                visible: true
-                text: "+ Add a channel"
-                anchors.leftMargin: 0
-                anchors.topMargin: 108
-            }
         },
         State {
             name: "parameterState"
@@ -1076,6 +1062,11 @@ Rectangle {
                 x: 173
                 y: 177
             }
+
+            PropertyChanges {
+                target: menuSeparator1
+                visible: false
+            }
         },
         State {
             name: "connectToServerState"
@@ -1172,7 +1163,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.6600000262260437}
+    D{i:0;formeditorZoom:0.75}
 }
 ##^##*/
 

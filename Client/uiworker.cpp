@@ -203,7 +203,7 @@ void UIWorker::onSelfChanged(CClient* c){
 
 
     //email_label->setProperty("text",c->get_mail());
-    email_label->setProperty("text","WESH");
+    email_label->setProperty("text",c->get_mail());
     qDebug()<< "USER mail :"<< c->get_mail();
 
 
