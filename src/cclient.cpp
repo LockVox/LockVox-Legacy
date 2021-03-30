@@ -96,7 +96,8 @@ QUuid CClient::get_uuid()
 
 QImage CClient::get_profilePic()
 {
-    return profilePic;
+    //return profilePic;
+    return QImage();
 }
 
 bool CClient::get_isOnline()

@@ -38,7 +38,7 @@ HEADERS += \
         Client/includes/messagelist.h \
         Client/messagemodel.h \
         Client/includes/caudio.h \
-    imageprovider.h \
+        imageprovider.h \
         src/includes/abstractserver.h \
         src/includes/cchannel.h \
         src/includes/cclient.h  \

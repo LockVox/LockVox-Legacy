@@ -229,6 +229,8 @@ void CServer::onReceiveData()
     QByteArray data;
     data.append(m_socket->readAll());
 
+    //qDebug() << "Packet : " << *data;
+
     QTextStream stream(&data);
     QString buff;
 
@@ -464,6 +466,7 @@ void CServer::loadAllCompenent(){
             if(c->getMessagesLists()->getHasBeenLoad() == false){
                 CPacket request("1","3");
                 request.Serialize_messageRequest(c->get_id(),20,0);
+                qDebug() << request.GetByteArray();
                 sendToServer(request.GetByteArray());
             }
         }
@@ -550,11 +553,6 @@ void CServer::processIncomingData(QByteArray data){
            ppRequest.Serialize_ppRequest(c->get_uuid().toString());
            m_socket->write(ppRequest.GetByteArray());
        }
-
-       /*CPacket ppRequest("1","4");
-       ppRequest.Serialize_ppRequest(getClientsList()->get_clients()[0]->get_uuid().toString());
-       qDebug() << ppRequest.GetByteArray();
-       m_socket->write(ppRequest.GetByteArray());*/
     }
 
     //Récupération du type
@@ -737,9 +735,11 @@ void CServer::processIncomingData(QByteArray data){
                     //received message list
                     QVector<CMessage> messages_list = packet->Deserialize_MessageList();
 
+
                     //Case empty messages list
                     if(messages_list.isEmpty()){
                         int index = packet->Deserialize_MessageListInfo();
+                        qDebug() << "Receive message list for channel " <<  index;
                         getChannelsList()->get_channelAt(index)->getMessagesLists()->setHasBeenLoad(true);
                         break;
                     }
@@ -748,7 +748,7 @@ void CServer::processIncomingData(QByteArray data){
                     for(int i = 0; i < messages_list.size(); i++){
                         messages_list[i].getSenderPseudo(getClientsList()->get_clients());
                     }
-
+                    qDebug() << "Receive message list for channel " << id;
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
 
                     break;
@@ -890,7 +890,10 @@ void CServer::processIncomingData(QByteArray data){
 
                         foreach(CClient * c, getClientsList()->get_clients())
                         {
+                            if(c->get_uuid() == uuid){
                                 c->set_profilePic(img);
+                                break;
+                            }
                         }
                     }
                     break;

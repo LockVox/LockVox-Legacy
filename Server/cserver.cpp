@@ -881,7 +881,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Request message list
                         //qDebug() << "Receive msg list request from " << sender->get_pseudo()
                         QList<QString> info = packet->deserialize_messageRequest();
-
+                        qDebug() << "Receive request message for channel " << info.at(1);
                         QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
 
                         if(messages_list.isEmpty()){
@@ -900,6 +900,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             break;
                         }
+
 
                         CPacket reqAns("1","2");
                         reqAns.Serialize_MessageListInfo(info.at(1).toInt());

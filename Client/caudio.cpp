@@ -56,7 +56,7 @@ CAudio::CAudio() : m_chain("MainAudio")
     jrtplib::RTPUDPv6TransmissionParams transmissionParams;
     jrtplib::RTPSessionParams sessionParams;
     int status;
-    transmissionParams.SetPortbase(AUDIO_PORTBASE);
+    //transmissionParams.SetPortbase(AUDIO_PORTBASE);
     sessionParams.SetOwnTimestampUnit(1.0/((double)samplingRate));
     sessionParams.SetMaximumPacketSize(64000);
     sessionParams.SetAcceptOwnPackets(false);       // Le serveur renverra tout mais le client ignorera ses paquets
@@ -204,14 +204,14 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     jrtplib::RTPUDPv6TransmissionParams transmissionParams;
     jrtplib::RTPSessionParams sessionParams;
     int status;
-    transmissionParams.SetPortbase(AUDIO_PORTBASE);
+    //transmissionParams.SetPortbase(AUDIO_PORTBASE);
     sessionParams.SetOwnTimestampUnit(1.f/((double)samplingRate));
     sessionParams.SetMaximumPacketSize(64000);
     sessionParams.SetAcceptOwnPackets(false);       // Le serveur renverra tout mais le client ignorera ses paquets
     status = rtpSession.Create(sessionParams,&transmissionParams, jrtplib::RTPTransmitter::IPv6UDPProto);
     checkError(status);
     // Instruct the RTP session to send data to ourselves.
-    status = rtpSession.AddDestination(jrtplib::RTPIPv6Address(ipaddr, AUDIO_PORTBASE+port));    //Les infos du serv
+    //status = rtpSession.AddDestination(jrtplib::RTPIPv6Address(ipaddr, AUDIO_PORTBASE+port));    //Les infos du serv
     checkError(status);
     // Tell the RTP component to use this RTPSession object.
     returnValue = m_rtp.init(&rtpSession);

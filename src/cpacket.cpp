@@ -634,7 +634,7 @@ QList<QString> CPacket::deserialize_messageRequest()
             else
             {
                 QList<QString> res;
-                int id = msgReq.value("id").toInt() - 1;
+                int id = msgReq.value("id").toInt();
                 res.append("public");
                 res.append(QString::number(id));
                 res.append(QString::number(msgReq.value("nb").toInt()));

@@ -36,8 +36,6 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
          return QVariant();
     }
 
-
-
     if(c == NULL){
         return QVariant("0");
     }
