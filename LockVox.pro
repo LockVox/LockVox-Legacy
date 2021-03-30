@@ -86,35 +86,6 @@ INCLUDEPATH += $$PWD/libs/libmariadb/include \
     $$PWD/libs/libmariadb/win32
 DEPENDPATH += $$PWD/libs/libmariadb/win32
 
-
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/
-DEPENDPATH += $$PWD/libs/emiplib/include/
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/emiplib
-DEPENDPATH += $$PWD/libs/emiplib/include/emiplib
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jrtplib3
-DEPENDPATH += $$PWD/libs/emiplib/include/jrtplib3
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jthread
-DEPENDPATH += $$PWD/libs/emiplib/include/jthread
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/portaudio
-DEPENDPATH += $$PWD/libs/emiplib/include/portaudio
-
 DISTFILES += \
     Client/qml/CustomQpushButton2.ui.qml \
     MenuBar.qml

@@ -1,4 +1,4 @@
-#ifndef CAUDIO_H
+/*#ifndef CAUDIO_H
 #define CAUDIO_H
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -42,15 +42,15 @@
 
 #include "src/includes/abstractaudio.h"
 
-class CAudio : public AbstractAudio
+class CAudio : public AbstractAudio*
 {
 public:
     CAudio();
     CAudio(uint8_t * ipaddr, int port=0);
     ~CAudio();
     void StopChain(){this->~CAudio();};
-    /*int SendSoundToRTP();
-    void OutputSound();*/
+    int SendSoundToRTP();
+    void OutputSound();
 private:
     void onThreadExit(bool error, const std::string &errorComponent, const std::string &errorDescription);
     void checkError(bool returnValue, const MIPComponent &component);
@@ -62,3 +62,4 @@ private:
 };
 
 #endif // CAUDIO_H
+*/

@@ -1,4 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+/*#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "config.h"
 #include "caudio.h"
 // We'll be using an RTPSession instance from the JRTPLIB library. The following
@@ -347,3 +347,4 @@ void CAudio::onThreadExit(bool error, const std::string &errorComponent, const s
     std::cerr << "    Error description: " << errorDescription << std::endl;
 }
 
+*/
