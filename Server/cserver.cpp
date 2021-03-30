@@ -404,13 +404,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     {
                         //PSEUDO UPDATE
                         CClient * client = packet->Deserialize_myClient();
+                        qDebug() << "Receive description update from " << sender->get_pseudo();
 
                         writeToLog("User [" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] change username to [" + client->get_pseudo() + "]", SERVER);
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
 
-                        QString res = m_db->updateUsername(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString());
+                        QString res = m_db->updateUsername(sender->get_uuid().toString(QUuid::WithoutBraces).toStdString(), sender->get_pseudo().toStdString());
                         //BDD
+                        qDebug() << "BDD Update description : " << res << "\n";
                         if(res=="success")
                         {
                             //Send update

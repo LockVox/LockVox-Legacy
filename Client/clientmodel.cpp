@@ -23,6 +23,9 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     CClient *c = m_clientsList->get_clients().at(index.row());
+    if(c == NULL){
+        return QVariant("0");
+    }
     switch(role){
         case uuidRole:
                     return QVariant(c->get_uuid());

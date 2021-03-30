@@ -488,12 +488,13 @@ void CServer::processIncomingData(QByteArray data){
                 CClient * client = packet->Deserialize_newClient();
                 int index = 0;
                 foreach(CClient * c, getClientsList()->get_clients()){
-                    if(c->get_uuid() == client->get_uuid())
+                    if(c->get_uuid() == client->get_uuid()){
+                        c->set_pseudo(client->get_pseudo());
+                        getClientsList()->setItemAt(index,c);
                         break;
+                    }
                     index++;
                 }
-
-                getClientsList()->setItemAt(index,client);
 
                 //client->set_pseudo(c->get_pseudo());
                 break;
@@ -507,12 +508,15 @@ void CServer::processIncomingData(QByteArray data){
                 int index = 0;
 
                 foreach(CClient * c, getClientsList()->get_clients()){
-                    if(c->get_uuid() == client->get_uuid())
+                    if(c->get_uuid() == client->get_uuid()){
+                        c->set_description(client->get_description());
+                        getClientsList()->setItemAt(index,c);
                         break;
+                    }
                     index++;
                 }
 
-                getClientsList()->setItemAt(index,client);
+
 
                 break;
             }

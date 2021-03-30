@@ -430,7 +430,7 @@ QString CDatabase::updateUsername(string uuid, string username)
 
         if(uuid =="" || username == "")
             throw("Missing paramater");
-    string query = "UPDATE utilisateurs SET username = " + username + "WHERE uuid = '" +  uuid + "';";
+    string query = "UPDATE utilisateurs SET username = '" + username + "' WHERE uuid = '" +  uuid + "';";
     qDebug() <<"UpdateUsername request : " <<  QString::fromStdString(query);
     QString error;
     if (mysql_query(conn, query.c_str()))
