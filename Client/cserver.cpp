@@ -890,8 +890,12 @@ void CServer::processIncomingData(QByteArray data){
 
                         foreach(CClient * c, getClientsList()->get_clients())
                         {
+                            if(c->get_uuid() == uuid)
+                            {
                                 c->set_profilePic(img);
+                            }
                         }
+
                     }
                     break;
                 }
