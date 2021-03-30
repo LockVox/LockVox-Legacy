@@ -7,5 +7,6 @@ Server.pro.user
 #Compiled autosave for ui
 *.autosave
 Server/config.h
+Client/include/config.h
 
 
