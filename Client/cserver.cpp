@@ -737,7 +737,8 @@ void CServer::processIncomingData(QByteArray data){
 
 
                     //Case empty messages list
-                    if(messages_list.isEmpty()){
+                    if(messages_list.last().get_from() == "noIndex")
+                    {
                         int index = packet->Deserialize_MessageListInfo();
                         qDebug() << "Receive message list for channel " <<  index;
                         getChannelsList()->get_channelAt(index)->getMessagesLists()->setHasBeenLoad(true);
@@ -749,6 +750,7 @@ void CServer::processIncomingData(QByteArray data){
                         messages_list[i].getSenderPseudo(getClientsList()->get_clients());
                     }
                     qDebug() << "Receive message list for channel " << id;
+
                     getChannelsList()->get_channelAt(id)->getMessagesLists()->set_messages(messages_list);
 
                     break;
