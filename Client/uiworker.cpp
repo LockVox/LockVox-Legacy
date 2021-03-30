@@ -65,6 +65,7 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_userparameter = m_rootObject->findChild<QObject*>("user_parameters");
 
     m_listChannels = m_rootObject->findChild<QObject*>("listChannels");
+    m_listClients = m_rootObject->findChild<QObject*>("listClients");
     m_changeusername = m_rootObject->findChild<QObject*>("user_parameters");
 
 
@@ -110,12 +111,12 @@ UIWorker::UIWorker(QGuiApplication *app)
     QObject::connect(m_server, SIGNAL(disconnected()),
                      this, SLOT(onDisconnected()));
 
-    //QObject::connect(m_menuBar, SIGNAL(quit()),
-    //                this, SLOT(onQuit()));
+    QObject::connect(m_menuBar, SIGNAL(quit()),
+                     this, SLOT(onQuit()));
     QObject::connect(m_menuBar, SIGNAL(disconnect()),
                      this, SLOT(onDisconnect()));
-    QObject::connect(m_menuBar, SIGNAL(change_server()),
-                     this, SLOT(onChangeServer()));
+    //QObject::connect(m_menuBar, SIGNAL(change_server()),
+    //                this, SLOT(onChangeServer()));
 
     QObject::connect(m_quitPopup, SIGNAL(confirmQuit(int)),
                      this, SLOT(onConfirmQuit(int)));
@@ -136,7 +137,8 @@ UIWorker::UIWorker(QGuiApplication *app)
      QObject::connect(m_changeusername,SIGNAL(change_description(QString)),
 
                       m_server,SLOT(changeDescription(QString)));
-
+    QObject::connect(m_server, SIGNAL(picturesLoad()),
+                     this, SLOT(onPicturesLoad()));
 
 
     //QObject::connect()
@@ -241,6 +243,25 @@ void UIWorker::onCurrentIndexChanged(int index)
     //Change m_messagesList
     //m_server->setMessagesList(m_server->getChannelsList()->get_channelAt(index)->getMessagesLists());
 
+}
+
+void UIWorker::onPicturesLoad()
+{
+    auto contentItem = m_listClients->property("contentItem").value<QQuickItem *>();
+    auto contentItemChildren = contentItem->childItems();
+
+    for (auto childItem: contentItemChildren )
+        {
+            if (childItem->objectName() == "clients"){
+                QObject * pseudo = childItem->findChild<QObject*>("username");
+                QString new_img = QString("image://ImageProvider/");
+                new_img += pseudo->property("text").toString();
+
+                QObject * img = childItem->findChild<QObject*>("img");
+                img->setProperty("source", "");
+                img->setProperty("source", new_img);
+             }
+        }
 }
 
 void UIWorker::onConnected()

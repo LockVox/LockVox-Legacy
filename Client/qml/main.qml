@@ -34,7 +34,7 @@ ApplicationWindow {
         //listChannel.onCurrentIndexChanged:  console.log(listChannel.currentIndex)
 
         disconnect.onTriggered:menuBar.disconnect()
-        change_server.onTriggered: menuBar.change_server()
+        //change_server.onTriggered: menuBar.change_server()
 
         quit_confirm.onClicked: quit_popup.confirmQuit(1)
         quit_back.onClicked: quit_popup.confirmQuit(0)
@@ -43,7 +43,10 @@ ApplicationWindow {
         //maximize_window.onTriggered: mainWindow.showMaximized()
         //normal_window.onTriggered: mainWindow.showNormal()
         listMessage.onCountChanged: listMessage.positionViewAtEnd()
-
+        listClient.onCountChanged: {
+                delegate.img.source = ""
+                delegate.img.source = "image://ImageProvider/"+delegate.pseudo
+        }
 
         //Move Window
         moveWindowArea.onPressed: {

@@ -99,6 +99,7 @@ signals:
         void selfChanged(CClient*);
         void connected();
         void disconnected();
+        void picturesLoad();
 
         //UI
 

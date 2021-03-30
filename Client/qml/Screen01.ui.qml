@@ -218,6 +218,7 @@ Rectangle {
     }
 
     ListView {
+        objectName: "listClients"
         id: listClient
         x: 940
         y: 70
@@ -254,7 +255,9 @@ Rectangle {
             m_clientsList: clientsList
         }
 
-        delegate: Delegate_Client {}
+        delegate: Delegate_Client {
+            objectName: "clients"
+        }
     }
 
     //property alias channel:channel
@@ -338,12 +341,11 @@ Rectangle {
 
             model: MessageModel {
                 m_messagesList: messagesList
-
             }
 
             verticalLayoutDirection: ListView.TopToBottom
             delegate: MessageWidget {
-            width: parent.width
+                width: parent.width
             }
         }
     }
@@ -452,10 +454,9 @@ Rectangle {
         height: 251
     }
 
-    //property alias toolbar: toolbar
+    property alias menuBar: menuBar
     property alias quit: quit
     property alias disconnect: disconnect
-    property alias change_server: change_server
 
     //property alias reduce_window: reduce_window
     //property alias maximize_window: maximize_window
@@ -507,43 +508,26 @@ Rectangle {
             visible: false
         }
 
-        Menu {
-            objectName: "menu_state_server"
-            id: menu_state_button
+        MenuSeparator {}
 
-            title: qsTr("Default")
+        delegate: MenuBarItem {
+            id: menuBarItem
 
-            Action {
-                id: change_server
-                text: qsTr("Change Server")
+            contentItem: Text {
+                text: menuBarItem.text
+                font: menuBarItem.font
+                opacity: enabled ? 1.0 : 0.3
+                color: menuBarItem.highlighted ? "red" : "#21be2b"
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
             }
 
-            Action {
-                id: ping_server
-                text: qsTr("Ping server")
-            }
-
-            MenuSeparator {}
-
-            delegate: MenuBarItem {
-                id: menuBarItem
-
-                contentItem: Text {
-                    text: menuBarItem.text
-                    font: menuBarItem.font
-                    opacity: enabled ? 1.0 : 0.3
-                    color: menuBarItem.highlighted ? "red" : "#21be2b"
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
-
-                background: Rectangle {
-                    implicitWidth: parent.width
-                    implicitHeight: 30
-                    opacity: enabled ? 1 : 0.3
-                    color: menuBarItem.highlighted ? "#21be2b" : "transparent"
-                }
+            background: Rectangle {
+                implicitWidth: parent.width
+                implicitHeight: 30
+                opacity: enabled ? 1 : 0.3
+                color: menuBarItem.highlighted ? "#21be2b" : "transparent"
             }
         }
     }

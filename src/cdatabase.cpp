@@ -255,7 +255,9 @@ QList<CClient*> CDatabase::parseClient()
 
            QString name(row[1]);
 
-           CClient* client = new CClient(uuid,name,NULL,-1,false, "");
+           QString description(row[5]);
+
+           CClient* client = new CClient(uuid,name,NULL,-1,false, description);
 
            list_client.push_back(client);
        }
@@ -379,6 +381,16 @@ QString CDatabase::updateUser(string uuid, string pseudo, string mail, string de
     {
         return QString::fromLocal8Bit(e);
     }
+}
+
+QString CDatabase::updateDescription(string uuid, string description)
+{
+    return "error";
+}
+
+QString CDatabase::updateUsername(string uuid, string username)
+{
+    return "error";
 }
 
 QString CDatabase::changePassword(string mail, string uuid, string password, string newPass)

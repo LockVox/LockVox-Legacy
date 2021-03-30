@@ -35,6 +35,8 @@ public:
     string getHash(string id, QString * get_err);
     QString newUser(string uuid,string pseudo, string mail, string password);
     QString updateUser(string uuid, string pseudo, string mail, string description);
+    QString updateDescription(string uuid, string description);
+    QString updateUsername(string uuid, string username);
     QString changePassword(string mail, string uuid, string password, string newPass);
     QString updateChannel(string id, string name, string maxuser);
     QString deleteUser(string uuid);

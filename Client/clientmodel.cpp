@@ -142,6 +142,7 @@ void ClientModel::setClientsList(ClientList *clientsList)
 
 void ClientModel::do_update()
 {
+    qDebug() << "Update Clients list - ";
     start_index = createIndex(0,0);
     end_index = createIndex(m_clientsList->get_clients().size()-1,0);
     emit dataChanged(start_index,end_index);

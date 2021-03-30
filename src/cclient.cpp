@@ -213,6 +213,7 @@ QJsonObject CClient::serializeToObj(){
     obj["idChannel"]= this->get_idChannel();
     obj["pseudo"]= this->get_pseudo();
     obj["isOnline"] = this->get_isOnline();
+    obj["description"] = this->get_description();
 
     return obj;
 }
@@ -222,6 +223,7 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_idChannel(json_obj["idChannel"].toInt());
     this->set_pseudo(json_obj["pseudo"].toString());
     this->set_isOnline(json_obj["isOnline"].toBool());
+    this->set_description(json_obj["description"].toString());
 }
 
 QString CClient::getImgPath() const

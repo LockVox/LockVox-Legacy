@@ -25,6 +25,7 @@ public slots:
     void onChangeState(QString);
     void onSelfChanged(CClient*);
     void onCurrentIndexChanged(int index);
+    void onPicturesLoad();
 
     void onConnected();
     void onDisconnected();
@@ -64,6 +65,7 @@ private:
     QObject * m_userparameter;
 
     QObject * m_listChannels;
+    QObject * m_listClients;
     QObject * m_stateServer;
 
     QObject * m_changeusername;

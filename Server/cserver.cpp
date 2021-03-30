@@ -389,7 +389,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
 
                         //User is not online anymore
-                        CPacket ans("1","0");
+                        CPacket ans("0","1");
                         ans.Serialize_newClient(client);
 
                         //Send Update
@@ -409,34 +409,30 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Apply changement
                         sender->set_pseudo(client->get_pseudo());
 
-
-                        //Send update
-                        CPacket ans("0","2");
-                        ans.Serialize_newClient(sender);
-                        sendToAll(ans.GetByteArray());
                         QString res = m_db->updateUser(sender->get_uuid().toString().toStdString(), sender->get_pseudo().toStdString(), sender->get_mail().toStdString(), sender->get_description().toStdString());
                         //BDD
-                        if(res=="succes")
+                        if(res=="success")
                         {
                             //Send update
-                            CPacket ans("2","0");
+                            CPacket ans("0","2");
                             ans.Serialize_newClient(sender);
                             sendToAll(ans.GetByteArray());
                         }
                         else
                         {
                             writeToLog(res, DB_ERR);
+                            /*
                             CPacket ans("2","0");
                             CClient * errClient = new CClient();
                             errClient->set_description("Error in database");//De la merde à rework
                             ans.Serialize_newClient(errClient);
+                            */
                         }
 
                         free(client);
 
                         break;
                     }
-
                     case 3:
                     {
                         //BIO UPDATE

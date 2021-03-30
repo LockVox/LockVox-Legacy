@@ -224,9 +224,6 @@ int checkPacketIntegrity(QByteArray ba){
 }
 
 
-
-
-
 void CServer::onReceiveData(){
 static int nb_receive_packet;
     QByteArray *data = new QByteArray();
@@ -331,6 +328,10 @@ static int nb_receive_packet;
 
     if(m_finishLoad && m_currentUIState != "Home"){
         //m_messagesList->set_messages(getChannelsList()->get_channelAt(0)->getMessagesLists()->get_messages());
+        emit picturesLoad();
+        emit m_clientsList->dataChanged();
+        emit m_channelsList->dataChanged();
+        emit(selfChanged(m_self));
         emit(changeState("Home"));
         m_currentUIState = "Home";
     }
@@ -387,6 +388,7 @@ void CServer::checkCompenents(){
             nb_pic_load++;
         }
     }
+    //qDebug() << "Nb img load : " << nb_pic_load;
 
     if(nb_pic_load == getClientsList()->get_clients().size()){
         m_hasPictureLoaded = true;
@@ -408,15 +410,14 @@ void CServer::checkCompenents(){
 
 void CServer::checkFinishLoad()
 {
-    if(m_hasChannelsLoaded & m_hasClientsLoaded & m_hasSelfLoaded & m_hasMessagesLoaded)
+    if(m_hasChannelsLoaded & m_hasClientsLoaded & m_hasSelfLoaded & m_hasMessagesLoaded & m_hasPictureLoaded)
         m_finishLoad = true;
 }
 
 void CServer::processIncomingData(QByteArray data){
 
     CPacket * packet = new CPacket(data,NULL);
-    qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
-
+    //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
     {
@@ -425,24 +426,10 @@ void CServer::processIncomingData(QByteArray data){
        }
        Deserialize(data);
 
-       /*if(!m_channelsList->get_channels().isEmpty() & !m_clientsList->get_clients().isEmpty())
-       {
-           //emit(changeState("Home"));
-           foreach(CChannel * c, m_channelsList->get_channels())
-           {
-               CPacket request("1","3");
-               request.Serialize_messageRequest(c->get_id(),20,0);
-               m_socket->write(request.GetByteArray());
-           }
-       }*/
-        /*
-       foreach(CClient * c, m_clientsList->get_clients())
-       {
-           CPacket ppRequest("1","4");
-           ppRequest.Serialize_ppRequest(c->get_uuid().toString());
-           qDebug() << ppRequest.GetByteArray();
-           m_socket->write(ppRequest.GetByteArray());
-       }*/
+       CPacket ppRequest("1","4");
+       ppRequest.Serialize_ppRequest(getClientsList()->get_clients()[0]->get_uuid().toString());
+       qDebug() << ppRequest.GetByteArray();
+       m_socket->write(ppRequest.GetByteArray());
     }
 
     //Récupération du type
@@ -508,9 +495,7 @@ void CServer::processIncomingData(QByteArray data){
 
                 getClientsList()->setItemAt(index,client);
 
-
-
-                        //client->set_pseudo(c->get_pseudo());
+                //client->set_pseudo(c->get_pseudo());
                 break;
             }
 
@@ -749,7 +734,7 @@ void CServer::processIncomingData(QByteArray data){
                 case 14:
                 {
                     //pp request answer
-                    static int nb_img;
+
                     QList<QString> request = packet->Deserialize_ppAns();
                     if(request.first() == "error")
                     {
@@ -766,18 +751,11 @@ void CServer::processIncomingData(QByteArray data){
 
                         foreach(CClient * c, getClientsList()->get_clients())
                         {
-                            if(c->get_uuid() == uuid)
-                            {
                                 c->set_profilePic(img);
-                                nb_img++;
-                                qDebug() << "Nb img load : " << nb_img;
-                                break;
-                            }
                         }
                     }
                     break;
                 }
-
                 default:
                 {
                     qDebug() << "Error invalid action" << Qt::endl;
@@ -1076,7 +1054,7 @@ bool CServer::changeUserName(QString pseudo)
         qDebug() << "New pseudo : " << pseudo << "\n";
         CClient * tmp = m_self;
         tmp->set_pseudo(pseudo);
-        selfChanged(m_self);
+        emit selfChanged(m_self);
         CPacket packet("0", "2");
         packet.Serialize_myClient(m_self);
         sendToServer(packet.GetByteArray());
@@ -1085,14 +1063,16 @@ bool CServer::changeUserName(QString pseudo)
 
 bool CServer::changeEmail(QString email)
 {
+    /*
         qDebug() << "New email : " << email << "\n";
         CClient * tmp = m_self;
         tmp->set_mail(email);
-        selfChanged(m_self);
+        emit selfChanged(m_self);
         CPacket packet("0", "2");
         packet.Serialize_myClient(m_self);
         sendToServer(packet.GetByteArray());
         return true;
+    */
 }
 
 bool CServer::changeDescription(QString description)
@@ -1102,7 +1082,7 @@ bool CServer::changeDescription(QString description)
     CClient * tmp = m_self;
     tmp->set_description(description);
     selfChanged(m_self);
-    CPacket packet("0", "2");
+    CPacket packet("0", "3");
     packet.Serialize_myClient(m_self);
     sendToServer(packet.GetByteArray());
     return true;
