@@ -22,18 +22,18 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !m_clientsList)
         return QVariant();
 
-    CClient c = *m_clientsList->get_clients().at(index.row());
+    CClient *c = m_clientsList->get_clients().at(index.row());
     switch(role){
         case uuidRole:
-                    return QVariant(c.get_uuid());
+                    return QVariant(c->get_uuid());
         case PseudoRole:
-                   return QVariant(c.get_pseudo());
+                   return QVariant(c->get_pseudo());
         case isOnlineRole:
-                   return QVariant(c.get_isOnline());
+                   return QVariant(c->get_isOnline());
         case imageRole:
-                   return QVariant(c.getImgPath());
+                   return QVariant(c->getImgPath());
         case descriptionRole:
-                   return QVariant(c.get_description());
+                   return QVariant(c->get_description());
     }
     return QVariant();
 }
