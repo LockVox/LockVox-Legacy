@@ -419,6 +419,12 @@ void CServer::processIncomingData(QByteArray data){
     CPacket * packet = new CPacket(data,NULL);
     //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
 
+    if(packet->GetAction() == NULL || packet->GetType() == NULL){
+        return;
+    }
+
+
+
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
     {
        if(!m_self){
@@ -515,8 +521,6 @@ void CServer::processIncomingData(QByteArray data){
                     }
                     index++;
                 }
-
-
 
                 break;
             }
