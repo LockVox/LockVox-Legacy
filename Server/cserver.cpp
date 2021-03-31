@@ -140,7 +140,7 @@ void CServer::onDisconnectClient()
 
             //Say to everyone
             CPacket request("0","1");
-            request.Serialize_newClient(get_clientList()[i]);
+            request.Serialize_newClient(get_clientList()[i],false);
             sendToAll(request.GetByteArray());
         }
     }
@@ -369,7 +369,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                        //Update info -
                        CPacket ans("0","0");
-                       ans.Serialize_newClient(client);
+                       ans.Serialize_newClient(client,false);
                        sendToAll(ans.GetByteArray());
                        break;
                     }
@@ -390,7 +390,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                         //User is not online anymore
                         CPacket ans("0","1");
-                        ans.Serialize_newClient(client);
+                        ans.Serialize_newClient(client,false);
 
                         //Send Update
                         sendToAll(packet->GetByteArray());
@@ -417,7 +417,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             //Send update
                             CPacket ans("0","2");
-                            ans.Serialize_newClient(sender);
+                            ans.Serialize_newClient(sender,false);
                             sendToAll(ans.GetByteArray());
                         }
                         else
@@ -452,7 +452,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             //Send update
                             CPacket ans("0","3");
-                            ans.Serialize_newClient(sender);
+                            ans.Serialize_newClient(sender, false);
                             sendToAll(ans.GetByteArray());
                         }
                         else
@@ -540,7 +540,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                         c->set_socket(sender->get_socket());
                                         //Lui envoyer ses infos
                                         ans->Serialize_auth(c, 0);
-                                        newUser.Serialize_newClient(c);
+                                        newUser.Serialize_newClient(c,false);
                                         valid = true;
                                     }
                                 }
@@ -604,6 +604,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 8 :
                     {
                         //Get Information from request
+                        //REGISTER
                         packet->Deserialize_regReq();
 
                         //Check informations
@@ -647,6 +648,24 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 CClient * client = new CClient(uuid, packet->get_RegisterInfo().name, sender->get_socket(), -1, true, "" );
                                 addClient(client);
 
+                                int random = QRandomGenerator::global()->bounded(0,18);
+                                QString path = "storage/server/pp/pp" + QString::number(random) + ".png";
+                                if(QFile::exists(path))
+                                {
+                                    QImage tmp(path);
+                                    client->set_profilePic(tmp);
+                                    QDir test;
+                                    if(test.exists("storage/private/" + client->get_uuid().toString(QUuid::WithoutBraces)))
+                                    {
+                                        tmp.save("storage/private/" + client->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                                    }
+                                    else
+                                    {
+                                        test.mkpath("storage/private/" + client->get_uuid().toString(QUuid::WithoutBraces));
+                                        tmp.save("storage/private/" + client->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                                    }
+                                }
+
                                 //Send answer to the client
                                 CPacket ans("0", "8");
                                 ans.Serialize_regAns(1);
@@ -662,8 +681,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 sender->get_socket()->waitForBytesWritten();
 
                                 CPacket newUser("0","0");
-                                newUser.Serialize_newClient(client);
-                                sendToAll(newUser.GetByteArray());
+                                newUser.Serialize_newClient(client,true);
+                                sendToAllExecptClient(newUser.GetByteArray(),sender);
                             }
                         }
                         break;

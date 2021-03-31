@@ -577,6 +577,7 @@ void CServer::processIncomingData(QByteArray data){
                 {
                     m_clientsList->addClient(client);
                     emit m_clientsList->dataChanged();
+                    emit picturesLoad();
                 }
                 break;
             }

@@ -141,7 +141,14 @@ CClient * CPacket::Deserialize_newClient(){
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            //qDebug() << "Name " << name << "   ID " << id;
+
+            if(newClient.contains("pp"))
+            {
+                QByteArray array = QByteArray::fromBase64(newClient.value("pp").toString().toLatin1());
+                QImage tmp;
+                tmp.loadFromData(array);
+                client->set_profilePic(tmp);
+            }
 
             return client;
         }

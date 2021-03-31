@@ -69,7 +69,7 @@ public:
 
 
     //Serialize specific object -
-    void Serialize_newClient(CClient * client);                  //Serialize Client object ( Pseudo & ID & isOnline & ...)
+    void Serialize_newClient(CClient * client, bool sendPP);                  //Serialize Client object ( Pseudo & ID & isOnline & ...)
     void Serialize_newChannel(CChannel * channel);               //Serialize Channel object ( Name & ID & MaxUsers=
     void Serialize_myClient(CClient * client);
 
