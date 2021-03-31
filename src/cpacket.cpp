@@ -109,15 +109,6 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("isOnline", client->get_isOnline());
    clientObj.insert("description", client->get_description());
 
-   if(!client->get_profilePic().isNull())
-   {
-        QByteArray array;
-        QBuffer buffer(&array);
-        client->get_profilePic().save(&buffer, "PNG");
-
-        clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
-   }
-
    m_obj["newClient"] = clientObj;
 }
 
@@ -139,15 +130,6 @@ void CPacket::Serialize_myClient(CClient * client)
     clientObj.insert("pseudo", client->get_pseudo());
     clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
-
-    if(!client->get_profilePic().isNull())
-    {
-         QByteArray array;
-         QBuffer buffer(&array);
-         client->get_profilePic().save(&buffer, "PNG");
-
-         clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
-    }
 
     m_obj["myClient"] = clientObj;
 }
@@ -185,15 +167,6 @@ CClient * CPacket::Deserialize_newClient()
             description = newClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-
-            if(newClient.contains("pp"))
-            {
-                QByteArray array = QByteArray::fromBase64(newClient.value("pp").toString().toLatin1());
-                QImage tmp;
-                tmp.loadFromData(array);
-                client->set_profilePic(tmp);
-            }
-
             return client;
         }
       }
@@ -242,14 +215,6 @@ CClient * CPacket::Deserialize_myClient(){
             description = myClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-
-            if(myClient.contains("pp"))
-            {
-                QByteArray array = QByteArray::fromBase64(myClient.value("pp").toString().toLatin1());
-                QImage tmp;
-                tmp.loadFromData(array);
-                client->set_profilePic(tmp);
-            }
             return client;
         }
       }
