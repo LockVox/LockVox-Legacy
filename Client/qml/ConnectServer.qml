@@ -22,6 +22,8 @@ Item {
             target: connectButton
             onClicked: server.connect_server(ipAdress.text)
         }
+
+
     }
     
     TextField {
@@ -31,7 +33,17 @@ Item {
         y: 29
         width: 115
         height: 29
+        font.pointSize: 10
+        renderType: Text.QtRendering
+        placeholderTextColor: "#7fffffff"
         hoverEnabled: false
+        color:"#7fffffff"
+
+        background: Rectangle {
+            color:"#313639"
+            radius:0
+            border.width: 0
+        }
         //placeholderText: qsTr("IP Adress")
     }
 }

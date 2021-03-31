@@ -4,11 +4,13 @@ import QtQuick.Extras 1.4
 
 Item {
 
-    id: channel
+    id: client
     x: 0
     y: 0
-    width: 640
+    width: parent.width-5
     height: 50
+    focus: false
+
 
 
     clip:true
@@ -43,50 +45,40 @@ Item {
     Text {
         objectName: "username"
         id: username
-        x: 56
+        x: 55
         y: 18
-        width: 59
+        width: 123
         height: 15
         color: "#33a5e5"
         text: pseudo
-        font.pixelSize: 12
-        horizontalAlignment: Text.AlignHCenter
+        font.pixelSize: 13
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
+        lineHeightMode: Text.ProportionalHeight
+        wrapMode: Text.Wrap
         font.bold: true
     }
-
-    StatusIndicator {
-        id: statusIndicator
-        x: 121
-        y: 15
-        width: 18
-        height: 20
-        color: "#52f34c"
-        active: isOnline
-    }
-
-    Rectangle {
-        id: rectangle
-        x: 8
-        y: 12
-        width: 33
-        height: 30
-        color: "#ffffff"
-        radius: 7
-    }
-
 
     Image{
         objectName: "img"
         id: img
-        x: 4
-        y: 4
-        width: 42
-        height: 42
+        x: 8
+        y: 8
+        fillMode: Image.PreserveAspectFit
+        width: 35
+        height: 35
         source:"image://ImageProvider/"+pseudo
     }
 
-
-
+    StatusIndicator {
+        id: statusIndicator
+        x: 34
+        y: 34
+        width: 9
+        height: 9
+        color: "#52f34c"
+        active: isOnline
+    }
 }
 
 /*##^##

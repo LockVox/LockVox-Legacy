@@ -25,10 +25,8 @@ CServer::CServer()
 
         m_socket = new QTcpSocket();
 
-
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
-
 }
 
 CServer::CServer(ClientList *clients, ChannelList *channels) : m_clientsList(clients), m_channelsList(channels)
@@ -889,11 +887,12 @@ void CServer::processIncomingData(QByteArray data){
                         QImage img;
                         QByteArray array = QByteArray::fromBase64(request.last().toLatin1());
                         img.loadFromData(array);
-
+                        img.save(uuid.toString()+".png", "PNG");
                         foreach(CClient * c, getClientsList()->get_clients())
                         {
                             if(c->get_uuid() == uuid){
                                 c->set_profilePic(img);
+                                //emit(picturesLoad());
                                 break;
                             }
                         }

@@ -68,9 +68,6 @@ UIWorker::UIWorker(QGuiApplication *app)
     m_listClients = m_rootObject->findChild<QObject*>("listClients");
     m_changeusername = m_rootObject->findChild<QObject*>("user_parameters");
 
-
-
-
     //Check if compenents has been load correctly
     if(!m_login || !m_register || !m_connectServer || !m_userinfo || !m_listChannels || !m_messageWindow || ! m_stateServer ||  ! m_changeusername){
         qDebug("Some objects hasn't been initialized correctly");
@@ -144,11 +141,9 @@ UIWorker::UIWorker(QGuiApplication *app)
     //QObject::connect()
 
 //The code below is only for developement, ensure that this functionnality is disable when distributing the application
-#ifdef AUTO_CONNECT
-    emit(connect_server(IP_ADDRESS));
-#endif
 
 #ifdef AUTO_LOGIN
+    m_server->setIp(IP);
     emit(login_request(USERNAME,PASSWORD));
 #endif
 }
@@ -247,6 +242,9 @@ void UIWorker::onCurrentIndexChanged(int index)
 
 void UIWorker::onPicturesLoad()
 {
+
+    m_imgProvider->setClientsList(m_server->getClientsList());
+
     auto contentItem = m_listClients->property("contentItem").value<QQuickItem *>();
     auto contentItemChildren = contentItem->childItems();
 

@@ -12,8 +12,8 @@ import Message 1.0
 ApplicationWindow {
 
     id:mainWindow
-    width:1440
-    height: 900
+    width:640
+    height: 550
     visible: true
     title: "Lock-Vox"
     //:"Client/qml/lock_vox_logo1.png"
