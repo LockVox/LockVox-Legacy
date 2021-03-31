@@ -677,8 +677,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 sender->get_socket()->write(ans.GetByteArray());
                                 sender->get_socket()->waitForBytesWritten();
 
-                                sender->get_socket()->write(Serialize());
-                                sender->get_socket()->waitForBytesWritten();
+                                //sender->get_socket()->write(Serialize());
+                                //sender->get_socket()->waitForBytesWritten();
 
                                 CPacket newUser("0","0");
                                 newUser.Serialize_newClient(client,true);

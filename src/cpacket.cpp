@@ -141,6 +141,15 @@ void CPacket::Serialize_myClient(CClient * client)
     clientObj.insert("isOnline", client->get_isOnline());
     clientObj.insert("description", client->get_description());
 
+    if(!client->get_profilePic().isNull())
+    {
+         QByteArray array;
+         QBuffer buffer(&array);
+         client->get_profilePic().save(&buffer, "PNG");
+
+         clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
+    }
+
     m_obj["myClient"] = clientObj;
 }
 
