@@ -59,6 +59,8 @@ Item {
             anchors.leftMargin: 21
             anchors.left: parent.left
             anchors.right:parent.right
+            wrapMode: "WordWrap"
+
 
             id: messageText
             x: 10
@@ -89,12 +91,12 @@ Item {
             x: 10
             y: 8
             color: "#676d76"
-            text: qsTr("channel")
+            text: qsTr("Channels")
             objectName: "channel_name"
-            font.pixelSize: 14
+            font.pixelSize: 15
             font.underline: true
             anchors.leftMargin: 8
-            anchors.topMargin: 47
+            anchors.topMargin: 14
             Layout.preferredHeight: 14
             Layout.preferredWidth: 140
             font.bold: true
@@ -103,38 +105,24 @@ Item {
             anchors.top:parent.top
         }
 
-        ColumnLayout {
-            anchors.fill: parent
-
-
-            spacing: 420
-
-            RowLayout {
-                Layout.bottomMargin: 0
-                Layout.topMargin: 0
-                Layout.margins: 3
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-        }
-
         Text {
             id: channel_members
             objectName: "channel_members"
-            x: 220
+            x: 221
             y: 16
+            visible: false
             color: "#33a5e5"
             text: pseudo
             anchors.right: parent.right
             anchors.top: parent.top
             font.pixelSize: 14
             minimumPixelSize: 8
-            anchors.rightMargin: 26
+            anchors.rightMargin: 14
 
             anchors.leftMargin: 232
             font.underline: false
             Layout.preferredHeight: 14
-            anchors.topMargin: 47
+            anchors.topMargin: 15
             Layout.preferredWidth: 140
             font.bold: false
         }

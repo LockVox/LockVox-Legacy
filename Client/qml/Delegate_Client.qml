@@ -72,10 +72,10 @@ Item {
 
     StatusIndicator {
         id: statusIndicator
-        x: 34
-        y: 34
-        width: 9
-        height: 9
+        x: 32
+        y: 32
+        width: 15
+        height: 15
         color: "#52f34c"
         active: isOnline
     }

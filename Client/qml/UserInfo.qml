@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Rectangle {
     width: 200
-    height: 100
+    height: 75
     border.color: "#cc0909"
 
     Text {
@@ -21,15 +21,15 @@ Rectangle {
 
         font.pixelSize: 15
         horizontalAlignment: Text.AlignHCenter
-        font.family: "Tahoma"
+        font.family: "Comfortaa"
         font.strikeout: false
         minimumPointSize: 14
         minimumPixelSize: 14
         font.bold: true
         anchors.rightMargin: -6
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: 19
         anchors.leftMargin: 68
-        anchors.topMargin: 62
+        anchors.topMargin: 35
 
         onTextChanged: {
             userPicture.source = ""
@@ -39,10 +39,10 @@ Rectangle {
 
     Image {
         id: userPicture
-        x: 0
-        y: 0
-        width: 71
-        height: 100
+        x: 8
+        y: 4
+        width: 66
+        height: 66
         fillMode: Image.PreserveAspectFit
         source: "image://ImageProvider/"+username.text
     }

@@ -335,7 +335,7 @@ Rectangle {
             height: 199
             visible: false
             clip: true
-
+            spacing: 10
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: messageWindow.left
@@ -490,8 +490,8 @@ Rectangle {
         height: 30
         visible: false
 
-        Menu {
 
+        Menu {
             objectName: "logo"
             id: logo
         }
@@ -555,21 +555,54 @@ Rectangle {
 
         signal confirmQuit(int confirm)
 
-        x: 100
-        y: 100
+        x: (parent.width/2) - (width / 2)
+        y: (parent.height/2) - (height / 2)
         width: 200
         height: 300
         modal: true
         focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        topMargin:0
+        rightMargin: 0
+        leftMargin: 0
+        bottomMargin: 0
+
+        Rectangle{
+            radius: 10
+            width:parent.width
+            height:parent.height
+            color: "#313539"
+        }
 
         ColumnLayout {
+            id:layout
+            y: parent.y+20
+            width: parent.width
+            //alignment: Qt.AlignCenter
+
             Button {
+                width: parent.width - 30
+
+                Rectangle{
+                    width:parent.width
+                    height:parent.height
+                    color: "#33a5e5"
+                }
+
                 id: quit_confirm
                 text: qsTr("Quit")
             }
 
             Button {
+                width: parent.width - 30
+
+                Rectangle{
+                    width:parent.width
+                    height:parent.height
+                    color: "#33a5e5"
+                }
+
                 id: quit_back
                 text: qsTr("Come back to the application")
             }
@@ -582,7 +615,7 @@ Rectangle {
         y: 6
         width: 295
         height: 114
-        source: "lock_vox_logo1.png"
+        source: "imports/LogoV2.png"
         anchors.rightMargin: 278
         anchors.leftMargin: 8
         fillMode: Image.PreserveAspectFit
@@ -696,12 +729,13 @@ Rectangle {
                 target: userInfo
                 x: 0
                 y: 29
-                width: 177
-                height: 91
+                width: 176
+                height: 75
                 visible: true
                 color: "#1b1f21"
+                border.color: "#ffffff"
                 border.width: 0
-                anchors.topMargin: -1
+                anchors.topMargin: 1
             }
 
             PropertyChanges {
@@ -742,7 +776,7 @@ Rectangle {
                 anchors.rightMargin: 177
                 anchors.bottomMargin: 0
                 anchors.leftMargin: 176
-                anchors.topMargin: 0
+                anchors.topMargin: 31
             }
 
             PropertyChanges {
@@ -756,7 +790,7 @@ Rectangle {
                 target: audioWindow
                 x: 0
                 y: 462
-                width: 177
+                width: 176
                 height: 41
                 visible: false
                 anchors.rightMargin: 461
@@ -825,7 +859,7 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 20
+                x: 38
                 y: parent.height - 30
                 height: 15
                 visible: true
@@ -835,9 +869,9 @@ Rectangle {
             PropertyChanges {
                 target: channels
                 x: 0
-                y: 141
+                y: 126
                 width: 179
-                height: 287
+                height: 302
             }
 
             PropertyChanges {
@@ -847,6 +881,8 @@ Rectangle {
 
             PropertyChanges {
                 target: lock_vox_logo11
+                y: 6
+                height: 114
                 visible: false
             }
 
@@ -867,14 +903,6 @@ Rectangle {
             PropertyChanges {
                 target: reduce_window
                 height: 30
-            }
-
-            PropertyChanges {
-                target: lock_vox_logo_miniature1
-                x: 23
-                y: 4
-                width: 24
-                height: 23
             }
 
             PropertyChanges {
@@ -932,6 +960,8 @@ Rectangle {
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                font.italic: false
+                font.family: "Comfortaa"
                 minimumPixelSize: 15
                 font.bold: true
                 anchors.leftMargin: 487
@@ -1057,6 +1087,11 @@ Rectangle {
                 height: 94
                 visible: false
             }
+
+            PropertyChanges {
+                target: rectangle
+                visible: false
+            }
         },
         State {
             name: "splashScreen"
@@ -1110,7 +1145,11 @@ Rectangle {
             PropertyChanges {
                 target: lock_vox_logo11
                 x: 173
-                y: 177
+                y: 96
+                anchors.rightMargin: 144
+                anchors.leftMargin: 143
+                anchors.horizontalCenter: true
+                anchors.verticalCenter: true
             }
 
             PropertyChanges {
@@ -1213,7 +1252,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.33}
+    D{i:0;formeditorZoom:2}
 }
 ##^##*/
 

@@ -16,6 +16,6 @@
         <file>ChangeUsername.qml</file>
         <file>ChangePassword.qml</file>
         <file>StateServer.qml</file>
-
+        <file>imports/LogoV2.png</file>
     </qresource>
 </RCC>
