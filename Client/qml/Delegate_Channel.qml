@@ -7,8 +7,8 @@ Item {
     id: channel
     x: 0
     y: 0
-    width: 640
-    height: 50
+    width: parent.width-5
+    height: 35
 
     clip:true
 
@@ -28,23 +28,18 @@ Item {
         anchors.leftMargin: 0
         anchors.topMargin: 0
 
+
         onEntered: {
-
             rectangle.visible=true
-            channel_activity.visible=true
-
+            //channel_activity.visible=true
         }
         onExited: {
-
             rectangle.visible=false
-            channel_activity.visible=false
-
+            //channel_activity.visible=false
         }
 
         onClicked: {
-
             listChannel.currentIndexChanged(index)
-
             listChannel.currentIndex = index
         }
 
@@ -60,20 +55,26 @@ Item {
         height: 50
         visible: false
         color: listChannel.isCurrentItem ? "red" : "#313539"
+        radius:5
     }
 
     Text {
         objectName: "title"
         id: title
         x: 8
-        y: 10
+        y: 2
         width: 188
         height: 32
         color: "#6f797f"
         text: model.name
-        font.pixelSize: 12
-        horizontalAlignment: Text.AlignHCenter
+        font.pixelSize: 13
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
+        lineHeightMode: Text.ProportionalHeight
+        wrapMode: Text.Wrap
+        font.bold: true
     }
+
 
     Text {
         id: channel_activity

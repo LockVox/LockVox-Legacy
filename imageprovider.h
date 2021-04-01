@@ -28,6 +28,10 @@ public:
 
         //QUuid uuid(QByteArray::fromPercentEncoding(id.toLatin1()));
         qDebug() << "Looking for img of user : " << id << Qt::endl;
+        //qDebug() << m_clientsList->get_clients()[0]->get_profilePic();
+        //return m_clientsList->get_clients()[0]->get_profilePic();
+
+
         foreach(CClient * c, m_clientsList->get_clients()){
             if(id == c->get_pseudo()){
                 return c->get_profilePic();
@@ -36,6 +40,9 @@ public:
         return default_img;
       }
 
+
+    ClientList *clientsList() const;
+    void setClientsList(ClientList *clientsList);
 
 private :
     ClientList * m_clientsList;

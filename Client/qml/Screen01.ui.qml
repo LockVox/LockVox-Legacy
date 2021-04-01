@@ -16,6 +16,9 @@ Rectangle {
     y: 0
     visible: true
     anchors.fill: parent
+
+    width: mainWindow.width
+
     property alias stateServer: stateServer
     property alias channels: channels
     color: "#1b1f21"
@@ -99,9 +102,8 @@ Rectangle {
     Rectangle {
         objectName: "rect_login"
         id: rect_log_reg
-        color: "#00ffffff"
-        border.color: "#1f3d5c"
-        border.width: 2
+        color: "#1b1f21"
+        border.width: 0
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -109,7 +111,7 @@ Rectangle {
         anchors.rightMargin: 272
         anchors.leftMargin: 25
         anchors.bottomMargin: 8
-        anchors.topMargin: 91
+        anchors.topMargin: 126
 
         RowLayout {
             id: rowLayout
@@ -171,7 +173,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.topMargin: 59
             anchors.top: parent.top
-            anchors.bottomMargin: 0
+            anchors.bottomMargin: 18
             anchors.leftMargin: 73
             anchors.rightMargin: 70
             anchors.left: parent.left
@@ -182,19 +184,19 @@ Rectangle {
     Rectangle {
 
         id: rect_con_server
-        x: 383
+        x: 405
         y: 85
-        width: 232
-        height: 278
+        width: 229
+        height: 246
         visible: true
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: 85
-        anchors.rightMargin: 25
+        anchors.topMargin: 68
+        anchors.rightMargin: 6
 
         color: "#00ffffff"
         border.color: "#1f3d5c"
-        border.width: 2
+        border.width: 0
 
         ConnectServer {
             objectName: "connect_server"
@@ -212,7 +214,7 @@ Rectangle {
             x: 18
             y: 8
             width: 200
-            height: 71
+            height: 153
             visible: true
         }
     }
@@ -244,18 +246,21 @@ Rectangle {
         //preferredHighlightBegin:
         highlightFollowsCurrentItem: true
         highlight: Rectangle {
+            radius: 10
             color: "#313539"
             height: parent.height
             width: parent.width
         }
 
         focus: true
+        spacing: 10
 
         model: ClientModel {
             m_clientsList: clientsList
         }
 
         delegate: Delegate_Client {
+
             objectName: "clients"
         }
     }
@@ -270,7 +275,7 @@ Rectangle {
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-
+        spacing: 5
         ScrollBar.vertical: ScrollBar {
             id: scrollBarChannel
             parent: listChannel.parent
@@ -285,7 +290,8 @@ Rectangle {
         highlightFollowsCurrentItem: true
 
         highlight: Rectangle {
-            color: "#33a5e5"
+            radius: 5
+            color: "#081e27"
             height: parent.height
             width: parent.width
         }
@@ -414,16 +420,19 @@ Rectangle {
         width: 166
         height: 90
         visible: false
+    }
 
-        CustomQpushButton {
-            id: parameterButton
-            x: 85
-            y: 33
+    CustomQpushButton {
+        id: parameterButton
+        x: 8
+        y: 432
+        visible: false
+        anchors.bottom: parent
+        anchors.bottomMargin: 10
 
-            Connections {
-                target: parameterButton
-                onClicked: window.state = "parameterState"
-            }
+        Connections {
+            target: parameterButton
+            onClicked: window.state = "parameterState"
         }
     }
 
@@ -512,6 +521,7 @@ Rectangle {
 
         MenuSeparator {
             id: menuSeparator1
+            visible: false
         }
 
         delegate: MenuBarItem {
@@ -571,10 +581,10 @@ Rectangle {
         x: 172
         y: 6
         width: 295
-        height: 79
+        height: 114
         source: "lock_vox_logo1.png"
-        anchors.rightMargin: 211
-        anchors.leftMargin: 211
+        anchors.rightMargin: 278
+        anchors.leftMargin: 8
         fillMode: Image.PreserveAspectFit
 
         anchors.left: parent.left
@@ -604,6 +614,20 @@ Rectangle {
         font.pixelSize: 12
     }
 
+    Rectangle {
+        id: rectangle
+        x: 402
+        y: 17
+        width: 3
+        height: parent.height - 40
+
+        color: "#3e3e3e"
+        anchors.right: parent.right
+        anchors.rightMargin: 235
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+    }
+
     states: [
         State {
             name: "registerState"
@@ -611,10 +635,6 @@ Rectangle {
             PropertyChanges {
                 target: register
                 visible: true
-                anchors.bottomMargin: 0
-                anchors.leftMargin: 73
-                anchors.topMargin: 59
-                anchors.rightMargin: 68
             }
 
             PropertyChanges {
@@ -622,6 +642,8 @@ Rectangle {
                 visible: false
             }
 
+
+            /*
             PropertyChanges {
                 target: messageWindow
                 visible: false
@@ -643,20 +665,22 @@ Rectangle {
             }
 
             PropertyChanges {
-                target: rect_con_server
-                visible: false
-            }
-
-            PropertyChanges {
                 target: rect_log_reg
                 anchors.leftMargin: 148
                 anchors.bottomMargin: 0
                 anchors.rightMargin: 149
                 anchors.topMargin: 99
             }
+            */
         },
         State {
             name: "Home"
+
+            PropertyChanges {
+                target: mainWindow
+                width: 1440
+                height: 960
+            }
 
             PropertyChanges {
                 target: columnLayout
@@ -672,22 +696,25 @@ Rectangle {
                 target: userInfo
                 x: 0
                 y: 29
-                width: 179
-                height: 80
+                width: 177
+                height: 91
                 visible: true
                 color: "#1b1f21"
                 border.width: 0
-                anchors.topMargin: -3
+                anchors.topMargin: -1
             }
 
             PropertyChanges {
                 target: listClient
-                x: 487
+                x: 477
                 y: 70
-                width: 145
+                width: 155
 
                 height: 410
                 visible: true
+                highlightRangeMode: ListView.NoHighlightRange
+                spacing: 5
+                snapMode: ListView.SnapToItem
                 anchors.rightMargin: 8
                 anchors.bottomMargin: 14
                 anchors.topMargin: 71
@@ -728,12 +755,11 @@ Rectangle {
             PropertyChanges {
                 target: audioWindow
                 x: 0
-                y: 356
+                y: 462
                 width: 177
-                height: 124
+                height: 41
                 visible: false
                 anchors.rightMargin: 461
-                anchors.bottomMargin: 0
                 anchors.leftMargin: 1
                 anchors.topMargin: 326
             }
@@ -750,13 +776,13 @@ Rectangle {
 
             PropertyChanges {
                 target: listChannel
-                x: 0
+                x: 14
                 y: 71
-                width: 179
+                width: 163
                 height: 287
                 visible: true
-                anchors.bottomMargin: 8
-                anchors.topMargin: 113
+                anchors.bottomMargin: 47
+                anchors.topMargin: 141
             }
 
             PropertyChanges {
@@ -770,7 +796,7 @@ Rectangle {
                 boundsBehavior: Flickable.StopAtBounds
                 keyNavigationWraps: true
                 snapMode: ListView.NoSnap
-                anchors.topMargin: 70
+                anchors.topMargin: 77
                 anchors.bottomMargin: 61
                 anchors.rightMargin: 21
                 anchors.leftMargin: 14
@@ -799,17 +825,17 @@ Rectangle {
 
             PropertyChanges {
                 target: parameterButton
-                x: 97
-                y: 63
-                width: 66
-                height: 17
-                text: "parameter"
+                x: 20
+                y: parent.height - 30
+                height: 15
+                visible: true
+                text: "Settings"
             }
 
             PropertyChanges {
                 target: channels
                 x: 0
-                y: 71
+                y: 141
                 width: 179
                 height: 287
             }
@@ -897,23 +923,37 @@ Rectangle {
 
             PropertyChanges {
                 target: membersText
-                x: 469
-                y: 43
-                width: 65
-                height: 14
+                x: 499
+                y: 36
+                width: 116
+                height: 19
                 visible: true
                 color: "#676d76"
-                font.pixelSize: 9
-                minimumPixelSize: 9
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                minimumPixelSize: 15
                 font.bold: true
                 anchors.leftMargin: 487
                 anchors.topMargin: 48
-                anchors.rightMargin: 106
+                anchors.rightMargin: 25
                 anchors.bottomMargin: 443
+            }
+
+            PropertyChanges {
+                target: rectangle
+                visible: false
             }
         },
         State {
             name: "parameterState"
+
+            PropertyChanges {
+                target: mainWindow
+                width: 1440
+                height: 960
+            }
+
             PropertyChanges {
                 target: columnLayout
                 visible: false
@@ -1020,6 +1060,16 @@ Rectangle {
         },
         State {
             name: "splashScreen"
+
+            PropertyChanges {
+                target: rectangle
+                visible: false
+            }
+            PropertyChanges {
+                target: mainWindow
+                width: 1440
+                height: 960
+            }
 
             PropertyChanges {
                 target: loginButton
@@ -1163,7 +1213,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}
+    D{i:0;formeditorZoom:1.33}
 }
 ##^##*/
 

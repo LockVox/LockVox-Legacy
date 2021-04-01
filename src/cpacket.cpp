@@ -101,7 +101,8 @@ QByteArray CPacket::Serialize(bool isActionValid){
 }
 
 //When a new client connected
-void CPacket::Serialize_newClient(CClient* client){
+void CPacket::Serialize_newClient(CClient* client,bool sendPP)
+{
 
    QJsonObject clientObj;
    clientObj.insert("uuid", client->get_uuid().toString());
@@ -109,7 +110,7 @@ void CPacket::Serialize_newClient(CClient* client){
    clientObj.insert("isOnline", client->get_isOnline());
    clientObj.insert("description", client->get_description());
 
-   if(!client->get_profilePic().isNull())
+   if(!client->get_profilePic().isNull() && sendPP)
    {
         QByteArray array;
         QBuffer buffer(&array);
@@ -177,7 +178,8 @@ CClient * CPacket::Deserialize_newClient()
         bool isOnline;
         QString description;
 
-        if(m_obj.contains("newClient")){
+        if(m_obj.contains("newClient"))
+        {
             QJsonObject newClient = m_obj.value("newClient").toObject();
             id = QUuid::fromString(newClient.value("uuid").toString());
             name = newClient.value("pseudo").toString();
@@ -193,7 +195,6 @@ CClient * CPacket::Deserialize_newClient()
                 tmp.loadFromData(array);
                 client->set_profilePic(tmp);
             }
-
             return client;
         }
       }
@@ -242,14 +243,6 @@ CClient * CPacket::Deserialize_myClient(){
             description = myClient.value("description").toString();
 
             CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-
-            if(myClient.contains("pp"))
-            {
-                QByteArray array = QByteArray::fromBase64(myClient.value("pp").toString().toLatin1());
-                QImage tmp;
-                tmp.loadFromData(array);
-                client->set_profilePic(tmp);
-            }
             return client;
         }
       }

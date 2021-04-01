@@ -25,10 +25,8 @@ CServer::CServer()
 
         m_socket = new QTcpSocket();
 
-
         m_self = NULL;
         qDebug() << "Starting LockVox client ! Welcome !" << Qt::endl;
-
 }
 
 CServer::CServer(ClientList *clients, ChannelList *channels) : m_clientsList(clients), m_channelsList(channels)
@@ -560,7 +558,6 @@ void CServer::processIncomingData(QByteArray data){
          switch (packet->GetAction().toInt()){
             case 0:
             {
-                qDebug() << packet->GetByteArray();
                 //New User is now online
                 CClient * client = new CClient();
                 client = packet->Deserialize_newClient();
@@ -571,16 +568,16 @@ void CServer::processIncomingData(QByteArray data){
                 {
                     if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
                     {
-                        client->set_isOnline(true);
-                        m_clientsList->setItem(client);
+                        m_clientsList->get_clients()[i]->set_isOnline(true);
+                        emit m_clientsList->dataChanged();
                         exist=true;
                     }
                 }
-
                 if(!exist)
                 {
                     m_clientsList->addClient(client);
                     emit m_clientsList->dataChanged();
+                    emit picturesLoad();
                 }
                 break;
             }
@@ -594,13 +591,11 @@ void CServer::processIncomingData(QByteArray data){
                 {
                    if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
                    {
-                       client->set_isOnline(false);
-                       m_clientsList->setItem(client);
+                       m_clientsList->get_clients()[i]->set_isOnline(false);
                        emit m_clientsList->dataChanged();
                        break;
                    }
                 }
-             free(client);
              break;
             }
 
@@ -889,11 +884,12 @@ void CServer::processIncomingData(QByteArray data){
                         QImage img;
                         QByteArray array = QByteArray::fromBase64(request.last().toLatin1());
                         img.loadFromData(array);
-
+                        img.save(uuid.toString()+".png", "PNG");
                         foreach(CClient * c, getClientsList()->get_clients())
                         {
                             if(c->get_uuid() == uuid){
                                 c->set_profilePic(img);
+                                //emit(picturesLoad());
                                 break;
                             }
                         }

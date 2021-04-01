@@ -22,6 +22,13 @@ QVector<CClient *> ClientList::get_clients()
 
 void ClientList::addClient(CClient * c)
 {
+    foreach(CClient * client, m_clients)
+    {
+        if(c->get_uuid() == client->get_uuid())
+        {
+            return;
+        }
+    }
     emit preItemAppended();
 
     m_clients.append(c);

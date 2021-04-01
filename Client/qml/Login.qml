@@ -47,8 +47,6 @@ Item {
                 radius:0
                 border.width: 0
             }
-
-
         }
 
         TextField {
@@ -90,14 +88,14 @@ Item {
     CustomQpushButton {
         id: customQpushButton
         x: 50
-        y: 243
+        y: 133
         width: 100
         height: 34
         text: qsTr("Sign In")
 
         anchors.bottom:parent.bottom
         anchors.horizontalCenterOffset: 0
-        anchors.bottomMargin: 23
+        anchors.bottomMargin: 133
         anchors.horizontalCenter:parent.horizontalCenter
 
         onClicked: {

@@ -19,22 +19,32 @@ Rectangle {
         anchors.left:parent.left
         anchors.right:parent.right
 
-        font.pixelSize: 12
+        font.pixelSize: 15
         horizontalAlignment: Text.AlignHCenter
+        font.family: "Tahoma"
+        font.strikeout: false
+        minimumPointSize: 14
+        minimumPixelSize: 14
         font.bold: true
-        anchors.rightMargin: -10
-        anchors.bottomMargin: 63
-        anchors.leftMargin: 71
-        anchors.topMargin: 8
+        anchors.rightMargin: -6
+        anchors.bottomMargin: 8
+        anchors.leftMargin: 68
+        anchors.topMargin: 62
+
+        onTextChanged: {
+            userPicture.source = ""
+            userPicture.source = "image://ImageProvider/" + username.text
+        }
     }
 
-    BorderImage {
+    Image {
         id: userPicture
         x: 0
         y: 0
         width: 71
-        height: 72
-        source: "qrc:/qtquickplugin/images/template_image.png"
+        height: 100
+        fillMode: Image.PreserveAspectFit
+        source: "image://ImageProvider/"+username.text
     }
 
     Text {
@@ -44,6 +54,7 @@ Rectangle {
         y: 13
         width: 121
         height: 18
+        visible: false
         color: "#687075"
         text: qsTr("Description")
         anchors.left: parent.left
@@ -54,11 +65,11 @@ Rectangle {
         horizontalAlignment: Text.AlignLeft
         wrapMode: Text.Wrap
         font.italic: false
-        anchors.topMargin: 30
-        anchors.leftMargin: 104
-        anchors.rightMargin: 0
+        anchors.topMargin: 120
+        anchors.leftMargin: 89
+        anchors.rightMargin: 15
 
-        anchors.bottomMargin: 28
+        anchors.bottomMargin: -62
         font.bold: false
     }
 
