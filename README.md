@@ -18,9 +18,11 @@ The project actually have :
 - Login
 - Register
 - Generating UUID for new user
-- Password stored using sha256
+- Password stored using sha256 (salt NYI)
 - Channel list
 - User list and isOnline info
+- Simple public message
+- Profile picture
 
 ### Client side :
 
@@ -29,11 +31,14 @@ The project actually have :
 - Login
 - Register
 - Retrieve channel and user list
+- Simple public message
+- Profile pictures
 
 ### TO DO : 
 
 - Audio immplementation
-- Message implementation using xml form
+- Message picture implementation
+- Emoji message implementation
 
 ## 3rd-party :
 
