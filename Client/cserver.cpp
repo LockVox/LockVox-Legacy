@@ -683,6 +683,8 @@ void CServer::processIncomingData(QByteArray data){
                     if(m_self)
                     {
                         emit(changeState("splashScreen"));
+                        emit selfChanged(m_self);
+
                     }
                 }
                 break;

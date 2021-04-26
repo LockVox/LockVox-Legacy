@@ -1,53 +1,57 @@
 #include "src/includes/cchannel.h"
 
-/*
-@description : Default constructor of a channel
-@param : none
-@return : none
-*/
+
+/**
+ * @brief Default constructor of the class CChannel.
+ *
+ * @see   CChannel::CChannel()
+ */
 CChannel::CChannel()
 {
     m_name = "";
     m_id = 0;
     m_maxUsers = 5;
     m_nbClients = 0;
-
     m_messagesLists = new MessageList();
-
 }
 
-/*
-@description : Copy constructor of a channel
-@param : channel to copy
-@return : none
-*/
+/**
+ * @brief Copy constructor of the class CChannel
+ * @overload
+ * @param copy the attribut to copy
+ *
+ * @see   CChannel::CChannel()
+ */
 CChannel::CChannel(const CChannel & copy)
 {
     m_name = copy.m_name;
     m_nbClients = copy.m_nbClients;
     m_maxUsers = copy.m_maxUsers;
     m_id = copy.m_id;
-
     m_messagesLists = copy.m_messagesLists;
-
 }
 
-/*
-@description : Customize constructor of a channel
-@param : Informations of the channel
-@return : none
-*/
-CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name) , m_id(id) , m_maxUsers(maxUsers)
+/**
+ * @brief Custom Constructor of the class CChannel
+ * @overload
+ * @param id the ID of the channel
+ * @param name the name of the channel
+ * @param maxUsers the maximum number of user in the channel
+ * @see   CChannel::CChannel()
+ */
+CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name)  , m_maxUsers(maxUsers), m_id(id)
 {
     m_nbClients = 0;
     m_messagesLists = new MessageList();
 }
 
-/*
-@description : Customize constructor of a channel
-@param : Informations of the channel
-@return : none
-*/
+/**
+ * @brief Custom Constructor of the class CChannel
+ * @overload
+ * @param name the name of the channel
+ * @param id the ID of the channel
+ * @see   CChannel::CChannel()
+ */
 CChannel::CChannel(QString name, int id)
 {
     m_name = name;
@@ -56,11 +60,14 @@ CChannel::CChannel(QString name, int id)
     m_messagesLists = new MessageList();
 }
 
-/*
-@description : Customize constructor of a channel
-@param : Informations of the channel
-@return : none
-*/
+/**
+ * @brief Custom Constructor of the class CChannel
+ * @overload
+ * @param name the name of the channel
+ * @param id the ID of the channel
+ * @param clients the lists of clients who are in the channel
+ * @see   CChannel::CChannel()
+ */
 CChannel::CChannel(QList<CClient*> clients, QString name, int id)
 {
     m_clients = clients;
@@ -71,104 +78,148 @@ CChannel::CChannel(QList<CClient*> clients, QString name, int id)
 }
 
 
-/*
-@description : return the list of clients
-@param : none
-@return : list of clients
-*/
+/**
+ * @brief Getter of attribute m_clients
+ * @callergraph
+ * @return m_clients the value of attribute m_clients
+ * @retval QList<CClient *> the value of attribute m_clients
+ */
 QList<CClient *> CChannel::get_clients()
 {
     return m_clients;
 }
 
-/*
-@description : return the name of the channel
-@param : none
-@return : name of the channel
-*/
-QString CChannel::get_name(){
+/**
+ * @brief Getter of attribute m_name
+ * @callergraph
+ * @return m_name the value of attribute m_name
+ * @retval QString the value of attribute m_name
+ */
+QString CChannel::get_name()
+{
     return m_name;
 }
 
-/*
-@description : return the id of the channel
-@param : none
-@return : id of the channel
-*/
+/**
+ * @brief Getter of attribute m_id
+ * @callergraph
+ * @return m_id the value of attribute m_id
+ * @retval int the value of attribute m_id
+ */
 int CChannel::get_id()
 {
     return m_id;
 }
 
-/*
-@description : return the maximum number of users in a channel
-@param : none
-@return : maximum users in a channel
-*/
-int CChannel::get_maxUsers(){
+/**
+ * @brief Getter of attribute m_maxUsers
+ * @callergraph
+ * @return m_maxUsers the value of attribute m_maxUsers
+ * @retval int the value of attribute m_maxUsers
+ */
+int CChannel::get_maxUsers()
+{
     return m_maxUsers;
 }
 
-/*
-@description : return the number of clients in a channel
-@param : none
-@return : number of clients in a channel
-*/
-int CChannel::get_nbClients(){
+/**
+ * @brief Getter of attribute m_nbClients
+ * @callergraph
+ * @return m_nbClients the value of attribute m_nbClients
+ * @retval int the value of attribute m_nbClients
+ */
+int CChannel::get_nbClients()
+{
     return m_nbClients;
 }
 
-/*
-@description : set the list of clients of the channel
-@param : list of clients
-@return : none
-*/
-void CChannel::set_clients(QList<CClient*> clients){
-    m_clients = clients;
+/**
+ * @brief Getter of attribute m_messagesLists
+ * @callergraph
+ * @return m_messagesLists the value of attribute m_messagesLists
+ * @retval MessageList the value of attribute m_messagesLists
+ */
+MessageList *CChannel::getMessagesLists() const
+{
+    return m_messagesLists;
 }
 
-/*
-@description : set the name of the channel
-@param : name of the channel
-@return : none
-*/
-void CChannel::set_name(QString name){
-    m_name = name;
+/**
+ * @brief Setter of attribute m_clients
+ * @callgraph
+ * @param clients the list of clients who are in the channel
+ * @exception range_error if clients is empty
+ */
+void CChannel::set_clients(QList<CClient*> clients)
+{
+    if(!clients.isEmpty())
+        m_clients = clients;
 }
 
-/*
-@description : set the id of the channel
-@param : channel id
-@return : none
-*/
-void CChannel::set_id(int id){
-    m_id = id;
+/**
+ * @brief Setter of attribute m_name
+ * @callgraph
+ * @param name the name of the channel
+ * @exception range_error if name is empty
+ */
+void CChannel::set_name(QString name)
+{
+    if(!name.isEmpty())
+        m_name = name;
 }
 
-/*
-@description : set the maximum users in a channel
-@param : maximum number of users in a channel
-@return : none
-*/
-void CChannel::set_maxUsers(int maxUsers){
+/**
+ * @brief Setter of attribute m_id
+ * @callgraph
+ * @param id the ID of the channel
+ * @exception range_error if ID is lower than 0
+ */
+void CChannel::set_id(int id)
+{
+    if(id >= 0)
+        m_id = id;
+}
+
+/**
+ * @brief Setter of attribute m_maxUsers
+ * @callgraph
+ * @param maxUsers the maximum number of users in the channel
+ * @exception
+ */
+void CChannel::set_maxUsers(int maxUsers)
+{
     m_maxUsers = maxUsers;
 }
 
-/*
-@description : set the number of clients in a channel
-@param : number of clients
-@return : none
-*/
-void CChannel::set_nbClients(int nb){
-    m_nbClients = nb;
+/**
+ * @brief Setter of attribute m_nbClients
+ * @callgraph
+ * @param nb the number of users in the channel
+ * @exception range_error if the number of users is greater than the maximum number of users in the channel
+ */
+void CChannel::set_nbClients(int nb)
+{
+    if(nb <= m_maxUsers)
+        m_nbClients = nb;
 }
 
-/*
-@description : set fields of channel class from another channel
-@param : a channel
-@return : none
-*/
-void CChannel::set_all(CChannel * c){
+/**
+ * @brief Setter of attribute m_messagesLists
+ * @callgraph
+ * @param messagesList the list of messages associate to this channel
+ * @exception
+ */
+void CChannel::setMessagesLists(MessageList *messagesList)
+{
+    m_messagesLists = messagesList;
+}
+
+/**
+ * @brief Set the different attribute of a CChannel from another an existing instance of CChannel.
+ * @param[in]       c  the CChannel instance which contains the attribute to copy.
+ */
+void CChannel::set_all(CChannel * c)
+{
     this->set_id(c->get_id());
     this->set_name(c->get_name());
     this->set_maxUsers(c->get_maxUsers());
@@ -176,12 +227,12 @@ void CChannel::set_all(CChannel * c){
 }
 
 
-/*
-@description : Serialize the fields of a channel into JSON Obj
-@param : none
-@return : JSON Object
-*/
-QJsonObject CChannel::serializeToObj(){
+/**
+ * @brief Serialize attributes of an user into a JSON object.
+ * @param[out]      obj  the JSON object which contains the attribute of the channel.
+ */
+QJsonObject CChannel::serializeToObj()
+{
     QJsonObject obj;
     obj["id"]= this->get_id();
     obj["name"]= this->get_name();
@@ -190,51 +241,46 @@ QJsonObject CChannel::serializeToObj(){
     return obj;
 }
 
-/*
-@description : Deserialize a JSON Object and fill the channel informations
-@param : JSON Object
-@return : none
-*/
-void CChannel::deserialize(QJsonObject json_obj){
+/**
+ * @brief Deserialize a JSON object into the current instance of CChannel.
+ * @param[in]       json_obj  the JSON object to deserialize into this CChannel instance.
+ */
+void CChannel::deserialize(QJsonObject json_obj)
+{
     this->set_id(json_obj["id"].toInt());
     this->set_name(json_obj["name"].toString());
     this->set_maxUsers(json_obj["maxUsers"].toInt());
     this->set_nbClients(json_obj["nbClients"].toInt());
 }
 
-/*
-@description : Add a client to the list of clients
-@param : reference to a client
-@return : none
-*/
-void CChannel::addUser(CClient * c){
+/**
+ * @brief Add an user to the list of users of this CChannel instance.
+ * @param[in]       c the user to add to the list of users
+ */
+void CChannel::addUser(CClient * c)
+{
+    //Add the user
     m_clients.append(c);
+    //Update the number of users
     m_nbClients = m_clients.size();
 }
 
-/*
-@description : Delete a client from the list of clients
-@param : id of the client
-@return : none
-*/
-void CChannel::delUser(QUuid idUser){
+/**
+ * @brief Remove an user to the list of users of this CChannel instance.
+ * @param[in]       idUser the ID of the user to remove to the list of users
+ */
+void CChannel::delUser(QUuid idUser)
+{
+    //Look for the index of the user to remove
    for(int i = 0; i < m_clients.size(); i++)
    {
        if(m_clients[i]->get_uuid() == idUser)
        {
+           //Remove the user
            m_clients.removeAt(i);
        }
    }
+   //Update the number of users
    m_nbClients = m_clients.size();
 }
 
-
-MessageList *CChannel::getMessagesLists() const
-{
-    return m_messagesLists;
-}
-
-void CChannel::setMessagesLists(MessageList *messagesLists)
-{
-    m_messagesLists = messagesLists;
-}

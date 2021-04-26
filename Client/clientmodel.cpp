@@ -46,8 +46,6 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
                    return QVariant(c->get_pseudo());
         case isOnlineRole:
                    return QVariant(c->get_isOnline());
-        case imageRole:
-                   return QVariant(c->getImgPath());
         case descriptionRole:
                    return QVariant(c->get_description());
     }
@@ -67,10 +65,8 @@ bool ClientModel::setData(const QModelIndex &index, const QVariant &value, int r
                    item->set_pseudo(value.toString());
         case isOnlineRole:
                    item->set_isOnline(value.toBool());
-    case imageRole:
-               item->setImgPath(value.toString());
-    case descriptionRole:
-               item->set_description(value.toString());
+        case descriptionRole:
+                   item->set_description(value.toString());
     }
 
 
