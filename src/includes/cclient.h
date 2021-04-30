@@ -99,6 +99,7 @@ class CClient
         bool m_isAuthenticate;              //!< m_isAuthenticate represent if the user has pass the authentification
 
         QImage profilePic;                  //!< profilePic is the profile picture of the user
+
 };
 
 #endif // CCLIENT_H

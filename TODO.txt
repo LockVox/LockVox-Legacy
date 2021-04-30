@@ -1,0 +1,81 @@
+#################################################
+#                                               #
+#            Implementation Idea                #
+#                                               #
+#################################################
+
+In this file you can write up the differents ideas about the project.
+For example some functionalities that would be nice to add, or also implementation improvement.
+Feel free !
+Each ideas will be discuss in the team and class with a priority.
+
+Please don't forget to sign each ideas.
+
+If you're interested to take care of one of these tasks, write your name in Assign Part.
+________________________________________________________________________________________________
+> Template
+TODO :
+
+Done :
+Scope :
+Priority:
+Author:
+Assign to:
+_________________________________________________________________________________________________
+> Change onReceiveData() in CServer.
+TODO : That would be better to parse incoming data with the size of the packet instead of the brackets.
+
+Done :
+
+Scope: Network, Cpp, Server & Client side
+Priority :
+Author : HM
+Assign to: HM
+__________________________________________________________________________________________________
+> Implement Session Cookies
+TODO :Instead of identifying users by sockets, we should use session cookie (random string used just for the time of one session)
+We could also think about persistent Cookie to remain a session and avoid the user to authenticate at app launching.
+
+Done :  Creation of a CSessionCookie class
+        Creation of a CookiesManager class
+
+Scope : Applicative protocol, Cpp, Network, Server & Client side
+Priority:
+Author : HM
+Assign to: HM
+________________________________________________________________________________________________
+>  User Interface Modulable
+TODO : Make the differents compenents of the Windows resizable, movable, ...
+
+Scope : QML, Client side
+Done :
+Priority:
+Author: HM
+Assign to:
+________________________________________________________________________________________________
+> Data encryption
+TODO : Implement TLS end-to-end encryption, Manage certificates generation on client and server
+
+Done :
+Scope : Network, Client & Server side, Cpp
+Priority:
+Author: HM
+Assign to:
+________________________________________________________________________________________________
+> Peer2Peer Message
+TODO : Implement Peer2Peer communication for messages
+
+Done :
+Scope : Applicative Protocol, Network, Cpp, QML, Client & Server side
+Priority:
+Author: HM
+Assign to:
+________________________________________________________________________________________________
+> Audio
+TODO : Finish audio communication :)
+
+Done :
+Scope : Audio, Cpp, Client & Server side
+Priority:
+Author: HM
+Assign to:

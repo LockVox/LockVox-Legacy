@@ -10,6 +10,7 @@ CONFIG += c++11 console
 
 SOURCES += \
     Server/caudio.cpp \
+    Server/cookiesmanager.cpp \
     src/AbstractServer.cpp \
     src/abstractaudio.cpp \
     src/cchannel.cpp \
@@ -22,14 +23,17 @@ SOURCES += \
     Server/mainwindow.cpp \
     src/crole.cpp \
     Server/sha256.cpp \
-    Client/messagelist.cpp
+    Client/messagelist.cpp \
+    src/csessioncookie.cpp
 
 HEADERS += \
     Server/caudio.h \
+    Server/cookiesmanager.h \
     Server/mainwindow.h \
     Server/sha256.h \
     Server/cserver.h \
     Server/config.h \
+    src/includes/csessioncookie.h \
     src/includes/cmessage.h \
     src/includes/AbstractServer.h \
     src/includes/abstractaudio.h \
@@ -47,7 +51,7 @@ FORMS += \
 
 
 INCLUDEPATH += src \
-    src/include \
+    src/includes \
     libs/emiplib/include \
     libs/emiplib/portaudio \
 
