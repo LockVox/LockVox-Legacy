@@ -6,7 +6,9 @@
 
 In this file you can write up the differents ideas about the project.
 For example some functionalities that would be nice to add, or also implementation improvement.
-Feel free !
+
+This file is aimed to list the tasks that have to be done in the near or far future.
+
 Each ideas will be discuss in the team and class with a priority.
 
 Please don't forget to sign each ideas.
