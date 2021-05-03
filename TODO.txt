@@ -81,3 +81,11 @@ Scope : Audio, Cpp, Client & Server side
 Priority:
 Author: HM
 Assign to:
+________________________________________________________________________________________________
+TODO : Implement roles
+
+Done :
+Scope : Cpp, QML, client & Server side
+Priority: Low
+Author: HL
+Assign to: HL
