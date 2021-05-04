@@ -13,6 +13,7 @@ CServer::CServer()
         if(!test.mkpath("storage/log"))
         {
             qDebug() << "[Log error] Can't create log directory" << Qt::endl;
+            abort();
         }
     }
 
@@ -25,55 +26,61 @@ CServer::CServer()
     if(!log_file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         qDebug() << "[Log Error] Can't create log file" << Qt::endl;
+        abort();
     }
     else
     {
         log.setDevice(&log_file);
-        writeToLog("Starting server...", SERVER);
+    }
+}
 
-        // Gestion du serveur TCP
-        serveur = new QTcpServer(this);
-        if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
+void CServer::start()
+{
+    // Gestion du serveur TCP
+    writeToLog("Starting server...", SERVER);
+
+    serveur = new QTcpServer(this);
+    if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
+    {
+        // Si le serveur n'a pas été démarré correctement
+        writeToLog(serveur->errorString(), SERVER_ERR);
+    }
+    else
+    {
+        // Si le serveur a été démarré correctement
+        writeToLog("Running on port :" + QString::number(serveur->serverPort()), SERVER);
+        connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+    }
+
+    m_db = new CDatabase();
+    set_channels(m_db->parseChannel());
+    set_clients(m_db->parseClient());
+
+    foreach(CClient *c, m_clients)
+    {
+        QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
+        if(QFile::exists(path))
         {
-            // Si le serveur n'a pas été démarré correctement
-            writeToLog(serveur->errorString(), SERVER_ERR);
+            QImage tmp(path);
+            c->set_profilePic(tmp);
         }
         else
         {
-            // Si le serveur a été démarré correctement
-            writeToLog("Running on port :" + QString::number(serveur->serverPort()), SERVER);
-            connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
-        }
-
-        m_db = new CDatabase();
-        set_channels(m_db->parseChannel());
-        set_clients(m_db->parseClient());
-
-        foreach(CClient *c, m_clients)
-        {
-            QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
+            int random = QRandomGenerator::global()->bounded(0,18);
+            path = "storage/server/pp/pp" + QString::number(random) + ".png";
             if(QFile::exists(path))
             {
+                QDir test;
                 QImage tmp(path);
                 c->set_profilePic(tmp);
-            }
-            else
-            {
-                int random = QRandomGenerator::global()->bounded(0,18);
-                path = "storage/server/pp/pp" + QString::number(random) + ".png";
-                if(QFile::exists(path))
+                if(test.exists("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces)))
                 {
-                    QImage tmp(path);
-                    c->set_profilePic(tmp);
-                    if(test.exists("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces)))
-                    {
-                        tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
-                    }
-                    else
-                    {
-                        test.mkpath("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces));
-                        tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
-                    }
+                    tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
+                }
+                else
+                {
+                    test.mkpath("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces));
+                    tmp.save("storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png","PNG");
                 }
             }
         }

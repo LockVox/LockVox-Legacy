@@ -20,7 +20,6 @@ SOURCES += \
     src/cpacket.cpp \
     Server/cserver.cpp \
     Server/main.cpp \
-    Server/mainwindow.cpp \
     src/crole.cpp \
     Server/sha256.cpp \
     Client/messagelist.cpp \
@@ -29,7 +28,6 @@ SOURCES += \
 HEADERS += \
     Server/caudio.h \
     Server/cookiesmanager.h \
-    Server/mainwindow.h \
     Server/sha256.h \
     Server/cserver.h \
     Server/config.h \
@@ -46,8 +44,7 @@ HEADERS += \
     Client/includes/messagelist.h
 
 
-FORMS += \
-    Server/mainwindow.ui
+FORMS +=
 
 
 INCLUDEPATH += src \

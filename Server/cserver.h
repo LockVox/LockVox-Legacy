@@ -34,6 +34,7 @@ class CServer : public AbstractServer
     public:
 
         CServer();
+        void start();
 
         //Getters
         CDatabase * get_database();

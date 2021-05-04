@@ -3,20 +3,18 @@
 #include <QThread>
 #include <QString>
 
-#include "mainwindow.h"
-
 #include "Server/config.h"
+#include "cserver.h"
 #include "winsock.h"
 #pragma comment(lib,"ws2_32.lib")
 
 
 int main(int argc, char *argv[])
 {
-   QApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
 
-    MainWindow w;
-    w.show();
-
+    CServer * server = new CServer();
+    server->start();
 
     /*WSADATA Data;
     WSAStartup(MAKEWORD(2,2), &Data);
