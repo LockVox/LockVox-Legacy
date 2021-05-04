@@ -58,7 +58,7 @@ DEPENDPATH += \
 
 
 #QML File ressources
-RESOURCES += Client/qml/qml.qrc
+RESOURCES += Client/qml.qrc
 RESOURCES += $$files(Client/qml/*)
 
 

@@ -26,8 +26,9 @@
 class CookiesManager
 {
 public:
+    //Penser a faire les definition des constructeur et destrcteur quand on créé une classes sinon ça compile pas pour les autres...
     CookiesManager(QList<CClient*> clients);
-    ~CookiesManager();
+    //~CookiesManager();
 
     void assignCookie(QUuid id);
     void deleteCookie(QUuid id);

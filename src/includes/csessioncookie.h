@@ -33,14 +33,14 @@ class CSessionCookie
      * @note
      * @bug
      * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
-     * @remark      Une remarque à faire ?
-     * @copyright   GNU Public License.
+     * @remark      Les destructeur non définie ça emepche de compiler !
+     * @copyright   GNU GPL V3.
      */
 public:
     CSessionCookie();
     CSessionCookie(CClient * c);
 
-    ~CSessionCookie();
+    //~CSessionCookie();
 
     //Getters
     QString getCookie() const;

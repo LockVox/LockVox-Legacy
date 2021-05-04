@@ -1,6 +1,6 @@
 #include "cookiesmanager.h"
 
-CookiesManager::CookiesManager()
+CookiesManager::CookiesManager(QList<CClient*> clients)
 {
 
 }
