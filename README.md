@@ -11,47 +11,46 @@ It's dev using Qt opensource, written in C++.
 
 The project actually have :
 
-### Server side :
+### Server side
 
-- A working server running on port 50885
-- Connect to MariaDB / MySQL server
-- Login
-- Register
-- Generating UUID for new user
-- Password stored using sha256 (salt NYI)
-- Channel list
-- User list and isOnline info
-- Simple public message
-- Profile picture
+-  A working server running on port 50885
+-  Connect to MariaDB / MySQL server
+-  Login
+-  Register
+-  Generating UUID for new user
+-  Password stored using sha256 (salt NYI)
+-  Channel list
+-  User list and isOnline info
+-  Simple public message
+-  Profile picture
 
-### Client side :
+### Client side
 
-- Simple GUI
-- Connect to server
-- Login
-- Register
-- Retrieve channel and user list
-- Simple public message
-- Profile pictures
+-  Simple GUI
+-  Connect to server
+-  Login
+-  Register
+-  Retrieve channel and user list
+-  Simple public message
+-  Profile pictures
 
-### TO DO : 
+### TO DO 
 
-- Audio immplementation
-- Message picture implementation
-- Emoji message implementation
+-  Audio immplementation
+-  Message picture implementation
+-  Emoji message implementation
 
-## 3rd-party :
+## 3rd-party
 
-- [EMIPLIB](https://github.com/j0r1/EMIPLIB)
-- [MariaDB C & C++ Connector](https://mariadb.com/kb/en/mariadb-connector-c/)
-- [Zedwood C++ SHA256](http://www.zedwood.com/article/cpp-sha256-function)
-- [Qt Open Sources](https://www.qt.io/licensing/)
+-  [EMIPLIB](https://github.com/j0r1/EMIPLIB)
+-  [MariaDB C & C++ Connector](https://mariadb.com/kb/en/mariadb-connector-c/)
+-  [Zedwood C++ SHA256](http://www.zedwood.com/article/cpp-sha256-function)
+-  [Qt Open Sources](https://www.qt.io/licensing/)
 
-## Authors :
+## Authors
 
-- Valentin MONNOT (monnot@et.esiea.fr)
-- Hugues MATTEI
-- Hugo LAVEAU
-- Louis BOURGEAIS
-- François LELIEVRE
-
+-  Valentin MONNOT (monnot@et.esiea.fr)
+-  Hugues MATTEI
+-  Hugo LAVEAU
+-  Louis BOURGEAIS
+-  François LELIEVRE
