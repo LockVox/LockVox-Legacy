@@ -478,9 +478,9 @@ QString CDatabase::changePassword(string mail, string uuid, string password, str
         return "success";
     }
     }
-    catch (QString e) {
-        cerr <<"Error occured in change password function : " << mysql_error(conn) << endl;
-        return e;
+    catch (char *e)
+    {
+        return QString::fromLocal8Bit(e);
     }
 }
 
@@ -535,8 +535,9 @@ QString CDatabase::deleteUser(string uuid)
             throw(error);
         }
     }
-    catch (QString err) {
-        return err;
+    catch (char *e)
+    {
+        return QString::fromLocal8Bit(e);
     }
     return "success";
 }
