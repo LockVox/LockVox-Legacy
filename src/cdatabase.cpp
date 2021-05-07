@@ -333,7 +333,7 @@ CClient* CDatabase::parseClient(string email, QString * get_err)
 
         // Close a MySQL connection
         mysql_close(conn);
-
+        *get_err = "success";
         return client;
     }
     catch (char *e)

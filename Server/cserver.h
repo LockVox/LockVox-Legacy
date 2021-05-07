@@ -61,7 +61,6 @@ class CServer : public AbstractServer
         void Deserialize(QByteArray in);
 
         QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
-        QByteArray SerializeClients();                                      //Serialize clients into json document then byte array
 
         void DeserializeChannels(QByteArray in);                            //Deserialize channels from byte array
         void DeserializeClient(QByteArray in);                              //Deserialize clients from byte array
@@ -71,10 +70,13 @@ class CServer : public AbstractServer
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
         CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
 
+        //Messages functions
         bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it
         QList<QString> readChannelIndex(QString path_to_index); //Returns the list of names of all messages files contained in the given index
         bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
         QList<CMessage> createMessageList(QString id, bool isPrivate,int nb_msg_to_sync, QUuid sender, int start_index); //Creates a QList of CMessage stored localy using index.json
+
+        //Log lol
         void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
 
 

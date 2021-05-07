@@ -365,8 +365,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                        //SERV CONNECT
                        //Check Auth -
                        //If Auth is Ok
-                       CClient * client = new CClient();
-                       client = packet->Deserialize_newClient();
+                       CClient * client = packet->Deserialize_newClient();
                        addClient(client);
 
                        if(get_clientById(client->get_uuid())->get_isOnline() == false)
@@ -386,13 +385,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //SERV DISCONNECT
                         //Update online users
                         CClient * client = packet->Deserialize_newClient();
-
-                        for(int i = 0; i < get_clientList().size(); i++)
+                        if(get_clientById(client->get_uuid()) != NULL)
                         {
-                            if(get_clientList()[i]->get_uuid() == client->get_uuid())
-                            {
-                                get_clientById(client->get_uuid())->set_isOnline(false);
-                            }
+                            get_clientById(client->get_uuid())->set_isOnline(false);
                         }
 
                         //User is not online anymore
@@ -402,10 +397,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Send Update
                         sendToAll(packet->GetByteArray());
 
-                       free(client);
+                        free(client);
 
-                       break;
-                   }
+                        break;
+                    }
 
                     case 2:
                     {
@@ -442,6 +437,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
                         break;
                     }
+
                     case 3:
                     {
                         //BIO UPDATE
@@ -498,73 +494,76 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Kick user
                         CClient * client = packet->Deserialize_newClient();
 
-                        foreach(CClient * c , m_clients)
+                        if(get_clientById(client->get_uuid()) != NULL)
                         {
-                            if(client->get_uuid() == c->get_uuid())
-                            {
-                                writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Has been kicked from server" ,SERVER);
-                                sendToAll(packet->GetByteArray());
-                                m_clients.removeOne(c);
-                                c->get_socket()->close();
-                            }
+                            /*
+                             * We should not use .removeOne but implemente AbstractServer::delClient()
+                             * Right must be implemeted and we must verify user have right to kick before implement kick
+                            writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] Has been kicked from server" ,SERVER);
+                            sendToAll(packet->GetByteArray());
+                            m_clients.removeOne(get_clientById(client->get_uuid()));
+                            client->get_socket()->close();
+                            */
                         }
+
                         break;
                     }
 
                     case 7:
                     {
-                        //Demande d'authentification
+                        //Auth request
                         QList<QString> info = packet->Deserialize_auth();
                         CPacket* ans = new CPacket("0", "7");
                         CPacket newUser("0","0");
-                        //Hachage du password
-                        std::string hashed = info[1].toStdString();
-                        hashed = sha256(hashed);
+
+                        //Password hash
+                        std::string hashed = sha256(info[1].toStdString());
                         bool valid = false;
 
                         QString * err = new QString;
                         CClient * tmp_client = m_db->parseClient(info[0].toStdString(), err);
-                        if(tmp_client) //Si l'utilisateur existe
+
+                        if(*err == "success")
                         {
-                            QString * err1 = new QString;
-                            if(hashed == m_db->getHash(info[0].toStdString(), err1))  //Si le mdp correspond à l'utilisateur
+                            if(hashed == m_db->getHash(info[0].toStdString(), err))  //If password is correct
                             {
-                                foreach(CClient *c, m_clients) //Vérification de connexion déjà existante
+                                foreach(CClient *c, m_clients) //Check if user already connected
                                 {
-                                    if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //utilisateur déjà co
+                                    if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //For the moment if yes just don't allow second connection
                                     {
                                         writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
                                         ans->Serialize_auth(NULL, 2);                 
                                         sender->get_socket()->waitForBytesWritten();
                                         sender->get_socket()->abort();
                                     }
-                                    if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //Si c'est valide
+                                    if(tmp_client->get_uuid() == c->get_uuid() && !c->get_isAuthenticate()) //If not connect him
                                     {
                                         writeToLog("User [" + c->get_uuid().toString()  + "(" + c->get_pseudo() + ")] connected from [" + sender->get_socket()->peerAddress().toString() + "]",SERVER);
-                                        //mettre l'utilisateur authentifié
+
                                         c->set_isOnline(true);
                                         c->set_isAuthenticate(true);
                                         c->set_socket(sender->get_socket());
-                                        //Lui envoyer ses infos
+
+                                        //Sending client info
                                         ans->Serialize_auth(c, 0);
                                         newUser.Serialize_newClient(c,false);
                                         valid = true;
                                     }
                                 }
-                                delete(err1);
+                                delete(err);
                             }
-                            else    //Bad password
+                            else
                             {
-                                if(hashed == "false")
+                                if(hashed == "false") //DB Error
                                 {
                                     writeToLog("Error with database when fetching password hash",SERVER_ERR);
-                                    writeToLog(*err1, DB_ERR);
+                                    writeToLog(*err, DB_ERR);
                                     ans->Serialize_auth(NULL, 1);     
                                     sender->get_socket()->waitForBytesWritten();
                                     //sender->get_socket()->abort();
-                                    delete(err1);
+                                    delete(err);
                                 }
-                                else
+                                else //Bad password
                                 {
                                     writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", SERVER_WARN);
                                     ans->Serialize_auth(NULL, 3);
@@ -582,6 +581,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 ans->Serialize_auth(NULL, 1);
                                 sender->get_socket()->waitForBytesWritten();
                                 //sender->get_socket()->abort();
+                                delete(err);
                             }
                             else
                             {
@@ -595,7 +595,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         }
 
                         //qDebug() << "Send Auth answer to client\n";
-                        sender->get_socket()->write(ans->GetByteArray());   //On lui envoie ses info
+
+                        //We should check if lines behind are usefull...
+                        sender->get_socket()->write(ans->GetByteArray());
                         sender->get_socket()->waitForBytesWritten();
 
                         //If authentification suceed - Send Server Object to the client
@@ -603,8 +605,6 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             sendToAllExecptClient(newUser.GetByteArray(), tmp_client);
                         }
-
-
                         break;
                     }
 
@@ -1203,67 +1203,6 @@ QByteArray CServer::SerializeChannels()
 
     QJsonDocument jsonDoc(jsonArray);
     return jsonDoc.toJson();
-}
-
-QByteArray CServer::SerializeClients()
-{
-    QJsonArray jsonArray;
-    foreach(CClient * c, get_clientList())
-    {
-        jsonArray.append(c->serializeToObj());
-    }
-
-    QJsonDocument jsonDoc(jsonArray);
-    return jsonDoc.toJson();
-}
-
-void CServer::DeserializeChannels(QByteArray in)
-{
-        //Deserialize byte array into a json document
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
-
-        if(jsonDoc.isNull())
-        {
-            writeToLog("JSON doc is invalid in channel deserialization",SERVER_WARN);
-        }
-
-        QJsonArray jsonArray = jsonDoc.array();
-
-        //Get each element of the array
-        foreach( const QJsonValue & value, jsonArray)
-        {
-            //Convert it to an json object then to a channel
-            QJsonObject obj = value.toObject();
-            CChannel * newChannel = deserializeToChannel(obj);
-
-            //check if the channel already exist or not
-            bool exist = false;
-
-            //if the channel exist, we reload it with new value
-            foreach(CChannel * c, get_channelList())
-            {
-                if(c->get_id() == newChannel->get_id())
-                {
-                    exist = true;
-                    c->set_all(newChannel);
-                }
-            }
-
-            //if the channel doesnt exist.
-            if(get_channelList().isEmpty() || exist == false)
-            {
-                writeToLog("Requesting a non-exisiting channel.",SERVER_WARN);
-            }
-        }
-
-        //Print content of the actual list of channel - check
-        /*
-        foreach(CChannel * c, get_channelList()){
-         qDebug() << "Channel :\nName: " << c->get_name()<< Qt::endl;
-         qDebug() << "ID: " << c->get_id()<< Qt::endl;
-         qDebug() << "MaxUsers: " << c->get_maxUsers()<< Qt::endl;
-         qDebug() << "NbClients: " << c->get_nbClients()<< Qt::endl;
-        }*/
 }
 
 CChannel * CServer::deserializeToChannel(QJsonObject json_obj)
