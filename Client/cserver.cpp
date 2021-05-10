@@ -58,7 +58,7 @@ void CServer::connectServer(QString  ip)
 {
     if(!ip.isEmpty()){
         this->m_ip = ip;
-        emit(connected());
+        emit connected();
     }
 }
 
@@ -136,7 +136,7 @@ void CServer::set_socket(QTcpSocket* soc){
 
 void CServer::set_self(CClient *c){
     m_self = c;
-    emit(selfChanged(m_self));
+    emit selfChanged(m_self);
 }
 
 //Envoie de l'audio au server grâce à un QByteArray
@@ -446,8 +446,8 @@ void CServer::onReceiveData()
         emit picturesLoad();
         emit m_clientsList->dataChanged();
         emit m_channelsList->dataChanged();
-        emit(selfChanged(m_self));
-        emit(changeState("Home"));
+        emit selfChanged(m_self);
+        emit changeState("Home");
         m_currentUIState = "Home";
     }
 }
@@ -459,7 +459,8 @@ void CServer::loadAllCompenent(){
         sendToServer(p.GetByteArray());
     }
 
-    if(!m_hasMessagesLoaded & m_hasChannelsLoaded & m_hasClientsLoaded){
+    if((!m_hasMessagesLoaded & m_hasChannelsLoaded & m_hasClientsLoaded))
+    {
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == false){
                 CPacket request("1","3");
@@ -507,10 +508,11 @@ void CServer::checkCompenents(){
         m_hasPictureLoaded = true;
     }
 
-    int nb_list_messages_load = 0;
-    if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded){
-    //Check if messages list has been load
 
+    if(!m_hasMessagesLoaded && m_hasChannelsLoaded && m_hasClientsLoaded)
+    {
+        int nb_list_messages_load = 0;
+        //Check if messages list has been load
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == true)
                 nb_list_messages_load++;
@@ -559,21 +561,16 @@ void CServer::processIncomingData(QByteArray data){
             case 0:
             {
                 //New User is now online
-                CClient * client = new CClient();
-                client = packet->Deserialize_newClient();
+                CClient * tmp = packet->Deserialize_newClient();
+                CClient * client = get_clientById(tmp->get_uuid());
+                delete(tmp);
 
-                bool exist = false;
-
-                for(int i = 0; i < get_clientList().size(); i++)
+                if(client)
                 {
-                    if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
-                    {
-                        m_clientsList->get_clients()[i]->set_isOnline(true);
-                        emit m_clientsList->dataChanged();
-                        exist=true;
-                    }
+                    client->set_isOnline(true);
+                    emit m_clientsList->dataChanged();
                 }
-                if(!exist)
+                else
                 {
                     m_clientsList->addClient(client);
                     emit m_clientsList->dataChanged();
@@ -585,18 +582,17 @@ void CServer::processIncomingData(QByteArray data){
             case 1:
             {
                 //User is now offline
-                CClient * client = packet->Deserialize_newClient();
+                CClient * tmp = packet->Deserialize_newClient();
+                CClient * client = get_clientById(tmp->get_uuid());
+                delete(tmp);
 
-                for(int i = 0; i < get_clientList().size(); i++)
+                if(client)
                 {
-                   if(m_clientsList->get_clients()[i]->get_uuid() == client->get_uuid())
-                   {
-                       m_clientsList->get_clients()[i]->set_isOnline(false);
-                       emit m_clientsList->dataChanged();
-                       break;
-                   }
+                    client->set_isOnline(false);
+                    emit m_clientsList->dataChanged();
+                    break;
                 }
-             break;
+                break;
             }
 
             case 2:
@@ -605,8 +601,10 @@ void CServer::processIncomingData(QByteArray data){
                 qDebug() << "Receive pseudo update";
                 CClient * client = packet->Deserialize_newClient();
                 int index = 0;
-                foreach(CClient * c, getClientsList()->get_clients()){
-                    if(c->get_uuid() == client->get_uuid()){
+                foreach(CClient * c, getClientsList()->get_clients())
+                {
+                    if(c->get_uuid() == client->get_uuid())
+                    {
                         c->set_pseudo(client->get_pseudo());
                         getClientsList()->setItemAt(index,c);
                         break;
@@ -625,8 +623,10 @@ void CServer::processIncomingData(QByteArray data){
                 CClient * client= packet->Deserialize_newClient();
                 int index = 0;
 
-                foreach(CClient * c, getClientsList()->get_clients()){
-                    if(c->get_uuid() == client->get_uuid()){
+                foreach(CClient * c, getClientsList()->get_clients())
+                {
+                    if(c->get_uuid() == client->get_uuid())
+                    {
                         c->set_description(client->get_description());
                         getClientsList()->setItemAt(index,c);
                         break;
@@ -659,14 +659,10 @@ void CServer::processIncomingData(QByteArray data){
             case 7:
             {
                 CClient * c = packet->Deserialize_authAns();
-                if(c == NULL){
-                    //Emit error_login here -
-                    return;
-                }
-                if(c != NULL)
+                if(c)
                 {
                     m_self = c;
-                     emit(changeState("splashScreen"));
+                    emit changeState("splashScreen");
                 }
                 break;
             }
@@ -682,7 +678,7 @@ void CServer::processIncomingData(QByteArray data){
 
                     if(m_self)
                     {
-                        emit(changeState("splashScreen"));
+                        emit changeState("splashScreen");
                         emit selfChanged(m_self);
 
                     }
@@ -692,7 +688,8 @@ void CServer::processIncomingData(QByteArray data){
         }
     }
 
-    if(packet->GetType().toInt() == 1){
+    if(packet->GetType().toInt() == 1)
+    {
         switch (packet->GetAction().toInt())
         {
                 case 0:
@@ -703,12 +700,12 @@ void CServer::processIncomingData(QByteArray data){
                     CClient * client = get_clientById(packet->get_IdClient());
                     CChannel * channel = get_channelById(packet->get_IdChannel());
 
-                    if(channel && client){
+                    if(channel && client)
+                    {
                         client->set_idChannel(channel->get_id());
                         channel->addUser(client);
+                        qDebug() << client->get_pseudo() << " has join channel " << channel->get_name();
                     }
-
-                    qDebug() << client->get_pseudo() << " has join channel " << channel->get_name();
                     break;
                 }
 
@@ -950,7 +947,7 @@ void CServer::processIncomingData(QByteArray data){
             case 6:
             {
                 //Get private message list
-                QVector<CMessage> message_list = packet->Deserialize_MessageList();
+                //QVector<CMessage> message_list = packet->Deserialize_MessageList();
                 //appendClientMessage(message_list)
             }
 
@@ -1217,7 +1214,6 @@ bool CServer::changeEmail(QString email)
         return true;
     */
     return true;
-
 }
 
 bool CServer::changeDescription(QString description)
@@ -1226,7 +1222,7 @@ bool CServer::changeDescription(QString description)
     qDebug() << "New description : " << description << "\n";
     CClient * tmp = m_self;
     tmp->set_description(description);
-    selfChanged(m_self);
+    emit selfChanged(m_self);
     CPacket packet("0", "3");
     packet.Serialize_myClient(m_self);
     sendToServer(packet.GetByteArray());

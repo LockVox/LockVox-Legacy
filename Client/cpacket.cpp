@@ -128,13 +128,15 @@ void CPacket::Deserialize(){
 
 CClient * CPacket::Deserialize_newClient(){
     try{
-        QString name;
-        QUuid id;
-        bool isOnline;
-        QString description;
+        if(m_obj.contains("newClient"))
+        {
+            QString name;
+            QUuid id;
+            bool isOnline;
+            QString description;
 
-        if(m_obj.contains("newClient")){
             QJsonObject newClient = m_obj.value("newClient").toObject();
+
             id = QUuid::fromString(newClient.value("uuid").toString());
             name = newClient.value("pseudo").toString();
             isOnline = newClient.value("isOnline").toBool();
@@ -163,11 +165,13 @@ CClient * CPacket::Deserialize_newClient(){
 
 CChannel * CPacket::Deserialize_newChannel(){
     try{
-        QString name;
-        int id, maxUsers;
+        if(m_obj.contains("newChannel"))
+        {
+            QString name;
+            int id, maxUsers;
 
-        if(m_obj.contains("newChannel")){
             QJsonObject newClient = m_obj.value("newChannel").toObject();
+
             id = newClient.value("id").toInt();
             name = newClient.value("name").toString();
             maxUsers = newClient.value("maxUsers").toInt();
@@ -302,26 +306,26 @@ void CPacket::Serialize_authReq(QString email, QString pass)
 CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide avec erreur en description
 {
     try{
-        int code;
-        QString err;
         if(m_obj.contains("newAuth"))
         {
+            int code;
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             code = newAuth.value("code").toInt();
-            if(code ==0){
+            if(code ==0)
+            {
                   CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
                   return tmp;         //On renvoie les infos client
 
-             }
-             return NULL;    //bad packet
+            }
+            return nullptr;    //bad packet
         }
     }
     catch(char* e)
     {
         qDebug() << "Error in Deserialize_authAns : " << e << Qt::endl;
-        return NULL;
+        return nullptr;
     }
-    return NULL;
+    return nullptr;
 }
 
 void CPacket::Serialize_regReq(QString username, QString mail, QString password,QString password_confirm)
@@ -475,13 +479,14 @@ QVector<CMessage> CPacket::Deserialize_MessageList()
 {
     QVector<CMessage> null;
     null.append(CMessage("null","null","null",true));
-    QVector<CMessage> list;
-    int index = 0;
 
     try
     {
         if(m_obj.contains("messagelist"))
         {
+            QVector<CMessage> list;
+            int index = 0;
+
             QJsonArray msglist = m_obj.value("messagelist").toArray();
 
             while(!msglist.isEmpty())
