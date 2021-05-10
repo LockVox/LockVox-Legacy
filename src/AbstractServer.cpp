@@ -49,7 +49,7 @@ CChannel * AbstractServer::get_channelById(int id)
             return c;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 CClient * AbstractServer::get_clientById(QUuid uuid)
@@ -61,7 +61,7 @@ CClient * AbstractServer::get_clientById(QUuid uuid)
             return c;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void AbstractServer::set_clients(QList<CClient*> clients)

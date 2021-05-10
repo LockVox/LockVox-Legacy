@@ -40,14 +40,14 @@ void CServer::start()
     writeToLog("Starting server...", SERVER);
 
     serveur = new QTcpServer(this);
-    if (!serveur->listen(QHostAddress::Any, 50885)) // Démarrage du serveur sur toutes les IP disponibles et sur le port 50885
+    if (!serveur->listen(QHostAddress::Any, 50885)) //Statuate on server sarting listening for every adresse on port given
     {
-        // Si le serveur n'a pas été démarré correctement
+        // If server didn't start properly
         writeToLog(serveur->errorString(), SERVER_ERR);
     }
     else
     {
-        // Si le serveur a été démarré correctement
+        // If server started properly
         writeToLog("Running on port :" + QString::number(serveur->serverPort()), SERVER);
         connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
     }
@@ -58,13 +58,14 @@ void CServer::start()
 
     foreach(CClient *c, m_clients)
     {
+        //For each flient, verify if they have profil pic
         QString path = "storage/private/" + c->get_uuid().toString(QUuid::WithoutBraces) + "/pp.png";
         if(QFile::exists(path))
         {
             QImage tmp(path);
             c->set_profilePic(tmp);
         }
-        else
+        else //Give them a random poril pic
         {
             int random = QRandomGenerator::global()->bounded(0,18);
             path = "storage/server/pp/pp" + QString::number(random) + ".png";
@@ -99,17 +100,17 @@ void CServer::set_database(CDatabase * db)
     m_db = db;
 }
 
-int CServer::whichClient(QTcpSocket * s)
+CClient * CServer::whichClient(QTcpSocket * s)
 {
-    //Looking for the client's index with the socket 's'
-    for(int i = 0; i < get_clientList().size(); i++)
+    //Looking for the client with the socket 's'
+    foreach(CClient * client, get_clientList())
     {
-        if(get_clientList()[i]->get_socket() == s)
+        if(client->get_socket() == s)
         {
-            return i;
+            return client;
         }
     }
-    return -1;
+    return nullptr;
 }
 
 void CServer::onNewConnection()
@@ -170,8 +171,8 @@ void CServer::onReceiveData(){
     QByteArray *data = new QByteArray();
     data->append(socket->readAll());
 
-    int uid = whichClient(socket);
-    if(uid == -1)
+    CClient * client = whichClient(socket);
+    if(client == nullptr)
     {
         //Process data
         CClient * c = new CClient();
@@ -181,7 +182,7 @@ void CServer::onReceiveData(){
     }
 
     //Process data
-    CPacket tmp(*data, get_clientList()[uid]); //Check if valid packet, if not, may be a splitted packet or multiple packet
+    CPacket tmp(*data, client); //Check if valid packet, if not, may be a splitted packet or multiple packet
     bool ifTrueProccess = true;
 
     if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
@@ -198,7 +199,7 @@ void CServer::onReceiveData(){
                 QByteArray array(buffer.toLocal8Bit());
                 if(array !="\n")
                 {
-                    processIncomingData(get_clientList()[uid], array);
+                    processIncomingData(client, array);
                 }
                 buffer.clear();
             }
@@ -217,13 +218,13 @@ void CServer::onReceiveData(){
 
         if(ifTrueProccess)
         {
-            QByteArray * buffer = get_clientBuffer(uid);
+            QByteArray * buffer = get_clientBuffer(get_clientList().indexOf(client));
             if(data->contains("\"mainObj\": {"))
             {
                 //New packet
                 if(!buffer->isEmpty())
                 {
-                    writeToLog("[" + get_clientList()[uid]->get_uuid().toString() + "(" + get_clientList()[uid]->get_pseudo() +
+                    writeToLog("[" + client->get_uuid().toString() + "(" + client->get_pseudo() +
                                ")] New request held by multiple packet arrived while user buffer isn't empty, clearing it",SERVER_WARN);
                     writeToLog("A packet and therefore a request must have been lost nor a bad packet was received before",SERVER_WARN);
                     buffer->clear();
@@ -240,12 +241,12 @@ void CServer::onReceiveData(){
                 else
                 {
                     buffer->append(*data);
-                    CPacket tmp1(*buffer, get_clientList()[uid]);
+                    CPacket tmp1(*buffer, client);
 
                     //We check if the packet is complete, otherwise we wait for the buffer to fill up
                     if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
                     {
-                        processIncomingData(get_clientList()[uid], *buffer);
+                        processIncomingData(client, *buffer);
                         buffer->clear();
                     }
                 }
@@ -256,7 +257,7 @@ void CServer::onReceiveData(){
     {
         if(ifTrueProccess & *data != "\n")
         {
-            processIncomingData(get_clientList()[uid], *data);
+            processIncomingData(client, *data);
         }
     }
 }
@@ -319,17 +320,9 @@ QList<CClient*> CServer::GetBannedUserList()
     return m_banned_users;
 }
 
-
-void delay()
-{
-    QTime dieTime= QTime::currentTime().addMSecs(10);
-    while (QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-}
-
 void CServer::processIncomingData(CClient *sender, QByteArray data) //Process received data
 {
-        if(!sender)
+        if(!sender) //Should never happen
         {
             writeToLog("Received data from unknown client", SERVER_WARN);
             return;
@@ -337,13 +330,13 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
 
         CPacket* packet = new CPacket(data, sender);
 
-        if(packet->GetAction() == NULL || packet->GetType() == NULL)
+        if(packet->GetAction() == NULL || packet->GetType() == NULL)//Bad packet
         {
             writeToLog("Unable to deserialize received packet :\n" + packet->GetByteArray() + "\nRequest Aborted", SERVER_WARN);
             return;
         }
 
-        if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
+        if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1) //Request server object
         {
             qDebug() << "Send server info to client\n";
             CPacket * objServer = new CPacket("-1","-1");
@@ -353,7 +346,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
             return;
         }
 
-        //Récupération du type
+        //Get type
         switch (packet->GetType().toInt())
         {
             case 0: //SERV
@@ -475,7 +468,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 4:
                     {
                         //BAN USER
-                        //Il faudra check si le sender a l'autorisation
+                        //Check if user have right to before...
                         //TODO
 
                         break;
@@ -484,7 +477,7 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     case 5:
                     {
                         //BAN IP
-                        //Rajouter système de gestion du temps
+                        //Maybe add time ?
                         //TODO
                         break;
                     }
@@ -569,9 +562,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     ans->Serialize_auth(NULL, 3);
                                     sender->get_socket()->waitForBytesWritten();
                                     //sender->get_socket()->abort();
+                                    delete(err);
                                 }
                             }
-                            delete(err);
                         }
                         else
                         {
@@ -712,33 +705,40 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                     {
                         //JOIN CHANNEL
                         packet->Deserialize_ID();
-                        QUuid tmp = packet->get_IdClient();
-                        CClient * client = get_clientById(tmp);
+
+                        CClient * client = get_clientById(packet->get_IdClient());
                         CChannel * channel = get_channelById(packet->get_IdChannel());
 
                         if(channel && client)
                         {
                             client->set_idChannel(channel->get_id());
                             channel->addUser(client);
+
                             CPacket ans("1","0");
+
                             ans.Serialize();
                             ans.Serialize_ID(channel->get_id(),client->get_uuid());
+
                             sendToAll(ans.GetByteArray());
+
                             writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has joined channel id ["+ QString::number(packet->get_IdChannel()) + "]", SERVER);
                         }
                         else
                         {
                             if(!client)
                             {
-                                writeToLog("A non-existing client is trying to join a channel ! packet UUID [" + tmp.toString() + "]", SERVER_ERR);
+                                writeToLog("A non-existing client is trying to join a channel ! packet UUID [" + packet->get_IdClient().toString() + "]", SERVER_ERR);
                                 //Send error packet
                                 //TODO
                             }
-                            if(!channel)
+                            else
                             {
-                                writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is trying to join a non-existing channel id [" + QString::number(packet->get_IdChannel()) + "]", SERVER_WARN);
-                                //Send error packet
-                                //TODO
+                                if(!channel)
+                                {
+                                    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is trying to join a non-existing channel id [" + QString::number(packet->get_IdChannel()) + "]", SERVER_WARN);
+                                    //Send error packet
+                                    //TODO
+                                }
                             }
                         }
                         break;
@@ -756,10 +756,15 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             client->set_idChannel(-1);
                             channel->delUser(client->get_uuid());
+
                             CPacket ans("1","1");
+
                             ans.Serialize();
                             ans.Serialize_ID(channel->get_id(),client->get_uuid());
+
                             sendToAll(ans.GetByteArray());
+
+                            writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has quit channel id ["+ QString::number(packet->get_IdChannel()) + "]", SERVER);
                         }
                         else
                         {
@@ -768,10 +773,13 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Try to exit a channel, but Client isn't in the list ???",SERVER_ERR);
                                 break;
                             }
-                            if(!channel)
+                            else
                             {
-                                writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Try to exit a non-existing channel ???",SERVER_ERR);
-                                break;
+                                if(!channel)
+                                {
+                                    writeToLog("[" + sender->get_socket()->peerAddress().toString() + "] Try to exit a non-existing channel ???",SERVER_ERR);
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -782,7 +790,8 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         //Text channel message
                         CMessage msg = packet->Deserialize_Message();
 
-                        if(msg.get_to().toInt() <= -1 || msg.get_to().toInt() > m_channels.size()){
+                        if(msg.get_to().toInt() <= -1 || msg.get_to().toInt() > m_channels.size())
+                        {
                             writeToLog("[" + sender->get_socket()->peerAddress().toString() + " Received a message for an unknown channel ("+msg.get_to() +") ? Ignored.", SERVER_ERR);
                             return;
                         }
@@ -793,8 +802,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             writeToLog("[" + sender->get_socket()->peerAddress().toString() + "Received a private message for a text channel ? Ignored.", SERVER_WARN);
                             //Send error packet to client
                             CPacket err("1","3");
+
                             err.Serialize_MessageError(1);
                             sendToClient(err.GetByteArray(),sender);
+
                             break;
                         }
                         msg.toXML();
@@ -813,14 +824,17 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 break;
                             }
                         }
+
                         path = "storage/public/" + msg.get_to() + "/" + QString::fromStdString(filename) + ".xml";
                         if(QFile::exists(path))
                         {
                             writeToLog("[" + sender->get_uuid().toString() + "(" + sender->get_pseudo() + ")] is spamming copy paste message in channel [" + msg.get_to() + "]",SERVER_WARN);
                             //Send error packet to client
                             CPacket err("1","3");
+
                             err.Serialize_MessageError(2);
                             sendToClient(err.GetByteArray(),sender);
+
                             break;
                         }
 
@@ -829,9 +843,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
                         {
                             writeToLog("Can't save received message from [" + msg.get_from() + "] to [" + msg.get_to() + "]",SERVER_ERR);
+
                             CPacket err("1","3");
+
                             err.Serialize_MessageError(3);
                             sendToClient(err.GetByteArray(),sender);
+
                             break;
                         }
 
@@ -848,9 +865,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             if(filename_list.isEmpty())
                             {
                                 writeToLog("Error while reading channel index for channel [" + msg.get_to() + "]",SERVER_ERR);
+
                                 CPacket err("1","3");
+
                                 err.Serialize_MessageError(3);
                                 sendToClient(err.GetByteArray(),sender);
+
                                 break;
                             }
                             else
@@ -861,9 +881,12 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     if(!createChannelIndex(filename,path))
                                     {
                                         writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",SERVER_ERR);
+
                                         CPacket err("1","3");
+
                                         err.Serialize_MessageError(3);
                                         sendToClient(err.GetByteArray(),sender);
+
                                         break;
                                     }
                                     else
@@ -876,10 +899,14 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                     filename_list.append(QString::fromStdString(filename));
                                     if(!insertChannelIndex(path,filename_list))
                                     {
+
                                         writeToLog("Error while inserting in channel index for channel [" + msg.get_to() + "]",SERVER_ERR);
                                         CPacket err("1","3");
+
                                         err.Serialize_MessageError(3);
                                         sendToClient(err.GetByteArray(),sender);
+
+                                        break;
                                     }
                                 }
                             }
@@ -889,45 +916,55 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                             if(!createChannelIndex(filename,path))
                             {
                                 writeToLog("Error while creating channel index from channel [" + msg.get_to() + "]",SERVER_ERR);
+
                                 CPacket err("1","3");
+
                                 err.Serialize_MessageError(3);
                                 sendToClient(err.GetByteArray(),sender);
+
                                 break;
                             }
                         }
                         //Send to all
                         CPacket msgToAll("1","4");
+
                         msgToAll.Serialize_Message(msg);
                         sendToAll(msgToAll.GetByteArray());
+
                         break;
                     }
 
                     case 3:
                     {
-                        //Request message list
-                        //qDebug() << "Receive msg list request from " << sender->get_pseudo()
                         QList<QString> info = packet->deserialize_messageRequest();
-                        qDebug() << "Receive request message for channel " << info.at(1);
+
                         QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), sender->get_uuid(), info.at(3).toInt());
 
                         if(messages_list.last().get_from() == "allIsSync")
                         {
                             break;
                         }
+
                         if(messages_list.last().get_from() == "noIndex")
                         {
                             CPacket reqAns("1","2");
+
                             reqAns.Serialize_MessageListInfo(info.at(1).toInt());
                             reqAns.Serialize_MessageList(messages_list);
+
                             sendToClient(reqAns.GetByteArray(), sender);
+
                             break;
                         }
 
 
                         CPacket reqAns("1","2");
+
                         reqAns.Serialize_MessageListInfo(info.at(1).toInt());
                         reqAns.Serialize_MessageList(messages_list);
+
                         sendToClient(reqAns.GetByteArray(), sender);
+
                         break;
                     }
 
@@ -948,8 +985,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                         {
                             QImage img(path);
                             CPacket ppAns("1","14");
+
                             ppAns.Serialize_ppAnswer(img,requested);
                             ppAns.GetByteArray().size();
+
                             sendToClient(ppAns.GetByteArray(), sender);
                         }
                         else
@@ -974,8 +1013,10 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
                                 }
 
                                 CPacket ppAns("1","14");
+
                                 ppAns.Serialize_ppAnswer(tmp,requested);
                                 ppAns.GetByteArray().size();
+
                                 sendToClient(ppAns.GetByteArray(), sender);
                             }
                         }
@@ -1172,28 +1213,9 @@ void CServer::processIncomingData(CClient *sender, QByteArray data) //Process re
         return;
  }
 
+// Unused functions, i leave them here in case @Valentin
 
-
-QByteArray CServer::Serialize()
-{
-    QByteArray* ba = new QByteArray();
-    return *ba;
-
-}
-
-void CServer::Deserialize(QByteArray in)
-{
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
-    QJsonObject obj = jsonDoc.object();
-
-    QJsonArray sArray = obj["clients"].toArray();
-    QJsonArray cArray = obj["channels"].toArray();
-
-    deserializeChannel(cArray);
-    deserializeClients(sArray);
-}
-
-QByteArray CServer::SerializeChannels()
+/*QByteArray CServer::SerializeChannels()
 {
     QJsonArray jsonArray;
     foreach(CChannel * c, get_channelList())
@@ -1204,24 +1226,22 @@ QByteArray CServer::SerializeChannels()
     QJsonDocument jsonDoc(jsonArray);
     return jsonDoc.toJson();
 }
+*/
 
-CChannel * CServer::deserializeToChannel(QJsonObject json_obj)
+/*QByteArray CServer::SerializeClients()
 {
-    CChannel * channel = new CChannel();
+    QJsonArray jsonArray;
+    foreach(CClient * c, get_clientList())
+    {
+        jsonArray.append(c->serializeToObj());
+    }
 
-    channel->deserialize(json_obj);
-
-    return channel;
+    QJsonDocument jsonDoc(jsonArray);
+    return jsonDoc.toJson();
 }
+*/
 
-CClient * CServer::deserializeToClient(QJsonObject json_obj)
-{
-    CClient * client = new CClient();
-    client->deserialize(json_obj);
-    return client;
-}
-
-void CServer::deserializeChannel(QJsonArray & json_array)
+/*void CServer::deserializeChannel(QJsonArray & json_array)
 {
 
     foreach( const QJsonValue & value, json_array)
@@ -1245,9 +1265,9 @@ void CServer::deserializeChannel(QJsonArray & json_array)
             addChannel(newChannel);
         }
     }
-}
+}*/
 
-void CServer::deserializeClients(QJsonArray & json_array)
+/*void CServer::deserializeClients(QJsonArray & json_array)
 {
     foreach( const QJsonValue & value, json_array)
     {
@@ -1270,7 +1290,23 @@ void CServer::deserializeClients(QJsonArray & json_array)
             addClient(newClient);
         }
     }
-}
+}*/
+
+/*CChannel * CServer::deserializeToChannel(QJsonObject json_obj)
+{
+    CChannel * channel = new CChannel();
+
+    channel->deserialize(json_obj);
+
+    return channel;
+}*/
+
+/*CClient * CServer::deserializeToClient(QJsonObject json_obj)
+{
+    CClient * client = new CClient();
+    client->deserialize(json_obj);
+    return client;
+}*/
 
 // ///////////////////////////////////////////////////////// //
 //     Create an index.json for an empty channel and add     //

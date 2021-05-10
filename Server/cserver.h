@@ -42,13 +42,14 @@ class CServer : public AbstractServer
         //Setters
         void set_database(CDatabase * db);
 
-        int whichClient(QTcpSocket * soc);                                  //Find ID client from socket
+        CClient * whichClient(QTcpSocket * soc);                                  //Find ID client from socket
 
         void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
         void sendToAllExecptClient(QByteArray out, CClient * client);
-        void AddChannel(CChannel* channel);
+
         //Admin
+        void AddChannel(CChannel* channel);
         void AddBannedUser(CClient * client);
         void RemoveBannedUser(CClient* client);
         QList<CClient*> GetBannedUserList();
@@ -56,19 +57,18 @@ class CServer : public AbstractServer
         //Process
         void processIncomingData(CClient *sender, QByteArray data);         //Process incoming data
 
+        //Unused functions, i leave it here for the moment @Valentin
+        /*
         //Serialization | Deserialization
-        QByteArray Serialize();                                             //Serialize client and channels on the same json document
-        void Deserialize(QByteArray in);
+        QByteArray SerializeChannels();
+        QByteArray SerializeClients();
 
-        QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
-
-        void DeserializeChannels(QByteArray in);                            //Deserialize channels from byte array
-        void DeserializeClient(QByteArray in);                              //Deserialize clients from byte array
         void deserializeChannel(QJsonArray & json_array);
         void deserializeClients(QJsonArray & json_array);
 
         CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
-        CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json object
+        CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json objec
+        */
 
         //Messages functions
         bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it
