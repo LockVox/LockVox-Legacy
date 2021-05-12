@@ -173,13 +173,13 @@ void CPacket::Deserialize(){
 CClient * CPacket::Deserialize_newClient()
 {
     try{
-        QString name;
-        QUuid id;
-        bool isOnline;
-        QString description;
-
         if(m_obj.contains("newClient"))
         {
+            QString name;
+            QUuid id;
+            bool isOnline;
+            QString description;
+
             QJsonObject newClient = m_obj.value("newClient").toObject();
             id = QUuid::fromString(newClient.value("uuid").toString());
             name = newClient.value("pseudo").toString();
@@ -208,10 +208,11 @@ CClient * CPacket::Deserialize_newClient()
 
 CChannel * CPacket::Deserialize_newChannel(){
     try{
-        QString name;
-        int id, maxUsers;
+        if(m_obj.contains("newChannel"))
+        {
+            QString name;
+            int id, maxUsers;
 
-        if(m_obj.contains("newChannel")){
             QJsonObject newClient = m_obj.value("newChannel").toObject();
             id = newClient.value("id").toInt();
             name = newClient.value("name").toString();
@@ -231,11 +232,12 @@ CChannel * CPacket::Deserialize_newChannel(){
 
 CClient * CPacket::Deserialize_myClient(){
     try{
-        QString name,description;
-        QUuid id;
-        bool isOnline;
+        if(m_obj.contains("myClient"))
+        {
+            QString name,description;
+            QUuid id;
+            bool isOnline;
 
-        if(m_obj.contains("myClient")){
             QJsonObject myClient = m_obj.value("myClient").toObject();
             id = QUuid::fromString(myClient.value("uuid").toString());
             name = myClient.value("pseudo").toString();
@@ -340,10 +342,11 @@ void CPacket::Serialize_authReq(QString email, QString pass)
 CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide avec erreur en description
 {
     try{
-        int code;
-        QString err;
         if(m_obj.contains("newAuth"))
         {
+            int code;
+            QString err;
+
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             code = newAuth.value("code").toInt();
             switch(code)
@@ -352,7 +355,6 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
                 {
                     CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
                     return tmp;         //On renvoie les infos client
-                    break;
                 }
 
                 case 1:
@@ -360,7 +362,6 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
                     err = newAuth.value("reason").toString();
                     CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
                     return error;
-                    break;
                 }
 
                 case 2:
@@ -368,7 +369,6 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
                     err = newAuth.value("reason").toString();
                     CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
                     return error;
-                    break;
                 }
 
                 case 3:
@@ -376,13 +376,11 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
                     err = newAuth.value("reason").toString();
                     CClient* error = new CClient(NULL, "NULL", NULL, -1, false, err);    //On renvoie l'erreur par la description
                     return error;
-                    break;
                 }
 
                 default:
                 {
                     return NULL;    //bad packet
-                    break;
                 }
             }
         }
@@ -544,13 +542,13 @@ QList<CMessage> CPacket::Deserialize_MessageList()
 {
     QList<CMessage> null;
     null.append(CMessage("null","null","null",true));
-    QList<CMessage> list;
-    int index = 0;
-
     try
     {
         if(m_obj.contains("messagelist"))
         {
+            QList<CMessage> list;
+            int index = 0;
+
             QJsonArray msglist = m_obj.value("messagelist").toArray();
 
             while(!msglist.isEmpty())

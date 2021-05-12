@@ -44,6 +44,7 @@ void CServer::start()
     {
         // If server didn't start properly
         writeToLog(serveur->errorString(), SERVER_ERR);
+        abort();
     }
     else
     {
@@ -53,6 +54,16 @@ void CServer::start()
     }
 
     m_db = new CDatabase();
+    m_db->moveToThread(&db_thread);
+
+    QString err = m_db->init();
+
+    if(err != "success")
+    {
+        writeToLog(err,DB_ERR);
+        abort();
+    }
+
     set_channels(m_db->parseChannel());
     set_clients(m_db->parseClient());
 

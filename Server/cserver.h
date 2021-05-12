@@ -30,7 +30,7 @@ class CChannel;
 class CServer : public AbstractServer
 {
     Q_OBJECT
-
+    QThread db_thread;
     public:
 
         CServer();
@@ -93,11 +93,13 @@ class CServer : public AbstractServer
         QTcpServer *serveur;
 
         //Database
-        CDatabase * m_db;                                                   //Database
+        CDatabase * m_db;                                                //Database
         QList<CClient*> m_banned_users;
+
         QFile log_file;
         QTextStream log;
         int log_level;
+
         QDateTime current;
         CAudio* m_audio;
 
