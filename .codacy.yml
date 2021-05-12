@@ -2,3 +2,9 @@
 engines:
   duplication:
     enabled: false
+exclude_paths:
+  - "libs/**"
+  - "README.md"
+  - "TODO.txt"
+  - "3rdparty licenses/**"
+  - "Others/**"
