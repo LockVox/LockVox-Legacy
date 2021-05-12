@@ -1,5 +1,4 @@
 ---
 engines:
   duplication:
-    exclude_paths:
-      - "*"
+    enabled: false
