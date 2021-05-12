@@ -1,10 +1,11 @@
 ---
-duplication:
-    exclude_paths:
-      - "**"
+engines: 
+    duplication:
+        exclude_paths:
+            - "**"
 exclude_paths:
-  - "libs/**"
-  - "README.md"
-  - "TODO.txt"
-  - "3rdparty licenses/**"
-  - "Others/**"
+    - "libs/**"
+    - "README.md"
+    - "TODO.txt"
+    - "3rdparty licenses/**"
+    - "Others/**"
