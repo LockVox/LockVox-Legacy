@@ -1,6 +1,6 @@
-#include "Server/cserver.h"
-#include "src/includes/cdatabase.h"
-#include "Server/sha256.h"
+#include "Server/includes/cserver.h"
+#include "Server/includes/cdatabase.h"
+#include "Server/includes/sha256.h"
 
 #include <QDebug>
 
@@ -147,24 +147,18 @@ void CServer::onDisconnectClient()
         return;
     }
 
-    //Compare to clients list
-    for( int i = 0 ; i  < get_clientList().size(); i++)
-    {
-        if(get_clientList()[i]->get_socket() == socket)
-        {
-            get_clientList()[i]->set_isOnline(false);
-            get_clientList()[i]->set_isAuthenticate(false);
+    CClient * client = whichClient(socket);
 
-            writeToLog("User [" + get_clientList()[i]->get_uuid().toString() + "(" + get_clientList()[i]->get_pseudo() + ")] disconnected", SERVER);
+    client->set_isOnline(false);
+    client->set_isAuthenticate(false);
 
-            //Say to everyone
-            CPacket request("0","1");
-            request.Serialize_newClient(get_clientList()[i],false);
-            sendToAll(request.GetByteArray());
-        }
-    }
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] disconnected", SERVER);
 
-    //send msg to everybody to say someone disconnect (id client)
+    //Say to everyone
+    CPacket request("0","1");
+    request.Serialize_newClient(client,false);
+    sendToAll(request.GetByteArray());
+    return;
 }
 
 void CServer::onReceiveData(){
@@ -307,7 +301,7 @@ void CServer::sendToAllExecptClient(QByteArray out, CClient *client)
 void CServer::AddChannel(CChannel *channel)
 {
     m_channels.push_back(channel);
-    m_audio->AddSession(*channel);
+    //m_audio->AddSession(*channel);
 }
 
 void CServer::AddBannedUser(CClient * client)

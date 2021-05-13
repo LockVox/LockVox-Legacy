@@ -26,31 +26,28 @@ SOURCES += \
     src/csessioncookie.cpp
 
 HEADERS += \
-    Server/caudio.h \
-    Server/cookiesmanager.h \
-    Server/sha256.h \
-    Server/cserver.h \
-    Server/config.h \
-    src/includes/csessioncookie.h \
-    src/includes/cmessage.h \
     src/includes/AbstractServer.h \
-    src/includes/abstractaudio.h \
+    Server/includes/caudio.h \
+    Server/includes/cookiesmanager.h \
+    Server/includes/sha256.h \
+    Server/includes/cserver.h \
+    Server/config.h \
+    Server/includes/csessioncookie.h \
+    src/includes/cmessage.h \
     src/includes/cchannel.h \
     src/includes/cclient.h \
-    src/includes/cdatabase.h \
-    src/includes/cpacket.h \
+    Server/includes/cdatabase.h \
+    Server/includes/cpacket.h \
     src/includes/cmessage.h \
     src/includes/crole.h \
     Client/includes/messagelist.h
-
 
 FORMS +=
 
 
 INCLUDEPATH += src \
     src/includes \
-    libs/emiplib/include \
-    libs/emiplib/portaudio \
+    Server/includes
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -62,30 +59,3 @@ win32: LIBS += -L$$PWD/libs/libmariadb/win32/ -llibmariadb
 INCLUDEPATH += $$PWD/libs/libmariadb/include \
     $$PWD/libs/libmariadb/win32
 DEPENDPATH += $$PWD/libs/libmariadb/win32
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/
-DEPENDPATH += $$PWD/libs/emiplib/include/
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lemiplib_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/emiplib
-DEPENDPATH += $$PWD/libs/emiplib/include/emiplib
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljrtplib_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jrtplib3
-DEPENDPATH += $$PWD/libs/emiplib/include/jrtplib3
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -ljthread_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/jthread
-DEPENDPATH += $$PWD/libs/emiplib/include/jthread
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/emiplib/lib/ -lportaudio_d
-
-INCLUDEPATH += $$PWD/libs/emiplib/include/portaudio
-DEPENDPATH += $$PWD/libs/emiplib/include/portaudio

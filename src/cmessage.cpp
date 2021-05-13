@@ -1,4 +1,4 @@
-#include "src/includes/cmessage.h"
+#include "cmessage.h"
 
 CMessage::CMessage(QString from, QString to, QString message,bool isPrivate)
 {

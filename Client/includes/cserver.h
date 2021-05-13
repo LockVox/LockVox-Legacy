@@ -15,7 +15,7 @@
 #include "cmessage.h"
 #include "messagelist.h"
 
-#include "Client/cpacket.h"
+#include "Client/includes/cpacket.h"
 #include "uiworker.h"
 
 

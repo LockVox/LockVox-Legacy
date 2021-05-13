@@ -4,8 +4,8 @@
 #include <QUuid>
 
 
-#include "src/includes/cchannel.h"
-#include "src/includes/cclient.h"
+#include "cchannel.h"
+#include "cclient.h"
 
 
 class CClient;

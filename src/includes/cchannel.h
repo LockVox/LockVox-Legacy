@@ -17,7 +17,7 @@
 #include <QUuid>
 
 //Includes
-#include "src/includes/cclient.h"
+#include "cclient.h"
 #include "Client/includes/messagelist.h"
 
 //Class

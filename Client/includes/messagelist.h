@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QModelIndex>
 
-#include "src/includes/cmessage.h"
-#include "Client/messagemodel.h"
+#include "cmessage.h"
+#include "Client/includes/messagemodel.h"
 
 class CMessage;
 

@@ -27,7 +27,7 @@ SOURCES += \
 
 
 HEADERS += \
-        Client/cpacket.h \
+        Client/includes/cpacket.h \
         Client/includes/channellist.h \
         Client/includes/channelmodel.h \
         Client/includes/clientlist.h \
@@ -36,10 +36,10 @@ HEADERS += \
         Client/includes/uiworker.h \
         Client/includes/config.h \
         Client/includes/messagelist.h \
-        Client/messagemodel.h \
+        Client/includes/messagemodel.h \
         Client/includes/caudio.h \
         imageprovider.h \
-        src/includes/abstractserver.h \
+        src/includes/AbstractServer.h \
         src/includes/cchannel.h \
         src/includes/cclient.h  \
         src/includes/cmessage.h \

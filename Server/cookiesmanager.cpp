@@ -1,4 +1,4 @@
-#include "cookiesmanager.h"
+#include "Server/includes/cookiesmanager.h"
 
 CookiesManager::CookiesManager(QList<CClient*> clients)
 {

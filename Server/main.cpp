@@ -4,7 +4,7 @@
 #include <QString>
 
 #include "Server/config.h"
-#include "cserver.h"
+#include "Server/includes/cserver.h"
 #include "winsock.h"
 #pragma comment(lib,"ws2_32.lib")
 

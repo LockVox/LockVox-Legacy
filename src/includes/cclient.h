@@ -22,7 +22,7 @@
 #include <QImage>
 
 //Includes
-#include "src/includes/cchannel.h"
+#include "cchannel.h"
 
 
 
