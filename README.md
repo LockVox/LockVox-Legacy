@@ -38,7 +38,7 @@ The project actually have :
 
 ### TO DO 
 
--  Audio immplementation
+-  [Audio immplementation](https://github.com/hyugzz/LVAudioSession)
 -  Message picture implementation
 -  Emoji message implementation
 
