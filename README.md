@@ -52,7 +52,7 @@ The project actually have :
 ## Authors
 
 -  Valentin MONNOT (monnot@et.esiea.fr)
--  Hugues MATTEI
--  Hugo LAVEAU
+-  Hugues MATTEI 
+-  Hugo LAVEAU (laveau@et.esiea.fr)
 -  Louis BOURGEAIS
 -  François LELIEVRE
