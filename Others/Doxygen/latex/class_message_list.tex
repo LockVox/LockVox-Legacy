@@ -1,0 +1,87 @@
+\hypertarget{class_message_list}{}\doxysection{Message\+List Class Reference}
+\label{class_message_list}\index{MessageList@{MessageList}}
+Inheritance diagram for Message\+List\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_message_list}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_list_a2bef25015bff2215da33fbcfdb4c59c5}\label{class_message_list_a2bef25015bff2215da33fbcfdb4c59c5}} 
+void {\bfseries append\+Item} ()
+\item 
+\mbox{\Hypertarget{class_message_list_a07a49785a3e4de5e09c03f794bdfa9da}\label{class_message_list_a07a49785a3e4de5e09c03f794bdfa9da}} 
+void {\bfseries remove\+Item} (int index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_list_a1b8bd785d6a423537c6c8d86c3fdd29e}\label{class_message_list_a1b8bd785d6a423537c6c8d86c3fdd29e}} 
+void {\bfseries data\+Changed} ()
+\item 
+\mbox{\Hypertarget{class_message_list_ac5091025123795d22b6ae0e135bb4b4d}\label{class_message_list_ac5091025123795d22b6ae0e135bb4b4d}} 
+void {\bfseries pre\+Item\+Appended} ()
+\item 
+\mbox{\Hypertarget{class_message_list_a2c1ee5fc7c68037698bab81e785710f3}\label{class_message_list_a2c1ee5fc7c68037698bab81e785710f3}} 
+void {\bfseries post\+Item\+Appended} ()
+\item 
+\mbox{\Hypertarget{class_message_list_ab2cbc8191269062d73f0d3b3c8e5b191}\label{class_message_list_ab2cbc8191269062d73f0d3b3c8e5b191}} 
+void {\bfseries pre\+Item\+Removed} (int index)
+\item 
+\mbox{\Hypertarget{class_message_list_a630d7862e9c4d061aaf96c95672fcbb1}\label{class_message_list_a630d7862e9c4d061aaf96c95672fcbb1}} 
+void {\bfseries post\+Item\+Removed} ()
+\item 
+\mbox{\Hypertarget{class_message_list_a033ca9538e11f352e272b4ecf1667d34}\label{class_message_list_a033ca9538e11f352e272b4ecf1667d34}} 
+void {\bfseries begin\+Change\+List} ()
+\item 
+\mbox{\Hypertarget{class_message_list_aee06256acff78b0e3e1446a283199476}\label{class_message_list_aee06256acff78b0e3e1446a283199476}} 
+void {\bfseries end\+Change\+List} ()
+\item 
+\mbox{\Hypertarget{class_message_list_a80962608a485187b8d5a140f912731ed}\label{class_message_list_a80962608a485187b8d5a140f912731ed}} 
+void {\bfseries list\+Changed} (\mbox{\hyperlink{class_message_list}{Message\+List}} $\ast$msg\+List)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_list_ad377b8581acccfd16397afe3fad7be82}\label{class_message_list_ad377b8581acccfd16397afe3fad7be82}} 
+{\bfseries Message\+List} (QObject $\ast$parent=nullptr)
+\item 
+\mbox{\Hypertarget{class_message_list_ad66e6020dec2e8c160c749792f2c2457}\label{class_message_list_ad66e6020dec2e8c160c749792f2c2457}} 
+Q\+\_\+\+INVOKABLE QVector$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ {\bfseries get\+\_\+messages} ()
+\item 
+\mbox{\Hypertarget{class_message_list_a42b104d5121462a00ded8b33eb5160d9}\label{class_message_list_a42b104d5121462a00ded8b33eb5160d9}} 
+void {\bfseries set\+\_\+messages} (QVector$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ messages)
+\item 
+\mbox{\Hypertarget{class_message_list_a0f548e1219e561d620edf562e42594e5}\label{class_message_list_a0f548e1219e561d620edf562e42594e5}} 
+void {\bfseries add\+Message} (\mbox{\hyperlink{class_c_message}{CMessage}} client)
+\item 
+\mbox{\Hypertarget{class_message_list_adb3e7707ed259bb8e80fa9c97927ae69}\label{class_message_list_adb3e7707ed259bb8e80fa9c97927ae69}} 
+void {\bfseries remove\+Message} (\mbox{\hyperlink{class_c_message}{CMessage}} client)
+\item 
+\mbox{\Hypertarget{class_message_list_a6c496aa9938b93df390ae884dbcf2253}\label{class_message_list_a6c496aa9938b93df390ae884dbcf2253}} 
+void {\bfseries set\+Item} (\mbox{\hyperlink{class_c_message}{CMessage}} c)
+\item 
+\mbox{\Hypertarget{class_message_list_a3ded18bab293807b76d572db58fc3e8b}\label{class_message_list_a3ded18bab293807b76d572db58fc3e8b}} 
+bool {\bfseries set\+Item\+At} (int index, \mbox{\hyperlink{class_c_message}{CMessage}} item)
+\item 
+\mbox{\Hypertarget{class_message_list_ab26baf809b16945484db0a6d0646f0db}\label{class_message_list_ab26baf809b16945484db0a6d0646f0db}} 
+bool {\bfseries get\+Has\+Been\+Load} () const
+\item 
+\mbox{\Hypertarget{class_message_list_af00f029abf0617af1223803b1413befb}\label{class_message_list_af00f029abf0617af1223803b1413befb}} 
+void {\bfseries set\+Has\+Been\+Load} (bool has\+Been\+Load)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 12 of file messagelist.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Client/includes/messagelist.\+h\item 
+Client/messagelist.\+cpp\end{DoxyCompactItemize}

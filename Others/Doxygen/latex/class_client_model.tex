@@ -1,0 +1,79 @@
+\hypertarget{class_client_model}{}\doxysection{Client\+Model Class Reference}
+\label{class_client_model}\index{ClientModel@{ClientModel}}
+Inheritance diagram for Client\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_client_model}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_model_ae16366ce80aa5bdebce5e4ed4ff8e39e}\label{class_client_model_ae16366ce80aa5bdebce5e4ed4ff8e39e}} 
+enum {\bfseries Model\+Roles} \{ \newline
+{\bfseries Pseudo\+Role} = Qt\+::User\+Role+1
+, {\bfseries is\+Online\+Role}
+, {\bfseries image\+Role}
+, {\bfseries description\+Role}
+, \newline
+{\bfseries uuid\+Role}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_model_aa78929f6af9e78a9e46b2fde40cb3d08}\label{class_client_model_aa78929f6af9e78a9e46b2fde40cb3d08}} 
+void {\bfseries do\+\_\+update} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_model_a154b746b44aa176fc2aba3ae81cb0af4}\label{class_client_model_a154b746b44aa176fc2aba3ae81cb0af4}} 
+{\bfseries Client\+Model} (QObject $\ast$parent=nullptr)
+\item 
+\mbox{\Hypertarget{class_client_model_a1b03f31abd9d091f8fc0f872194b84eb}\label{class_client_model_a1b03f31abd9d091f8fc0f872194b84eb}} 
+int {\bfseries row\+Count} (const QModel\+Index \&parent=QModel\+Index()) const override
+\item 
+\mbox{\Hypertarget{class_client_model_a17d127af44a04d29f454ff39be5095a6}\label{class_client_model_a17d127af44a04d29f454ff39be5095a6}} 
+QVariant {\bfseries data} (const QModel\+Index \&index, int role=Qt\+::\+Display\+Role) const override
+\item 
+\mbox{\Hypertarget{class_client_model_ab614479d5ac107dc2e234fa9b6cb43b7}\label{class_client_model_ab614479d5ac107dc2e234fa9b6cb43b7}} 
+bool {\bfseries set\+Data} (const QModel\+Index \&index, const QVariant \&value, int role=Qt\+::\+Edit\+Role) override
+\item 
+\mbox{\Hypertarget{class_client_model_a45f61f1ed76f63f44e0dd984f5bbfc8f}\label{class_client_model_a45f61f1ed76f63f44e0dd984f5bbfc8f}} 
+Qt\+::\+Item\+Flags {\bfseries flags} (const QModel\+Index \&index) const override
+\item 
+\mbox{\Hypertarget{class_client_model_a16428bf4417a8cda79d15831efd206c8}\label{class_client_model_a16428bf4417a8cda79d15831efd206c8}} 
+bool {\bfseries insert\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_client_model_adda5b75bcda39004f3896b6bf3becb0e}\label{class_client_model_adda5b75bcda39004f3896b6bf3becb0e}} 
+bool {\bfseries remove\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_client_model_a4636518f901db75bde129ef14f8a447b}\label{class_client_model_a4636518f901db75bde129ef14f8a447b}} 
+virtual QHash$<$ int, QByte\+Array $>$ {\bfseries role\+Names} () const override
+\item 
+\mbox{\Hypertarget{class_client_model_afabdd09d26229bbed7f4a268116d9929}\label{class_client_model_afabdd09d26229bbed7f4a268116d9929}} 
+\mbox{\hyperlink{class_client_list}{Client\+List}} $\ast$ {\bfseries get\+Clients\+List} () const
+\item 
+\mbox{\Hypertarget{class_client_model_ae5ccb7d30d1a7bb3ad71edcc5f8d0814}\label{class_client_model_ae5ccb7d30d1a7bb3ad71edcc5f8d0814}} 
+void {\bfseries set\+Clients\+List} (\mbox{\hyperlink{class_client_list}{Client\+List}} $\ast$clients\+List)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_model_a9511cef20056e2a117323fd32cb09fc8}\label{class_client_model_a9511cef20056e2a117323fd32cb09fc8}} 
+\mbox{\hyperlink{class_client_list}{Client\+List}} $\ast$ {\bfseries m\+\_\+clients\+List}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 9 of file clientmodel.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Client/includes/clientmodel.\+h\item 
+Client/clientmodel.\+cpp\end{DoxyCompactItemize}

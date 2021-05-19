@@ -1,0 +1,63 @@
+\hypertarget{class_c_database}{}\doxysection{CDatabase Class Reference}
+\label{class_c_database}\index{CDatabase@{CDatabase}}
+Inheritance diagram for CDatabase\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_database}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_c_database_ae634ed8a9dbf6a42c130bfc7cc9f930d}\label{class_c_database_ae634ed8a9dbf6a42c130bfc7cc9f930d}} 
+QString {\bfseries init} ()
+\item 
+\mbox{\Hypertarget{class_c_database_a777a4a6606221878693bc18c3c6b8e7f}\label{class_c_database_a777a4a6606221878693bc18c3c6b8e7f}} 
+string {\bfseries get\+Hash} (string id, QString $\ast$get\+\_\+err)
+\item 
+\mbox{\Hypertarget{class_c_database_a1242e4e5aa5380b55a095f3c12dc21dc}\label{class_c_database_a1242e4e5aa5380b55a095f3c12dc21dc}} 
+QString {\bfseries new\+User} (string uuid, string pseudo, string mail, string password)
+\item 
+\mbox{\Hypertarget{class_c_database_a64ece2c3aabfbda466b2ec96dd3219fb}\label{class_c_database_a64ece2c3aabfbda466b2ec96dd3219fb}} 
+QString {\bfseries update\+User} (string uuid, string pseudo, string mail, string description)
+\item 
+\mbox{\Hypertarget{class_c_database_a01b11ecd65af11cabe110a3c08bbadfa}\label{class_c_database_a01b11ecd65af11cabe110a3c08bbadfa}} 
+QString {\bfseries update\+Description} (string uuid, string description)
+\item 
+\mbox{\Hypertarget{class_c_database_a34bd419cb3079b1ade08863f1e83cd7c}\label{class_c_database_a34bd419cb3079b1ade08863f1e83cd7c}} 
+QString {\bfseries update\+Username} (string uuid, string username)
+\item 
+\mbox{\Hypertarget{class_c_database_aef71f747b62d4cd4d877ca8be77d9693}\label{class_c_database_aef71f747b62d4cd4d877ca8be77d9693}} 
+QString {\bfseries change\+Password} (string mail, string uuid, string password, string new\+Pass)
+\item 
+\mbox{\Hypertarget{class_c_database_a7364a62e196fa591a25f0247a39ae09a}\label{class_c_database_a7364a62e196fa591a25f0247a39ae09a}} 
+QString {\bfseries update\+Channel} (string id, string name, string maxuser)
+\item 
+\mbox{\Hypertarget{class_c_database_a005ba90ad1e2444b9bcab9b28a15be1f}\label{class_c_database_a005ba90ad1e2444b9bcab9b28a15be1f}} 
+QString {\bfseries delete\+User} (string uuid)
+\item 
+\mbox{\Hypertarget{class_c_database_aa9d1adbcb6c18fa0903272bbd6a628dd}\label{class_c_database_aa9d1adbcb6c18fa0903272bbd6a628dd}} 
+QString {\bfseries delete\+Channel} (string id)
+\item 
+\mbox{\Hypertarget{class_c_database_a78eef5955e27f7ff1953dbb0de04dfd6}\label{class_c_database_a78eef5955e27f7ff1953dbb0de04dfd6}} 
+QList$<$ \mbox{\hyperlink{class_c_channel}{CChannel}} $\ast$ $>$ {\bfseries parse\+Channel} ()
+\item 
+\mbox{\Hypertarget{class_c_database_a4f202ba918b3df4fbdf52f38c5ed9d8b}\label{class_c_database_a4f202ba918b3df4fbdf52f38c5ed9d8b}} 
+QList$<$ \mbox{\hyperlink{class_c_client}{CClient}} $\ast$ $>$ {\bfseries parse\+Client} ()
+\item 
+\mbox{\Hypertarget{class_c_database_a08f78c95d361ae302c8d7b00d757d9bb}\label{class_c_database_a08f78c95d361ae302c8d7b00d757d9bb}} 
+\mbox{\hyperlink{class_c_client}{CClient}} $\ast$ {\bfseries parse\+Client} (string email, QString $\ast$get\+\_\+err)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 18 of file cdatabase.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Server/includes/cdatabase.\+h\item 
+src/cdatabase.\+cpp\end{DoxyCompactItemize}

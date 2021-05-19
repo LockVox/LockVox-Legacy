@@ -1,0 +1,81 @@
+\hypertarget{class_channel_model}{}\doxysection{Channel\+Model Class Reference}
+\label{class_channel_model}\index{ChannelModel@{ChannelModel}}
+Inheritance diagram for Channel\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_channel_model}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_channel_model_a7b1e757d754139678a756c6109d16a14}\label{class_channel_model_a7b1e757d754139678a756c6109d16a14}} 
+enum {\bfseries Model\+Roles} \{ {\bfseries Name\+Role} = Qt\+::User\+Role+1
+, {\bfseries nb\+Users\+Role}
+, {\bfseries max\+Users\+Role}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_channel_model_aa085f2d8aec8490977e326fc0f38d8ee}\label{class_channel_model_aa085f2d8aec8490977e326fc0f38d8ee}} 
+void {\bfseries do\+\_\+update} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_channel_model_a79402c5c3297ada0c3279e15986334b9}\label{class_channel_model_a79402c5c3297ada0c3279e15986334b9}} 
+void {\bfseries current\+Index\+Changed} (int index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_channel_model_a1215980bb97997249f059ea0f7e45b22}\label{class_channel_model_a1215980bb97997249f059ea0f7e45b22}} 
+{\bfseries Channel\+Model} (QObject $\ast$parent=nullptr)
+\item 
+\mbox{\Hypertarget{class_channel_model_abfba25b5f187ba77973751f065653c3f}\label{class_channel_model_abfba25b5f187ba77973751f065653c3f}} 
+int {\bfseries row\+Count} (const QModel\+Index \&parent=QModel\+Index()) const override
+\item 
+\mbox{\Hypertarget{class_channel_model_a00f6b67f0b9b1f65e63783f535b4b7c7}\label{class_channel_model_a00f6b67f0b9b1f65e63783f535b4b7c7}} 
+QVariant {\bfseries data} (const QModel\+Index \&index, int role=Qt\+::\+Display\+Role) const override
+\item 
+\mbox{\Hypertarget{class_channel_model_a95cb18ee31d1fbb014f2d866884a063c}\label{class_channel_model_a95cb18ee31d1fbb014f2d866884a063c}} 
+bool {\bfseries set\+Data} (const QModel\+Index \&index, const QVariant \&value, int role=Qt\+::\+Edit\+Role) override
+\item 
+\mbox{\Hypertarget{class_channel_model_a81dcfea3901854ba24438378e623daf9}\label{class_channel_model_a81dcfea3901854ba24438378e623daf9}} 
+Qt\+::\+Item\+Flags {\bfseries flags} (const QModel\+Index \&index) const override
+\item 
+\mbox{\Hypertarget{class_channel_model_ae6132720a86f48c19e4e8b8dfe3c4d12}\label{class_channel_model_ae6132720a86f48c19e4e8b8dfe3c4d12}} 
+bool {\bfseries insert\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_channel_model_a538e1a17f9cdd714ebf0816c7af89ea1}\label{class_channel_model_a538e1a17f9cdd714ebf0816c7af89ea1}} 
+bool {\bfseries remove\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_channel_model_aeb1e0402057a939d5cf571a02996b53d}\label{class_channel_model_aeb1e0402057a939d5cf571a02996b53d}} 
+virtual QHash$<$ int, QByte\+Array $>$ {\bfseries role\+Names} () const override
+\item 
+\mbox{\Hypertarget{class_channel_model_a25e309e79370d6eb323c8ffd942037e4}\label{class_channel_model_a25e309e79370d6eb323c8ffd942037e4}} 
+\mbox{\hyperlink{class_channel_list}{Channel\+List}} $\ast$ {\bfseries get\+Channels\+List} () const
+\item 
+\mbox{\Hypertarget{class_channel_model_a61382feacd1488170cc8e765793a7d22}\label{class_channel_model_a61382feacd1488170cc8e765793a7d22}} 
+void {\bfseries set\+Channels\+List} (\mbox{\hyperlink{class_channel_list}{Channel\+List}} $\ast$channels\+List)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_channel_model_a8079fd99e0652105b194fa43c6f61e93}\label{class_channel_model_a8079fd99e0652105b194fa43c6f61e93}} 
+\mbox{\hyperlink{class_channel_list}{Channel\+List}} $\ast$ {\bfseries m\+\_\+channels\+List}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 9 of file channelmodel.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Client/includes/channelmodel.\+h\item 
+Client/channelmodel.\+cpp\end{DoxyCompactItemize}

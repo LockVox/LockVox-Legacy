@@ -1,0 +1,82 @@
+\hypertarget{class_message_model}{}\doxysection{Message\+Model Class Reference}
+\label{class_message_model}\index{MessageModel@{MessageModel}}
+Inheritance diagram for Message\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_message_model}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_model_a15478ebb537644eebdbcc4bc96eb9b72}\label{class_message_model_a15478ebb537644eebdbcc4bc96eb9b72}} 
+enum {\bfseries Model\+Roles} \{ \newline
+{\bfseries From\+Role} = Qt\+::User\+Role+1
+, {\bfseries To\+Role}
+, {\bfseries Time\+Role}
+, {\bfseries Date\+Role}
+, \newline
+{\bfseries Message\+Role}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_model_a646ab3eb2a8715206387b8528b4981f2}\label{class_message_model_a646ab3eb2a8715206387b8528b4981f2}} 
+void {\bfseries do\+\_\+update} ()
+\item 
+\mbox{\Hypertarget{class_message_model_ad37702b34f9b54b071a2d3c9c5d4afb6}\label{class_message_model_ad37702b34f9b54b071a2d3c9c5d4afb6}} 
+void {\bfseries on\+List\+Changed} (\mbox{\hyperlink{class_message_list}{Message\+List}} $\ast$msg\+List)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_model_a1503c8cd92eef12ef7364892093daeae}\label{class_message_model_a1503c8cd92eef12ef7364892093daeae}} 
+{\bfseries Message\+Model} (QObject $\ast$parent=nullptr)
+\item 
+\mbox{\Hypertarget{class_message_model_aecc76740f3d54c882e55a1e493f78bee}\label{class_message_model_aecc76740f3d54c882e55a1e493f78bee}} 
+int {\bfseries row\+Count} (const QModel\+Index \&parent=QModel\+Index()) const override
+\item 
+\mbox{\Hypertarget{class_message_model_a8b260e0896da2f648c199429092cc5e9}\label{class_message_model_a8b260e0896da2f648c199429092cc5e9}} 
+QVariant {\bfseries data} (const QModel\+Index \&index, int role=Qt\+::\+Display\+Role) const override
+\item 
+\mbox{\Hypertarget{class_message_model_a92622c65b353f9ee8116f36f5ef49181}\label{class_message_model_a92622c65b353f9ee8116f36f5ef49181}} 
+bool {\bfseries set\+Data} (const QModel\+Index \&index, const QVariant \&value, int role=Qt\+::\+Edit\+Role) override
+\item 
+\mbox{\Hypertarget{class_message_model_a1a2d22567d34a9699f40a15359ff3a07}\label{class_message_model_a1a2d22567d34a9699f40a15359ff3a07}} 
+Qt\+::\+Item\+Flags {\bfseries flags} (const QModel\+Index \&index) const override
+\item 
+\mbox{\Hypertarget{class_message_model_a80f8f41c0f360eeb0daf25624fe45278}\label{class_message_model_a80f8f41c0f360eeb0daf25624fe45278}} 
+bool {\bfseries insert\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_message_model_a9ccfbb93b0e7b658076a570c5ed3a9d8}\label{class_message_model_a9ccfbb93b0e7b658076a570c5ed3a9d8}} 
+bool {\bfseries remove\+Rows} (int row, int count, const QModel\+Index \&parent=QModel\+Index()) override
+\item 
+\mbox{\Hypertarget{class_message_model_a84949cc353b5c4c813b51ab3575245b5}\label{class_message_model_a84949cc353b5c4c813b51ab3575245b5}} 
+virtual QHash$<$ int, QByte\+Array $>$ {\bfseries role\+Names} () const override
+\item 
+\mbox{\Hypertarget{class_message_model_a4e4bf2c79504313db2895ee17da8726a}\label{class_message_model_a4e4bf2c79504313db2895ee17da8726a}} 
+\mbox{\hyperlink{class_message_list}{Message\+List}} $\ast$ {\bfseries get\+Messages\+List} () const
+\item 
+\mbox{\Hypertarget{class_message_model_a5d5fae0b39996a481c9064f143cb6ebd}\label{class_message_model_a5d5fae0b39996a481c9064f143cb6ebd}} 
+void {\bfseries set\+Messages\+List} (\mbox{\hyperlink{class_message_list}{Message\+List}} $\ast$messages\+List)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_message_model_a1fa640e7f14d619638dc1c07a9738b9c}\label{class_message_model_a1fa640e7f14d619638dc1c07a9738b9c}} 
+\mbox{\hyperlink{class_message_list}{Message\+List}} $\ast$ {\bfseries m\+\_\+messages\+List}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 10 of file messagemodel.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Client/includes/messagemodel.\+h\item 
+Client/messagemodel.\+cpp\end{DoxyCompactItemize}
