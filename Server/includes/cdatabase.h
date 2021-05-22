@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class CDatabase : public QObject
+class CDatabase : public QThread
 {
     Q_OBJECT
     public:

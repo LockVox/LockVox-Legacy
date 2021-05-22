@@ -26,7 +26,6 @@ class CChannel;
 class CServer : public AbstractServer
 {
     Q_OBJECT
-    QThread db_thread;
     public:
 
         CServer();

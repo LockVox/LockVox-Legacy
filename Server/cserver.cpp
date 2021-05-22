@@ -54,7 +54,7 @@ void CServer::start()
     }
 
     m_db = new CDatabase();
-    m_db->moveToThread(&db_thread);
+    m_db->start();
 
     QString err = m_db->init();
 
