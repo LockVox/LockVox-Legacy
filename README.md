@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/808bb4b5cc554ac79c0d9cb77c4910d2)](https://www.codacy.com/gh/ValentinGrim/LockVox/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ValentinGrim/LockVox&amp;utm_campaign=Badge_Grade)
-[License](https://img.shields.io/github/license/ValentinGrim/LockVox)
+![License](https://img.shields.io/github/license/ValentinGrim/LockVox)
 # LockVox Project
 
 Lockvox project aims to create a fully encrypted and open source voice and audio exchange system while keeping the GUI as simple and easy to access as possible.
@@ -9,7 +9,7 @@ Lockvox project aims to create a fully encrypted and open source voice and audio
 We are a group of friends and classmate currently in IT engineering school. This project is our annual project as part of our 4th year of university course.
 It's dev using Qt opensource, written in C++.
 
-![Documentation](https://valentingrim.github.io/LockVox/html/index.html)
+[Documentation](https://valentingrim.github.io/LockVox/html/index.html)
 
 ## Current Status
 
