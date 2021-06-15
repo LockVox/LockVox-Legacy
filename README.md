@@ -46,6 +46,7 @@ The project actually have :
 
 ## 3rd-party
 
+-  [Skycoder42/QSslServer](https://github.com/Skycoder42/QSslServer)
 -  [EMIPLIB](https://github.com/j0r1/EMIPLIB)
 -  [MariaDB C & C++ Connector](https://mariadb.com/kb/en/mariadb-connector-c/)
 -  [Zedwood C++ SHA256](http://www.zedwood.com/article/cpp-sha256-function)
