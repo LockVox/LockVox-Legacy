@@ -34,7 +34,7 @@ class CSessionCookie
      * @bug
      * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
      * @remark      Les destructeur non définie ça emepche de compiler !
-     * @copyright   GNU GPL V3.
+     * @copyright   GNU GPL-3.0
      */
 public:
     CSessionCookie();

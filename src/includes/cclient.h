@@ -39,7 +39,7 @@ class CClient
      * @bug
      * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
      * @remark      Une remarque à faire ?
-     * @copyright   GNU Public License.
+     * @copyright   GNU GPL-3.0
      */
 
     public:
