@@ -9,3 +9,4 @@ exclude_paths:
     - "TODO.txt"
     - "3rdparty licenses/**"
     - "Others/**"
+    - "docs/**"
