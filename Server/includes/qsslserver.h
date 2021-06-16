@@ -3,7 +3,7 @@
  * @brief An extension of QTcpServer to support ssl. The counterpart to QSslSocket.
  * @author Skycoder42
  * @link https://github.com/Skycoder42/QSslServer
- * @version 1.1.0 updated by Grim
+ * @version 1.1.0 updated by Valentin Monnot
  * @date 2021
  * @copyright BSD-3-Clause License
  */
@@ -17,6 +17,16 @@
 
 class QSslServer : public QTcpServer
 {
+    /**
+     * @class QSslServer qsslserver.h "qsslserver.h"
+     * @brief An extension of QTcpServer to support ssl. The counterpart to QSslSocket.
+     * @author Skycoder42
+     * @link https://github.com/Skycoder42/QSslServer
+     * @version 1.1.0 updated by Valentin Monnot
+     * @date 2021
+     * @copyright BSD-3-Clause License
+     */
+
     Q_OBJECT
 
     public:

@@ -3,7 +3,7 @@
  * @brief       Declaration of the class CMessage
  * @details     CMessage are simply the messages class so that client can communicate between them...
  * @author      Valentin Monnot (LockVox Team)
- * @version     0.1.0
+ * @version     0.1.1
  * @date        2021
  * @copyright   GNU GPL-3.0
  */
@@ -25,6 +25,20 @@
 class CClient;
 class CMessage
 {
+    /**
+     * @class       CMessage cmessage.h "cmessage.h"
+     * @brief       Declaration of the class CMessage
+     * @details     CMessage are simply the messages class so that client can communicate between them...
+     * @author      Valentin Monnot (LockVox Team)
+     * @version     0.1.1
+     * @date        2021
+     * @note
+     * @bug
+     * @warning
+     * @remark
+     * @copyright   GNU GPL-3.0
+     */
+
     public:
         CMessage(QString from, QString to,QString message,bool isPrivate); //Create message from var
         CMessage(QString from, QString to,QString message, QImage img,bool isPrivate); //Create message with image from var

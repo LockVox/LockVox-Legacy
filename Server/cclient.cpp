@@ -1,5 +1,5 @@
 /**
- * @file cclient.cpp
+ * @file Server/cclient.cpp
  * @brief Definition of class CClient.
  * @author
  * @version
@@ -8,7 +8,6 @@
 
 //Includes
 #include "cclient.h"
-
 
 /**
  * @brief Default constructor of the class CClient.
@@ -31,7 +30,7 @@ CClient::CClient()
  *
  * @see   CClient::CClient()
  */
-CClient::CClient( const CClient & copy)
+CClient::CClient(const CClient & copy)
 { 
     Q_UNUSED(copy);
     /*

@@ -1,9 +1,9 @@
 /**
  * @file        csessioncookie.h
- * @brief       Declaration of the class CSessioncookie
- * @details
+ * @brief       Declaration of the class CSessionCookie
+ * @details     This class represent a cookie session
  * @author      Hugues Mattei (LockVox Team)
- * @version     0.1.2
+ * @version     0.1.1
  * @date        2021
  * @copyright   GNU GPL-3.0
  */
@@ -13,8 +13,6 @@
 
 //QT Includes
 
-
-
 //Includes
 #include "cclient.h"
 
@@ -23,36 +21,35 @@ class CSessionCookie
     /**
      * @class       CSessionCookie csessioncookie.h "csessioncookie.h"
      * @brief       Declaration of the class CSessionCookie
-     * @details     This class represent a session cookie
-     * @author
-     * @version     0.1
-     * @date        2020
+     * @details     This class represent a cookie session
+     * @author      Hugues Mattei (LockVox Team)
+     * @version     0.1.1
+     * @date        2021
      * @note
      * @bug
      * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
      * @remark      Les destructeur non définie ça emepche de compiler !
      * @copyright   GNU GPL-3.0
      */
-public:
-    CSessionCookie();
-    CSessionCookie(CClient * c);
 
-    //~CSessionCookie();
+    public:
+        CSessionCookie();
+        CSessionCookie(CClient * c);
 
-    //Getters
-    QString getCookie() const;
+        //~CSessionCookie();
 
-    //Setters
-    void setCookie(const QString &cookie);
+        //Getters
+        QString getCookie() const;
 
-    QString HighRandomStringGenerator();
+        //Setters
+        void setCookie(const QString &cookie);
 
-    void clearCookie();
+        QString HighRandomStringGenerator();
 
-private:
-    QString m_cookie;
+        void clearCookie();
 
-
+    private:
+        QString m_cookie;
 };
 
 #endif // CSESSIONCOOKIE_H

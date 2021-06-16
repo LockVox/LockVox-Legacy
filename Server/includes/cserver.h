@@ -1,7 +1,7 @@
 /**
- * @file        cclient.h
+ * @file        cserver.h
  * @brief       Declaration of the class CServer
- * @details     Here is the main process of a LockVox server
+ * @details     This class the main class of LockVox server
  * @author      LockVox Team
  * @version     0.2.0
  * @date        2021
@@ -27,6 +27,20 @@ class CDatabase;
 
 class CServer : public AbstractServer
 {
+    /**
+     * @class       CServer cserver.h "cserver.h"
+     * @brief       Declaration of the class CServer
+     * @details     Here is the main process of a LockVox server
+     * @author      LockVox Team
+     * @version     0.2.0
+     * @date        2021
+     * @note
+     * @bug
+     * @warning
+     * @remark
+     * @copyright   GNU GPL-3.0
+     */
+
     Q_OBJECT
     public:
 

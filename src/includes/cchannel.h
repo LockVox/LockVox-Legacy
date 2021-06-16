@@ -8,7 +8,6 @@
  * @copyright   GNU GPL-3.0
  */
 
-
 #ifndef CCHANNEL_H
 #define CCHANNEL_H
 
@@ -32,13 +31,13 @@ class CChannel
      * @class       CChannel cchannel.h "cchannel.h"
      * @brief       Declaration of the class CChannel
      * @details     This class represent a channel
-     * @author
-     * @version     0.1
-     * @date        2020
+     * @author      LockVox Team
+     * @version     0.1.1
+     * @date        2021
      * @note
      * @bug
-     * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
-     * @remark      Une remarque à faire ?
+     * @warning
+     * @remark
      * @copyright   GNU GPL-3.0
      */
 

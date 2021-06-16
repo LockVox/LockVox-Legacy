@@ -1,8 +1,8 @@
 /**
  * @file        cdatabase.h
  * @brief       Declaration of the class CDatabase
- * @details     This class represente the main database (MySQL/MariaDB) and its function
- * @author      LockVox Team
+ * @details     This class represent an user
+ * @author      Valentin Monnot (LockVox Team)
  * @version     0.2.0
  * @date        2021
  * @copyright   GNU GPL-3.0
@@ -29,6 +29,20 @@ class CChannel;
 
 class CDatabase : public QThread
 {
+    /**
+     * @class       CDatabase cdatabase.h "cdatabase.h"
+     * @brief       SQL Database Class
+     * @details     This class represente the main database (MySQL/MariaDB) and its function using mariadb connector lib
+     * @author      Valentin Monnot (LockVox Team)
+     * @version     0.2.0
+     * @date        2021
+     * @note
+     * @bug
+     * @warning
+     * @remark
+     * @copyright   GNU GPL-3.0
+     */
+
     Q_OBJECT
     public:
         CDatabase();           // Constructor

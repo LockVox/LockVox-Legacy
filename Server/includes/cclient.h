@@ -1,13 +1,12 @@
 /**
- * @file        cclient.h
+ * @file        Server/cclient.h
  * @brief       Declaration of the class CClient
- * @details     This class represent an user server side (Threaded)
+ * @details     This class represent an user
  * @author      LockVox Team
- * @version     0.2.0
+ * @version     0.1.1
  * @date        2021
  * @copyright   GNU GPL-3.0
  */
-
 
 #ifndef CCLIENT_H
 #define CCLIENT_H
@@ -40,13 +39,13 @@ class CClient : public QThread
      * @class       CClient cclient.h "cclient.h"
      * @brief       Declaration of the class CClient
      * @details     This class represent an user
-     * @author
-     * @version     0.1
-     * @date        2020
+     * @author      LockVox Team
+     * @version     0.2.0
+     * @date        2021
      * @note
      * @bug
-     * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)
-     * @remark      Une remarque à faire ?
+     * @warning
+     * @remark
      * @copyright   GNU GPL-3.0
      */
     Q_OBJECT

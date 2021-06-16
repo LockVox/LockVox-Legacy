@@ -3,7 +3,7 @@
  * @brief       Declaration of the class AbstractServer
  * @details     This class represent the virtual class of CServer
  * @author      LockVox Team
- * @version     0.1.1
+ * @version     0.2.0
  * @date        2021
  * @copyright   GNU GPL-3.0
  */
@@ -23,6 +23,19 @@ class CChannel;
 
 class AbstractServer : public QObject
 {
+    /**
+     * @class       AbstractServer AbstractServer.h "AbastractServer.h"
+     * @brief       Declaration of the class AbstractServer
+     * @details     This class represent the virtual class of CServer
+     * @author      LockVox Team
+     * @version     0.2.0
+     * @date        2021
+     * @note
+     * @bug
+     * @warning
+     * @remark
+     * @copyright   GNU GPL-3.0
+     */
     Q_OBJECT
     public:
         //Constructor

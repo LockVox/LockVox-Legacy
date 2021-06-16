@@ -1,7 +1,7 @@
 /**
  * @file        cpacket.h
- * @brief       Declaration of the class CPacket
- * @details     CPacket are used to discuss between client and server
+ * @brief       Declaration of the class Server CPacket
+ * @details     This class used for LockVox protocol
  * @author      LockVox Team
  * @version     0.1.1
  * @date        2021
@@ -24,6 +24,20 @@ class CChannel;
 
 class CPacket
 {
+    /**
+     * @class       CPacket cpacket.h "cpacket.h"
+     * @brief       Declaration of the class Server CPacket
+     * @details     CPacket are used to discuss between client and server
+     * @author      LockVox Team
+     * @version     0.1.1
+     * @date        2021
+     * @note
+     * @bug
+     * @warning
+     * @remark
+     * @copyright   GNU GPL-3.0
+     */
+
     public:
         CPacket();
         CPacket(QByteArray data, CClient * client);
