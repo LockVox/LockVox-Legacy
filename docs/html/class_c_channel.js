@@ -1,0 +1,27 @@
+var class_c_channel =
+[
+    [ "CChannel", "class_c_channel.html#af535b67058ecff456eafa43406b46198", null ],
+    [ "CChannel", "class_c_channel.html#a4e023e88d035ab732c446df07510128c", null ],
+    [ "CChannel", "class_c_channel.html#a4490935e6d33c9a943070b7eec103a8b", null ],
+    [ "CChannel", "class_c_channel.html#a22162ea6d3ab4a76b32bd0e4dd83bd70", null ],
+    [ "CChannel", "class_c_channel.html#a4ffe622165910ab9a748888742e3d31d", null ],
+    [ "~CChannel", "class_c_channel.html#a28de30ec727b766834c5a51b66b4846d", null ],
+    [ "addUser", "class_c_channel.html#a7b8e130304b4ef69b5b58a883e0d029a", null ],
+    [ "delUser", "class_c_channel.html#a28349123233fee561d256adcd1947fba", null ],
+    [ "deserialize", "class_c_channel.html#aff78e9e56c2c5049c7d9d47da8a6c37c", null ],
+    [ "get_clients", "class_c_channel.html#ac3ad7408fdbe3595140b8ec50519c026", null ],
+    [ "get_id", "class_c_channel.html#abdd059673b7d4cc730c4afd1ba066970", null ],
+    [ "get_maxUsers", "class_c_channel.html#aea44874ed5f814046977441809a1b011", null ],
+    [ "get_name", "class_c_channel.html#a405e0496fc2ae8e6d2a59c89fc95c4d0", null ],
+    [ "get_nbClients", "class_c_channel.html#ae1e5dfbc0ca7e6e9432a042674224927", null ],
+    [ "get_this", "class_c_channel.html#a8c46d0cb36b8afd5c7be0eda888a68ed", null ],
+    [ "getMessagesLists", "class_c_channel.html#a75ce31d8869252257677b66915b8384d", null ],
+    [ "serializeToObj", "class_c_channel.html#ad60eafd63035c3173ff8dd9e419d3419", null ],
+    [ "set_all", "class_c_channel.html#ac27c85d2303a05dac787a19f2d0fd596", null ],
+    [ "set_clients", "class_c_channel.html#a55070e2e95701cbefb7d70f36612618a", null ],
+    [ "set_id", "class_c_channel.html#a78c690574b2ac264b118650d529109ca", null ],
+    [ "set_maxUsers", "class_c_channel.html#a87a495631804269c28e6653e17ae437e", null ],
+    [ "set_name", "class_c_channel.html#aacfda09db4f9f07fb2ab8aebe01c1f33", null ],
+    [ "set_nbClients", "class_c_channel.html#a3c0d0740401d4ec95d779327d565edfe", null ],
+    [ "setMessagesLists", "class_c_channel.html#a1847e544479960a279ed47d9e4ac3a79", null ]
+];

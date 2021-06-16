@@ -22,7 +22,7 @@
 class CookiesManager
 {
     /**
-     * @class       CSessionCookie csessioncookie.h "csessioncookie.h"
+     * @class       CookiesManager mookiesmanager.h "cookiesmanager.h"
      * @brief       Declaration of the class CookiesManager
      * @details     This class is used to manage users session cookie
      * @author      Hugues Mattei (LockVox Team)

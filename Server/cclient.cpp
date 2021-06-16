@@ -330,7 +330,7 @@ void CClient::set_all(CClient *c){
 
 /**
  * @brief Serialize attributes of an user into a JSON object.
- * @param[out]      obj  the JSON object which contains the attribute of the user.
+ * @return      obj  the JSON object which contains the attribute of the user.
  */
 QJsonObject CClient::serializeToObj(){
     QJsonObject obj;
@@ -356,6 +356,10 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_description(json_obj["description"].toString());
 }
 
+/**
+ * @brief This is a slot you call with a signal from another class to send data to the client using its TCP socket
+ * @param[in] out  The QbyteArray object to send to the client.
+ */
 void CClient::sendToClient(QByteArray out)
 {
     if(m_soc != NULL && m_soc->isOpen())
@@ -365,6 +369,9 @@ void CClient::sendToClient(QByteArray out)
     }
 }
 
+/**
+ * @brief This slot is called when client TCP socket send signal "readyRead", it pre process the data received and call function processData
+ */
 void CClient::onReceiveData()
 {
   //Get data
@@ -451,6 +458,10 @@ void CClient::onReceiveData()
   }
 }
 
+/**
+ * @brief This function is called by onReceiveData to process received data in order to manage cases defined by the application protocol
+ * @param[in] data  The QByteArray object received from the TCP socket
+ */
 void CClient::processData(QByteArray data) //Process received data
 {
 
@@ -1094,14 +1105,12 @@ void CClient::processData(QByteArray data) //Process received data
       return;
 }
 
-// ///////////////////////////////////////////////////////// //
-//     Create an index.json for an empty channel and add     //
-//               the first message of it                     //
-//         filename should be the exacte file name           //
-//                  of the message file                      //
-//         path_to_index should be something like :          //
-//         storage/[public|private]/[id]/index.json          //
-// ///////////////////////////////////////////////////////// //
+/**
+ * @brief Create an index.json for an empty channel and add the first message of it
+ * @param[in] filename should be the exacte file name of the message file
+ * @param[in] path_to_index should be something like : "storage/[public|private]/[id]/index.json"
+ * @return true if channel index has been created successfully, otherwise false
+ */
 bool CClient::createChannelIndex(string filename, QString path_to_index)
 {
    QFile index(path_to_index);
@@ -1129,12 +1138,12 @@ bool CClient::createChannelIndex(string filename, QString path_to_index)
    return true;
 }
 
-// ///////////////////////////////////////////////////////// //
-//      returns the list of names of all messages files      //
-//             contained in the given index                  //
-//         path_to_index should be something like :          //
-//         storage/[public|private]/[id]/index.json          //
-// ///////////////////////////////////////////////////////// //
+/**
+ * @brief returns the list of names of all messages files contained in the given index
+ * @param[in] path_to_index should be something like : "storage/[public|private]/[id]/index.json"
+ * @return A list of message filename
+ * @retval A QList of QString countaining all message filename in the given index. Return an empty QList if no index or empty index was found
+ */
 QList<QString> CClient::readChannelIndex(QString path_to_index)
 {
    QFile indexJson(path_to_index);
@@ -1181,14 +1190,12 @@ QList<QString> CClient::readChannelIndex(QString path_to_index)
    }
 }
 
-// ///////////////////////////////////////////////////////// //
-//     Update index.json when inserting new message to it    //
-//         path_to_index should be something like :          //
-//         storage/[public|private]/[id]/index.json          //
-//    filename_list is the list of all filename of message   //
-// stored into for the given channel, can be exctracted with //
-//                     the above function                    //
-// ///////////////////////////////////////////////////////// //
+/**
+ * @brief Update index.json when inserting new message to it
+ * @param[in] path_to_index should be something like : "storage/[public|private]/[id]/index.json"
+ * @param[in] filename_list is the list of all filename of message stored into for the given channel, can be exctracted with readChannelIndex
+ * @return true if the function had successfully updated the index, otherwise false
+ */
 bool CClient::insertChannelIndex(QString path_to_index, QList<QString> filename_list)
 {
    QFile indexJson(path_to_index);
@@ -1223,17 +1230,16 @@ bool CClient::insertChannelIndex(QString path_to_index, QList<QString> filename_
    return true;
 }
 
-// ///////////////////////////////////////////////////////// //
-// Create a QList of CMessage stored localy using index.json //
-//      id refers to id of channel or user for storage       //
-//     isPrivate tells if it's a private message or not      //
-//  nb_msg_to_sync to tell how much message you want to sync //
-//               should be -1 to retrieve all                //
-//             sender refere tu uuid of sender,              //
-//              used to gather private message               //
-//        start_index is used to retrieve older message      //
-//       should be 0 if no message has already been sync     //
-// ///////////////////////////////////////////////////////// //
+/**
+ * @brief Create a QList of CMessage stored localy using index.json
+ * @param[in] id  refers to id of channel or user for storage
+ * @param[in] isPrivate  tells if it's a private message or not
+ * @param[in] nb_msg_to_sync  to tell how much message you want to sync should be -1 to retrieve all
+ * @param[in] sender  refere tu uuid of sender, used to gather private message
+ * @param start_index  is used to retrieve older message, should be 0 if no message has already been sync
+ * @return A list of message
+ * @retval A Qlist of CMessage countaining all message selected according to given information, if an error has occured, return the error has name of the sender (field "from") in the first message of the QList
+ */
 QList<CMessage> CClient::createMessageList(QString id, bool isPrivate, int nb_msg_to_sync, QUuid sender, int start_index)
 {
    QString default_path, path;

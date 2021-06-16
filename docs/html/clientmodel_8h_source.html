@@ -5,10 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LockVox: Client/includes/clientmodel.h Source File</title>
+<title>LockVox: C:/Users/Grim/Documents/GitHub/LockVox/Client/includes/clientmodel.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,10 +24,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LockVox
-   &#160;<span id="projectnumber">0.1</span>
+   &#160;<span id="projectnumber">alpha-0.1.1</span>
    </div>
+   <div id="projectbrief">Lockvox project aims to create a fully encrypted and open source voice and audio exchange system while keeping the GUI as simple and easy to access as possible.</div>
   </td>
  </tr>
  </tbody>
@@ -46,6 +52,23 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('clientmodel_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +83,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_922c588100a187620fdc1533bc178f73.html">Client</a></li><li class="navelem"><a class="el" href="dir_2b6b393a2faf74a67ed448c4cffa5cc5.html">includes</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">clientmodel.h</div>  </div>
@@ -74,7 +92,7 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define CLIENTMODEL_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QAbstractListModel&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="cclient_8h.html">src/includes/cclient.h</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_client_2includes_2cclient_8h.html">Client/includes/cclient.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span><a class="code" href="class_client_list.html">ClientList</a>;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
@@ -138,13 +156,17 @@ $(function() {
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// CLIENTMODEL_H</span></div>
-<div class="ttc" id="acclient_8h_html"><div class="ttname"><a href="cclient_8h.html">cclient.h</a></div><div class="ttdoc">Declaration of the class CookiesManager.</div></div>
-<div class="ttc" id="aclass_client_list_html"><div class="ttname"><a href="class_client_list.html">ClientList</a></div><div class="ttdef"><b>Definition:</b> <a href="clientlist_8h_source.html#l00013">clientlist.h:14</a></div></div>
-<div class="ttc" id="aclass_client_model_html"><div class="ttname"><a href="class_client_model.html">ClientModel</a></div><div class="ttdef"><b>Definition:</b> <a href="clientmodel_8h_source.html#l00009">clientmodel.h:10</a></div></div>
+<div class="ttc" id="a_client_2includes_2cclient_8h_html"><div class="ttname"><a href="_client_2includes_2cclient_8h.html">cclient.h</a></div><div class="ttdoc">Declaration of the class CClient.</div></div>
+<div class="ttc" id="aclass_client_list_html"><div class="ttname"><a href="class_client_list.html">ClientList</a></div><div class="ttdef"><b>Definition:</b> clientlist.h:14</div></div>
+<div class="ttc" id="aclass_client_model_html"><div class="ttname"><a href="class_client_model.html">ClientModel</a></div><div class="ttdef"><b>Definition:</b> clientmodel.h:10</div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_1db139f4197993aa3017f474e3b596e4.html">LockVox</a></li><li class="navelem"><a class="el" href="dir_4b9526b5aaab21d5c1e7cb8a1fe614a1.html">Client</a></li><li class="navelem"><a class="el" href="dir_ef856846a8482887c0ea4051f22b6891.html">includes</a></li><li class="navelem"><b>clientmodel.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -1,0 +1,96 @@
+\hypertarget{sha256_8h}{}\doxysection{C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Server/includes/sha256.h File Reference}
+\label{sha256_8h}\index{C:/Users/Grim/Documents/GitHub/LockVox/Server/includes/sha256.h@{C:/Users/Grim/Documents/GitHub/LockVox/Server/includes/sha256.h}}
+
+
+sha256 C implementation  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_s_h_a256}{SHA256}}
+\begin{DoxyCompactList}\small\item\em sha256 C implementation \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sha256_8h_a0a0e7e0d135e9feff1da2e46fa556d50}\label{sha256_8h_a0a0e7e0d135e9feff1da2e46fa556d50}} 
+\#define {\bfseries SHA2\+\_\+\+SHFR}(x,  n)~(x $>$$>$ n)
+\item 
+\mbox{\Hypertarget{sha256_8h_a9509f7c1f927cb12f98d9995ae2f92d3}\label{sha256_8h_a9509f7c1f927cb12f98d9995ae2f92d3}} 
+\#define {\bfseries SHA2\+\_\+\+ROTR}(x,  n)~((x $>$$>$ n) $\vert$ (x $<$$<$ ((sizeof(x) $<$$<$ 3) -\/ n)))
+\item 
+\mbox{\Hypertarget{sha256_8h_a0fcefdff5f2609b2c5eb1d0f99214199}\label{sha256_8h_a0fcefdff5f2609b2c5eb1d0f99214199}} 
+\#define {\bfseries SHA2\+\_\+\+ROTL}(x,  n)~((x $<$$<$ n) $\vert$ (x $>$$>$ ((sizeof(x) $<$$<$ 3) -\/ n)))
+\item 
+\mbox{\Hypertarget{sha256_8h_a1d4a72c3cb3d85b0c82736081042c1a4}\label{sha256_8h_a1d4a72c3cb3d85b0c82736081042c1a4}} 
+\#define {\bfseries SHA2\+\_\+\+CH}(x,  y,  z)~((x \& y) $^\wedge$ ($\sim$x \& z))
+\item 
+\mbox{\Hypertarget{sha256_8h_ae9222f6c22449097806fb1dac2a58107}\label{sha256_8h_ae9222f6c22449097806fb1dac2a58107}} 
+\#define {\bfseries SHA2\+\_\+\+MAJ}(x,  y,  z)~((x \& y) $^\wedge$ (x \& z) $^\wedge$ (y \& z))
+\item 
+\mbox{\Hypertarget{sha256_8h_a0ae1b70e2104958a43d1d8f32cb79eb6}\label{sha256_8h_a0ae1b70e2104958a43d1d8f32cb79eb6}} 
+\#define {\bfseries SHA256\+\_\+\+F1}(x)~(SHA2\+\_\+\+ROTR(x,  2) $^\wedge$ SHA2\+\_\+\+ROTR(x, 13) $^\wedge$ SHA2\+\_\+\+ROTR(x, 22))
+\item 
+\mbox{\Hypertarget{sha256_8h_afc002a02aab7533fb0bfe557a25266e1}\label{sha256_8h_afc002a02aab7533fb0bfe557a25266e1}} 
+\#define {\bfseries SHA256\+\_\+\+F2}(x)~(SHA2\+\_\+\+ROTR(x,  6) $^\wedge$ SHA2\+\_\+\+ROTR(x, 11) $^\wedge$ SHA2\+\_\+\+ROTR(x, 25))
+\item 
+\mbox{\Hypertarget{sha256_8h_a9435ee6ad07985796b91077d13eaf7a0}\label{sha256_8h_a9435ee6ad07985796b91077d13eaf7a0}} 
+\#define {\bfseries SHA256\+\_\+\+F3}(x)~(SHA2\+\_\+\+ROTR(x,  7) $^\wedge$ SHA2\+\_\+\+ROTR(x, 18) $^\wedge$ SHA2\+\_\+\+SHFR(x,  3))
+\item 
+\mbox{\Hypertarget{sha256_8h_afc7152c6ff0146084db95994f2852b56}\label{sha256_8h_afc7152c6ff0146084db95994f2852b56}} 
+\#define {\bfseries SHA256\+\_\+\+F4}(x)~(SHA2\+\_\+\+ROTR(x, 17) $^\wedge$ SHA2\+\_\+\+ROTR(x, 19) $^\wedge$ SHA2\+\_\+\+SHFR(x, 10))
+\item 
+\#define {\bfseries SHA2\+\_\+\+UNPACK32}(x,  str)
+\item 
+\#define {\bfseries SHA2\+\_\+\+PACK32}(str,  x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sha256_8h_a53697cb2d3701568ca4241e5f8d36acd}\label{sha256_8h_a53697cb2d3701568ca4241e5f8d36acd}} 
+std\+::string {\bfseries sha256} (std\+::string input)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+sha256 C implementation 
+
+\begin{DoxyAuthor}{Author}
+Oliver Gay \mbox{\hyperlink{}{updated to C++ by Zedwood  2012  BSD }}
+\end{DoxyAuthor}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{sha256_8h_a7275957ed17d7fe14f0ab6e32c18f9b7}\label{sha256_8h_a7275957ed17d7fe14f0ab6e32c18f9b7}} 
+\index{sha256.h@{sha256.h}!SHA2\_PACK32@{SHA2\_PACK32}}
+\index{SHA2\_PACK32@{SHA2\_PACK32}!sha256.h@{sha256.h}}
+\doxysubsubsection{\texorpdfstring{SHA2\_PACK32}{SHA2\_PACK32}}
+{\footnotesize\ttfamily \#define SHA2\+\_\+\+PACK32(\begin{DoxyParamCaption}\item[{}]{str,  }\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{                                             \(\backslash\)}
+\DoxyCodeLine{    *(x) =   ((uint32) *((str) + 3)      )    \(\backslash\)}
+\DoxyCodeLine{           | ((uint32) *((str) + 2) <<  8)    \(\backslash\)}
+\DoxyCodeLine{           | ((uint32) *((str) + 1) << 16)    \(\backslash\)}
+\DoxyCodeLine{           | ((uint32) *((str) + 0) << 24);   \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{sha256_8h_a2dc032adc83afe8e265a7941ef11f258}\label{sha256_8h_a2dc032adc83afe8e265a7941ef11f258}} 
+\index{sha256.h@{sha256.h}!SHA2\_UNPACK32@{SHA2\_UNPACK32}}
+\index{SHA2\_UNPACK32@{SHA2\_UNPACK32}!sha256.h@{sha256.h}}
+\doxysubsubsection{\texorpdfstring{SHA2\_UNPACK32}{SHA2\_UNPACK32}}
+{\footnotesize\ttfamily \#define SHA2\+\_\+\+UNPACK32(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{str }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{                                             \(\backslash\)}
+\DoxyCodeLine{    *((str) + 3) = (uint8) ((x)      );       \(\backslash\)}
+\DoxyCodeLine{    *((str) + 2) = (uint8) ((x) >>  8);       \(\backslash\)}
+\DoxyCodeLine{    *((str) + 1) = (uint8) ((x) >> 16);       \(\backslash\)}
+\DoxyCodeLine{    *((str) + 0) = (uint8) ((x) >> 24);       \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

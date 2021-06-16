@@ -5,6 +5,39 @@
 Declaration of the class \mbox{\hyperlink{class_c_client}{CClient}}.  
 
 
+Inheritance diagram for CClient\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_client}
+\end{center}
+\end{figure}
+\doxysubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_c_client_abc210c0496c4e8455b0d3a99f42cc923}\label{class_c_client_abc210c0496c4e8455b0d3a99f42cc923}} 
+void {\bfseries write\+To\+Log} (QString error, int level)
+\item 
+\mbox{\Hypertarget{class_c_client_aa0e1e27fc0c1aedb562b2bd9c5d60450}\label{class_c_client_aa0e1e27fc0c1aedb562b2bd9c5d60450}} 
+void {\bfseries send\+You} (QTcp\+Socket $\ast$socket)
+\item 
+\mbox{\Hypertarget{class_c_client_a029bcb26dd36b94ccf02f680408c040f}\label{class_c_client_a029bcb26dd36b94ccf02f680408c040f}} 
+void {\bfseries update\+Me} (int update\+\_\+type, \mbox{\hyperlink{class_c_client}{CClient}} $\ast$client)
+\item 
+\mbox{\Hypertarget{class_c_client_a7bb5921b66aaf0cac680a424e91b6418}\label{class_c_client_a7bb5921b66aaf0cac680a424e91b6418}} 
+void {\bfseries update\+Chan} (int update\+\_\+type, \mbox{\hyperlink{class_c_channel}{CChannel}} $\ast$channel)
+\item 
+\mbox{\Hypertarget{class_c_client_ade5df332f0fe7af8c70ba83353049380}\label{class_c_client_ade5df332f0fe7af8c70ba83353049380}} 
+void {\bfseries auth\+Me} (QList$<$ QString $>$ info, \mbox{\hyperlink{class_c_client}{CClient}} $\ast$client)
+\item 
+\mbox{\Hypertarget{class_c_client_aace3723ff4bdeb13da41f2d441a6f576}\label{class_c_client_aace3723ff4bdeb13da41f2d441a6f576}} 
+void {\bfseries reg\+Me} (QList$<$ QString $>$ info, \mbox{\hyperlink{class_c_client}{CClient}} $\ast$Client)
+\item 
+\mbox{\Hypertarget{class_c_client_a53ff81d30e666083e6c6494d69958e3a}\label{class_c_client_a53ff81d30e666083e6c6494d69958e3a}} 
+\mbox{\hyperlink{class_c_channel}{CChannel}} $\ast$ {\bfseries which\+Chan} (int id)
+\item 
+\mbox{\Hypertarget{class_c_client_ae1e77dfd4480a244718147175850f687}\label{class_c_client_ae1e77dfd4480a244718147175850f687}} 
+void {\bfseries send\+To\+All} (QByte\+Array out)
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -59,7 +92,89 @@ void \mbox{\hyperlink{class_c_client_af7c6ea324d615750b942f6ffc5a043ab}{set\+\_\
 QJson\+Object \mbox{\hyperlink{class_c_client_a8ad7da633a5f0b7f774e5e92371e890e}{serialize\+To\+Obj}} ()
 \begin{DoxyCompactList}\small\item\em Serialize attributes of an user into a JSON object. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_c_client_a816c9eb03a6bc4376b5e8b218266de0e}{deserialize}} (QJson\+Object json\+\_\+obj)
-\begin{DoxyCompactList}\small\item\em Deserialize a JSON object into the current instance of \mbox{\hyperlink{class_c_client}{CClient}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Deserialize a JSON object into the current instance of \mbox{\hyperlink{class_c_client}{CClient}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_c_client_a0d27bb198fe0d83b12794fbfb41cdb5c}\label{class_c_client_a0d27bb198fe0d83b12794fbfb41cdb5c}} 
+{\bfseries CClient} (const \mbox{\hyperlink{class_c_client}{CClient}} \&copy)
+\item 
+\mbox{\Hypertarget{class_c_client_a6f6434bd8ff1bddb45a46f9777439c96}\label{class_c_client_a6f6434bd8ff1bddb45a46f9777439c96}} 
+{\bfseries CClient} (QUuid id, QString name, QTcp\+Socket $\ast$soc, int id\+Channel, bool online, QString description)
+\item 
+\mbox{\Hypertarget{class_c_client_abad7743cffbc70db9c3c7f7c371a67de}\label{class_c_client_abad7743cffbc70db9c3c7f7c371a67de}} 
+{\bfseries CClient} (QTcp\+Socket $\ast$soc)
+\item 
+\mbox{\Hypertarget{class_c_client_a22076e0a55eb5c5c7611e959b7f3cae2}\label{class_c_client_a22076e0a55eb5c5c7611e959b7f3cae2}} 
+QString {\bfseries get\+\_\+pseudo} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a1fab8bdc3fc63281c662111cf5ffaed7}\label{class_c_client_a1fab8bdc3fc63281c662111cf5ffaed7}} 
+QString {\bfseries get\+\_\+mail} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a6b50095de9c902e4b87af34d5f2cc415}\label{class_c_client_a6b50095de9c902e4b87af34d5f2cc415}} 
+QString {\bfseries get\+\_\+description} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a5b71a6432e901c9d5b8545f2244bda31}\label{class_c_client_a5b71a6432e901c9d5b8545f2244bda31}} 
+QTcp\+Socket $\ast$ {\bfseries get\+\_\+socket} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a32005fb0f5fa81cac9563bab216cac9c}\label{class_c_client_a32005fb0f5fa81cac9563bab216cac9c}} 
+int {\bfseries get\+\_\+id\+Channel} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a49ebe8e9bf0d2e5e5bf5466f94eb0257}\label{class_c_client_a49ebe8e9bf0d2e5e5bf5466f94eb0257}} 
+bool {\bfseries get\+\_\+is\+Online} ()
+\item 
+\mbox{\Hypertarget{class_c_client_afcc66b178fb49778063ea48468af7950}\label{class_c_client_afcc66b178fb49778063ea48468af7950}} 
+bool {\bfseries get\+\_\+is\+Authenticate} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a6bf1091a09e1eed1ed103a5d90721c52}\label{class_c_client_a6bf1091a09e1eed1ed103a5d90721c52}} 
+QUuid {\bfseries get\+\_\+uuid} ()
+\item 
+\mbox{\Hypertarget{class_c_client_aa7e8a6bca0fa911cf2431da21fc19296}\label{class_c_client_aa7e8a6bca0fa911cf2431da21fc19296}} 
+QImage {\bfseries get\+\_\+profile\+Pic} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a8e73a30052fa116a463c7a51d1afbfdb}\label{class_c_client_a8e73a30052fa116a463c7a51d1afbfdb}} 
+void {\bfseries set\+\_\+pseudo} (QString pseudo)
+\item 
+\mbox{\Hypertarget{class_c_client_ab64ae81e872a57e6b881d1e1e44a048e}\label{class_c_client_ab64ae81e872a57e6b881d1e1e44a048e}} 
+void {\bfseries set\+\_\+mail} (QString mail)
+\item 
+\mbox{\Hypertarget{class_c_client_a47bd2e2ae946f920147c7ca9cc2fde15}\label{class_c_client_a47bd2e2ae946f920147c7ca9cc2fde15}} 
+void {\bfseries set\+\_\+socket} (QTcp\+Socket $\ast$soc)
+\item 
+\mbox{\Hypertarget{class_c_client_a7fe666c1dafdd7101cb34cf493f14705}\label{class_c_client_a7fe666c1dafdd7101cb34cf493f14705}} 
+void {\bfseries set\+\_\+id\+Channel} (int id)
+\item 
+\mbox{\Hypertarget{class_c_client_adb18c5b070e821bc21ce6e7e0f0ab0a9}\label{class_c_client_adb18c5b070e821bc21ce6e7e0f0ab0a9}} 
+void {\bfseries set\+\_\+all} (\mbox{\hyperlink{class_c_client}{CClient}} $\ast$c)
+\item 
+\mbox{\Hypertarget{class_c_client_ab65b29b645a623ab9572b993a8d67122}\label{class_c_client_ab65b29b645a623ab9572b993a8d67122}} 
+void {\bfseries set\+\_\+is\+Online} (bool online)
+\item 
+\mbox{\Hypertarget{class_c_client_af1c341e2a14205e0bc8c3c6263216c19}\label{class_c_client_af1c341e2a14205e0bc8c3c6263216c19}} 
+void {\bfseries set\+\_\+is\+Authenticate} (bool Auth)
+\item 
+\mbox{\Hypertarget{class_c_client_a27a7a7bac6bec2fe82b8abe62c82b1ef}\label{class_c_client_a27a7a7bac6bec2fe82b8abe62c82b1ef}} 
+void {\bfseries set\+\_\+description} (QString d)
+\item 
+\mbox{\Hypertarget{class_c_client_af0b78d1c07427431acb911659d4b5296}\label{class_c_client_af0b78d1c07427431acb911659d4b5296}} 
+void {\bfseries set\+\_\+uuid} (QUuid uuid)
+\item 
+\mbox{\Hypertarget{class_c_client_af7c6ea324d615750b942f6ffc5a043ab}\label{class_c_client_af7c6ea324d615750b942f6ffc5a043ab}} 
+void {\bfseries set\+\_\+profile\+Pic} (QImage img)
+\item 
+\mbox{\Hypertarget{class_c_client_a8ad7da633a5f0b7f774e5e92371e890e}\label{class_c_client_a8ad7da633a5f0b7f774e5e92371e890e}} 
+QJson\+Object {\bfseries serialize\+To\+Obj} ()
+\item 
+\mbox{\Hypertarget{class_c_client_a816c9eb03a6bc4376b5e8b218266de0e}\label{class_c_client_a816c9eb03a6bc4376b5e8b218266de0e}} 
+void {\bfseries deserialize} (QJson\+Object json\+\_\+obj)
+\item 
+void \mbox{\hyperlink{class_c_client_af79cf29c4f8bab8296bbcca2491382ef}{process\+Data}} (QByte\+Array data)
+\begin{DoxyCompactList}\small\item\em This function is called by on\+Receive\+Data to process received data in order to manage cases defined by the application protocol. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_c_client_ad216ddf0c3eb0bb7883dad96d133b7be}{create\+Channel\+Index}} (string filename, QString path\+\_\+to\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Create an index.\+json for an empty channel and add the first message of it. \end{DoxyCompactList}\item 
+QList$<$ QString $>$ \mbox{\hyperlink{class_c_client_a13b725f43f8a74f781694faed3b2deeb}{read\+Channel\+Index}} (QString path\+\_\+to\+\_\+index)
+\begin{DoxyCompactList}\small\item\em returns the list of names of all messages files contained in the given index \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_c_client_a344be2fb6f10e4d73e0ddd87152917c2}{insert\+Channel\+Index}} (QString path\+\_\+to\+\_\+index, QList$<$ QString $>$ filename\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Update index.\+json when inserting new message to it. \end{DoxyCompactList}\item 
+QList$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ \mbox{\hyperlink{class_c_client_a67dc1d90694ad6d1d7b951bf163bcde3}{create\+Message\+List}} (QString id, bool is\+Private, int nb\+\_\+msg\+\_\+to\+\_\+sync, QUuid sender, int start\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Create a QList of \mbox{\hyperlink{class_c_message}{CMessage}} stored localy using index.\+json. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -78,7 +193,7 @@ This class represent an user \begin{DoxyAuthor}{Author}
 
 \end{DoxyNote}
 \begin{DoxyRefDesc}{Bug}
-\item[\mbox{\hyperlink{bug__bug000003}{Bug}}]\end{DoxyRefDesc}
+\item[\mbox{\hyperlink{bug__bug000001}{Bug}}]\end{DoxyRefDesc}
 \begin{DoxyWarning}{Warning}
 Une mauvaise utilisation peut faire planter votre application (c\textquotesingle{}est votre faute) 
 \end{DoxyWarning}
@@ -86,12 +201,31 @@ Une mauvaise utilisation peut faire planter votre application (c\textquotesingle
 Une remarque à faire ? 
 \end{DoxyRemark}
 \begin{DoxyCopyright}{Copyright}
-GNU Public License. 
+GNU GPL-\/3.\+0
 \end{DoxyCopyright}
+This class represent an user \begin{DoxyAuthor}{Author}
+Lock\+Vox Team 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+2.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2021 
+\end{DoxyDate}
+\begin{DoxyNote}{Note}
 
+\end{DoxyNote}
+\begin{DoxyRefDesc}{Bug}
+\item[\mbox{\hyperlink{bug__bug000002}{Bug}}]\end{DoxyRefDesc}
+\begin{DoxyWarning}{Warning}
 
-Definition at line 29 of file cclient.\+h.
+\end{DoxyWarning}
+\begin{DoxyRemark}{Remarks}
 
+\end{DoxyRemark}
+\begin{DoxyCopyright}{Copyright}
+GNU GPL-\/3.\+0 
+\end{DoxyCopyright}
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
@@ -108,10 +242,6 @@ Default constructor of the class \mbox{\hyperlink{class_c_client}{CClient}}.
 \begin{DoxySeeAlso}{See also}
 CCllient\+::\+Client() 
 \end{DoxySeeAlso}
-
-
-Definition at line 18 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a0d27bb198fe0d83b12794fbfb41cdb5c}\label{class_c_client_a0d27bb198fe0d83b12794fbfb41cdb5c}} 
 \index{CClient@{CClient}!CClient@{CClient}}
 \index{CClient@{CClient}!CClient@{CClient}}
@@ -130,10 +260,6 @@ Copy constructor of the class \mbox{\hyperlink{class_c_client}{CClient}} This is
 \begin{DoxySeeAlso}{See also}
 \mbox{\hyperlink{class_c_client_a51f196439c3218b2dce8f7c6610dad14}{CClient\+::\+CClient()}} 
 \end{DoxySeeAlso}
-
-
-Definition at line 33 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a6f6434bd8ff1bddb45a46f9777439c96}\label{class_c_client_a6f6434bd8ff1bddb45a46f9777439c96}} 
 \index{CClient@{CClient}!CClient@{CClient}}
 \index{CClient@{CClient}!CClient@{CClient}}
@@ -162,10 +288,6 @@ Custom Constructor of the class \mbox{\hyperlink{class_c_client}{CClient}} This 
 \begin{DoxySeeAlso}{See also}
 \mbox{\hyperlink{class_c_client_a51f196439c3218b2dce8f7c6610dad14}{CClient\+::\+CClient()}} 
 \end{DoxySeeAlso}
-
-
-Definition at line 55 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_abad7743cffbc70db9c3c7f7c371a67de}\label{class_c_client_abad7743cffbc70db9c3c7f7c371a67de}} 
 \index{CClient@{CClient}!CClient@{CClient}}
 \index{CClient@{CClient}!CClient@{CClient}}
@@ -184,10 +306,6 @@ Custom Constructor of the class \mbox{\hyperlink{class_c_client}{CClient}} This 
 \begin{DoxySeeAlso}{See also}
 \mbox{\hyperlink{class_c_client_a51f196439c3218b2dce8f7c6610dad14}{CClient\+::\+CClient()}} 
 \end{DoxySeeAlso}
-
-
-Definition at line 72 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_adfec5dfb8d13c1245020e52aac0812b1}\label{class_c_client_adfec5dfb8d13c1245020e52aac0812b1}} 
 \index{CClient@{CClient}!````~CClient@{$\sim$CClient}}
 \index{````~CClient@{$\sim$CClient}!CClient@{CClient}}
@@ -203,11 +321,58 @@ CCllient\+::\+Client()
 \end{DoxySeeAlso}
 
 
-Definition at line 82 of file cclient.\+cpp.
-
-
-
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_client_ad216ddf0c3eb0bb7883dad96d133b7be}\label{class_c_client_ad216ddf0c3eb0bb7883dad96d133b7be}} 
+\index{CClient@{CClient}!createChannelIndex@{createChannelIndex}}
+\index{createChannelIndex@{createChannelIndex}!CClient@{CClient}}
+\doxysubsubsection{\texorpdfstring{createChannelIndex()}{createChannelIndex()}}
+{\footnotesize\ttfamily bool CClient\+::create\+Channel\+Index (\begin{DoxyParamCaption}\item[{string}]{filename,  }\item[{QString}]{path\+\_\+to\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Create an index.\+json for an empty channel and add the first message of it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em filename} & should be the exacte file name of the message file \\
+\hline
+\mbox{\texttt{ in}}  & {\em path\+\_\+to\+\_\+index} & should be something like \+: \char`\"{}storage/\mbox{[}public$\vert$private\mbox{]}/\mbox{[}id\mbox{]}/index.\+json\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if channel index has been created successfully, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_c_client_a67dc1d90694ad6d1d7b951bf163bcde3}\label{class_c_client_a67dc1d90694ad6d1d7b951bf163bcde3}} 
+\index{CClient@{CClient}!createMessageList@{createMessageList}}
+\index{createMessageList@{createMessageList}!CClient@{CClient}}
+\doxysubsubsection{\texorpdfstring{createMessageList()}{createMessageList()}}
+{\footnotesize\ttfamily QList$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ CClient\+::create\+Message\+List (\begin{DoxyParamCaption}\item[{QString}]{id,  }\item[{bool}]{is\+Private,  }\item[{int}]{nb\+\_\+msg\+\_\+to\+\_\+sync,  }\item[{QUuid}]{sender,  }\item[{int}]{start\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Create a QList of \mbox{\hyperlink{class_c_message}{CMessage}} stored localy using index.\+json. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & refers to id of channel or user for storage \\
+\hline
+\mbox{\texttt{ in}}  & {\em is\+Private} & tells if it\textquotesingle{}s a private message or not \\
+\hline
+\mbox{\texttt{ in}}  & {\em nb\+\_\+msg\+\_\+to\+\_\+sync} & to tell how much message you want to sync should be -\/1 to retrieve all \\
+\hline
+\mbox{\texttt{ in}}  & {\em sender} & refere tu uuid of sender, used to gather private message \\
+\hline
+ & {\em start\+\_\+index} & is used to retrieve older message, should be 0 if no message has already been sync \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of message 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em A} & Qlist of \mbox{\hyperlink{class_c_message}{CMessage}} countaining all message selected according to given information, if an error has occured, return the error has name of the sender (field \char`\"{}from\char`\"{}) in the first message of the QList \\
+\hline
+\end{DoxyRetVals}
 \mbox{\Hypertarget{class_c_client_a816c9eb03a6bc4376b5e8b218266de0e}\label{class_c_client_a816c9eb03a6bc4376b5e8b218266de0e}} 
 \index{CClient@{CClient}!deserialize@{deserialize}}
 \index{deserialize@{deserialize}!CClient@{CClient}}
@@ -223,10 +388,6 @@ Deserialize a JSON object into the current instance of \mbox{\hyperlink{class_c_
 \mbox{\texttt{ in}}  & {\em json\+\_\+obj} & the JSON object to deserialize into this \mbox{\hyperlink{class_c_client}{CClient}} instance. \\
 \hline
 \end{DoxyParams}
-
-
-Definition at line 335 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a6b50095de9c902e4b87af34d5f2cc415}\label{class_c_client_a6b50095de9c902e4b87af34d5f2cc415}} 
 \index{CClient@{CClient}!get\_description@{get\_description}}
 \index{get\_description@{get\_description}!CClient@{CClient}}
@@ -245,10 +406,6 @@ m\+\_\+description the value of attribute m\+\_\+description
 {\em QString} & the value of attribute m\+\_\+description \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 198 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a32005fb0f5fa81cac9563bab216cac9c}\label{class_c_client_a32005fb0f5fa81cac9563bab216cac9c}} 
 \index{CClient@{CClient}!get\_idChannel@{get\_idChannel}}
 \index{get\_idChannel@{get\_idChannel}!CClient@{CClient}}
@@ -267,10 +424,6 @@ m\+\_\+id\+Channel the value of attribute m\+\_\+id\+Channel
 {\em int} & the value of attribute m\+\_\+id\+Channel \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 142 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_afcc66b178fb49778063ea48468af7950}\label{class_c_client_afcc66b178fb49778063ea48468af7950}} 
 \index{CClient@{CClient}!get\_isAuthenticate@{get\_isAuthenticate}}
 \index{get\_isAuthenticate@{get\_isAuthenticate}!CClient@{CClient}}
@@ -289,10 +442,6 @@ m\+\_\+is\+Authenticate the value of attribute m\+\_\+is\+Authenticate
 {\em bool} & the value of attribute m\+\_\+is\+Authenticate \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 187 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a49ebe8e9bf0d2e5e5bf5466f94eb0257}\label{class_c_client_a49ebe8e9bf0d2e5e5bf5466f94eb0257}} 
 \index{CClient@{CClient}!get\_isOnline@{get\_isOnline}}
 \index{get\_isOnline@{get\_isOnline}!CClient@{CClient}}
@@ -311,10 +460,6 @@ m\+\_\+is\+Online the value of attribute m\+\_\+is\+Online
 {\em bool} & the value of attribute m\+\_\+is\+Online \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 176 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a1fab8bdc3fc63281c662111cf5ffaed7}\label{class_c_client_a1fab8bdc3fc63281c662111cf5ffaed7}} 
 \index{CClient@{CClient}!get\_mail@{get\_mail}}
 \index{get\_mail@{get\_mail}!CClient@{CClient}}
@@ -333,10 +478,6 @@ m\+\_\+mail the value of attribute m\+\_\+mail
 {\em QString} & the value of attribute m\+\_\+mail \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 120 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_aa7e8a6bca0fa911cf2431da21fc19296}\label{class_c_client_aa7e8a6bca0fa911cf2431da21fc19296}} 
 \index{CClient@{CClient}!get\_profilePic@{get\_profilePic}}
 \index{get\_profilePic@{get\_profilePic}!CClient@{CClient}}
@@ -355,10 +496,6 @@ profile\+Pic the value of attribute profile\+Pic
 {\em QImage} & the value of attribute profile\+Pic \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 163 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a22076e0a55eb5c5c7611e959b7f3cae2}\label{class_c_client_a22076e0a55eb5c5c7611e959b7f3cae2}} 
 \index{CClient@{CClient}!get\_pseudo@{get\_pseudo}}
 \index{get\_pseudo@{get\_pseudo}!CClient@{CClient}}
@@ -377,10 +514,6 @@ m\+\_\+pseudo the value of attribute m\+\_\+pseudo
 {\em QString} & the value of attribute m\+\_\+pseudo \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 109 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a67f87d18c97fbffb17a4555cf67f1b9f}\label{class_c_client_a67f87d18c97fbffb17a4555cf67f1b9f}} 
 \index{CClient@{CClient}!get\_socket@{get\_socket}}
 \index{get\_socket@{get\_socket}!CClient@{CClient}}
@@ -399,10 +532,6 @@ m\+\_\+soc the value of attribute m\+\_\+soc
 {\em QTcp\+Socket} & the value of attribute m\+\_\+soc \\
 \hline
 \end{DoxyRetVals}
-
-
-Definition at line 131 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a6bf1091a09e1eed1ed103a5d90721c52}\label{class_c_client_a6bf1091a09e1eed1ed103a5d90721c52}} 
 \index{CClient@{CClient}!get\_uuid@{get\_uuid}}
 \index{get\_uuid@{get\_uuid}!CClient@{CClient}}
@@ -421,10 +550,64 @@ m\+\_\+uuid the value of attribute m\+\_\+uuid
 {\em QUuid} & the value of attribute m\+\_\+uuid \\
 \hline
 \end{DoxyRetVals}
+\mbox{\Hypertarget{class_c_client_a344be2fb6f10e4d73e0ddd87152917c2}\label{class_c_client_a344be2fb6f10e4d73e0ddd87152917c2}} 
+\index{CClient@{CClient}!insertChannelIndex@{insertChannelIndex}}
+\index{insertChannelIndex@{insertChannelIndex}!CClient@{CClient}}
+\doxysubsubsection{\texorpdfstring{insertChannelIndex()}{insertChannelIndex()}}
+{\footnotesize\ttfamily bool CClient\+::insert\+Channel\+Index (\begin{DoxyParamCaption}\item[{QString}]{path\+\_\+to\+\_\+index,  }\item[{QList$<$ QString $>$}]{filename\+\_\+list }\end{DoxyParamCaption})}
 
 
-Definition at line 152 of file cclient.\+cpp.
 
+Update index.\+json when inserting new message to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path\+\_\+to\+\_\+index} & should be something like \+: \char`\"{}storage/\mbox{[}public$\vert$private\mbox{]}/\mbox{[}id\mbox{]}/index.\+json\char`\"{} \\
+\hline
+\mbox{\texttt{ in}}  & {\em filename\+\_\+list} & is the list of all filename of message stored into for the given channel, can be exctracted with read\+Channel\+Index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the function had successfully updated the index, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_c_client_af79cf29c4f8bab8296bbcca2491382ef}\label{class_c_client_af79cf29c4f8bab8296bbcca2491382ef}} 
+\index{CClient@{CClient}!processData@{processData}}
+\index{processData@{processData}!CClient@{CClient}}
+\doxysubsubsection{\texorpdfstring{processData()}{processData()}}
+{\footnotesize\ttfamily void CClient\+::process\+Data (\begin{DoxyParamCaption}\item[{QByte\+Array}]{data }\end{DoxyParamCaption})}
+
+
+
+This function is called by on\+Receive\+Data to process received data in order to manage cases defined by the application protocol. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em data} & The QByte\+Array object received from the TCP socket \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_c_client_a13b725f43f8a74f781694faed3b2deeb}\label{class_c_client_a13b725f43f8a74f781694faed3b2deeb}} 
+\index{CClient@{CClient}!readChannelIndex@{readChannelIndex}}
+\index{readChannelIndex@{readChannelIndex}!CClient@{CClient}}
+\doxysubsubsection{\texorpdfstring{readChannelIndex()}{readChannelIndex()}}
+{\footnotesize\ttfamily QList$<$ QString $>$ CClient\+::read\+Channel\+Index (\begin{DoxyParamCaption}\item[{QString}]{path\+\_\+to\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+returns the list of names of all messages files contained in the given index 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path\+\_\+to\+\_\+index} & should be something like \+: \char`\"{}storage/\mbox{[}public$\vert$private\mbox{]}/\mbox{[}id\mbox{]}/index.\+json\char`\"{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of message filename 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em A} & QList of QString countaining all message filename in the given index. Return an empty QList if no index or empty index was found \\
+\hline
+\end{DoxyRetVals}
 \mbox{\Hypertarget{class_c_client_a8ad7da633a5f0b7f774e5e92371e890e}\label{class_c_client_a8ad7da633a5f0b7f774e5e92371e890e}} 
 \index{CClient@{CClient}!serializeToObj@{serializeToObj}}
 \index{serializeToObj@{serializeToObj}!CClient@{CClient}}
@@ -437,13 +620,12 @@ Serialize attributes of an user into a JSON object.
 
 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ out}}  & {\em obj} & the JSON object which contains the attribute of the user. \\
+\mbox{\texttt{ out}}  & {\em obj} & the JSON object which contains the attribute of the user.\\
 \hline
 \end{DoxyParams}
-
-
-Definition at line 320 of file cclient.\+cpp.
-
+\begin{DoxyReturn}{Returns}
+obj the JSON object which contains the attribute of the user. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_c_client_adb18c5b070e821bc21ce6e7e0f0ab0a9}\label{class_c_client_adb18c5b070e821bc21ce6e7e0f0ab0a9}} 
 \index{CClient@{CClient}!set\_all@{set\_all}}
 \index{set\_all@{set\_all}!CClient@{CClient}}
@@ -459,10 +641,6 @@ Set the different attribute of a \mbox{\hyperlink{class_c_client}{CClient}} from
 \mbox{\texttt{ in}}  & {\em c} & the \mbox{\hyperlink{class_c_client}{CClient}} instance which contains the attribute to copy. \\
 \hline
 \end{DoxyParams}
-
-
-Definition at line 309 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a27a7a7bac6bec2fe82b8abe62c82b1ef}\label{class_c_client_a27a7a7bac6bec2fe82b8abe62c82b1ef}} 
 \index{CClient@{CClient}!set\_description@{set\_description}}
 \index{set\_description@{set\_description}!CClient@{CClient}}
@@ -483,10 +661,6 @@ Setter of attribute m\+\_\+description.
 {\em } & \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 277 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a7fe666c1dafdd7101cb34cf493f14705}\label{class_c_client_a7fe666c1dafdd7101cb34cf493f14705}} 
 \index{CClient@{CClient}!set\_idChannel@{set\_idChannel}}
 \index{set\_idChannel@{set\_idChannel}!CClient@{CClient}}
@@ -507,10 +681,6 @@ Setter of attribute m\+\_\+id\+Channel.
 {\em range\+\_\+error} & if id is lower than -\/1 \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 244 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_af1c341e2a14205e0bc8c3c6263216c19}\label{class_c_client_af1c341e2a14205e0bc8c3c6263216c19}} 
 \index{CClient@{CClient}!set\_isAuthenticate@{set\_isAuthenticate}}
 \index{set\_isAuthenticate@{set\_isAuthenticate}!CClient@{CClient}}
@@ -531,10 +701,6 @@ Setter of attribute m\+\_\+is\+Authenticate.
 {\em } & \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 266 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_ab65b29b645a623ab9572b993a8d67122}\label{class_c_client_ab65b29b645a623ab9572b993a8d67122}} 
 \index{CClient@{CClient}!set\_isOnline@{set\_isOnline}}
 \index{set\_isOnline@{set\_isOnline}!CClient@{CClient}}
@@ -555,10 +721,6 @@ Setter of attribute m\+\_\+is\+Online.
 {\em } & \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 255 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_ab64ae81e872a57e6b881d1e1e44a048e}\label{class_c_client_ab64ae81e872a57e6b881d1e1e44a048e}} 
 \index{CClient@{CClient}!set\_mail@{set\_mail}}
 \index{set\_mail@{set\_mail}!CClient@{CClient}}
@@ -579,10 +741,6 @@ Setter of attribute m\+\_\+mail.
 {\em range\+\_\+error} & if mail is empty \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 221 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_af7c6ea324d615750b942f6ffc5a043ab}\label{class_c_client_af7c6ea324d615750b942f6ffc5a043ab}} 
 \index{CClient@{CClient}!set\_profilePic@{set\_profilePic}}
 \index{set\_profilePic@{set\_profilePic}!CClient@{CClient}}
@@ -603,10 +761,6 @@ Setter of attribute profile\+Pic.
 {\em range\+\_\+error} & if img is null \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 299 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a8e73a30052fa116a463c7a51d1afbfdb}\label{class_c_client_a8e73a30052fa116a463c7a51d1afbfdb}} 
 \index{CClient@{CClient}!set\_pseudo@{set\_pseudo}}
 \index{set\_pseudo@{set\_pseudo}!CClient@{CClient}}
@@ -627,10 +781,6 @@ Setter of attribute m\+\_\+pseudo.
 {\em range\+\_\+error} & if pseudo is empty \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 209 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_a47bd2e2ae946f920147c7ca9cc2fde15}\label{class_c_client_a47bd2e2ae946f920147c7ca9cc2fde15}} 
 \index{CClient@{CClient}!set\_socket@{set\_socket}}
 \index{set\_socket@{set\_socket}!CClient@{CClient}}
@@ -651,10 +801,6 @@ Setter of attribute m\+\_\+soc.
 {\em } & \\
 \hline
 \end{DoxyExceptions}
-
-
-Definition at line 233 of file cclient.\+cpp.
-
 \mbox{\Hypertarget{class_c_client_af0b78d1c07427431acb911659d4b5296}\label{class_c_client_af0b78d1c07427431acb911659d4b5296}} 
 \index{CClient@{CClient}!set\_uuid@{set\_uuid}}
 \index{set\_uuid@{set\_uuid}!CClient@{CClient}}
@@ -677,11 +823,7 @@ Setter of attribute m\+\_\+uuid.
 \end{DoxyExceptions}
 
 
-Definition at line 288 of file cclient.\+cpp.
-
-
-
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-src/includes/\mbox{\hyperlink{cclient_8h}{cclient.\+h}}\item 
-src/\mbox{\hyperlink{cclient_8cpp}{cclient.\+cpp}}\end{DoxyCompactItemize}
+C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/includes/\mbox{\hyperlink{_client_2includes_2cclient_8h}{cclient.\+h}}\item 
+C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/\mbox{\hyperlink{_client_2cclient_8cpp}{cclient.\+cpp}}\end{DoxyCompactItemize}

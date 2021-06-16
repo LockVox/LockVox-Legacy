@@ -1,5 +1,10 @@
 \hypertarget{class_c_server}{}\doxysection{CServer Class Reference}
 \label{class_c_server}\index{CServer@{CServer}}
+
+
+Declaration of the class \mbox{\hyperlink{class_c_server}{CServer}}.  
+
+
 Inheritance diagram for CServer\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -59,6 +64,9 @@ void {\bfseries disconnected} ()
 \item 
 \mbox{\Hypertarget{class_c_server_afa1204488fac95c9c2c9a58ed7707eab}\label{class_c_server_afa1204488fac95c9c2c9a58ed7707eab}} 
 void {\bfseries pictures\+Load} ()
+\item 
+\mbox{\Hypertarget{class_c_server_a01aac1531c36a4f8dc02e3da80917e93}\label{class_c_server_a01aac1531c36a4f8dc02e3da80917e93}} 
+void {\bfseries send\+To\+All} (QByte\+Array out)
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -183,9 +191,6 @@ void {\bfseries set\+\_\+database} (\mbox{\hyperlink{class_c_database}{CDatabase
 \mbox{\Hypertarget{class_c_server_a19bb880afc3b77ad2d321ffcb3e3ff08}\label{class_c_server_a19bb880afc3b77ad2d321ffcb3e3ff08}} 
 \mbox{\hyperlink{class_c_client}{CClient}} $\ast$ {\bfseries which\+Client} (QTcp\+Socket $\ast$soc)
 \item 
-\mbox{\Hypertarget{class_c_server_a01aac1531c36a4f8dc02e3da80917e93}\label{class_c_server_a01aac1531c36a4f8dc02e3da80917e93}} 
-void {\bfseries send\+To\+All} (QByte\+Array out)
-\item 
 \mbox{\Hypertarget{class_c_server_ae02fb57a48bbcaabca8ffce0e3b2cf8b}\label{class_c_server_ae02fb57a48bbcaabca8ffce0e3b2cf8b}} 
 void {\bfseries send\+To\+Client} (QByte\+Array out, \mbox{\hyperlink{class_c_client}{CClient}} $\ast$client)
 \item 
@@ -204,35 +209,44 @@ void {\bfseries Remove\+Banned\+User} (\mbox{\hyperlink{class_c_client}{CClient}
 \mbox{\Hypertarget{class_c_server_a06b5385550b3a0ab6e51b438f5650a36}\label{class_c_server_a06b5385550b3a0ab6e51b438f5650a36}} 
 QList$<$ \mbox{\hyperlink{class_c_client}{CClient}} $\ast$ $>$ {\bfseries Get\+Banned\+User\+List} ()
 \item 
-\mbox{\Hypertarget{class_c_server_a0ec8053eb2edd88bf42bc611001fcfc8}\label{class_c_server_a0ec8053eb2edd88bf42bc611001fcfc8}} 
-void {\bfseries process\+Incoming\+Data} (\mbox{\hyperlink{class_c_client}{CClient}} $\ast$sender, QByte\+Array data)
-\item 
-\mbox{\Hypertarget{class_c_server_a4263736faed447686fbedf25521608f6}\label{class_c_server_a4263736faed447686fbedf25521608f6}} 
-bool {\bfseries create\+Channel\+Index} (string filename, QString path\+\_\+to\+\_\+index)
-\item 
-\mbox{\Hypertarget{class_c_server_a33ee27600a9a0c29a3d46f180adffd84}\label{class_c_server_a33ee27600a9a0c29a3d46f180adffd84}} 
-QList$<$ QString $>$ {\bfseries read\+Channel\+Index} (QString path\+\_\+to\+\_\+index)
-\item 
-\mbox{\Hypertarget{class_c_server_a50aa2e9d1018b3bd69412106e8d882b1}\label{class_c_server_a50aa2e9d1018b3bd69412106e8d882b1}} 
-bool {\bfseries insert\+Channel\+Index} (QString path\+\_\+to\+\_\+index, QList$<$ QString $>$ filename\+\_\+list)
-\item 
-\mbox{\Hypertarget{class_c_server_a4e61b72d9bcb26aa3c994de217005831}\label{class_c_server_a4e61b72d9bcb26aa3c994de217005831}} 
-QList$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ {\bfseries create\+Message\+List} (QString id, bool is\+Private, int nb\+\_\+msg\+\_\+to\+\_\+sync, QUuid sender, int start\+\_\+index)
-\item 
 \mbox{\Hypertarget{class_c_server_ac3ce066e969c191cc6eab412f4c4fe92}\label{class_c_server_ac3ce066e969c191cc6eab412f4c4fe92}} 
 void {\bfseries write\+To\+Log} (QString error, int level)
+\item 
+\mbox{\Hypertarget{class_c_server_a4eff5062f0cbad28bd73905567acbe15}\label{class_c_server_a4eff5062f0cbad28bd73905567acbe15}} 
+void {\bfseries connect\+Client} (\mbox{\hyperlink{class_c_client}{CClient}} $\ast$client)
 \end{DoxyCompactItemize}
 \doxysubsection*{Additional Inherited Members}
 
 
 \doxysubsection{Detailed Description}
+Declaration of the class \mbox{\hyperlink{class_c_server}{CServer}}. 
 
+Here is the main process of a Lock\+Vox server \begin{DoxyAuthor}{Author}
+Lock\+Vox Team 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+2.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2021 
+\end{DoxyDate}
+\begin{DoxyNote}{Note}
 
-Definition at line 25 of file cserver.\+h.
+\end{DoxyNote}
+\begin{DoxyRefDesc}{Bug}
+\item[\mbox{\hyperlink{bug__bug000006}{Bug}}]\end{DoxyRefDesc}
+\begin{DoxyWarning}{Warning}
 
+\end{DoxyWarning}
+\begin{DoxyRemark}{Remarks}
+
+\end{DoxyRemark}
+\begin{DoxyCopyright}{Copyright}
+GNU GPL-\/3.\+0 
+\end{DoxyCopyright}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-Client/includes/cserver.\+h\item 
-Client/cserver.\+cpp\end{DoxyCompactItemize}
+C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/includes/cserver.\+h\item 
+C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/cserver.\+cpp\end{DoxyCompactItemize}

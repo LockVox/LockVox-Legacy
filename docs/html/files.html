@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,10 +24,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LockVox
-   &#160;<span id="projectnumber">0.1</span>
+   &#160;<span id="projectnumber">alpha-0.1.1</span>
    </div>
+   <div id="projectbrief">Lockvox project aims to create a fully encrypted and open source voice and audio exchange system while keeping the GUI as simple and easy to access as possible.</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +53,22 @@ $(function() {
 /* @license-end */</script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('files.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -67,70 +89,51 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock">Here is a list of all documented files with brief descriptions:</div><div class="directory">
-<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><span id="img_0_" class="iconfopen" onclick="toggleFolder('0_')">&#160;</span><a class="el" href="dir_922c588100a187620fdc1533bc178f73.html" target="_self">Client</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_0_" class="arrow" onclick="toggleFolder('0_0_')">&#9660;</span><span id="img_0_0_" class="iconfopen" onclick="toggleFolder('0_0_')">&#160;</span><a class="el" href="dir_2b6b393a2faf74a67ed448c4cffa5cc5.html" target="_self">includes</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_client_2includes_2caudio_8h_source.html"><span class="icondoc"></span></a><b>caudio.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_1_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="channellist_8h_source.html"><span class="icondoc"></span></a><b>channellist.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_2_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="channelmodel_8h_source.html"><span class="icondoc"></span></a><b>channelmodel.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_3_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="clientlist_8h_source.html"><span class="icondoc"></span></a><b>clientlist.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_4_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="clientmodel_8h_source.html"><span class="icondoc"></span></a><b>clientmodel.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_5_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_client_2includes_2config_8h_source.html"><span class="icondoc"></span></a><b>config.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_6_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_client_2includes_2cpacket_8h_source.html"><span class="icondoc"></span></a><b>cpacket.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_7_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_client_2includes_2cserver_8h_source.html"><span class="icondoc"></span></a><b>cserver.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_8_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="messagelist_8h_source.html"><span class="icondoc"></span></a><b>messagelist.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_9_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="messagemodel_8h_source.html"><span class="icondoc"></span></a><b>messagemodel.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_10_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="uiworker_8h_source.html"><span class="icondoc"></span></a><b>uiworker.h</b></td><td class="desc"></td></tr>
-<tr id="row_0_1_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_client_2caudio_8cpp_source.html"><span class="icondoc"></span></a><b>caudio.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_2_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="channellist_8cpp_source.html"><span class="icondoc"></span></a><b>channellist.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_3_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="channelmodel_8cpp_source.html"><span class="icondoc"></span></a><b>channelmodel.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_4_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="clientlist_8cpp_source.html"><span class="icondoc"></span></a><b>clientlist.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_5_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="clientmodel_8cpp_source.html"><span class="icondoc"></span></a><b>clientmodel.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_6_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_client_2cpacket_8cpp_source.html"><span class="icondoc"></span></a><b>cpacket.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_7_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_client_2cserver_8cpp_source.html"><span class="icondoc"></span></a><b>cserver.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_8_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_client_2main_8cpp_source.html"><span class="icondoc"></span></a><b>main.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_9_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="messagelist_8cpp_source.html"><span class="icondoc"></span></a><b>messagelist.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_10_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="messagemodel_8cpp_source.html"><span class="icondoc"></span></a><b>messagemodel.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_11_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="uiworker_8cpp_source.html"><span class="icondoc"></span></a><b>uiworker.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_1_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9660;</span><span id="img_1_" class="iconfopen" onclick="toggleFolder('1_')">&#160;</span><a class="el" href="dir_1a445cb237d74f7a5f8d11ec3b0585cc.html" target="_self">Server</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_0_" class="arrow" onclick="toggleFolder('1_0_')">&#9660;</span><span id="img_1_0_" class="iconfopen" onclick="toggleFolder('1_0_')">&#160;</span><a class="el" href="dir_0de08b9b9b0dec5097b167934381223d.html" target="_self">includes</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_0_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_server_2includes_2caudio_8h_source.html"><span class="icondoc"></span></a><b>caudio.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_1_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="cdatabase_8h_source.html"><span class="icondoc"></span></a><b>cdatabase.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_2_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="cookiesmanager_8h_source.html"><span class="icondoc"></span></a><b>cookiesmanager.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_3_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_server_2includes_2cpacket_8h_source.html"><span class="icondoc"></span></a><b>cpacket.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_server_2includes_2cserver_8h_source.html"><span class="icondoc"></span></a><b>cserver.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_5_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="csessioncookie_8h_source.html"><span class="icondoc"></span></a><b>csessioncookie.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_0_6_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="sha256_8h_source.html"><span class="icondoc"></span></a><b>sha256.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_1_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_server_2caudio_8cpp_source.html"><span class="icondoc"></span></a><a class="el" href="_server_2caudio_8cpp.html" target="_self">caudio.cpp</a></td><td class="desc"></td></tr>
-<tr id="row_1_2_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_server_2config_8h_source.html"><span class="icondoc"></span></a><b>config.h</b></td><td class="desc"></td></tr>
-<tr id="row_1_3_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="cookiesmanager_8cpp_source.html"><span class="icondoc"></span></a><b>cookiesmanager.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_1_4_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_server_2cserver_8cpp_source.html"><span class="icondoc"></span></a><b>cserver.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_1_5_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_server_2main_8cpp_source.html"><span class="icondoc"></span></a><b>main.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_1_6_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="sha256_8cpp_source.html"><span class="icondoc"></span></a><b>sha256.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_2_" class="arrow" onclick="toggleFolder('2_')">&#9660;</span><span id="img_2_" class="iconfopen" onclick="toggleFolder('2_')">&#160;</span><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" target="_self">src</a></td><td class="desc"></td></tr>
-<tr id="row_2_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_2_0_" class="arrow" onclick="toggleFolder('2_0_')">&#9660;</span><span id="img_2_0_" class="iconfopen" onclick="toggleFolder('2_0_')">&#160;</span><a class="el" href="dir_bf59d41d727aac54882b42f236ae575e.html" target="_self">includes</a></td><td class="desc"></td></tr>
-<tr id="row_2_0_0_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="_abstract_server_8h_source.html"><span class="icondoc"></span></a><b>AbstractServer.h</b></td><td class="desc"></td></tr>
-<tr id="row_2_0_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="cchannel_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cchannel_8h.html" target="_self">cchannel.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_channel.html" title="Declaration of the class CChannel.">CChannel</a> </td></tr>
-<tr id="row_2_0_2_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="cclient_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cclient_8h.html" target="_self">cclient.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_cookies_manager.html">CookiesManager</a> </td></tr>
-<tr id="row_2_0_3_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="cmessage_8h_source.html"><span class="icondoc"></span></a><b>cmessage.h</b></td><td class="desc"></td></tr>
-<tr id="row_2_0_4_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="crole_8h_source.html"><span class="icondoc"></span></a><b>crole.h</b></td><td class="desc"></td></tr>
-<tr id="row_2_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="abstractaudio_8cpp_source.html"><span class="icondoc"></span></a><b>abstractaudio.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_2_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="_abstract_server_8cpp_source.html"><span class="icondoc"></span></a><b>AbstractServer.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_3_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="cchannel_8cpp_source.html"><span class="icondoc"></span></a><b>cchannel.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_4_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="cclient_8cpp_source.html"><span class="icondoc"></span></a><a class="el" href="cclient_8cpp.html" target="_self">cclient.cpp</a></td><td class="desc">Definition of class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a> </td></tr>
-<tr id="row_2_5_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="cdatabase_8cpp_source.html"><span class="icondoc"></span></a><b>cdatabase.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_6_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="cmessage_8cpp_source.html"><span class="icondoc"></span></a><b>cmessage.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_7_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="src_2cpacket_8cpp_source.html"><span class="icondoc"></span></a><b>cpacket.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_8_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="crole_8cpp_source.html"><span class="icondoc"></span></a><b>crole.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_2_9_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="csessioncookie_8cpp_source.html"><span class="icondoc"></span></a><b>csessioncookie.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_3_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a href="imageprovider_8cpp_source.html"><span class="icondoc"></span></a><b>imageprovider.cpp</b></td><td class="desc"></td></tr>
-<tr id="row_4_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a href="imageprovider_8h_source.html"><span class="icondoc"></span></a><b>imageprovider.h</b></td><td class="desc"></td></tr>
+<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span><span onclick="javascript:toggleLevel(4);">4</span>]</div><table class="directory">
+<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><span id="img_0_" class="iconfopen" onclick="toggleFolder('0_')">&#160;</span><a class="el" href="dir_1db139f4197993aa3017f474e3b596e4.html" target="_self">LockVox</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_0_" class="arrow" onclick="toggleFolder('0_0_')">&#9660;</span><span id="img_0_0_" class="iconfopen" onclick="toggleFolder('0_0_')">&#160;</span><a class="el" href="dir_4b9526b5aaab21d5c1e7cb8a1fe614a1.html" target="_self">Client</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_')">&#9660;</span><span id="img_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_')">&#160;</span><a class="el" href="dir_ef856846a8482887c0ea4051f22b6891.html" target="_self">includes</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_0_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_client_2includes_2caudio_8h_source.html"><span class="icondoc"></span></a><b>caudio.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_1_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_client_2includes_2cclient_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_client_2includes_2cclient_8h.html" target="_self">cclient.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a> </td></tr>
+<tr id="row_0_0_0_2_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="channellist_8h_source.html"><span class="icondoc"></span></a><b>channellist.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_3_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="channelmodel_8h_source.html"><span class="icondoc"></span></a><b>channelmodel.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_4_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="clientlist_8h_source.html"><span class="icondoc"></span></a><b>clientlist.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_5_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="clientmodel_8h_source.html"><span class="icondoc"></span></a><b>clientmodel.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_6_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_client_2includes_2cpacket_8h_source.html"><span class="icondoc"></span></a><b>cpacket.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_7_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_client_2includes_2cserver_8h_source.html"><span class="icondoc"></span></a><b>cserver.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_8_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="messagelist_8h_source.html"><span class="icondoc"></span></a><b>messagelist.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_9_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="messagemodel_8h_source.html"><span class="icondoc"></span></a><b>messagemodel.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_10_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="uiworker_8h_source.html"><span class="icondoc"></span></a><b>uiworker.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="_client_2cclient_8cpp.html" target="_self">cclient.cpp</a></td><td class="desc">Definition of class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a> </td></tr>
+<tr id="row_0_1_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_1_" class="arrow" onclick="toggleFolder('0_1_')">&#9660;</span><span id="img_0_1_" class="iconfopen" onclick="toggleFolder('0_1_')">&#160;</span><a class="el" href="dir_9945d90053114091d5446084177d52df.html" target="_self">Server</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_1_0_" class="arrow" onclick="toggleFolder('0_1_0_')">&#9660;</span><span id="img_0_1_0_" class="iconfopen" onclick="toggleFolder('0_1_0_')">&#160;</span><a class="el" href="dir_fd4b8ce79d1c2ce525fcf98c2c26cb19.html" target="_self">includes</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_0_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_server_2includes_2caudio_8h_source.html"><span class="icondoc"></span></a><b>caudio.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_1_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_server_2includes_2cclient_8h_source.html"><span class="icondoc"></span></a><b>cclient.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_2_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="cdatabase_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cdatabase_8h.html" target="_self">cdatabase.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_database.html" title="SQL Database Class.">CDatabase</a> </td></tr>
+<tr id="row_0_1_0_3_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="cookiesmanager_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cookiesmanager_8h.html" target="_self">cookiesmanager.h</a></td><td class="desc">Declaration of the class CookieManager </td></tr>
+<tr id="row_0_1_0_4_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_server_2includes_2cpacket_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_server_2includes_2cpacket_8h.html" target="_self">cpacket.h</a></td><td class="desc">Declaration of the class Server <a class="el" href="class_c_packet.html" title="Declaration of the class Server CPacket.">CPacket</a> </td></tr>
+<tr id="row_0_1_0_5_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_server_2includes_2cserver_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_server_2includes_2cserver_8h.html" target="_self">cserver.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_server.html" title="Declaration of the class CServer.">CServer</a> </td></tr>
+<tr id="row_0_1_0_6_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="csessioncookie_8h_source.html"><span class="icondoc"></span></a><a class="el" href="csessioncookie_8h.html" target="_self">csessioncookie.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_session_cookie.html" title="Declaration of the class CSessionCookie.">CSessionCookie</a> </td></tr>
+<tr id="row_0_1_0_7_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="qsslserver_8h_source.html"><span class="icondoc"></span></a><a class="el" href="qsslserver_8h.html" target="_self">qsslserver.h</a></td><td class="desc">An extension of QTcpServer to support ssl. The counterpart to QSslSocket </td></tr>
+<tr id="row_0_1_0_8_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="sha256_8h_source.html"><span class="icondoc"></span></a><a class="el" href="sha256_8h.html" target="_self">sha256.h</a></td><td class="desc">Sha256 C implementation </td></tr>
+<tr id="row_0_1_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="_server_2cclient_8cpp.html" target="_self">cclient.cpp</a></td><td class="desc">Definition of class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a> </td></tr>
+<tr id="row_0_1_2_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="config_8h_source.html"><span class="icondoc"></span></a><b>config.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_2_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_2_" class="arrow" onclick="toggleFolder('0_2_')">&#9660;</span><span id="img_0_2_" class="iconfopen" onclick="toggleFolder('0_2_')">&#160;</span><a class="el" href="dir_e0df3d807f935f549e7fbcc09040c782.html" target="_self">src</a></td><td class="desc"></td></tr>
+<tr id="row_0_2_0_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_2_0_" class="arrow" onclick="toggleFolder('0_2_0_')">&#9660;</span><span id="img_0_2_0_" class="iconfopen" onclick="toggleFolder('0_2_0_')">&#160;</span><a class="el" href="dir_c18478bf08ab0c28289545a648fb715b.html" target="_self">includes</a></td><td class="desc"></td></tr>
+<tr id="row_0_2_0_0_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_abstract_server_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_abstract_server_8h.html" target="_self">AbstractServer.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_abstract_server.html" title="Declaration of the class AbstractServer.">AbstractServer</a> </td></tr>
+<tr id="row_0_2_0_1_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="cchannel_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cchannel_8h.html" target="_self">cchannel.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_channel.html" title="Declaration of the class CChannel.">CChannel</a> </td></tr>
+<tr id="row_0_2_0_2_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="cmessage_8h_source.html"><span class="icondoc"></span></a><a class="el" href="cmessage_8h.html" target="_self">cmessage.h</a></td><td class="desc">Declaration of the class <a class="el" href="class_c_message.html" title="Declaration of the class CMessage.">CMessage</a> </td></tr>
+<tr id="row_0_2_0_3_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="crole_8h_source.html"><span class="icondoc"></span></a><b>crole.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_3_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a href="imageprovider_8h_source.html"><span class="icondoc"></span></a><b>imageprovider.h</b></td><td class="desc"></td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>
