@@ -203,6 +203,7 @@ QList<CClient*> CDatabase::parseClient()
             QString description(row[5]);
 
             CClient* client = new CClient(uuid,name,NULL,-1,false, description);
+            client->start();
 
             list_client.push_back(client);
         }

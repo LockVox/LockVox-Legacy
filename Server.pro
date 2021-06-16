@@ -14,7 +14,7 @@ SOURCES += \
     src/AbstractServer.cpp \
     src/abstractaudio.cpp \
     src/cchannel.cpp \
-    src/cclient.cpp \
+    Server/cclient.cpp \
     src/cdatabase.cpp \
     src/cmessage.cpp \
     src/cpacket.cpp \
@@ -22,8 +22,9 @@ SOURCES += \
     Server/main.cpp \
     src/crole.cpp \
     Server/sha256.cpp \
+    src/csessioncookie.cpp \
     Client/messagelist.cpp \
-    src/csessioncookie.cpp
+    Server/qsslserver.cpp
 
 HEADERS += \
     src/includes/AbstractServer.h \
@@ -35,12 +36,13 @@ HEADERS += \
     Server/includes/csessioncookie.h \
     src/includes/cmessage.h \
     src/includes/cchannel.h \
-    src/includes/cclient.h \
+    Server/includes/cclient.h \
     Server/includes/cdatabase.h \
     Server/includes/cpacket.h \
     src/includes/cmessage.h \
     src/includes/crole.h \
-    Client/includes/messagelist.h
+    Client/includes/messagelist.h \
+    Server/includes/qsslserver.h
 
 FORMS +=
 

@@ -2,10 +2,10 @@
  * @file        cchannel.h
  * @brief       Declaration of the class CChannel
  * @details     This class represent a channel
- * @author
- * @version     0.1
- * @date        2020
- * @copyright   GNU Public License.
+ * @author      LockVox Team
+ * @version     0.1.1
+ * @date        2021
+ * @copyright   GNU GPL-3.0
  */
 
 

@@ -2,7 +2,7 @@
 #define CLIENTMODEL_H
 
 #include <QAbstractListModel>
-#include "src/includes/cclient.h"
+#include "Client/includes/cclient.h"
 
 class ClientList;
 
