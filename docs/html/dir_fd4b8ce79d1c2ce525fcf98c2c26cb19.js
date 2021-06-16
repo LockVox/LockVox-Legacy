@@ -1,7 +1,7 @@
 var dir_fd4b8ce79d1c2ce525fcf98c2c26cb19 =
 [
     [ "caudio.h", "_server_2includes_2caudio_8h_source.html", null ],
-    [ "cclient.h", "_server_2includes_2cclient_8h_source.html", null ],
+    [ "cclient.h", "_server_2includes_2cclient_8h.html", "_server_2includes_2cclient_8h" ],
     [ "cdatabase.h", "cdatabase_8h.html", [
       [ "CDatabase", "class_c_database.html", "class_c_database" ]
     ] ],

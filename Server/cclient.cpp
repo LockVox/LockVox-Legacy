@@ -1,9 +1,9 @@
 /**
- * @file Server/cclient.cpp
- * @brief Definition of class CClient.
- * @author
- * @version
- * @date
+ * @file        cclient.cpp
+ * @brief       Definition of class CClient.
+ * @author      LockVox Team
+ * @version     0.2.0
+ * @date        2021
  */
 
 //Includes
@@ -11,7 +11,6 @@
 
 /**
  * @brief Default constructor of the class CClient.
- *
  * @see   CCllient::Client()
  */
 CClient::CClient()
@@ -27,7 +26,6 @@ CClient::CClient()
  * @brief Copy constructor of the class CClient
  * @overload
  * @param copy the attribut to copy
- *
  * @see   CClient::CClient()
  */
 CClient::CClient(const CClient & copy)
@@ -1193,7 +1191,7 @@ QList<QString> CClient::readChannelIndex(QString path_to_index)
 /**
  * @brief Update index.json when inserting new message to it
  * @param[in] path_to_index should be something like : "storage/[public|private]/[id]/index.json"
- * @param[in] filename_list is the list of all filename of message stored into for the given channel, can be exctracted with readChannelIndex
+ * @param[in] filename_list is the list of all filename of message stored into for the given channel, can be exctracted with CClient::readChannelIndex
  * @return true if the function had successfully updated the index, otherwise false
  */
 bool CClient::insertChannelIndex(QString path_to_index, QList<QString> filename_list)
@@ -1236,7 +1234,7 @@ bool CClient::insertChannelIndex(QString path_to_index, QList<QString> filename_
  * @param[in] isPrivate  tells if it's a private message or not
  * @param[in] nb_msg_to_sync  to tell how much message you want to sync should be -1 to retrieve all
  * @param[in] sender  refere tu uuid of sender, used to gather private message
- * @param start_index  is used to retrieve older message, should be 0 if no message has already been sync
+ * @param[in] start_index  is used to retrieve older message, should be 0 if no message has already been sync
  * @return A list of message
  * @retval A Qlist of CMessage countaining all message selected according to given information, if an error has occured, return the error has name of the sender (field "from") in the first message of the QList
  */

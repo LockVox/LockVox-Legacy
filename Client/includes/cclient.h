@@ -2,10 +2,10 @@
  * @file        cclient.h
  * @brief       Declaration of the class CClient
  * @details     This class represent an user
- * @author
- * @version     0.1
- * @date        2020
- * @copyright   GNU Public License.
+ * @author      LockVox Team
+ * @version     0.1.1
+ * @date        2021
+ * @copyright   GNU GPL-3.0
  */
 
 
@@ -33,8 +33,8 @@ class CClient
      * @brief       Declaration of the class CClient
      * @details     This class represent an user
      * @author
-     * @version     0.1
-     * @date        2020
+     * @version     0.1.1
+     * @date        2021
      * @note
      * @bug
      * @warning     Une mauvaise utilisation peut faire planter votre application (c'est votre faute)

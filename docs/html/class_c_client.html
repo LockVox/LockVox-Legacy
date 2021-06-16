@@ -299,14 +299,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>deserialize</b> (QJso
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Declaration of the class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a>. </p>
-<p>This class represent an user </p><dl class="section author"><dt>Author</dt><dd></dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2020 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd></dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd></dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>Une mauvaise utilisation peut faire planter votre application (c'est votre faute) </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>Une remarque à faire ? </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>GNU GPL-3.0</dd></dl>
 <p>This class represent an user </p><dl class="section author"><dt>Author</dt><dd>LockVox Team </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.2.0 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2021 </dd></dl>
@@ -566,7 +558,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>deserialize</b> (QJso
     <tr><td class="paramdir">[in]</td><td class="paramname">isPrivate</td><td>tells if it's a private message or not </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">nb_msg_to_sync</td><td>to tell how much message you want to sync should be -1 to retrieve all </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">sender</td><td>refere tu uuid of sender, used to gather private message </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">start_index</td><td>is used to retrieve older message, should be 0 if no message has already been sync </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">start_index</td><td>is used to retrieve older message, should be 0 if no message has already been sync </td></tr>
   </table>
   </dd>
 </dl>
@@ -870,7 +862,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>deserialize</b> (QJso
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">path_to_index</td><td>should be something like : "storage/[public|private]/[id]/index.json" </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">filename_list</td><td>is the list of all filename of message stored into for the given channel, can be exctracted with readChannelIndex </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">filename_list</td><td>is the list of all filename of message stored into for the given channel, can be exctracted with <a class="el" href="class_c_client.html#a13b725f43f8a74f781694faed3b2deeb" title="returns the list of names of all messages files contained in the given index">CClient::readChannelIndex</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -1278,8 +1270,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>deserialize</b> (QJso
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Grim/Documents/GitHub/LockVox/Client/includes/<a class="el" href="_client_2includes_2cclient_8h_source.html">cclient.h</a></li>
-<li>C:/Users/Grim/Documents/GitHub/LockVox/Client/<a class="el" href="_client_2cclient_8cpp.html">cclient.cpp</a></li>
+<li>LockVox/Client/includes/<a class="el" href="_client_2includes_2cclient_8h_source.html">cclient.h</a></li>
+<li>LockVox/Client/<a class="el" href="_client_2cclient_8cpp.html">cclient.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

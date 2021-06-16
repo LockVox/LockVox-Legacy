@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LockVox: LockVox/Server/includes/csessioncookie.h File Reference</title>
+<title>LockVox: LockVox/Server/includes/cclient.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('csessioncookie_8h.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('_server_2includes_2cclient_8h.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -85,28 +85,52 @@ $(document).ready(function(){initNavTree('csessioncookie_8h.html',''); initResiz
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
-<div class="title">csessioncookie.h File Reference</div>  </div>
+<div class="title">cclient.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Declaration of the class <a class="el" href="class_c_session_cookie.html" title="Declaration of the class CSessionCookie.">CSessionCookie</a>.  
+<p>Declaration of the class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="_server_2includes_2cclient_8h_source.html">cclient.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;QString&gt;</code><br />
+<code>#include &lt;QList&gt;</code><br />
+<code>#include &lt;QDebug&gt;</code><br />
+<code>#include &lt;QObject&gt;</code><br />
+<code>#include &lt;QtNetwork&gt;</code><br />
+<code>#include &lt;QUuid&gt;</code><br />
+<code>#include &lt;QImage&gt;</code><br />
+<code>#include &quot;<a class="el" href="_server_2includes_2cpacket_8h_source.html">cpacket.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sha256_8h_source.html">sha256.h</a>&quot;</code><br />
 </div>
-<p><a href="csessioncookie_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="_server_2includes_2cclient_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_session_cookie.html">CSessionCookie</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the class <a class="el" href="class_c_session_cookie.html" title="Declaration of the class CSessionCookie.">CSessionCookie</a>.  <a href="class_c_session_cookie.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_client.html">CClient</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a>.  <a href="class_c_client.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a24cd3c37a165a8c4626d9e78df4574ff"><td class="memItemLeft" align="right" valign="top"><a id="a24cd3c37a165a8c4626d9e78df4574ff"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SERVER</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a24cd3c37a165a8c4626d9e78df4574ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b33252c6ef2186f5fbd95caccc29c8"><td class="memItemLeft" align="right" valign="top"><a id="a22b33252c6ef2186f5fbd95caccc29c8"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SERVER_WARN</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a22b33252c6ef2186f5fbd95caccc29c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb2eb558e648404a280651301ad568b9"><td class="memItemLeft" align="right" valign="top"><a id="adb2eb558e648404a280651301ad568b9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SERVER_ERR</b>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:adb2eb558e648404a280651301ad568b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a498ff3b7c5fdb98a24abf1b5212b3f84"><td class="memItemLeft" align="right" valign="top"><a id="a498ff3b7c5fdb98a24abf1b5212b3f84"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DB_ERR</b>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:a498ff3b7c5fdb98a24abf1b5212b3f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Declaration of the class <a class="el" href="class_c_session_cookie.html" title="Declaration of the class CSessionCookie.">CSessionCookie</a>. </p>
-<p>This class represent a cookie session </p><dl class="section author"><dt>Author</dt><dd>Hugues Mattei (LockVox Team) </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1.1 </dd></dl>
+<div class="textblock"><p>Declaration of the class <a class="el" href="class_c_client.html" title="Declaration of the class CClient.">CClient</a>. </p>
+<p>This class represent an user </p><dl class="section author"><dt>Author</dt><dd>LockVox Team </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.2.0 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2021 </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>GNU GPL-3.0 </dd></dl>
 </div></div><!-- contents -->
@@ -114,7 +138,7 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_1db139f4197993aa3017f474e3b596e4.html">LockVox</a></li><li class="navelem"><a class="el" href="dir_9945d90053114091d5446084177d52df.html">Server</a></li><li class="navelem"><a class="el" href="dir_fd4b8ce79d1c2ce525fcf98c2c26cb19.html">includes</a></li><li class="navelem"><a class="el" href="csessioncookie_8h.html">csessioncookie.h</a></li>
+    <li class="navelem"><a class="el" href="dir_1db139f4197993aa3017f474e3b596e4.html">LockVox</a></li><li class="navelem"><a class="el" href="dir_9945d90053114091d5446084177d52df.html">Server</a></li><li class="navelem"><a class="el" href="dir_fd4b8ce79d1c2ce525fcf98c2c26cb19.html">includes</a></li><li class="navelem"><a class="el" href="_server_2includes_2cclient_8h.html">cclient.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

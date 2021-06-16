@@ -4,6 +4,10 @@
 
 #include <QDebug>
 
+/**
+ * @brief The CServer constructor
+ * @see CServer::CServer
+ */
 CServer::CServer()
 {
     qDebug() << "Welcome to Lockvox Server !" << Qt::endl;

@@ -181,29 +181,6 @@ QList$<$ \mbox{\hyperlink{class_c_message}{CMessage}} $>$ \mbox{\hyperlink{class
 Declaration of the class \mbox{\hyperlink{class_c_client}{CClient}}. 
 
 This class represent an user \begin{DoxyAuthor}{Author}
-
-\end{DoxyAuthor}
-\begin{DoxyVersion}{Version}
-0.\+1 
-\end{DoxyVersion}
-\begin{DoxyDate}{Date}
-2020 
-\end{DoxyDate}
-\begin{DoxyNote}{Note}
-
-\end{DoxyNote}
-\begin{DoxyRefDesc}{Bug}
-\item[\mbox{\hyperlink{bug__bug000001}{Bug}}]\end{DoxyRefDesc}
-\begin{DoxyWarning}{Warning}
-Une mauvaise utilisation peut faire planter votre application (c\textquotesingle{}est votre faute) 
-\end{DoxyWarning}
-\begin{DoxyRemark}{Remarks}
-Une remarque à faire ? 
-\end{DoxyRemark}
-\begin{DoxyCopyright}{Copyright}
-GNU GPL-\/3.\+0
-\end{DoxyCopyright}
-This class represent an user \begin{DoxyAuthor}{Author}
 Lock\+Vox Team 
 \end{DoxyAuthor}
 \begin{DoxyVersion}{Version}
@@ -362,7 +339,7 @@ Create a QList of \mbox{\hyperlink{class_c_message}{CMessage}} stored localy usi
 \hline
 \mbox{\texttt{ in}}  & {\em sender} & refere tu uuid of sender, used to gather private message \\
 \hline
- & {\em start\+\_\+index} & is used to retrieve older message, should be 0 if no message has already been sync \\
+\mbox{\texttt{ in}}  & {\em start\+\_\+index} & is used to retrieve older message, should be 0 if no message has already been sync \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -564,7 +541,7 @@ Update index.\+json when inserting new message to it.
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in}}  & {\em path\+\_\+to\+\_\+index} & should be something like \+: \char`\"{}storage/\mbox{[}public$\vert$private\mbox{]}/\mbox{[}id\mbox{]}/index.\+json\char`\"{} \\
 \hline
-\mbox{\texttt{ in}}  & {\em filename\+\_\+list} & is the list of all filename of message stored into for the given channel, can be exctracted with read\+Channel\+Index \\
+\mbox{\texttt{ in}}  & {\em filename\+\_\+list} & is the list of all filename of message stored into for the given channel, can be exctracted with \mbox{\hyperlink{class_c_client_a13b725f43f8a74f781694faed3b2deeb}{CClient\+::read\+Channel\+Index}} \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -825,5 +802,5 @@ Setter of attribute m\+\_\+uuid.
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/includes/\mbox{\hyperlink{_client_2includes_2cclient_8h}{cclient.\+h}}\item 
-C\+:/\+Users/\+Grim/\+Documents/\+Git\+Hub/\+Lock\+Vox/\+Client/\mbox{\hyperlink{_client_2cclient_8cpp}{cclient.\+cpp}}\end{DoxyCompactItemize}
+Lock\+Vox/\+Client/includes/\mbox{\hyperlink{_client_2includes_2cclient_8h}{cclient.\+h}}\item 
+Lock\+Vox/\+Client/\mbox{\hyperlink{_client_2cclient_8cpp}{cclient.\+cpp}}\end{DoxyCompactItemize}

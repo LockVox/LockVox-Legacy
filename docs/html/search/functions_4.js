@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['insertchannelindex_131',['insertChannelIndex',['../class_c_client.html#a344be2fb6f10e4d73e0ddd87152917c2',1,'CClient']]]
+  ['insertchannelindex_132',['insertChannelIndex',['../class_c_client.html#a344be2fb6f10e4d73e0ddd87152917c2',1,'CClient']]]
 ];

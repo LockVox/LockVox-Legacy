@@ -1,9 +1,9 @@
 /**
- * @file        Server/cclient.h
+ * @file        cclient.h
  * @brief       Declaration of the class CClient
  * @details     This class represent an user
  * @author      LockVox Team
- * @version     0.1.1
+ * @version     0.2.0
  * @date        2021
  * @copyright   GNU GPL-3.0
  */

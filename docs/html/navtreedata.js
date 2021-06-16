@@ -25,16 +25,16 @@
 var NAVTREE =
 [
   [ "LockVox", "index.html", [
-    [ "README", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html", [
-      [ "LockVox Project", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md0", [
-        [ "Introduction", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md1", null ],
-        [ "Current Status", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md2", [
-          [ "Server side", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md3", null ],
-          [ "Client side", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md4", null ],
-          [ "TO DO", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md5", null ]
+    [ "README", "md__lock_vox__r_e_a_d_m_e.html", [
+      [ "LockVox Project", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md0", [
+        [ "Introduction", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md1", null ],
+        [ "Current Status", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md2", [
+          [ "Server side", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md3", null ],
+          [ "Client side", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md4", null ],
+          [ "TO DO", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md5", null ]
         ] ],
-        [ "3rd-party", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md6", null ],
-        [ "Authors", "md__c___users__grim__documents__git_hub__lock_vox__r_e_a_d_m_e.html#autotoc_md7", null ]
+        [ "3rd-party", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md6", null ],
+        [ "Authors", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md7", null ]
       ] ]
     ] ],
     [ "Bug List", "bug.html", null ],
@@ -56,8 +56,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_abstract_server_8h.html",
-"class_c_packet.html#af51056009e93a72caf33fa1fe9d18006",
-"classcrole.html"
+"class_c_packet.html#adf2216b9b40a57097101b54b185ddeea",
+"class_u_i_worker.html#a9c71bce4153aa75e53bca7073b1deec4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
