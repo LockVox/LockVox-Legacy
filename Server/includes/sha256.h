@@ -1,3 +1,13 @@
+/**
+ * @file sha256.h
+ * @brief sha256 C implementation
+ * @author Oliver Gay
+ * @link http://www.zedwood.com/article/cpp-sha256-function
+ * @version updated to C++ by Zedwood
+ * @date 2012
+ * @copyright BSD
+ */
+
 #ifndef SHA256_H
 #define SHA256_H
 #include <string>

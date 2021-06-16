@@ -1,25 +1,26 @@
+/**
+ * @file        cpacket.h
+ * @brief       Declaration of the class CPacket
+ * @details     CPacket are used to discuss between client and server
+ * @author      LockVox Team
+ * @version     0.1.1
+ * @date        2021
+ * @copyright   GNU GPL-3.0
+ */
+
 #ifndef CPACKET_H
 #define CPACKET_H
 
-
+#include "cmessage.h"
 #include "cclient.h"
 #include "cchannel.h"
-#include "cmessage.h"
+
 
 #include <QString>
 #include <QList>
 
-#include "cserver.h"
-
 class CServer;
-
-struct register_info{
-    QString email;
-    QString password;
-    QString password_confirm;
-    QString name;
-
-};
+class CChannel;
 
 class CPacket
 {
@@ -56,11 +57,6 @@ class CPacket
             return id_channel;
         }
 
-        struct register_info get_RegisterInfo()
-        {
-            return m_register;
-        }
-
         //Setters
         void SetType(QString p_type);
         void SetAction(QString p_action);
@@ -91,7 +87,7 @@ class CPacket
 
         QList<QString> Deserialize_auth();
         void Deserialize_ID();                                       //Deerialize ID Object (ID chan & ID client)
-        void Deserialize_regReq();
+        QList<QString> Deserialize_regReq();
         CMessage Deserialize_Message();
         QList<CMessage> Deserialize_MessageList();
         QList<QString> deserialize_messageRequest();
@@ -119,8 +115,6 @@ class CPacket
         //From Object to Byte Array
         QJsonDocument m_data;
         QByteArray m_ba;
-
-        struct register_info m_register;
 };
 
 #endif // CPACKET_H

@@ -1,3 +1,13 @@
+/**
+ * @file        cmessage.h
+ * @brief       Declaration of the class CMessage
+ * @details     CMessage are simply the messages class so that client can communicate between them...
+ * @author      Valentin Monnot (LockVox Team)
+ * @version     0.1.0
+ * @date        2021
+ * @copyright   GNU GPL-3.0
+ */
+
 #ifndef CMESSAGE_H
 #define CMESSAGE_H
 

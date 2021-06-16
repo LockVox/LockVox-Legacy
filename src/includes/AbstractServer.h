@@ -1,16 +1,25 @@
+/**
+ * @file        AbstractServer.h
+ * @brief       Declaration of the class AbstractServer
+ * @details     This class represent the virtual class of CServer
+ * @author      LockVox Team
+ * @version     0.1.1
+ * @date        2021
+ * @copyright   GNU GPL-3.0
+ */
+
+#ifndef ABSTRACT_SERVER_H
+#define ABSTRACT_SERVER_H
+
 #include <QDebug>
 #include <QObject>
 #include <QtNetwork>
 #include <QUuid>
 
-
 #include "cchannel.h"
 #include "cclient.h"
 
-
-class CClient;
 class CChannel;
-
 
 class AbstractServer : public QObject
 {
@@ -70,13 +79,12 @@ class AbstractServer : public QObject
 
     signals:
 
-    protected slots:
-        virtual void onReceiveData();
-
-   protected:
+    protected:
 
         QList<CChannel*> m_channels;                        //List of channels
         QList<CClient*> m_clients;                          //List of clients
         QList<QByteArray*> m_buffers;                       //List of buffers for multiples packets request
 
 };
+
+#endif

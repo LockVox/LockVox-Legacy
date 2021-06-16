@@ -21,7 +21,7 @@ SOURCES += \
         imageprovider.cpp \
         src/abstractserver.cpp \
         src/cchannel.cpp \
-        src/cclient.cpp  \
+        Client/cclient.cpp  \
         src/cmessage.cpp \
         src/crole.cpp
 
@@ -41,7 +41,7 @@ HEADERS += \
         imageprovider.h \
         src/includes/AbstractServer.h \
         src/includes/cchannel.h \
-        src/includes/cclient.h  \
+        Client/includes/cclient.h  \
         src/includes/cmessage.h \
         src/includes/crole.h \
 

@@ -2,10 +2,10 @@
  * @file        cclient.h
  * @brief       Declaration of the class CookiesManager
  * @details     This class is used to manage users session cookie
- * @author
- * @version     0.1
- * @date        2020
- * @copyright   GNU Public License.
+ * @author      Hugues Mattei (LockVox Team)
+ * @version     0.1.1
+ * @date        2021
+ * @copyright   GNU GPL-3.0
  */
 
 

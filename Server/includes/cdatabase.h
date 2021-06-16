@@ -1,3 +1,13 @@
+/**
+ * @file        cdatabase.h
+ * @brief       Declaration of the class CDatabase
+ * @details     This class represente the main database (MySQL/MariaDB) and its function
+ * @author      LockVox Team
+ * @version     0.2.0
+ * @date        2021
+ * @copyright   GNU GPL-3.0
+ */
+
 #ifndef CDATABASE_H
 #define CDATABASE_H
 
@@ -14,6 +24,8 @@
 #include "cclient.h"
 
 using namespace std;
+
+class CChannel;
 
 class CDatabase : public QThread
 {

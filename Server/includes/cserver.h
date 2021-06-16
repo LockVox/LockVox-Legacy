@@ -1,3 +1,13 @@
+/**
+ * @file        cclient.h
+ * @brief       Declaration of the class CServer
+ * @details     Here is the main process of a LockVox server
+ * @author      LockVox Team
+ * @version     0.2.0
+ * @date        2021
+ * @copyright   GNU GPL-3.0
+ */
+
 #ifndef CSERVER_H
 #define CSERVER_H
 
@@ -7,21 +17,13 @@
 #include <QRandomGenerator>
 
 #include "AbstractServer.h"
-#include "cchannel.h"
 #include "cdatabase.h"
 #include "cpacket.h"
 #include "caudio.h"
 
 #include "Server/config.h"
 
-#define SERVER 0
-#define SERVER_WARN 1
-#define SERVER_ERR 2
-#define DB_ERR 3
-
-
-class CClient;
-class CChannel;
+class CDatabase;
 
 class CServer : public AbstractServer
 {
@@ -39,7 +41,6 @@ class CServer : public AbstractServer
 
         CClient * whichClient(QTcpSocket * soc);                                  //Find ID client from socket
 
-        void sendToAll(QByteArray out);                                     //Send packet to everyone
         void sendToClient(QByteArray out, CClient * client);
         void sendToAllExecptClient(QByteArray out, CClient * client);
 
@@ -49,39 +50,31 @@ class CServer : public AbstractServer
         void RemoveBannedUser(CClient* client);
         QList<CClient*> GetBannedUserList();
 
-        //Process
-        void processIncomingData(CClient *sender, QByteArray data);         //Process incoming data
-
-        //Unused functions, i leave it here for the moment @Valentin
-        /*
-        //Serialization | Deserialization
-        QByteArray SerializeChannels();
-        QByteArray SerializeClients();
-
-        void deserializeChannel(QJsonArray & json_array);
-        void deserializeClients(QJsonArray & json_array);
-
-        CChannel * deserializeToChannel(QJsonObject json_obj);              //Deserialize channels from json object
-        CClient * deserializeToClient(QJsonObject json_obj);                //Deserialize clients from json objec
-        */
-
-        //Messages functions
-        bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it
-        QList<QString> readChannelIndex(QString path_to_index); //Returns the list of names of all messages files contained in the given index
-        bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
-        QList<CMessage> createMessageList(QString id, bool isPrivate,int nb_msg_to_sync, QUuid sender, int start_index); //Creates a QList of CMessage stored localy using index.json
-
         //Log lol
         void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
 
 
-    public slots:
+        void connectClient(CClient * client);
 
+    signals:
+        void sendToAll(QByteArray out);
 
     private slots:
         void onNewConnection();                                           //Add client to the server - default no channel           //get data
         void onDisconnectClient();                                        //Disconnecting client - del client from channel list - del client
-        void onReceiveData();                                                //Server receive data
+
+        //CClient
+        void ext_writeToLog(QString error, int level);
+        void ext_sendToAll(QByteArray out);
+
+        void sendMe(QTcpSocket * socket);
+        void updateClient(int update_type, CClient * client);
+        void updateChannel(int update_type, CChannel * channel);
+
+        void auth(QList<QString> info, CClient * client);
+        void reg(QList<QString> info, CClient * client);
+
+        CChannel * thisChan(int id);
 
     private:
         //Server mode

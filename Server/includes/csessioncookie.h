@@ -1,11 +1,11 @@
 /**
- * @file        cclient.h
- * @brief       Declaration of the class CClient
- * @details     This class represent an user
- * @author
- * @version     0.1
- * @date        2020
- * @copyright   GNU Public License.
+ * @file        csessioncookie.h
+ * @brief       Declaration of the class CSessioncookie
+ * @details
+ * @author      Hugues Mattei (LockVox Team)
+ * @version     0.1.2
+ * @date        2021
+ * @copyright   GNU GPL-3.0
  */
 
 #ifndef CSESSIONCOOKIE_H
@@ -17,9 +17,6 @@
 
 //Includes
 #include "cclient.h"
-
-
-
 
 class CSessionCookie
 {

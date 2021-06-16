@@ -1,4 +1,5 @@
 #include "Server/includes/cpacket.h"
+#include "cserver.h"
 
 CPacket::CPacket()
 {
@@ -303,23 +304,26 @@ QList<QString> CPacket::Deserialize_auth()
     return null;
 }
 
-void CPacket::Deserialize_regReq()
+QList<QString> CPacket::Deserialize_regReq()
 {
+    QList<QString> null;
+    null.push_back("null");
     try {
         if(m_obj.contains("newReg"))
         {
+            QList<QString> res;
             QJsonObject newReg = m_obj.value("newReg").toObject();
-            m_register.name = newReg.value("username").toString();
-            m_register.email = newReg.value("mail").toString();
-            m_register.password = newReg.value("password").toString();
-            m_register.password_confirm = newReg.value("password_confirm").toString();
+            res.push_back(newReg.value("username").toString());
+            res.push_back(newReg.value("mail").toString());
+            res.push_back(newReg.value("password").toString());
+            res.push_back(newReg.value("password_confirm").toString());
         }
 
     }  catch (char* e) {
         qDebug() << "Error in Deserialize_regReq :" << e << Qt::endl;
-        QList<QString> err;
-        err.push_back("0");
+        return null;
     }
+    return null;
 }
 
 void CPacket::Serialize_regAns(int code)

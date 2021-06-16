@@ -170,8 +170,3 @@ void AbstractServer::printClients()
         qDebug() << "ID[" << c->get_uuid() << "] Name " << c->get_pseudo() << Qt::endl;
     }
 }
-
-void AbstractServer::onReceiveData()
-{
-    qDebug() << "Receive Data - Virtual member of abstract server\n";
-}
