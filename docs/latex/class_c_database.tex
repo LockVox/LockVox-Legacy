@@ -68,12 +68,19 @@ Valentin Monnot (Lock\+Vox Team)
 2021 
 \end{DoxyDate}
 \begin{DoxyNote}{Note}
-
+db.\+cnf in \char`\"{}\%\+LOCKVOX\+\_\+\+SERVER\+\_\+\+ROOT\+\_\+\+DIR\%/storage/conf/\char`\"{} use 4 parameter, all of them should be there even if not used ! ~\newline
+ Order is important ! If you didn\textquotesingle{}t use one of the parameter, default value will be applied, except for MY\+\_\+\+PASSWORD. For user security you should never use a database without password... ~\newline
+ Exemple with default values \+: ~\newline
+ MY\+\_\+\+HOSTNAME=127.\+0.\+0.\+1 ~\newline
+ MY\+\_\+\+DATABASE=lockvox\+\_\+server ~\newline
+ MY\+\_\+\+USERNAME=lockvox ~\newline
+ MY\+\_\+\+PASSWORD=changeme ~\newline
+ If no configuration file found when starting the server, it will automaticcaly create a db.\+cnf file with these default values. After what server will close telling you that its default values and you should change them. 
 \end{DoxyNote}
 \begin{DoxyRefDesc}{Bug}
-\item[\mbox{\hyperlink{bug__bug000003}{Bug}}]\end{DoxyRefDesc}
+\item[\mbox{\hyperlink{bug__bug000003}{Bug}}]In db configuration file, if MY\+\_\+\+HOSTNAME=domain\+Name.\+something Maria\+DB connector didn\textquotesingle{}t recognize it as an address and use your ip address, i don\textquotesingle{}t f$\ast$$\ast$$\ast$ing know why. All work great if MY\+\_\+\+HOSTNAME is hardcoded or if you use a standard IPV4 address in configuration file \end{DoxyRefDesc}
 \begin{DoxyWarning}{Warning}
-
+DEV\+\_\+\+DB is our Maria\+DB database used for testing purpose, only fake account with troll username/password should be used on this database as everyone with an internet connection could access it ! if you just want to test, use account \char`\"{}test\char`\"{} with password \char`\"{}test\char`\"{}. If you want to use your own Maria\+DB/\+My\+SQL database, we advise you to NOT hardcode your database credential. You should go in \char`\"{}config.\+h\char`\"{} and comment \#define DEV\+\_\+\+DB so you can use db.\+cnf file to configure your own DB. 
 \end{DoxyWarning}
 \begin{DoxyRemark}{Remarks}
 

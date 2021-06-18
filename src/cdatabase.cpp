@@ -10,7 +10,7 @@ CDatabase::CDatabase()
 QString CDatabase::init()
 {
 #ifdef DEV_DB
-    MY_HOSTNAME = "82.64.90.246";
+    MY_HOSTNAME = "lockvox.fr";
     MY_DATABASE = "lockvox_server";
     MY_USERNAME = "lockvox";
     MY_PASSWORD = "4E96up6E3jxsX6QR";

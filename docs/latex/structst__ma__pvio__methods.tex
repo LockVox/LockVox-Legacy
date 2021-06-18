@@ -1,0 +1,61 @@
+\hypertarget{structst__ma__pvio__methods}{}\doxysection{st\+\_\+ma\+\_\+pvio\+\_\+methods Struct Reference}
+\label{structst__ma__pvio__methods}\index{st\_ma\_pvio\_methods@{st\_ma\_pvio\_methods}}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_ac8cb192db3c4a881922a0c20278f3325}\label{structst__ma__pvio__methods_ac8cb192db3c4a881922a0c20278f3325}} 
+my\+\_\+bool($\ast$ {\bfseries set\+\_\+timeout} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, enum enum\+\_\+pvio\+\_\+timeout type, int timeout)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a59924c110404596af540fce3a0e08471}\label{structst__ma__pvio__methods_a59924c110404596af540fce3a0e08471}} 
+int($\ast$ {\bfseries get\+\_\+timeout} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, enum enum\+\_\+pvio\+\_\+timeout type)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a46c560c20f271bf4a2ecc4cb35cc88f5}\label{structst__ma__pvio__methods_a46c560c20f271bf4a2ecc4cb35cc88f5}} 
+ssize\+\_\+t($\ast$ {\bfseries read} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, uchar $\ast$buffer, size\+\_\+t length)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a2bd2716127aa1eabd70d62e6df9e6eb6}\label{structst__ma__pvio__methods_a2bd2716127aa1eabd70d62e6df9e6eb6}} 
+ssize\+\_\+t($\ast$ {\bfseries async\+\_\+read} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, uchar $\ast$buffer, size\+\_\+t length)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a1f2831e47850716727ca9059af8eec8a}\label{structst__ma__pvio__methods_a1f2831e47850716727ca9059af8eec8a}} 
+ssize\+\_\+t($\ast$ {\bfseries write} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, const uchar $\ast$buffer, size\+\_\+t length)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_ac5933e3cf7e74462475912ccc74c675f}\label{structst__ma__pvio__methods_ac5933e3cf7e74462475912ccc74c675f}} 
+ssize\+\_\+t($\ast$ {\bfseries async\+\_\+write} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, const uchar $\ast$buffer, size\+\_\+t length)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a961536cb04fcfc342942c429ffd680c9}\label{structst__ma__pvio__methods_a961536cb04fcfc342942c429ffd680c9}} 
+int($\ast$ {\bfseries wait\+\_\+io\+\_\+or\+\_\+timeout} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, my\+\_\+bool is\+\_\+read, int timeout)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a1699d6594669e8df1cad11150941027d}\label{structst__ma__pvio__methods_a1699d6594669e8df1cad11150941027d}} 
+int($\ast$ {\bfseries blocking} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, my\+\_\+bool value, my\+\_\+bool $\ast$old\+\_\+value)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_aca66510bbb214fc8127d206902c9c8f2}\label{structst__ma__pvio__methods_aca66510bbb214fc8127d206902c9c8f2}} 
+my\+\_\+bool($\ast$ {\bfseries connect} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, \mbox{\hyperlink{structst__ma__pvio__cinfo}{MA\+\_\+\+PVIO\+\_\+\+CINFO}} $\ast$cinfo)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_ad12b2cb54ed37d5e7ee38b1d315f8e8e}\label{structst__ma__pvio__methods_ad12b2cb54ed37d5e7ee38b1d315f8e8e}} 
+my\+\_\+bool($\ast$ {\bfseries close} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_aca524e2ea5fe2d6e28dbdd97285f4b09}\label{structst__ma__pvio__methods_aca524e2ea5fe2d6e28dbdd97285f4b09}} 
+int($\ast$ {\bfseries fast\+\_\+send} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_adb1c81965585da7973a10acbd77a6910}\label{structst__ma__pvio__methods_adb1c81965585da7973a10acbd77a6910}} 
+int($\ast$ {\bfseries keepalive} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_aa0ea7ae6d7654f7b1b3894e37e2e6deb}\label{structst__ma__pvio__methods_aa0ea7ae6d7654f7b1b3894e37e2e6deb}} 
+my\+\_\+bool($\ast$ {\bfseries get\+\_\+handle} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, void $\ast$handle)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a2f523c8664cb4356e464da99c2a106ed}\label{structst__ma__pvio__methods_a2f523c8664cb4356e464da99c2a106ed}} 
+my\+\_\+bool($\ast$ {\bfseries is\+\_\+blocking} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_a00fca17ce759d23cfee21f498a6c6e60}\label{structst__ma__pvio__methods_a00fca17ce759d23cfee21f498a6c6e60}} 
+my\+\_\+bool($\ast$ {\bfseries is\+\_\+alive} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_aa9a7e69727dc35c560608ba21037e294}\label{structst__ma__pvio__methods_aa9a7e69727dc35c560608ba21037e294}} 
+my\+\_\+bool($\ast$ {\bfseries has\+\_\+data} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio, ssize\+\_\+t $\ast$data\+\_\+len)
+\item 
+\mbox{\Hypertarget{structst__ma__pvio__methods_ab3a1d635dc1b1623d98b29d8c251cd5c}\label{structst__ma__pvio__methods_ab3a1d635dc1b1623d98b29d8c251cd5c}} 
+int($\ast$ {\bfseries shutdown} )(\mbox{\hyperlink{structst__ma__pvio}{MARIADB\+\_\+\+PVIO}} $\ast$pvio)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/ma\+\_\+pvio.\+h\end{DoxyCompactItemize}

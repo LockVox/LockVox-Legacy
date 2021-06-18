@@ -1,0 +1,28 @@
+\hypertarget{structst__ma__connection__plugin}{}\doxysection{st\+\_\+ma\+\_\+connection\+\_\+plugin Struct Reference}
+\label{structst__ma__connection__plugin}\index{st\_ma\_connection\_plugin@{st\_ma\_connection\_plugin}}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_a127feb39e79e1097ac5e2006747d73ce}\label{structst__ma__connection__plugin_a127feb39e79e1097ac5e2006747d73ce}} 
+MYSQL\+\_\+\+CLIENT\+\_\+\+PLUGIN\+\_\+\+HEADER \mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$($\ast$ {\bfseries connect} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, const char $\ast$host, const char $\ast$user, const char $\ast$passwd, const char $\ast$db, unsigned int port, const char $\ast$unix\+\_\+socket, unsigned long clientflag)
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_a3317708b924235f6b642776f93e42aa3}\label{structst__ma__connection__plugin_a3317708b924235f6b642776f93e42aa3}} 
+void($\ast$ {\bfseries close} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_aa53c0d0421ab3ed959bd6a1775e364d9}\label{structst__ma__connection__plugin_aa53c0d0421ab3ed959bd6a1775e364d9}} 
+int($\ast$ {\bfseries set\+\_\+optionsv} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, unsigned int option,...)
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_a4f98ff34865ffe0d5afcc9bb4f1cb239}\label{structst__ma__connection__plugin_a4f98ff34865ffe0d5afcc9bb4f1cb239}} 
+int($\ast$ {\bfseries set\+\_\+connection} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, enum enum\+\_\+server\+\_\+command command, const char $\ast$arg, size\+\_\+t length, my\+\_\+bool skipp\+\_\+check, void $\ast$opt\+\_\+arg)
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_a30b1188af68a615b11de43854c5eb234}\label{structst__ma__connection__plugin_a30b1188af68a615b11de43854c5eb234}} 
+my\+\_\+bool($\ast$ {\bfseries reconnect} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__ma__connection__plugin_a34854e120a6f85b26c5a6dc7c6ca534b}\label{structst__ma__connection__plugin_a34854e120a6f85b26c5a6dc7c6ca534b}} 
+int($\ast$ {\bfseries reset} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/mysql/\mbox{\hyperlink{client__plugin_8h}{client\+\_\+plugin.\+h}}\end{DoxyCompactItemize}

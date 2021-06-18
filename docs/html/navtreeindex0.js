@@ -6,9 +6,11 @@ var NAVTREEINDEX0 =
 "_client_2includes_2caudio_8h_source.html":[3,0,0,0,0,0],
 "_client_2includes_2cclient_8h.html":[3,0,0,0,0,1],
 "_client_2includes_2cclient_8h_source.html":[3,0,0,0,0,1],
-"_client_2includes_2cpacket_8h_source.html":[3,0,0,0,0,6],
-"_client_2includes_2cserver_8h_source.html":[3,0,0,0,0,7],
+"_client_2includes_2config_8h_source.html":[3,0,0,0,0,6],
+"_client_2includes_2cpacket_8h_source.html":[3,0,0,0,0,7],
+"_client_2includes_2cserver_8h_source.html":[3,0,0,0,0,8],
 "_server_2cclient_8cpp.html":[3,0,0,1,1],
+"_server_2config_8h_source.html":[3,0,0,1,2],
 "_server_2includes_2caudio_8h_source.html":[3,0,0,1,0,0],
 "_server_2includes_2cclient_8h.html":[3,0,0,1,0,1],
 "_server_2includes_2cclient_8h.html#a22b33252c6ef2186f5fbd95caccc29c8":[3,0,0,1,0,1,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "class_c_packet.html#ac8aba12d9b64f4bf0db275f1c00ea485":[2,0,10,50],
 "class_c_packet.html#ac8aba12d9b64f4bf0db275f1c00ea485":[2,0,10,51],
 "class_c_packet.html#ad0f8879dd6fd755339bd4d5cb0456762":[2,0,10,60],
-"class_c_packet.html#ad0f8879dd6fd755339bd4d5cb0456762":[2,0,10,61],
-"class_c_packet.html#ade783a6bc30048efefc572ab2293d858":[2,0,10,7],
-"class_c_packet.html#adec79b441cdcfa18495c36bcfabee4e0":[2,0,10,8]
+"class_c_packet.html#ad0f8879dd6fd755339bd4d5cb0456762":[2,0,10,61]
 };

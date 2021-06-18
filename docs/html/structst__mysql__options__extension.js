@@ -1,0 +1,28 @@
+var structst__mysql__options__extension =
+[
+    [ "async_context", "structst__mysql__options__extension.html#a64ec9af905da1e557e4f921b28021ee4", null ],
+    [ "connect_attrs", "structst__mysql__options__extension.html#adaf268e62a25d5f03ac55ae3c2d2d57d", null ],
+    [ "connect_attrs_len", "structst__mysql__options__extension.html#ad5b954fe77790a3f7de0569ae8d66c89", null ],
+    [ "connection_handler", "structst__mysql__options__extension.html#a308d07f839feaf2f82c60eefcae6b3db", null ],
+    [ "db_driver", "structst__mysql__options__extension.html#a7d856b82f0a8cf2652d6f9c33dc2352d", null ],
+    [ "default_auth", "structst__mysql__options__extension.html#a2772401d270a59e4b9335d29cba174e8", null ],
+    [ "io_wait", "structst__mysql__options__extension.html#a2aea04c4b57847fac7c7e98895c2f42d", null ],
+    [ "multi_command", "structst__mysql__options__extension.html#ae86c130c7e02cec4395850bb181b4e7d", null ],
+    [ "plugin_dir", "structst__mysql__options__extension.html#a522944ff3b9ad433bf556db956a868b9", null ],
+    [ "proxy_header", "structst__mysql__options__extension.html#afc2a23c3be4185c9cb2c3fb70a9a63e2", null ],
+    [ "proxy_header_len", "structst__mysql__options__extension.html#ad28dd40a4f78ef16b9db999aaf6d4e49", null ],
+    [ "read_only", "structst__mysql__options__extension.html#ac76c594f0e9793f12047d6c5f0faadb0", null ],
+    [ "report_progress", "structst__mysql__options__extension.html#a5fee6942543ce9dd0f80ee9ac3850e30", null ],
+    [ "server_public_key", "structst__mysql__options__extension.html#a754304937b1d73134cb7be088331dec3", null ],
+    [ "server_public_key_path", "structst__mysql__options__extension.html#aab88aa6e8c6bb8232e6590556479b3aa", null ],
+    [ "set_option", "structst__mysql__options__extension.html#abff85003383130205470512931318b2c", null ],
+    [ "ssl_crl", "structst__mysql__options__extension.html#a771b732e01d74b76692586e270e37d8b", null ],
+    [ "ssl_crlpath", "structst__mysql__options__extension.html#a1e162444bed08ecfd1aa85e5c28cc19d", null ],
+    [ "tls_cipher_strength", "structst__mysql__options__extension.html#ae3b426f2118208325b36b1101f3fbd9b", null ],
+    [ "tls_fp", "structst__mysql__options__extension.html#af22cb1b313e737a6a62b48b828bfac51", null ],
+    [ "tls_fp_list", "structst__mysql__options__extension.html#ad87436fe77984b097416b706b181e778", null ],
+    [ "tls_pw", "structst__mysql__options__extension.html#a4f21b842bd7dcc9500f4190b0450613c", null ],
+    [ "tls_version", "structst__mysql__options__extension.html#a734f6a520bf5ac410fce4b958aec246b", null ],
+    [ "url", "structst__mysql__options__extension.html#afc18b92417533ccbbb88d69b6885696b", null ],
+    [ "userdata", "structst__mysql__options__extension.html#a070dfa8b84126a5a5b09bb48b5d0fbfe", null ]
+];

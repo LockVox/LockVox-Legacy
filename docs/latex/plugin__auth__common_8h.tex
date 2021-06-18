@@ -1,0 +1,75 @@
+\hypertarget{plugin__auth__common_8h}{}\doxysection{libs/libmariadb/include/mysql/plugin\+\_\+auth\+\_\+common.h File Reference}
+\label{plugin__auth__common_8h}\index{libs/libmariadb/include/mysql/plugin\_auth\_common.h@{libs/libmariadb/include/mysql/plugin\_auth\_common.h}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structst__plugin__vio__info}{st\+\_\+plugin\+\_\+vio\+\_\+info}}
+\item 
+struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{plugin__auth__common_8h_a008ce35f9da3c81fc28ad7e4cdc524e3}\label{plugin__auth__common_8h_a008ce35f9da3c81fc28ad7e4cdc524e3}} 
+\#define {\bfseries MYSQL\+\_\+\+PLUGIN\+\_\+\+AUTH\+\_\+\+COMMON\+\_\+\+INCLUDED}
+\item 
+\#define \mbox{\hyperlink{plugin__auth__common_8h_aa9261e7b650434a33f94d75a65fa9b57}{MYSQL\+\_\+\+USERNAME\+\_\+\+LENGTH}}~512
+\item 
+\#define \mbox{\hyperlink{plugin__auth__common_8h_a44f1794e5697229fad0750b028ddbd4d}{CR\+\_\+\+ERROR}}~0
+\item 
+\#define \mbox{\hyperlink{plugin__auth__common_8h_ae5ecbb4568bb8771e7cb0d2b9d192e62}{CR\+\_\+\+OK}}~-\/1
+\item 
+\#define \mbox{\hyperlink{plugin__auth__common_8h_a64bf95e422b0259c0705ea8585f6e8d6}{CR\+\_\+\+OK\+\_\+\+HANDSHAKE\+\_\+\+COMPLETE}}~-\/2
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{plugin__auth__common_8h_a719b5778c7ee8bfa365b22da340abae9}\label{plugin__auth__common_8h_a719b5778c7ee8bfa365b22da340abae9}} 
+typedef struct \mbox{\hyperlink{structst__plugin__vio__info}{st\+\_\+plugin\+\_\+vio\+\_\+info}} {\bfseries MYSQL\+\_\+\+PLUGIN\+\_\+\+VIO\+\_\+\+INFO}
+\item 
+typedef struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} \mbox{\hyperlink{plugin__auth__common_8h_ab33c4740c70c652ea4201b3d59e6ba27}{MYSQL\+\_\+\+PLUGIN\+\_\+\+VIO}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file defines constants and data structures that are the same for both client-\/ and server-\/side authentication plugins. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{plugin__auth__common_8h_a44f1794e5697229fad0750b028ddbd4d}\label{plugin__auth__common_8h_a44f1794e5697229fad0750b028ddbd4d}} 
+\index{plugin\_auth\_common.h@{plugin\_auth\_common.h}!CR\_ERROR@{CR\_ERROR}}
+\index{CR\_ERROR@{CR\_ERROR}!plugin\_auth\_common.h@{plugin\_auth\_common.h}}
+\doxysubsubsection{\texorpdfstring{CR\_ERROR}{CR\_ERROR}}
+{\footnotesize\ttfamily \#define CR\+\_\+\+ERROR~0}
+
+return values of the plugin authenticate\+\_\+user() method. Authentication failed. Additionally, all other CR\+\_\+xxx values (libmariadb error code) can be used too.
+
+The client plugin may set the error code and the error message directly in the MYSQL structure and return CR\+\_\+\+ERROR. If a CR\+\_\+xxx specific error code was returned, an error message in the MYSQL structure will be overwritten. If CR\+\_\+\+ERROR is returned without setting the error in MYSQL, CR\+\_\+\+UNKNOWN\+\_\+\+ERROR will be user. \mbox{\Hypertarget{plugin__auth__common_8h_ae5ecbb4568bb8771e7cb0d2b9d192e62}\label{plugin__auth__common_8h_ae5ecbb4568bb8771e7cb0d2b9d192e62}} 
+\index{plugin\_auth\_common.h@{plugin\_auth\_common.h}!CR\_OK@{CR\_OK}}
+\index{CR\_OK@{CR\_OK}!plugin\_auth\_common.h@{plugin\_auth\_common.h}}
+\doxysubsubsection{\texorpdfstring{CR\_OK}{CR\_OK}}
+{\footnotesize\ttfamily \#define CR\+\_\+\+OK~-\/1}
+
+Authentication (client part) was successful. It does not mean that the authentication as a whole was successful, usually it only means that the client was able to send the user name and the password to the server. If CR\+\_\+\+OK is returned, the libmariadb reads the next packet expecting it to be one of OK, ERROR, or CHANGE\+\_\+\+PLUGIN packets. \mbox{\Hypertarget{plugin__auth__common_8h_a64bf95e422b0259c0705ea8585f6e8d6}\label{plugin__auth__common_8h_a64bf95e422b0259c0705ea8585f6e8d6}} 
+\index{plugin\_auth\_common.h@{plugin\_auth\_common.h}!CR\_OK\_HANDSHAKE\_COMPLETE@{CR\_OK\_HANDSHAKE\_COMPLETE}}
+\index{CR\_OK\_HANDSHAKE\_COMPLETE@{CR\_OK\_HANDSHAKE\_COMPLETE}!plugin\_auth\_common.h@{plugin\_auth\_common.h}}
+\doxysubsubsection{\texorpdfstring{CR\_OK\_HANDSHAKE\_COMPLETE}{CR\_OK\_HANDSHAKE\_COMPLETE}}
+{\footnotesize\ttfamily \#define CR\+\_\+\+OK\+\_\+\+HANDSHAKE\+\_\+\+COMPLETE~-\/2}
+
+Authentication was successful. It means that the client has done its part successfully and also that a plugin has read the last packet (one of OK, ERROR, CHANGE\+\_\+\+PLUGIN). In this case, libmariadb will not read a packet from the server, but it will use the data at mysql-\/$>$net.\+read\+\_\+pos.
+
+A plugin may return this value if the number of roundtrips in the authentication protocol is not known in advance, and the client plugin needs to read one packet more to determine if the authentication is finished or not. \mbox{\Hypertarget{plugin__auth__common_8h_aa9261e7b650434a33f94d75a65fa9b57}\label{plugin__auth__common_8h_aa9261e7b650434a33f94d75a65fa9b57}} 
+\index{plugin\_auth\_common.h@{plugin\_auth\_common.h}!MYSQL\_USERNAME\_LENGTH@{MYSQL\_USERNAME\_LENGTH}}
+\index{MYSQL\_USERNAME\_LENGTH@{MYSQL\_USERNAME\_LENGTH}!plugin\_auth\_common.h@{plugin\_auth\_common.h}}
+\doxysubsubsection{\texorpdfstring{MYSQL\_USERNAME\_LENGTH}{MYSQL\_USERNAME\_LENGTH}}
+{\footnotesize\ttfamily \#define MYSQL\+\_\+\+USERNAME\+\_\+\+LENGTH~512}
+
+the max allowed length for a user name 
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{plugin__auth__common_8h_ab33c4740c70c652ea4201b3d59e6ba27}\label{plugin__auth__common_8h_ab33c4740c70c652ea4201b3d59e6ba27}} 
+\index{plugin\_auth\_common.h@{plugin\_auth\_common.h}!MYSQL\_PLUGIN\_VIO@{MYSQL\_PLUGIN\_VIO}}
+\index{MYSQL\_PLUGIN\_VIO@{MYSQL\_PLUGIN\_VIO}!plugin\_auth\_common.h@{plugin\_auth\_common.h}}
+\doxysubsubsection{\texorpdfstring{MYSQL\_PLUGIN\_VIO}{MYSQL\_PLUGIN\_VIO}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} \mbox{\hyperlink{plugin__auth_8h_ab33c4740c70c652ea4201b3d59e6ba27}{MYSQL\+\_\+\+PLUGIN\+\_\+\+VIO}}}
+
+Provides plugin access to communication channel 

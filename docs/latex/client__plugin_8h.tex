@@ -1,0 +1,281 @@
+\hypertarget{client__plugin_8h}{}\doxysection{libs/libmariadb/include/mysql/client\+\_\+plugin.h File Reference}
+\label{client__plugin_8h}\index{libs/libmariadb/include/mysql/client\_plugin.h@{libs/libmariadb/include/mysql/client\_plugin.h}}
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$ma\+\_\+pvio.\+h$>$}\newline
+{\ttfamily \#include $<$mysql/plugin\+\_\+auth\+\_\+common.\+h$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}}
+\item 
+struct \mbox{\hyperlink{structst__ma__connection__plugin}{st\+\_\+ma\+\_\+connection\+\_\+plugin}}
+\item 
+struct \mbox{\hyperlink{structst__mariadb__client__plugin___p_v_i_o}{st\+\_\+mariadb\+\_\+client\+\_\+plugin\+\_\+\+PVIO}}
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin___a_u_t_h_e_n_t_i_c_a_t_i_o_n}{st\+\_\+mysql\+\_\+client\+\_\+plugin\+\_\+\+AUTHENTICATION}}
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin___t_r_a_c_e}{st\+\_\+mysql\+\_\+client\+\_\+plugin\+\_\+\+TRACE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_aab5f12bd566916ffe7b907ab31a0d105}\label{client__plugin_8h_aab5f12bd566916ffe7b907ab31a0d105}} 
+\#define {\bfseries PLUGINDIR}~\char`\"{}lib/plugin\char`\"{}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a6106d159db3ac3fbd67fda6fc58ef35b}\label{client__plugin_8h_a6106d159db3ac3fbd67fda6fc58ef35b}} 
+\#define {\bfseries plugin\+\_\+declarations\+\_\+sym}~\char`\"{}\+\_\+mysql\+\_\+client\+\_\+plugin\+\_\+declaration\+\_\+\char`\"{}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a5429ef0275d97ed2aced08f3a68ace7f}\label{client__plugin_8h_a5429ef0275d97ed2aced08f3a68ace7f}} 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+PLUGIN\+\_\+\+RESERVED}~0
+\item 
+\mbox{\Hypertarget{client__plugin_8h_afe2d0592f200c2f7ec6db26ef9a2d513}\label{client__plugin_8h_afe2d0592f200c2f7ec6db26ef9a2d513}} 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+PLUGIN\+\_\+\+RESERVED2}~1
+\item 
+\mbox{\Hypertarget{client__plugin_8h_afb1e5ef94f39fd38147347a56c64e540}\label{client__plugin_8h_afb1e5ef94f39fd38147347a56c64e540}} 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+AUTHENTICATION\+\_\+\+PLUGIN}~2 /$\ast$ authentication   $\ast$/
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a6bb95288c33f992893496ff7a695a1bd}\label{client__plugin_8h_a6bb95288c33f992893496ff7a695a1bd}} 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+AUTHENTICATION\+\_\+\+PLUGIN\+\_\+\+INTERFACE\+\_\+\+VERSION}~0x0100
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a3528c36b5073f36f4d0f63d9cbe6e217}\label{client__plugin_8h_a3528c36b5073f36f4d0f63d9cbe6e217}} 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+MAX\+\_\+\+PLUGINS}~3
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a455e549380f77f0e50bb66a9dd97da33}\label{client__plugin_8h_a455e549380f77f0e50bb66a9dd97da33}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+REMOTEIO\+\_\+\+PLUGIN}~100 /$\ast$ communication IO $\ast$/
+\item 
+\mbox{\Hypertarget{client__plugin_8h_ada97057a4d2ab444a41691934876f4df}\label{client__plugin_8h_ada97057a4d2ab444a41691934876f4df}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+PVIO\+\_\+\+PLUGIN}~101
+\item 
+\mbox{\Hypertarget{client__plugin_8h_ae69909cb8c248651a9ae161d1921c69c}\label{client__plugin_8h_ae69909cb8c248651a9ae161d1921c69c}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+TRACE\+\_\+\+PLUGIN}~102
+\item 
+\mbox{\Hypertarget{client__plugin_8h_aaf5cb7103af857204c9df5cf2ae655aa}\label{client__plugin_8h_aaf5cb7103af857204c9df5cf2ae655aa}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+CONNECTION\+\_\+\+PLUGIN}~103
+\item 
+\mbox{\Hypertarget{client__plugin_8h_af89b152ebec516f79a09ece8cb9e48c3}\label{client__plugin_8h_af89b152ebec516f79a09ece8cb9e48c3}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+REMOTEIO\+\_\+\+PLUGIN\+\_\+\+INTERFACE\+\_\+\+VERSION}~0x0100
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a1d95250ad00487e1f8fdfc4b533116c7}\label{client__plugin_8h_a1d95250ad00487e1f8fdfc4b533116c7}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+PVIO\+\_\+\+PLUGIN\+\_\+\+INTERFACE\+\_\+\+VERSION}~0x0100
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a46b08bc8615796ac1e4bcf379593ed5a}\label{client__plugin_8h_a46b08bc8615796ac1e4bcf379593ed5a}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+TRACE\+\_\+\+PLUGIN\+\_\+\+INTERFACE\+\_\+\+VERSION}~0x0100
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a0c262ae0e594e310d3f922c46f853086}\label{client__plugin_8h_a0c262ae0e594e310d3f922c46f853086}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+CONNECTION\+\_\+\+PLUGIN\+\_\+\+INTERFACE\+\_\+\+VERSION}~0x0100
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a979f9f87a8f106bf1ed16b050368b70d}\label{client__plugin_8h_a979f9f87a8f106bf1ed16b050368b70d}} 
+\#define {\bfseries MARIADB\+\_\+\+CLIENT\+\_\+\+MAX\+\_\+\+PLUGINS}~4
+\item 
+\#define {\bfseries mysql\+\_\+declare\+\_\+client\+\_\+plugin}(X)
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a407fd6edd21d6afba837f3bdcad7a832}\label{client__plugin_8h_a407fd6edd21d6afba837f3bdcad7a832}} 
+\#define {\bfseries mysql\+\_\+end\+\_\+client\+\_\+plugin}~\}
+\item 
+\#define {\bfseries MYSQL\+\_\+\+CLIENT\+\_\+\+PLUGIN\+\_\+\+HEADER}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a6004d4692c1ace8ce752e37aea5acd45}\label{client__plugin_8h_a6004d4692c1ace8ce752e37aea5acd45}} 
+\#define {\bfseries MARIADB\+\_\+\+DB\+\_\+\+DRIVER}(a)~((a)-\/$>$ext\+\_\+db)
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a02b20a3420f9585c280f30b2cd98de7a}\label{client__plugin_8h_a02b20a3420f9585c280f30b2cd98de7a}} 
+typedef struct \mbox{\hyperlink{structst__ma__connection__plugin}{st\+\_\+ma\+\_\+connection\+\_\+plugin}} {\bfseries MARIADB\+\_\+\+CONNECTION\+\_\+\+PLUGIN}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_a535d01f7c9d91f3ec178cfbda79989c0}\label{client__plugin_8h_a535d01f7c9d91f3ec178cfbda79989c0}} 
+typedef struct \mbox{\hyperlink{structst__mariadb__client__plugin___p_v_i_o}{st\+\_\+mariadb\+\_\+client\+\_\+plugin\+\_\+\+PVIO}} {\bfseries MARIADB\+\_\+\+PVIO\+\_\+\+PLUGIN}
+\item 
+typedef char $\ast$($\ast$ \mbox{\hyperlink{client__plugin_8h_a5ec504d84d3e627c80aefb3511ab507a}{mysql\+\_\+authentication\+\_\+dialog\+\_\+ask\+\_\+t}}) (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, int type, const char $\ast$prompt, char $\ast$buf, int buf\+\_\+len)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$ \mbox{\hyperlink{client__plugin_8h_a3667292c8b1c4c373bd07284986cf0e2}{mysql\+\_\+load\+\_\+plugin}} (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, const char $\ast$name, int type, int argc,...)
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$STDCALL \mbox{\hyperlink{client__plugin_8h_a38b9bf033a7b8e064dbe0c0775863bde}{mysql\+\_\+load\+\_\+plugin\+\_\+v}} (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, const char $\ast$name, int type, int argc, va\+\_\+list args)
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$STDCALL \mbox{\hyperlink{client__plugin_8h_aa2aa988101e1d0c1efe1cb972f18bf58}{mysql\+\_\+client\+\_\+find\+\_\+plugin}} (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, const char $\ast$name, int type)
+\item 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$STDCALL \mbox{\hyperlink{client__plugin_8h_a4c8658f4cc6aaaf5bbc569bcebef73da}{mysql\+\_\+client\+\_\+register\+\_\+plugin}} (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$plugin)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{client__plugin_8h_afa083ad989cbc1302375bfaf0f1ceb16}\label{client__plugin_8h_afa083ad989cbc1302375bfaf0f1ceb16}} 
+struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$ {\bfseries mysql\+\_\+client\+\_\+builtins} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+My\+SQL Client Plugin API
+
+This file defines the API for plugins that work on the client side 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{client__plugin_8h_afcac096554073d524d04d7d347ba1aa3}\label{client__plugin_8h_afcac096554073d524d04d7d347ba1aa3}} 
+\index{client\_plugin.h@{client\_plugin.h}!MYSQL\_CLIENT\_PLUGIN\_HEADER@{MYSQL\_CLIENT\_PLUGIN\_HEADER}}
+\index{MYSQL\_CLIENT\_PLUGIN\_HEADER@{MYSQL\_CLIENT\_PLUGIN\_HEADER}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{MYSQL\_CLIENT\_PLUGIN\_HEADER}{MYSQL\_CLIENT\_PLUGIN\_HEADER}}
+{\footnotesize\ttfamily \#define MYSQL\+\_\+\+CLIENT\+\_\+\+PLUGIN\+\_\+\+HEADER}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  \textcolor{keywordtype}{int} type;                                             \(\backslash\)}
+\DoxyCodeLine{  unsigned \textcolor{keywordtype}{int} interface\_version;                       \(\backslash\)}
+\DoxyCodeLine{  const \textcolor{keywordtype}{char} *name;                                     \(\backslash\)}
+\DoxyCodeLine{  const \textcolor{keywordtype}{char} *author;                                   \(\backslash\)}
+\DoxyCodeLine{  const \textcolor{keywordtype}{char} *desc;                                     \(\backslash\)}
+\DoxyCodeLine{  unsigned \textcolor{keywordtype}{int} version[3];                              \(\backslash\)}
+\DoxyCodeLine{  const \textcolor{keywordtype}{char} *license;                                  \(\backslash\)}
+\DoxyCodeLine{  void *mysql\_api;                                      \(\backslash\)}
+\DoxyCodeLine{  int (*init)(\textcolor{keywordtype}{char} *, size\_t, int, va\_list);            \(\backslash\)}
+\DoxyCodeLine{  int (*deinit)();                                      \(\backslash\)}
+\DoxyCodeLine{  int (*options)(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *option, \textcolor{keyword}{const} \textcolor{keywordtype}{void} *);}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{client__plugin_8h_a151fa576c38c30f44946f7561578b187}\label{client__plugin_8h_a151fa576c38c30f44946f7561578b187}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_declare\_client\_plugin@{mysql\_declare\_client\_plugin}}
+\index{mysql\_declare\_client\_plugin@{mysql\_declare\_client\_plugin}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_declare\_client\_plugin}{mysql\_declare\_client\_plugin}}
+{\footnotesize\ttfamily \#define mysql\+\_\+declare\+\_\+client\+\_\+plugin(\begin{DoxyParamCaption}\item[{}]{X }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{     \textcolor{keyword}{struct }st\_mysql\_client\_plugin\_ \#\# X        \(\backslash\)}
+\DoxyCodeLine{        \_mysql\_client\_plugin\_declaration\_ = \{   \(\backslash\)}
+\DoxyCodeLine{          MYSQL\_CLIENT\_ \#\# X \#\# \_PLUGIN,        \(\backslash\)}
+\DoxyCodeLine{          MYSQL\_CLIENT\_ \#\# X \#\# \_PLUGIN\_INTERFACE\_VERSION,}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{client__plugin_8h_a5ec504d84d3e627c80aefb3511ab507a}\label{client__plugin_8h_a5ec504d84d3e627c80aefb3511ab507a}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_authentication\_dialog\_ask\_t@{mysql\_authentication\_dialog\_ask\_t}}
+\index{mysql\_authentication\_dialog\_ask\_t@{mysql\_authentication\_dialog\_ask\_t}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_authentication\_dialog\_ask\_t}{mysql\_authentication\_dialog\_ask\_t}}
+{\footnotesize\ttfamily typedef char$\ast$($\ast$ mysql\+\_\+authentication\+\_\+dialog\+\_\+ask\+\_\+t) (struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$mysql, int type, const char $\ast$prompt, char $\ast$buf, int buf\+\_\+len)}
+
+type of the mysql\+\_\+authentication\+\_\+dialog\+\_\+ask function
+
+
+\begin{DoxyParams}{Parameters}
+{\em mysql} & mysql \\
+\hline
+{\em type} & type of the input 1 -\/ ordinary string input 2 -\/ password string \\
+\hline
+{\em prompt} & prompt \\
+\hline
+{\em buf} & a buffer to store the use input \\
+\hline
+{\em buf\+\_\+len} & the length of the buffer\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em a} & pointer to the user input string. It may be equal to \textquotesingle{}buf\textquotesingle{} or to \textquotesingle{}mysql-\/$>$password\textquotesingle{}. In all other cases it is assumed to be an allocated string, and the \char`\"{}dialog\char`\"{} plugin will free() it. \\
+\hline
+\end{DoxyRetVals}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{client__plugin_8h_aa2aa988101e1d0c1efe1cb972f18bf58}\label{client__plugin_8h_aa2aa988101e1d0c1efe1cb972f18bf58}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_client\_find\_plugin@{mysql\_client\_find\_plugin}}
+\index{mysql\_client\_find\_plugin@{mysql\_client\_find\_plugin}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_client\_find\_plugin()}{mysql\_client\_find\_plugin()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}}$\ast$ STDCALL mysql\+\_\+client\+\_\+find\+\_\+plugin (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$}]{mysql,  }\item[{const char $\ast$}]{name,  }\item[{int}]{type }\end{DoxyParamCaption})}
+
+finds an already loaded plugin by name, or loads it, if necessary
+
+
+\begin{DoxyParams}{Parameters}
+{\em mysql} & MYSQL structure. only MYSQL\+\_\+\+PLUGIN\+\_\+\+DIR option value is used, and last\+\_\+errno/last\+\_\+error, for error reporting \\
+\hline
+{\em name} & a name of the plugin to load \\
+\hline
+{\em type} & type of plugin that should be loaded\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em a} & pointer to the plugin, or NULL in case of a failure \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{client__plugin_8h_a4c8658f4cc6aaaf5bbc569bcebef73da}\label{client__plugin_8h_a4c8658f4cc6aaaf5bbc569bcebef73da}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_client\_register\_plugin@{mysql\_client\_register\_plugin}}
+\index{mysql\_client\_register\_plugin@{mysql\_client\_register\_plugin}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_client\_register\_plugin()}{mysql\_client\_register\_plugin()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}}$\ast$ STDCALL mysql\+\_\+client\+\_\+register\+\_\+plugin (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$}]{mysql,  }\item[{struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} $\ast$}]{plugin }\end{DoxyParamCaption})}
+
+adds a plugin structure to the list of loaded plugins
+
+This is useful if an application has the necessary functionality (for example, a special load data handler) statically linked into the application binary. It can use this function to register the plugin directly, avoiding the need to factor it out into a shared object.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mysql} & MYSQL structure. It is only used for error reporting \\
+\hline
+{\em plugin} & an \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}} structure to register\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em a} & pointer to the plugin, or NULL in case of a failure \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{client__plugin_8h_a3667292c8b1c4c373bd07284986cf0e2}\label{client__plugin_8h_a3667292c8b1c4c373bd07284986cf0e2}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_load\_plugin@{mysql\_load\_plugin}}
+\index{mysql\_load\_plugin@{mysql\_load\_plugin}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_load\_plugin()}{mysql\_load\_plugin()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}}$\ast$ mysql\+\_\+load\+\_\+plugin (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$}]{mysql,  }\item[{const char $\ast$}]{name,  }\item[{int}]{type,  }\item[{int}]{argc,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+loads a plugin and initializes it
+
+
+\begin{DoxyParams}{Parameters}
+{\em mysql} & MYSQL structure. only MYSQL\+\_\+\+PLUGIN\+\_\+\+DIR option value is used, and last\+\_\+errno/last\+\_\+error, for error reporting \\
+\hline
+{\em name} & a name of the plugin to load \\
+\hline
+{\em type} & type of plugin that should be loaded, -\/1 to disable type check \\
+\hline
+{\em argc} & number of arguments to pass to the plugin initialization function \\
+\hline
+{\em ...} & arguments for the plugin initialization function\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em a} & pointer to the loaded plugin, or NULL in case of a failure \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{client__plugin_8h_a38b9bf033a7b8e064dbe0c0775863bde}\label{client__plugin_8h_a38b9bf033a7b8e064dbe0c0775863bde}} 
+\index{client\_plugin.h@{client\_plugin.h}!mysql\_load\_plugin\_v@{mysql\_load\_plugin\_v}}
+\index{mysql\_load\_plugin\_v@{mysql\_load\_plugin\_v}!client\_plugin.h@{client\_plugin.h}}
+\doxysubsubsection{\texorpdfstring{mysql\_load\_plugin\_v()}{mysql\_load\_plugin\_v()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structst__mysql__client__plugin}{st\+\_\+mysql\+\_\+client\+\_\+plugin}}$\ast$ STDCALL mysql\+\_\+load\+\_\+plugin\+\_\+v (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structst__mysql}{st\+\_\+mysql}} $\ast$}]{mysql,  }\item[{const char $\ast$}]{name,  }\item[{int}]{type,  }\item[{int}]{argc,  }\item[{va\+\_\+list}]{args }\end{DoxyParamCaption})}
+
+loads a plugin and initializes it, taking va\+\_\+list as an argument
+
+This is the same as mysql\+\_\+load\+\_\+plugin, but take va\+\_\+list instead of a list of arguments.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mysql} & MYSQL structure. only MYSQL\+\_\+\+PLUGIN\+\_\+\+DIR option value is used, and last\+\_\+errno/last\+\_\+error, for error reporting \\
+\hline
+{\em name} & a name of the plugin to load \\
+\hline
+{\em type} & type of plugin that should be loaded, -\/1 to disable type check \\
+\hline
+{\em argc} & number of arguments to pass to the plugin initialization function \\
+\hline
+{\em args} & arguments for the plugin initialization function\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em a} & pointer to the loaded plugin, or NULL in case of a failure \\
+\hline
+\end{DoxyRetVals}

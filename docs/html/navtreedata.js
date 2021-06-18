@@ -34,7 +34,8 @@ var NAVTREE =
           [ "TO DO", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md5", null ]
         ] ],
         [ "3rd-party", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md6", null ],
-        [ "Authors", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md7", null ]
+        [ "Authors", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md7", null ],
+        [ "Contact", "md__lock_vox__r_e_a_d_m_e.html#autotoc_md8", null ]
       ] ]
     ] ],
     [ "Bug List", "bug.html", null ],
@@ -56,8 +57,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_abstract_server_8h.html",
-"class_c_packet.html#adf2216b9b40a57097101b54b185ddeea",
-"class_u_i_worker.html#a9c71bce4153aa75e53bca7073b1deec4"
+"class_c_packet.html#ade783a6bc30048efefc572ab2293d858",
+"class_u_i_worker.html#a6b2aed5895011b3edceafafd36f694cd"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

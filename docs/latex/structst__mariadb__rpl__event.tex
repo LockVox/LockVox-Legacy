@@ -1,0 +1,59 @@
+\hypertarget{structst__mariadb__rpl__event}{}\doxysection{st\+\_\+mariadb\+\_\+rpl\+\_\+event Struct Reference}
+\label{structst__mariadb__rpl__event}\index{st\_mariadb\_rpl\_event@{st\_mariadb\_rpl\_event}}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a4421f78b90ec71bc62cac92ab3305f99}\label{structst__mariadb__rpl__event_a4421f78b90ec71bc62cac92ab3305f99}} 
+\mbox{\hyperlink{structst__ma__mem__root}{MA\+\_\+\+MEM\+\_\+\+ROOT}} {\bfseries memroot}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a2d586a93b3b04527ab9a7f875fd5ce1e}\label{structst__mariadb__rpl__event_a2d586a93b3b04527ab9a7f875fd5ce1e}} 
+unsigned int {\bfseries checksum}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_aea5911d8b926c9de0783c020c9075bac}\label{structst__mariadb__rpl__event_aea5911d8b926c9de0783c020c9075bac}} 
+char {\bfseries ok}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a2935309f1b1f9ccdcce467b9d643ff11}\label{structst__mariadb__rpl__event_a2935309f1b1f9ccdcce467b9d643ff11}} 
+enum mariadb\+\_\+rpl\+\_\+event {\bfseries event\+\_\+type}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_aa0b7bef666834288814327e55db47837}\label{structst__mariadb__rpl__event_aa0b7bef666834288814327e55db47837}} 
+unsigned int {\bfseries timestamp}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_acef53717934edad8318cecd177c8d477}\label{structst__mariadb__rpl__event_acef53717934edad8318cecd177c8d477}} 
+unsigned int {\bfseries server\+\_\+id}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a432cbd53578d342af9ed4db836e54d4d}\label{structst__mariadb__rpl__event_a432cbd53578d342af9ed4db836e54d4d}} 
+unsigned int {\bfseries event\+\_\+length}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a806eb53da4dc536b15bd0a83076d955f}\label{structst__mariadb__rpl__event_a806eb53da4dc536b15bd0a83076d955f}} 
+unsigned int {\bfseries next\+\_\+event\+\_\+pos}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a12569bb431731a15f5b66759c2458b3a}\label{structst__mariadb__rpl__event_a12569bb431731a15f5b66759c2458b3a}} 
+unsigned short {\bfseries flags}
+\item 
+\mbox{\Hypertarget{structst__mariadb__rpl__event_a87df72d62667a49b870f39a40f788298}\label{structst__mariadb__rpl__event_a87df72d62667a49b870f39a40f788298}} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__rotate__event}{st\_mariadb\_rpl\_rotate\_event}} {\bfseries rotate}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__query__event}{st\_mariadb\_rpl\_query\_event}} {\bfseries query}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__format__description__event}{st\_mariadb\_rpl\_format\_description\_event}} {\bfseries format\_description}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__gtid__list__event}{st\_mariadb\_rpl\_gtid\_list\_event}} {\bfseries gtid\_list}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__checkpoint__event}{st\_mariadb\_rpl\_checkpoint\_event}} {\bfseries checkpoint}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__xid__event}{st\_mariadb\_rpl\_xid\_event}} {\bfseries xid}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__gtid__event}{st\_mariadb\_rpl\_gtid\_event}} {\bfseries gtid}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__annotate__rows__event}{st\_mariadb\_rpl\_annotate\_rows\_event}} {\bfseries annotate\_rows}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__table__map__event}{st\_mariadb\_rpl\_table\_map\_event}} {\bfseries table\_map}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__rand__event}{st\_mariadb\_rpl\_rand\_event}} {\bfseries rand}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__encryption__event}{st\_mariadb\_rpl\_encryption\_event}} {\bfseries encryption}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__intvar__event}{st\_mariadb\_rpl\_intvar\_event}} {\bfseries intvar}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__uservar__event}{st\_mariadb\_rpl\_uservar\_event}} {\bfseries uservar}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__rows__event}{st\_mariadb\_rpl\_rows\_event}} {\bfseries rows}\\
+\>struct \mbox{\hyperlink{structst__mariadb__rpl__heartbeat__event}{st\_mariadb\_rpl\_heartbeat\_event}} {\bfseries heartbeat}\\
+\} {\bfseries event}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/mariadb\+\_\+rpl.\+h\end{DoxyCompactItemize}

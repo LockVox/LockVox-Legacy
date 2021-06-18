@@ -1,0 +1,112 @@
+\hypertarget{structst__mysql__stmt}{}\doxysection{st\+\_\+mysql\+\_\+stmt Struct Reference}
+\label{structst__mysql__stmt}\index{st\_mysql\_stmt@{st\_mysql\_stmt}}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a39296c35d9c44012f50d38bec38d2c00}\label{structst__mysql__stmt_a39296c35d9c44012f50d38bec38d2c00}} 
+\mbox{\hyperlink{structst__ma__mem__root}{MA\+\_\+\+MEM\+\_\+\+ROOT}} {\bfseries mem\+\_\+root}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a224349871acc052c72cfa86f5901c809}\label{structst__mysql__stmt_a224349871acc052c72cfa86f5901c809}} 
+\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$ {\bfseries mysql}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ad800f40b351919f8d6e9c9a4d757ab72}\label{structst__mysql__stmt_ad800f40b351919f8d6e9c9a4d757ab72}} 
+unsigned long {\bfseries stmt\+\_\+id}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a5db08a5ec03692af1fd1b2d588c10999}\label{structst__mysql__stmt_a5db08a5ec03692af1fd1b2d588c10999}} 
+unsigned long {\bfseries flags}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a23d8b4114af447e87e134bc14c64b066}\label{structst__mysql__stmt_a23d8b4114af447e87e134bc14c64b066}} 
+enum\+\_\+mysqlnd\+\_\+stmt\+\_\+state {\bfseries state}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a1d7627383d3c0ab2989968d88c2bb83d}\label{structst__mysql__stmt_a1d7627383d3c0ab2989968d88c2bb83d}} 
+\mbox{\hyperlink{structst__mysql__field}{MYSQL\+\_\+\+FIELD}} $\ast$ {\bfseries fields}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_aee56a3ffa9c1019c207ee1eaade2306b}\label{structst__mysql__stmt_aee56a3ffa9c1019c207ee1eaade2306b}} 
+unsigned int {\bfseries field\+\_\+count}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a082d2c41726787a2c9daea75e9afb2cd}\label{structst__mysql__stmt_a082d2c41726787a2c9daea75e9afb2cd}} 
+unsigned int {\bfseries param\+\_\+count}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ad73a8842fe1e1e9712a53a6325d6e9d5}\label{structst__mysql__stmt_ad73a8842fe1e1e9712a53a6325d6e9d5}} 
+unsigned char {\bfseries send\+\_\+types\+\_\+to\+\_\+server}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a0276e0f80817dccc03611786fd646ec7}\label{structst__mysql__stmt_a0276e0f80817dccc03611786fd646ec7}} 
+\mbox{\hyperlink{structst__mysql__bind}{MYSQL\+\_\+\+BIND}} $\ast$ {\bfseries params}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a5651622ae4c2c31616aa648b70cc12b2}\label{structst__mysql__stmt_a5651622ae4c2c31616aa648b70cc12b2}} 
+\mbox{\hyperlink{structst__mysql__bind}{MYSQL\+\_\+\+BIND}} $\ast$ {\bfseries bind}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a198cbcc8f7faf73522a281dec2e1e434}\label{structst__mysql__stmt_a198cbcc8f7faf73522a281dec2e1e434}} 
+\mbox{\hyperlink{structst__mysql__data}{MYSQL\+\_\+\+DATA}} {\bfseries result}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a74f43825ade8f30ac5da414bf8f04637}\label{structst__mysql__stmt_a74f43825ade8f30ac5da414bf8f04637}} 
+\mbox{\hyperlink{structst__mysql__rows}{MYSQL\+\_\+\+ROWS}} $\ast$ {\bfseries result\+\_\+cursor}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_aeeb3ad792b8eaafa08485c0573f96c1e}\label{structst__mysql__stmt_aeeb3ad792b8eaafa08485c0573f96c1e}} 
+my\+\_\+bool {\bfseries bind\+\_\+result\+\_\+done}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a591d90535b12361e5eb35142cead78cd}\label{structst__mysql__stmt_a591d90535b12361e5eb35142cead78cd}} 
+my\+\_\+bool {\bfseries bind\+\_\+param\+\_\+done}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a4d78f996798326eaa96092e2e98dd91d}\label{structst__mysql__stmt_a4d78f996798326eaa96092e2e98dd91d}} 
+\mbox{\hyperlink{structst__mysqlnd__upsert__result}{mysql\+\_\+upsert\+\_\+status}} {\bfseries upsert\+\_\+status}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a58c9c8e23ee17b61de9804585fa3c9cd}\label{structst__mysql__stmt_a58c9c8e23ee17b61de9804585fa3c9cd}} 
+unsigned int {\bfseries last\+\_\+errno}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a31f143b5f6900558e6c0bfc60ed100ca}\label{structst__mysql__stmt_a31f143b5f6900558e6c0bfc60ed100ca}} 
+char {\bfseries last\+\_\+error} \mbox{[}MYSQL\+\_\+\+ERRMSG\+\_\+\+SIZE+1\mbox{]}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a4bc2da06a308a95a0e5af923239493b5}\label{structst__mysql__stmt_a4bc2da06a308a95a0e5af923239493b5}} 
+char {\bfseries sqlstate} \mbox{[}SQLSTATE\+\_\+\+LENGTH+1\mbox{]}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ab2e8f874563ad8a2d658117548983cf8}\label{structst__mysql__stmt_ab2e8f874563ad8a2d658117548983cf8}} 
+my\+\_\+bool {\bfseries update\+\_\+max\+\_\+length}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ae2e891ae11a6f5d016166f93d1553c24}\label{structst__mysql__stmt_ae2e891ae11a6f5d016166f93d1553c24}} 
+unsigned long {\bfseries prefetch\+\_\+rows}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_aac96a0c9f7a07434da3d798f3b2ece87}\label{structst__mysql__stmt_aac96a0c9f7a07434da3d798f3b2ece87}} 
+\mbox{\hyperlink{structst__list}{LIST}} {\bfseries list}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_adef0d5e4305c585468fa7a626d768fb4}\label{structst__mysql__stmt_adef0d5e4305c585468fa7a626d768fb4}} 
+my\+\_\+bool {\bfseries cursor\+\_\+exists}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a52b00e0bc0ae40162986a10f59e6873d}\label{structst__mysql__stmt_a52b00e0bc0ae40162986a10f59e6873d}} 
+void $\ast$ {\bfseries extension}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a490425ad907079d21fc7207c778336e5}\label{structst__mysql__stmt_a490425ad907079d21fc7207c778336e5}} 
+mysql\+\_\+stmt\+\_\+fetch\+\_\+row\+\_\+func {\bfseries fetch\+\_\+row\+\_\+func}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a4c9504072459b2c9a2b10376afa6680f}\label{structst__mysql__stmt_a4c9504072459b2c9a2b10376afa6680f}} 
+unsigned int {\bfseries execute\+\_\+count}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ab04ac3caae35b14323dd7995240f30d9}\label{structst__mysql__stmt_ab04ac3caae35b14323dd7995240f30d9}} 
+mysql\+\_\+stmt\+\_\+use\+\_\+or\+\_\+store\+\_\+func {\bfseries default\+\_\+rset\+\_\+handler}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_abd363ab291d83aaffc20d328942c608a}\label{structst__mysql__stmt_abd363ab291d83aaffc20d328942c608a}} 
+struct \mbox{\hyperlink{structst__mysqlnd__stmt__methods}{st\+\_\+mysqlnd\+\_\+stmt\+\_\+methods}} $\ast$ {\bfseries m}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a2e042d32adfba54a79fe0e3cc18f3da7}\label{structst__mysql__stmt_a2e042d32adfba54a79fe0e3cc18f3da7}} 
+unsigned int {\bfseries array\+\_\+size}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_afdf5d65ae5d5f85088c20f3665e4a6da}\label{structst__mysql__stmt_afdf5d65ae5d5f85088c20f3665e4a6da}} 
+size\+\_\+t {\bfseries row\+\_\+size}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_ace61716a1c750b9216f3f4c2911b7aa5}\label{structst__mysql__stmt_ace61716a1c750b9216f3f4c2911b7aa5}} 
+unsigned int {\bfseries prebind\+\_\+params}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_abdcb47e0100a089252c4cd8719f34fdb}\label{structst__mysql__stmt_abdcb47e0100a089252c4cd8719f34fdb}} 
+void $\ast$ {\bfseries user\+\_\+data}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a4040d3e64f6bcf1aa87a5991fcf60734}\label{structst__mysql__stmt_a4040d3e64f6bcf1aa87a5991fcf60734}} 
+ps\+\_\+result\+\_\+callback {\bfseries result\+\_\+callback}
+\item 
+\mbox{\Hypertarget{structst__mysql__stmt_a805fe7a2eb372e81e83ae8d75240ba5c}\label{structst__mysql__stmt_a805fe7a2eb372e81e83ae8d75240ba5c}} 
+ps\+\_\+param\+\_\+callback {\bfseries param\+\_\+callback}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/mariadb\+\_\+stmt.\+h\end{DoxyCompactItemize}

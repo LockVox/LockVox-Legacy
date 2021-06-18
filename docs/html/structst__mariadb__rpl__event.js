@@ -1,0 +1,28 @@
+var structst__mariadb__rpl__event =
+[
+    [ "annotate_rows", "structst__mariadb__rpl__event.html#a5f4bc1642ded1ea6efa0aae4882fda5a", null ],
+    [ "checkpoint", "structst__mariadb__rpl__event.html#a11129cef84b0a3eefe2f6b7c0e8b3fe4", null ],
+    [ "checksum", "structst__mariadb__rpl__event.html#a2d586a93b3b04527ab9a7f875fd5ce1e", null ],
+    [ "encryption", "structst__mariadb__rpl__event.html#a25803112310f9c8f8566aa94a2316d14", null ],
+    [ "event", "structst__mariadb__rpl__event.html#a87df72d62667a49b870f39a40f788298", null ],
+    [ "event_length", "structst__mariadb__rpl__event.html#a432cbd53578d342af9ed4db836e54d4d", null ],
+    [ "event_type", "structst__mariadb__rpl__event.html#a2935309f1b1f9ccdcce467b9d643ff11", null ],
+    [ "flags", "structst__mariadb__rpl__event.html#a12569bb431731a15f5b66759c2458b3a", null ],
+    [ "format_description", "structst__mariadb__rpl__event.html#a83fbcd187d556db88f8c3e841d0a00f4", null ],
+    [ "gtid", "structst__mariadb__rpl__event.html#a5ceff61f376cc6bc972d408340a0e4de", null ],
+    [ "gtid_list", "structst__mariadb__rpl__event.html#afa6a7731922f2f8ec6c71a098517b3a0", null ],
+    [ "heartbeat", "structst__mariadb__rpl__event.html#a4f5b544e3712eec0d97d042080dbd684", null ],
+    [ "intvar", "structst__mariadb__rpl__event.html#a73921867ae754fd548ba66132ba8a192", null ],
+    [ "memroot", "structst__mariadb__rpl__event.html#a4421f78b90ec71bc62cac92ab3305f99", null ],
+    [ "next_event_pos", "structst__mariadb__rpl__event.html#a806eb53da4dc536b15bd0a83076d955f", null ],
+    [ "ok", "structst__mariadb__rpl__event.html#aea5911d8b926c9de0783c020c9075bac", null ],
+    [ "query", "structst__mariadb__rpl__event.html#acf19967a0b51c6329a55bbcc22361d03", null ],
+    [ "rand", "structst__mariadb__rpl__event.html#a9425e26a3f1b754bcde806bb499a886a", null ],
+    [ "rotate", "structst__mariadb__rpl__event.html#ad19293d311ce141cf398407ae30b275e", null ],
+    [ "rows", "structst__mariadb__rpl__event.html#a45bb4c8b8a01e94ed3a4a2ac2dec7a07", null ],
+    [ "server_id", "structst__mariadb__rpl__event.html#acef53717934edad8318cecd177c8d477", null ],
+    [ "table_map", "structst__mariadb__rpl__event.html#a62564efbe870dd4dfb9b004817173b38", null ],
+    [ "timestamp", "structst__mariadb__rpl__event.html#aa0b7bef666834288814327e55db47837", null ],
+    [ "uservar", "structst__mariadb__rpl__event.html#abd2c7469af1754e6cccc81f9e1c9ee7d", null ],
+    [ "xid", "structst__mariadb__rpl__event.html#a7332ac7333a13597775dd8f171664b0e", null ]
+];

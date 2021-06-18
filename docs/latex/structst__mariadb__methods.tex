@@ -1,0 +1,67 @@
+\hypertarget{structst__mariadb__methods}{}\doxysection{st\+\_\+mariadb\+\_\+methods Struct Reference}
+\label{structst__mariadb__methods}\index{st\_mariadb\_methods@{st\_mariadb\_methods}}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a4f7793ae1c2c98bede09ed79ebe8d9bc}\label{structst__mariadb__methods_a4f7793ae1c2c98bede09ed79ebe8d9bc}} 
+\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$($\ast$ {\bfseries db\+\_\+connect} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, const char $\ast$host, const char $\ast$user, const char $\ast$passwd, const char $\ast$db, unsigned int port, const char $\ast$unix\+\_\+socket, unsigned long clientflag)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a89306c528a1c8eab5f10b416d5b0f55f}\label{structst__mariadb__methods_a89306c528a1c8eab5f10b416d5b0f55f}} 
+void($\ast$ {\bfseries db\+\_\+close} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a939e876cd82bf3575839a595dee1e6fe}\label{structst__mariadb__methods_a939e876cd82bf3575839a595dee1e6fe}} 
+int($\ast$ {\bfseries db\+\_\+command} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, enum enum\+\_\+server\+\_\+command command, const char $\ast$arg, size\+\_\+t length, my\+\_\+bool skipp\+\_\+check, void $\ast$opt\+\_\+arg)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a6f28f71bb5b3406f3bcc40d35ed6a6a3}\label{structst__mariadb__methods_a6f28f71bb5b3406f3bcc40d35ed6a6a3}} 
+void($\ast$ {\bfseries db\+\_\+skip\+\_\+result} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a9a365ba718ff8d44575c6583cd37d756}\label{structst__mariadb__methods_a9a365ba718ff8d44575c6583cd37d756}} 
+int($\ast$ {\bfseries db\+\_\+read\+\_\+query\+\_\+result} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a284f72642e30e4d421985c711ccac4ed}\label{structst__mariadb__methods_a284f72642e30e4d421985c711ccac4ed}} 
+\mbox{\hyperlink{structst__mysql__data}{MYSQL\+\_\+\+DATA}} $\ast$($\ast$ {\bfseries db\+\_\+read\+\_\+rows} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, \mbox{\hyperlink{structst__mysql__field}{MYSQL\+\_\+\+FIELD}} $\ast$fields, unsigned int field\+\_\+count)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a0655809f61e259672f8fec24553a8882}\label{structst__mariadb__methods_a0655809f61e259672f8fec24553a8882}} 
+int($\ast$ {\bfseries db\+\_\+read\+\_\+one\+\_\+row} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, unsigned int fields, MYSQL\+\_\+\+ROW row, unsigned long $\ast$lengths)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a72f3a091ebe2f2b21971dd3a0b174a03}\label{structst__mariadb__methods_a72f3a091ebe2f2b21971dd3a0b174a03}} 
+my\+\_\+bool($\ast$ {\bfseries db\+\_\+supported\+\_\+buffer\+\_\+type} )(enum enum\+\_\+field\+\_\+types type)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a171bde658af9c4ca76cec9e0d51b398e}\label{structst__mariadb__methods_a171bde658af9c4ca76cec9e0d51b398e}} 
+my\+\_\+bool($\ast$ {\bfseries db\+\_\+read\+\_\+prepare\+\_\+response} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a30e3c3642ca986efa61f48d52a783c59}\label{structst__mariadb__methods_a30e3c3642ca986efa61f48d52a783c59}} 
+int($\ast$ {\bfseries db\+\_\+read\+\_\+stmt\+\_\+result} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a5227208e3a3f140a8acefda40ee25e4f}\label{structst__mariadb__methods_a5227208e3a3f140a8acefda40ee25e4f}} 
+my\+\_\+bool($\ast$ {\bfseries db\+\_\+stmt\+\_\+get\+\_\+result\+\_\+metadata} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a83b53aa2ab76e03e7bdedff97b061da3}\label{structst__mariadb__methods_a83b53aa2ab76e03e7bdedff97b061da3}} 
+my\+\_\+bool($\ast$ {\bfseries db\+\_\+stmt\+\_\+get\+\_\+param\+\_\+metadata} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a5a0f261bd5c5a14e00d615e13b90e0d8}\label{structst__mariadb__methods_a5a0f261bd5c5a14e00d615e13b90e0d8}} 
+int($\ast$ {\bfseries db\+\_\+stmt\+\_\+read\+\_\+all\+\_\+rows} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a338e08f053a10ac4aa140f58e680cb12}\label{structst__mariadb__methods_a338e08f053a10ac4aa140f58e680cb12}} 
+int($\ast$ {\bfseries db\+\_\+stmt\+\_\+fetch} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt, unsigned char $\ast$$\ast$row)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a9c4ec3941216d2e6c7f29b29b93b2899}\label{structst__mariadb__methods_a9c4ec3941216d2e6c7f29b29b93b2899}} 
+int($\ast$ {\bfseries db\+\_\+stmt\+\_\+fetch\+\_\+to\+\_\+bind} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt, unsigned char $\ast$row)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a3d06e04cdba18eb0360b8cc68b2535ff}\label{structst__mariadb__methods_a3d06e04cdba18eb0360b8cc68b2535ff}} 
+void($\ast$ {\bfseries db\+\_\+stmt\+\_\+flush\+\_\+unbuffered} )(\mbox{\hyperlink{structst__mysql__stmt}{MYSQL\+\_\+\+STMT}} $\ast$stmt)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a68422f04fde7d329fe036caa3e739d66}\label{structst__mariadb__methods_a68422f04fde7d329fe036caa3e739d66}} 
+void($\ast$ {\bfseries set\+\_\+error} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, unsigned int error\+\_\+nr, const char $\ast$sqlstate, const char $\ast$format,...)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a0e6859962b6eab5cfe5268665fe7670d}\label{structst__mariadb__methods_a0e6859962b6eab5cfe5268665fe7670d}} 
+void($\ast$ {\bfseries invalidate\+\_\+stmts} )(\mbox{\hyperlink{structst__mysql}{MYSQL}} $\ast$mysql, const char $\ast$function\+\_\+name)
+\item 
+\mbox{\Hypertarget{structst__mariadb__methods_a3060ebf6a927b609d46e26013cd812dd}\label{structst__mariadb__methods_a3060ebf6a927b609d46e26013cd812dd}} 
+struct \mbox{\hyperlink{structst__mariadb__api}{st\+\_\+mariadb\+\_\+api}} $\ast$ {\bfseries api}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/mysql.\+h\end{DoxyCompactItemize}

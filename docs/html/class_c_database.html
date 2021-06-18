@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LockVox
-   &#160;<span id="projectnumber">alpha-0.1.1</span>
+   &#160;<span id="projectnumber">0.1.1</span>
    </div>
    <div id="projectbrief">Lockvox project aims to create a fully encrypted and open source voice and audio exchange system while keeping the GUI as simple and easy to access as possible.</div>
   </td>
@@ -148,9 +148,16 @@ QList&lt; <a class="el" href="class_c_client.html">CClient</a> * &gt;&#160;</td>
 <p>This class represente the main database (MySQL/MariaDB) and its function using mariadb connector lib </p><dl class="section author"><dt>Author</dt><dd>Valentin Monnot (LockVox Team) </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.2.0 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2021 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd></dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000003">Bug:</a></b></dt><dd></dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd></dd></dl>
+<dl class="section note"><dt>Note</dt><dd>db.cnf in "%LOCKVOX_SERVER_ROOT_DIR%/storage/conf/" use 4 parameter, all of them should be there even if not used ! <br  />
+ Order is important ! If you didn't use one of the parameter, default value will be applied, except for MY_PASSWORD. For user security you should never use a database without password... <br  />
+ Exemple with default values : <br  />
+ MY_HOSTNAME=127.0.0.1 <br  />
+ MY_DATABASE=lockvox_server <br  />
+ MY_USERNAME=lockvox <br  />
+ MY_PASSWORD=changeme <br  />
+ If no configuration file found when starting the server, it will automaticcaly create a db.cnf file with these default values. After what server will close telling you that its default values and you should change them. </dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000003">Bug:</a></b></dt><dd>In db configuration file, if MY_HOSTNAME=domainName.something MariaDB connector didn't recognize it as an address and use your ip address, i don't f***ing know why. All work great if MY_HOSTNAME is hardcoded or if you use a standard IPV4 address in configuration file </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>DEV_DB is our MariaDB database used for testing purpose, only fake account with troll username/password should be used on this database as everyone with an internet connection could access it ! if you just want to test, use account "test" with password "test". If you want to use your own MariaDB/MySQL database, we advise you to NOT hardcode your database credential. You should go in "config.h" and comment #define DEV_DB so you can use db.cnf file to configure your own DB. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd></dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>GNU GPL-3.0 </dd></dl>
 </div><hr/>The documentation for this class was generated from the following files:<ul>

@@ -1,0 +1,45 @@
+\hypertarget{structst__plugin__vio}{}\doxysection{st\+\_\+plugin\+\_\+vio Struct Reference}
+\label{structst__plugin__vio}\index{st\_plugin\_vio@{st\_plugin\_vio}}
+
+
+{\ttfamily \#include $<$plugin\+\_\+auth.\+h$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int($\ast$ \mbox{\hyperlink{structst__plugin__vio_a70d95a26f566bc94cfb5b6396ed254b2}{read\+\_\+packet}} )(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, unsigned char $\ast$$\ast$buf)
+\item 
+int($\ast$ \mbox{\hyperlink{structst__plugin__vio_a1b4bba4ce731f1f909467c679388a3d7}{write\+\_\+packet}} )(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, const unsigned char $\ast$packet, int packet\+\_\+len)
+\item 
+void($\ast$ \mbox{\hyperlink{structst__plugin__vio_a7af1a7d80ee137ad63ab9a31c8801996}{info}} )(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, struct \mbox{\hyperlink{structst__plugin__vio__info}{st\+\_\+plugin\+\_\+vio\+\_\+info}} $\ast$info)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides plugin access to communication channel 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structst__plugin__vio_a7af1a7d80ee137ad63ab9a31c8801996}\label{structst__plugin__vio_a7af1a7d80ee137ad63ab9a31c8801996}} 
+\index{st\_plugin\_vio@{st\_plugin\_vio}!info@{info}}
+\index{info@{info}!st\_plugin\_vio@{st\_plugin\_vio}}
+\doxysubsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily void($\ast$ st\+\_\+plugin\+\_\+vio\+::info)(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, struct \mbox{\hyperlink{structst__plugin__vio__info}{st\+\_\+plugin\+\_\+vio\+\_\+info}} $\ast$info)}
+
+Fills in a \mbox{\hyperlink{structst__plugin__vio__info}{st\+\_\+plugin\+\_\+vio\+\_\+info}} structure, providing the information about the connection. \mbox{\Hypertarget{structst__plugin__vio_a70d95a26f566bc94cfb5b6396ed254b2}\label{structst__plugin__vio_a70d95a26f566bc94cfb5b6396ed254b2}} 
+\index{st\_plugin\_vio@{st\_plugin\_vio}!read\_packet@{read\_packet}}
+\index{read\_packet@{read\_packet}!st\_plugin\_vio@{st\_plugin\_vio}}
+\doxysubsubsection{\texorpdfstring{read\_packet}{read\_packet}}
+{\footnotesize\ttfamily int($\ast$ st\+\_\+plugin\+\_\+vio\+::read\+\_\+packet)(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, unsigned char $\ast$$\ast$buf)}
+
+Plugin provides a pointer reference and this function sets it to the contents of any incoming packet. Returns the packet length, or -\/1 if the plugin should terminate. \mbox{\Hypertarget{structst__plugin__vio_a1b4bba4ce731f1f909467c679388a3d7}\label{structst__plugin__vio_a1b4bba4ce731f1f909467c679388a3d7}} 
+\index{st\_plugin\_vio@{st\_plugin\_vio}!write\_packet@{write\_packet}}
+\index{write\_packet@{write\_packet}!st\_plugin\_vio@{st\_plugin\_vio}}
+\doxysubsubsection{\texorpdfstring{write\_packet}{write\_packet}}
+{\footnotesize\ttfamily int($\ast$ st\+\_\+plugin\+\_\+vio\+::write\+\_\+packet)(struct \mbox{\hyperlink{structst__plugin__vio}{st\+\_\+plugin\+\_\+vio}} $\ast$vio, const unsigned char $\ast$packet, int packet\+\_\+len)}
+
+Plugin provides a buffer with data and the length and this function sends it as a packet. Returns 0 on success, 1 on failure. 
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+libs/libmariadb/include/mysql/\mbox{\hyperlink{plugin__auth_8h}{plugin\+\_\+auth.\+h}}\item 
+libs/libmariadb/include/mysql/\mbox{\hyperlink{plugin__auth__common_8h}{plugin\+\_\+auth\+\_\+common.\+h}}\end{DoxyCompactItemize}
