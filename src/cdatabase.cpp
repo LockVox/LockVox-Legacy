@@ -1,13 +1,55 @@
 #include "cdatabase.h"
+#include "Server/config.h"
 
 CDatabase::CDatabase()
 {
     // Initialize constants
+#ifdef DEV_DB
     MY_HOSTNAME = "lockvox.fr";
     MY_DATABASE = "lockvox_server";
     MY_USERNAME = "lockvox";
     MY_PASSWORD = "4E96up6E3jxsX6QR";
     MY_SOCKET   = NULL;
+#else
+    QDir test;
+    if(!test.exists("storage/conf"))
+    {
+        if(!test.mkpath("storage/conf"))
+        {
+            qDebug() << "[Conf error] Can't create conf directory" << Qt::endl;
+            abort();
+        }
+    }
+    else
+    {
+        if(!QFile::exists("storage/conf/db.cnf"))
+        {
+            QFile cnf;
+            cnf.setFileName("storage/conf/db.cnf");
+            if(!cnf.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                qDebug() << "Can't create default DB configuration file" << Qt::endl;
+                abort();
+            }
+            QTextStream stream(&cnf);
+
+            stream << "MY_HOSTNAME=127.0.0.1" << Qt::endl;
+            stream << "MY_DATABASE=lockvox_server" << Qt::endl;
+            stream << "MY_USERNAME=lockvox" << Qt::endl;
+            stream << "MY_PASSWORD=changeme" << Qt::endl;
+
+            cnf.close();
+
+            qDebug() << "No DB configuration file was found, I generate you the default one." << Qt::endl << "Please go to $LOCKVOX_SERVER_PATH/storage/conf and modify db.cnf with your db credential" << Qt::endl;
+            abort();
+        }
+        else
+        {
+
+        }
+    }
+#endif
+
 
 }
 
