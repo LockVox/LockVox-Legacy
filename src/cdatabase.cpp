@@ -4,12 +4,16 @@
 CDatabase::CDatabase()
 {
     // Initialize constants
+    MY_SOCKET   = NULL;
+}
+
+QString CDatabase::init()
+{
 #ifdef DEV_DB
-    MY_HOSTNAME = "lockvox.fr";
+    MY_HOSTNAME = "82.64.90.246";
     MY_DATABASE = "lockvox_server";
     MY_USERNAME = "lockvox";
     MY_PASSWORD = "4E96up6E3jxsX6QR";
-    MY_SOCKET   = NULL;
 #else
     QDir test;
     if(!test.exists("storage/conf"))
@@ -24,8 +28,7 @@ CDatabase::CDatabase()
     {
         if(!QFile::exists("storage/conf/db.cnf"))
         {
-            QFile cnf;
-            cnf.setFileName("storage/conf/db.cnf");
+            QFile cnf("storage/conf/db.cnf");
             if(!cnf.open(QIODevice::WriteOnly | QIODevice::Text))
             {
                 qDebug() << "Can't create default DB configuration file" << Qt::endl;
@@ -45,16 +48,123 @@ CDatabase::CDatabase()
         }
         else
         {
+            QFile cnf("storage/conf/db.cnf");
+            if(!cnf.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                qDebug() << "Can't open DB configuration file" << Qt::endl;
+                abort();
+            }
+            QByteArray db_cnf = cnf.readAll();
+            QList<QByteArray> cnf_list = db_cnf.split('\n');
 
+            for(int i = 0; i < 4; i++)
+            {
+                if(!cnf_list[i].isNull())
+                {
+                    QList<QByteArray> tmp = cnf_list[i].split('=');
+                    switch (i)
+                    {
+                        case 0:
+                        {
+                            if(tmp[0] == "MY_HOSTNAME" && !tmp[1].isEmpty())
+                            {
+                                MY_HOSTNAME = tmp[1].toStdString().c_str();
+                            }
+                            else
+                            {
+                                if(tmp[1].isEmpty())
+                                {
+                                    qDebug() << "No hostname set for MY_HOSTNAME, localhost will be applied by default";
+                                    MY_HOSTNAME = "127.0.0.1";
+                                }
+                                else
+                                {
+                                    qDebug() << "Invalide first parameter in DB configuration file. Should be MY_HOSTNAME";
+                                    abort();
+                                }
+                            }
+                            break;
+                        }
+                        case 1:
+                        {
+                           if(tmp[0] == "MY_DATABASE" && !tmp[1].isEmpty())
+                           {
+                               MY_DATABASE = tmp[1].toStdString().c_str();
+                           }
+                           else
+                           {
+                               if(tmp[1].isEmpty())
+                               {
+                                   qDebug() << "No DB set for MY_DATABASE, lockvox_server will be applied by default";
+                                   MY_DATABASE = "lockvox_server";
+                               }
+                               else
+                               {
+                                   qDebug() << "Invalide seconde parameter in DB configuration file. Should be MY_DATABASE";
+                                   abort();
+                               }
+                           }
+                           break;
+                        }
+                        case 2:
+                        {
+                           if(tmp[0] == "MY_USERNAME" && !tmp[1].isEmpty())
+                           {
+                               MY_USERNAME = tmp[1].toStdString().c_str();
+                           }
+                           else
+                           {
+                               if(tmp[1].isEmpty())
+                               {
+                                   qDebug() << "No username set for MY_USERNAME, lockvox will be applied by default";
+                                   MY_USERNAME = "lockvox";
+                               }
+                               else
+                               {
+                                   qDebug() << "Invalide third parameter in DB configuration file. Should be MY_USERNAME";
+                                   abort();
+                               }
+                           }
+                           break;
+                        }
+                        case 3:
+                        {
+                           if(tmp[0] == "MY_PASSWORD" && !tmp[1].isEmpty())
+                           {
+                               MY_PASSWORD = tmp[1].toStdString().c_str();
+                           }
+                           else
+                           {
+                               if(tmp[1].isEmpty())
+                               {
+                                   qDebug() << "No password set for MY_PASSWORD, please set your MY_DB password";
+                                   abort();
+                               }
+                               else
+                               {
+                                   qDebug() << "Invalide fourth parameter in DB configuration file. Should be MY_PASSWORD";
+                                   abort();
+                               }
+                           }
+                           break;
+                        }
+                        default:
+                        {
+                            qDebug() << "Too much parameters in db.cnf, ignoring the rest";
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    qDebug() << "Can't initialyse DB conf, 4 parameters required" << Qt::endl;
+                    abort();
+                }
+            }
         }
     }
 #endif
 
-
-}
-
-QString CDatabase::init()
-{
     try
     {
         conn = mysql_init(NULL);
