@@ -531,7 +531,7 @@ void CClient::processData(QByteArray data) //Process received data
                       //PSEUDO UPDATE
                       CClient * client = packet->Deserialize_myClient();
 
-                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", SERVER);
+                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", USER);
                       //Apply changement
                       m_pseudo = client->get_pseudo();
 
@@ -545,7 +545,7 @@ void CClient::processData(QByteArray data) //Process received data
                       //BIO UPDATE
                       CClient * client = packet->Deserialize_myClient();
 
-                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", SERVER);
+                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", USER);
                       //Apply changement
                       m_description = client->get_description();
 
@@ -641,7 +641,7 @@ void CClient::processData(QByteArray data) //Process received data
 
                           emit sendToAll(ans.GetByteArray());
 
-                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has joined channel id ["+ QString::number(packet->get_IdChannel()) + "]", SERVER);
+                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has joined channel id ["+ QString::number(packet->get_IdChannel()) + "]", USER);
                       }
                       else
                       {
@@ -674,7 +674,7 @@ void CClient::processData(QByteArray data) //Process received data
 
                           emit sendToAll(ans.GetByteArray());
 
-                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has quit channel id ["+ QString::number(packet->get_IdChannel()) + "]", SERVER);
+                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has quit channel id ["+ QString::number(packet->get_IdChannel()) + "]", USER);
                       }
                       else
                       {

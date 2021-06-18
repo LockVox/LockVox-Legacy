@@ -26,10 +26,11 @@
 class CMessage;
 class CChannel;
 
-#define SERVER 0
-#define SERVER_WARN 1
-#define SERVER_ERR 2
-#define DB_ERR 3
+#define USER 0
+#define SERVER 1
+#define SERVER_WARN 2
+#define SERVER_ERR 3
+#define DB_ERR 4
 
 using namespace std;
 
@@ -43,7 +44,7 @@ class CClient : public QThread
      * @version     0.2.0
      * @date        2021
      * @note
-     * @bug
+     * @bug         QAbstractSocket tells us that waitForBytes written isn't allowed in unconnected state when client alt-f4. Mybe it comes from onDisconnect from CServer.
      * @warning
      * @remark
      * @copyright   GNU GPL-3.0

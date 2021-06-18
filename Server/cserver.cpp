@@ -21,7 +21,7 @@ CServer::CServer()
         }
     }
 
-    log_level = SERVER;
+    log_level = USER;
     current = QDateTime::currentDateTime();
     QString path = "storage/log/Server_log_" +  current.toString("dd_MMMM_yyyy_hh_mm_ss") + ".txt";
     log_file.setFileName(path);
@@ -38,6 +38,9 @@ CServer::CServer()
     }
 }
 
+/**
+ * @brief This function should be called to start the server. Starting TCP Server and initialising DB connection.
+ */
 void CServer::start()
 {
     // Gestion du serveur TCP
@@ -231,20 +234,25 @@ void CServer::writeToLog(QString error, int level)
         {
             case 0:
             {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server]";
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][User]";
                 break;
             }
             case 1:
             {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Warning]";
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server]";
                 break;
             }
             case 2:
             {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Error]";
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Warning]";
                 break;
             }
             case 3:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Error]";
+                break;
+            }
+            case 4:
             {
                 prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Database Error]";
                 break;

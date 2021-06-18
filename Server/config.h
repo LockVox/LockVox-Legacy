@@ -3,7 +3,7 @@
 
 #define LOCKVOX_SERVER
 
-//#define DEV_DB
+#define DEV_DB
 #define AUTOCONFIG
 #ifdef AUTOCONFIG
     #define IP_ADRESS "127.0.0.1"   //Default Server IP@
