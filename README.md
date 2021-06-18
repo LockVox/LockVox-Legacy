@@ -9,7 +9,7 @@ Lockvox project aims to create a fully encrypted and open source voice and audio
 We are a group of friends and classmate currently in IT engineering school. This project is our annual project as part of our 4th year of university course.
 It's dev using Qt opensource, written in C++.
 
-[Documentation](https://lockvox.github.io/LockVox/html/index.html)
+[Documentation](https://lockvox.github.io/LockVox/)
 
 ## Current Status
 
