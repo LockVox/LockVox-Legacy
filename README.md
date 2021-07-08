@@ -10,6 +10,7 @@ We are a group of friends and classmate currently in IT engineering school. This
 It's dev using Qt opensource, written in C++.
 
 [Documentation](https://lockvox.github.io/LockVox/)
+[Release](https://lockvox.fr:4443/index.php/s/BMkLzFZPPwy5K7p)
 
 ## Current Status
 
