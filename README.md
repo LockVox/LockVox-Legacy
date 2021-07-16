@@ -42,14 +42,15 @@ The project actually have :
 
 ### TO DO 
 
+-  SSL !!!!!
 -  [Audio immplementation](https://github.com/hyugzz/LVAudioSession)
 -  Message picture implementation
 -  Emoji message implementation
+-  Switch message to database ?
 
 ## 3rd-party
 
 -  [Skycoder42/QSslServer](https://github.com/Skycoder42/QSslServer)
--  [EMIPLIB](https://github.com/j0r1/EMIPLIB)
 -  [MariaDB C & C++ Connector](https://mariadb.com/kb/en/mariadb-connector-c/)
 -  [Zedwood C++ SHA256](http://www.zedwood.com/article/cpp-sha256-function)
 -  [Qt Open Sources](https://www.qt.io/licensing/)
