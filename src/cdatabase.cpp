@@ -7,7 +7,7 @@ CDatabase::CDatabase()
     MY_SOCKET   = NULL;
 }
 
-QString CDatabase::init()
+QString CDatabase::init(QString username, QString password, int port, QString hostname, QString database)
 {
 #ifdef DEV_DB
     MY_HOSTNAME = "lockvox.fr";
@@ -15,6 +15,11 @@ QString CDatabase::init()
     MY_USERNAME = "lockvox";
     MY_PASSWORD = "4E96up6E3jxsX6QR";
 #else
+    MY_HOSTNAME=hostname.toStdString().c_str();
+    MY_DATABASE=database.toStdString().c_str();
+    MY_USERNAME=username.toStdString().c_str();
+    MY_PASSWORD=password.toStdString().c_str();
+/*
     QDir test;
     if(!test.exists("storage/conf"))
     {
@@ -162,7 +167,7 @@ QString CDatabase::init()
                 }
             }
         }
-    }
+    }*/
 #endif
 
     try

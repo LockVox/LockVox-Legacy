@@ -1,7 +1,7 @@
 /**
  * @file        cdatabase.h
  * @brief       Declaration of the class CDatabase
- * @details     This class represent an user
+ * @details     This class is used to connect and query database
  * @author      Valentin Monnot (LockVox Team)
  * @version     0.2.0
  * @date        2021
@@ -11,22 +11,28 @@
 #ifndef CDATABASE_H
 #define CDATABASE_H
 
+//QT Includes
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <QApplication>
 
+//Librairies includes
 #include "mysql.h"
 #include "sha256.h"
 
+//Includes
 #include "cchannel.h"
 #include "cclient.h"
 
+//Namespace
 using namespace std;
 
+//Class definition
 class CChannel;
 
+//class
 class CDatabase : public QThread
 {
     /**
@@ -54,7 +60,8 @@ class CDatabase : public QThread
     Q_OBJECT
     public:
         CDatabase();           // Constructor
-        QString init();
+
+        QString init(QString username, QString password, int port, QString hostname, QString database);
 
         string getHash(string id, QString * get_err);
         QString newUser(string uuid,string pseudo, string mail, string password);

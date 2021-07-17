@@ -11,6 +11,8 @@
 #ifndef CMESSAGE_H
 #define CMESSAGE_H
 
+
+//QT Includes
 #include <QString>
 #include <QtXml>
 #include <QTime>
@@ -19,16 +21,20 @@
 #include <QImage>
 #include <QDebug>
 
+//Includes
 #include "cclient.h"
 #include "cchannel.h"
 
+//Class definition
 class CClient;
+
+//Class
 class CMessage
 {
     /**
      * @class       CMessage cmessage.h "cmessage.h"
      * @brief       Declaration of the class CMessage
-     * @details     CMessage are simply the messages class so that client can communicate between them...
+     * @details     CMessage class is the representation of a message. (Sender, Receiver, content, ...)
      * @author      Valentin Monnot (LockVox Team)
      * @version     0.1.1
      * @date        2021
@@ -40,6 +46,7 @@ class CMessage
      */
 
     public:
+        //Constructor
         CMessage(QString from, QString to,QString message,bool isPrivate); //Create message from var
         CMessage(QString from, QString to,QString message, QImage img,bool isPrivate); //Create message with image from var
         CMessage(QString xml); //Create message from xml
@@ -64,22 +71,19 @@ class CMessage
 
     private:
 
+        QString from;                   //!< Sender of the message
+        QString to;                     //!< Receiver of the message
+        QTime time;                     //!< Time when message has been send
+        QDate date;                     //!< Date of the message
+        QString message;                //!< Content of the message
+        QImage image;                   //!< Image hasImg  must be true
+        bool isPrivate;                 //!< if true private message if false chanel message
+        bool hasImg;                    //!< if true message has an image
 
-        //Var part
-
-        QString from; //Sender
-        QString to; //Receiver
-        QTime time; //Time when message sended
-        QDate date; //Date when message sended
-        QString message; // The message
-        QImage image; //Image hasImg  must be true
-        bool isPrivate; //if true private message if false chanel message
-        bool hasImg; //if true message has an image
-
-        QString from_pseudo;    //From is an UUID - This is the pseudo of the sender
+        QString from_pseudo;            //!< From is an UUID - This is the pseudo of the sender
         //XML part
 
-        QDomDocument xmlmessage; //XML Document containing message and information
+        QDomDocument xmlmessage;        //!< XML Document containing message and informations
 };
 
 #endif // CMESSAGE_H

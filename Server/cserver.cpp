@@ -46,8 +46,23 @@ void CServer::start()
     // Gestion du serveur TCP
     writeToLog("Starting server...", SERVER);
 
+    //Read config file
+    //readConfig();
+
+    //Databse
+    m_db = new CDatabase();
+    QString err =  m_db->init(m_UserDb, m_passwordDb, m_portDb, m_hostnameDb, m_nameDb);
+    if(err != "success")
+    {
+        writeToLog(err,DB_ERR);
+        abort();
+    }
+
+    m_db->start();
+
+
     serveur = new QTcpServer(this);
-    if (!serveur->listen(QHostAddress::Any, 50885)) //Statuate on server sarting listening for every adresse on port given
+    if (!serveur->listen(QHostAddress::Any, 50885)) //Statuate on server starting listening for every adresse on port given
     {
         // If server didn't start properly
         writeToLog(serveur->errorString(), SERVER_ERR);
@@ -58,17 +73,6 @@ void CServer::start()
         // If server started properly
         writeToLog("Running on port :" + QString::number(serveur->serverPort()), SERVER);
         connect(serveur, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
-    }
-
-    m_db = new CDatabase();
-    m_db->start();
-
-    QString err = m_db->init();
-
-    if(err != "success")
-    {
-        writeToLog(err,DB_ERR);
-        abort();
     }
 
     set_channels(m_db->parseChannel());
@@ -109,6 +113,90 @@ void CServer::start()
             }
         }
     }
+}
+
+
+//Read and parse config file, assign values
+void CServer::readConfig()
+{
+    QFile f(CONFIG_FILE_PATH);
+
+    if(f.exists() == true){
+        //Open file
+        f.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream in(&f);
+
+        //Read lines
+        while(!in.atEnd()){
+            QString line = in.readLine();
+            qDebug() << line;
+            if(line.contains("=")){
+               QStringList strList = line.split("=");
+
+               //Assign values
+
+               //Informations
+               if(strList[0] == "server")
+                   m_serverName = strList[1];
+
+               //Database
+               if(strList[0] == "db_port")
+                   m_portDb = strList[1].toInt();
+               if(strList[0] == "db_hostname")
+                   m_hostnameDb = strList[1];
+               if(strList[0] == "db_name")
+                   m_nameDb = strList[1];
+
+               if(strList[0] == "db_login")
+                   m_UserDb = strList[1];
+               if(strList[0] == "db_password")
+                   m_passwordDb = strList[1];
+
+               //Server parameter
+               if(strList[0] == "default_portt")
+                   m_serverPort = strList[1].toInt();
+               if(strList[0] == "maxUsers")
+                   m_maxUsers = strList[1].toInt();
+               if(strList[0] == "maxChannels")
+                   m_maxChannels = strList[1].toInt();
+               if(strList[0] == "maxAudioSessions")
+                   m_maxAudioSessions = strList[1].toInt();
+
+               //Log
+               if(strList[0] == "log_path")
+                   m_logFilePath = strList[1];
+
+            }
+        }
+
+    }
+    //manage errors reading or parsing config file.
+}
+
+//Print parsed config file values
+void CServer::printConfig()
+{
+    qDebug() << "Printing server informations and server\n";
+    qDebug() << "\n";
+    qDebug() << "INFORMATIONS :\n";
+    qDebug() << "Server name : " << m_serverName + "\n";
+    qDebug() << "\n";
+    qDebug() << "PARAMETERS : \n";
+    qDebug() << "Serveur port base       : " << m_serverPort << "\n";
+    qDebug() << "Serveur Audio port base : " << m_audioBasePort << "\n";
+    qDebug() << "Max simultaneous users  : " << m_maxUsers << "\n";
+    qDebug() << "Max channels            : " << m_maxChannels << "\n";
+    qDebug() << "Max audio sessions      : " << m_maxAudioSessions << "\n";
+    qDebug() << "\n";
+    qDebug() << "DATABASE : \n";
+    qDebug() << "Database hostname       : " << m_hostnameDb << "\n";
+    qDebug() << "Database name           : " << m_nameDb << "\n";
+    qDebug() << "Username                : " << m_UserDb << "\n";
+    qDebug() << "Database port           : " << m_portDb << "\n";
+    qDebug() << "\n";
+    qDebug() << "LOG : \n";
+    qDebug() << "Log file path           : " << m_logFilePath << "\n";
+
 }
 
 //Getters
@@ -306,6 +394,10 @@ void CServer::sendMe(QTcpSocket * socket)
     return;
 }
 
+//Pour faire plus propre  modifier update_level par des define
+//#define USERNAME 0
+//#define DESCRIPTION 1
+//et appeller updateClient(USERNAME, client);
 void CServer::updateClient(int update_level, CClient * client)
 {
     switch (update_level)

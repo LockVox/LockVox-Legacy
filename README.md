@@ -40,13 +40,15 @@ The project actually have :
 -  Simple public message
 -  Profile pictures
 
-### TO DO 
+### TO DO
 
 -  SSL !!!!!
 -  [Audio immplementation](https://github.com/hyugzz/LVAudioSession)
 -  Message picture implementation
 -  Emoji message implementation
 -  Switch message to database ?
+-  P2P Message
+-  Add and implement configuration file for Server. 
 
 ## 3rd-party
 
