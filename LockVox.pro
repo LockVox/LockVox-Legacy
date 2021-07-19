@@ -38,12 +38,14 @@ HEADERS += \
         Client/includes/messagelist.h \
         Client/includes/messagemodel.h \
         Client/includes/caudio.h \
+        Client/includes/config.h \
         imageprovider.h \
         src/includes/AbstractServer.h \
         src/includes/cchannel.h \
         Client/includes/cclient.h  \
         src/includes/cmessage.h \
         src/includes/crole.h \
+
 
 INCLUDEPATH += \
         src/includes \
@@ -68,8 +70,6 @@ QML_IMPORT_PATH = Client/qml/imports
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
-
-
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -78,7 +78,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 #DISTFILES += \
 #    qml/ConnectServer.qml
-
 
 win32: LIBS += -L$$PWD/libs/libmariadb/win32/ -llibmariadb
 
@@ -90,5 +89,45 @@ DISTFILES += \
     Client/qml/CustomQpushButton2.ui.qml \
     MenuBar.qml
 
+
+#portaudio
+win32: LIBS += -L$$PWD/libs/lib/ -lportaudio_x64
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/lib/portaudio_x64.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/libs/lib/libportaudio_x64.a
+
+#opus
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -lopus
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libopus.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/opus.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/opus.lib
+#jthread
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -ljthread
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libjthread.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libjthread_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jthread.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jthread_d.lib
+
+
+#jrtplib
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -ljrtplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/lib/ -ljrtplib_d
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib_d.lib
+
+
+#emiplib
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/lib/ -lemiplib_d
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib_d.lib
 
 

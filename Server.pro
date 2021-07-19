@@ -1,4 +1,4 @@
-QT       += core xml
+QT     += core xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network sql
 
@@ -61,3 +61,64 @@ win32: LIBS += -L$$PWD/libs/libmariadb/win32/ -llibmariadb
 INCLUDEPATH += $$PWD/libs/libmariadb/include \
     $$PWD/libs/libmariadb/win32
 DEPENDPATH += $$PWD/libs/libmariadb/win32
+
+
+#Includes paths for libs
+INCLUDEPATH += $$PWD/libs/include/
+DEPENDPATH += $$PWD/libs/include/
+
+INCLUDEPATH += $$PWD/libs/include/portaudio
+DEPENDPATH += $$PWD/libs/include/portaudio
+
+INCLUDEPATH += $$PWD/libs/include/opus
+DEPENDPATH += $$PWD/libs/include/opus
+
+INCLUDEPATH += $$PWD/libs/include/jthread
+DEPENDPATH += $$PWD/libs/include/jthread
+
+INCLUDEPATH += $$PWD/libs/include/jrtplib3
+DEPENDPATH += $$PWD/libs/include/jrtplib3
+
+INCLUDEPATH += $$PWD/libs/include/emiplib
+DEPENDPATH += $$PWD/libs/include/emiplib
+
+
+#portaudio
+win32: LIBS += -L$$PWD/libs/lib/ -lportaudio_x64
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/libs/lib/portaudio_x64.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/libs/lib/libportaudio_x64.a
+
+#opus
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -lopus
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libopus.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/opus.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/opus.lib
+#jthread
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -ljthread
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libjthread.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/libjthread_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jthread.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jthread_d.lib
+
+
+#jrtplib
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -ljrtplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/lib/ -ljrtplib_d
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/jrtplib_d.lib
+
+
+#emiplib
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/lib/ -lemiplib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/lib/ -lemiplib_d
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib_d.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/lib/emiplib_d.lib
