@@ -234,7 +234,7 @@ void CServer::onReceiveData()
     //Get packet size
     ds >> size;
 
-#ifdef LOCKVOX_DEBUG
+#ifdef _DEBUG
     qDebug() << "DATA RECEIVED:" << *data;
     qDebug() << "SIZE OF RECEIVE PACKET:" << size;
 #endif
@@ -269,7 +269,6 @@ void CServer::onReceiveData()
         emit changeState("Home");
         m_currentUIState = "Home";
     }
-
 
     //Free
     free(p);

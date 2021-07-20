@@ -88,7 +88,7 @@ class CClient : public QThread
         void deserialize(QJsonObject json_obj);
 
         //Process
-        void processData(CPacket * packet);
+        void processData(CPacket packet);
 
         //Messages
         bool createChannelIndex(string filename, QString path_to_index); //Creates an index.json for an empty channel and add the first message of it

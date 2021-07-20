@@ -47,24 +47,10 @@ class CPacket
         //Getters
         QString GetType();
         QString GetAction();
-
-        QJsonDocument GetData()
-        {
-            return m_data;
-        }
-
-        //Convert m_obj to a byte array
+        QJsonDocument GetData();
         QByteArray GetByteArray();
-
-        QUuid get_IdClient()
-        {
-            return id_client;
-        }
-
-        int get_IdChannel()
-        {
-            return id_channel;
-        }
+        QUuid get_IdClient();
+        int get_IdChannel();
 
         //Setters
         void SetType(QString p_type);

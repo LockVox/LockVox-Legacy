@@ -3,6 +3,7 @@
 
 #define LOCKVOX_SERVER
 
+
 #define DEV_DB
 #define AUTOCONFIG
 #ifdef AUTOCONFIG

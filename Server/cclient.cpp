@@ -66,6 +66,10 @@ CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool 
     m_description = description;
     m_isAuthenticate = false;
     m_buffer = new QByteArray;
+
+#ifdef _DEBUG
+     qDebug() << "[CREATE USER] " << m_pseudo << " - " << m_uuid;
+#endif
 }
 
 /**
@@ -91,6 +95,12 @@ CClient::CClient( QTcpSocket * soc)
  */
 CClient::~CClient()
 {
+
+#ifdef _DEBUG
+    qDebug() << "Delete client " << m_pseudo;
+#endif
+
+
     if(m_soc != NULL)
     {
         m_soc->disconnectFromHost();
@@ -392,45 +402,44 @@ void CClient::onReceiveData()
     ds.readBytes(p, size);
 
     //Create and parse packet
-    CPacket *packet = new CPacket(p, new CClient());
+    CPacket packet(p, new CClient());
 
     //Process received data
     processData(packet);
-
 }
 
 /**
  * @brief This function is called by onReceiveData to process received data in order to manage cases defined by the application protocol
  * @param[in] data  The QByteArray object received from the TCP socket
  */
-void CClient::processData(CPacket * packet) //Process received data
+void CClient::processData(CPacket packet) //Process received data
 {
 
-      if(packet->GetAction() == NULL || packet->GetType() == NULL)//Bad packet
+      if(packet.GetAction() == NULL || packet.GetType() == NULL)//Bad packet
       {
-          emit writeToLog("Unable to deserialize received packet :\n" + packet->GetByteArray() + "\nRequest Aborted", SERVER_WARN);
+          emit writeToLog("Unable to deserialize received packet :\n" + packet.GetByteArray() + "\nRequest Aborted", SERVER_WARN);
           return;
       }
 
-      if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1) //Request server object
+      if(packet.GetAction().toInt() == -1 && packet.GetType().toInt() == -1) //Request server object
       {
           emit sendYou(m_soc);
           return;
       }
 
       //Get type
-      switch (packet->GetType().toInt())
+      switch (packet.GetType().toInt())
       {
           case 0: //SERV
           {
-              switch (packet->GetAction().toInt())
+              switch (packet.GetAction().toInt())
               {
                   /*case 0: //Did we use that ?
                   {
                       //SERV CONNECT
                       //Check Auth -
                       //If Auth is Ok
-                      CClient * client = packet->Deserialize_newClient();
+                      CClient * client = packet.Deserialize_newClient();
                       //addClient(client);
 
                       if(m_isOnline == false)
@@ -449,7 +458,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   {
                       //SERV DISCONNECT
                       //Update online users
-                      CClient * client = packet->Deserialize_newClient();
+                      CClient * client = packet.Deserialize_newClient();
                       if(m_uuid != NULL)
                       {
                           m_isOnline = false;
@@ -460,7 +469,7 @@ void CClient::processData(CPacket * packet) //Process received data
                       ans.Serialize_newClient(client,false);
 
                       //Send Update
-                      emit sendToAll(packet->GetByteArray());
+                      emit sendToAll(packet.GetByteArray());
 
                       free(client);
 
@@ -470,7 +479,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 2:
                   {
                       //PSEUDO UPDATE
-                      CClient * client = packet->Deserialize_myClient();
+                      CClient * client = packet.Deserialize_myClient();
 
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", USER);
                       //Apply changement
@@ -484,7 +493,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 3:
                   {
                       //BIO UPDATE
-                      CClient * client = packet->Deserialize_myClient();
+                      CClient * client = packet.Deserialize_myClient();
 
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", USER);
                       //Apply changement
@@ -515,14 +524,14 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 6:
                   {
                       //Kick user
-                      //CClient * client = packet->Deserialize_newClient();
+                      //CClient * client = packet.Deserialize_newClient();
 
                       /*if(get_clientById(client->get_uuid()) != NULL)
                       {
                           * We should not use .removeOne but implemente AbstractServer::delClient()
                           * Right must be implemeted and we must verify user have right to kick before implement kick
                           writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] Has been kicked from server" ,SERVER);
-                          sendToAll(packet->GetByteArray());
+                          sendToAll(packet.GetByteArray());
                           m_clients.removeOne(get_clientById(client->get_uuid()));
                           client->get_socket()->close();
 
@@ -534,7 +543,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 7:
                   {
                       //Auth request
-                      QList<QString> info = packet->Deserialize_auth();
+                      QList<QString> info = packet.Deserialize_auth();
                       emit authMe(info, this);
 
                       break;
@@ -544,7 +553,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   {
                       //Get Information from request
                       //REGISTER
-                      QList<QString> info = packet->Deserialize_regReq();
+                      QList<QString> info = packet.Deserialize_regReq();
                       emit regMe(info, this);
 
                       break;
@@ -552,7 +561,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
                   default:
                   {
-                      emit writeToLog("Received invalid server action :\n" + packet->GetByteArray() +"\nIgnored", SERVER_WARN);
+                      emit writeToLog("Received invalid server action :\n" + packet.GetByteArray() +"\nIgnored", SERVER_WARN);
                       break;
                   }
               }
@@ -561,14 +570,14 @@ void CClient::processData(CPacket * packet) //Process received data
 
           case 1: //CHAN
           {
-              switch (packet->GetAction().toInt())
+              switch (packet.GetAction().toInt())
               {
                   case 0:
                   {
                       //JOIN CHANNEL
-                      packet->Deserialize_ID();
+                      packet.Deserialize_ID();
 
-                      CChannel * channel = emit whichChan(packet->get_IdChannel());
+                      CChannel * channel = emit whichChan(packet.get_IdChannel());
 
                       if(channel)
                       {
@@ -582,13 +591,13 @@ void CClient::processData(CPacket * packet) //Process received data
 
                           emit sendToAll(ans.GetByteArray());
 
-                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has joined channel id ["+ QString::number(packet->get_IdChannel()) + "]", USER);
+                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has joined channel id ["+ QString::number(packet.get_IdChannel()) + "]", USER);
                       }
                       else
                       {
                           if(!channel)
                           {
-                              emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] is trying to join a non-existing channel id [" + QString::number(packet->get_IdChannel()) + "]", SERVER_WARN);
+                              emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] is trying to join a non-existing channel id [" + QString::number(packet.get_IdChannel()) + "]", SERVER_WARN);
                               //Send error packet
                               //TODO
                           }
@@ -599,9 +608,9 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 1:
                   {
                       //QUIT CHAN
-                      packet->Deserialize_ID();
+                      packet.Deserialize_ID();
 
-                      CChannel * channel = emit whichChan(packet->get_IdChannel());
+                      CChannel * channel = emit whichChan(packet.get_IdChannel());
 
                       if(channel)
                       {
@@ -615,7 +624,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
                           emit sendToAll(ans.GetByteArray());
 
-                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has quit channel id ["+ QString::number(packet->get_IdChannel()) + "]", USER);
+                          emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] has quit channel id ["+ QString::number(packet.get_IdChannel()) + "]", USER);
                       }
                       else
                       {
@@ -631,7 +640,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 2:
                   {
                       //Text channel message
-                      CMessage msg = packet->Deserialize_Message();
+                      CMessage msg = packet.Deserialize_Message();
 
                       if(msg.get_to().toInt() <= -1 || emit whichChan(msg.get_to().toInt()) == nullptr)
                       {
@@ -786,7 +795,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
                   case 3:
                   {
-                      QList<QString> info = packet->deserialize_messageRequest();
+                      QList<QString> info = packet.deserialize_messageRequest();
 
                       QList<CMessage> messages_list = createMessageList(info.at(1), false, info.at(2).toInt(), m_uuid, info.at(3).toInt());
 
@@ -823,7 +832,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 4:
                   {
                       //Request profile picture
-                      QString tmp = packet->deserialize_ppRequest();
+                      QString tmp = packet.deserialize_ppRequest();
                       if(tmp.size() != 38)
                       {
                           emit writeToLog("[" + m_uuid.toString(QUuid::WithoutBraces) + "(" + m_pseudo + ")] Error in request :", SERVER_ERR);
@@ -880,7 +889,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 5:
                   {
                       //Create audio chan
-                      CChannel * c = packet->Deserialize_newChannel();
+                      CChannel * c = packet.Deserialize_newChannel();
                       emit updateChan(0,c);
 
                       break;
@@ -889,7 +898,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 6:
                   {
                       //Delete audio chan
-                      CChannel * c = packet->Deserialize_newChannel();
+                      CChannel * c = packet.Deserialize_newChannel();
                       emit updateChan(1,c);
 
                       break;
@@ -898,7 +907,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 7:
                   {
                       //Rename audio chan
-                      CChannel * c = packet->Deserialize_newChannel();
+                      CChannel * c = packet.Deserialize_newChannel();
                       emit updateChan(2,c);
 
                       break;
@@ -907,7 +916,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 8:
                   {
                       //Modif max user (voc)
-                      CChannel * c = packet->Deserialize_newChannel();
+                      CChannel * c = packet.Deserialize_newChannel();
                       emit updateChan(3,c);
 
                       break;
@@ -950,7 +959,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
                   default:
                   {
-                      emit writeToLog("Received invalid channel action :\n" + packet->GetByteArray() +"\nIgnored", SERVER_WARN);
+                      emit writeToLog("Received invalid channel action :\n" + packet.GetByteArray() +"\nIgnored", SERVER_WARN);
                       break;
                   }
               }
@@ -959,7 +968,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
           case 2: //USER
           {
-              switch (packet->GetAction().toInt())
+              switch (packet.GetAction().toInt())
               {
                   case 0:
                   {
@@ -1006,7 +1015,7 @@ void CClient::processData(CPacket * packet) //Process received data
                   case 6:
                   {
                       //Request message list
-                      QList<QString> info = packet->deserialize_messageRequest();
+                      QList<QString> info = packet.deserialize_messageRequest();
                       QList<CMessage> messages_list = createMessageList(info.at(1), true, info.at(2).toInt(), m_uuid, info.at(3).toInt());
 
                       if(messages_list.last().get_from() == "allIsSync")
@@ -1028,7 +1037,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
                   default:
                   {
-                      emit writeToLog("Received invalid user action :\n" + packet->GetByteArray() +"\nIgnored", SERVER_WARN);
+                      emit writeToLog("Received invalid user action :\n" + packet.GetByteArray() +"\nIgnored", SERVER_WARN);
                       break;
                   }
               }
@@ -1037,7 +1046,7 @@ void CClient::processData(CPacket * packet) //Process received data
 
           default:
           {
-              emit writeToLog("Received invalid request type :\n" + packet->GetByteArray() +"\nIgnored", SERVER_WARN);
+              emit writeToLog("Received invalid request type :\n" + packet.GetByteArray() +"\nIgnored", SERVER_WARN);
               break;
           }
       }
