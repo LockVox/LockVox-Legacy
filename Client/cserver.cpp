@@ -224,212 +224,31 @@ int checkPacketIntegrity(QByteArray ba){
 
 void CServer::onReceiveData()
 {
+
     QByteArray data;
     data.append(m_socket->readAll());
 
-    //qDebug() << "Packet : " << *data;
+    QDataStream ds(&data,QIODevice::ReadOnly);
+    quint32 size;
 
-    QTextStream stream(&data);
-    QString buff;
+    //Get packet size
+    ds >> size;
 
-    int bracket = 0;
-    bool ifTrueProcess = true;
+#ifdef LOCKVOX_DEBUG
+    qDebug() << "DATA RECEIVED:" << *data;
+    qDebug() << "SIZE OF RECEIVE PACKET:" << size;
+#endif
 
-    while(!stream.atEnd())
-    {
-        if(bracket < 0)
-        {
-            //on a la fin d'une request au debut de data
-            break;
-        }
+    char *p;
+    ds.readBytes(p, size);
 
-        if(bracket == 0 && !buff.isEmpty())
-        {
-            if(buff.contains("\"mainObj\": {"))
-            {
-                ifTrueProcess = false;
-                QByteArray array(buff.toLocal8Bit());
-                processIncomingData(array);
-            }
-            buff.clear();
-        }
+    //Create and parse packet
+    CPacket *packet = new CPacket(p, new CClient());
 
-        QString oneChar = stream.read(1);
-        buff += oneChar;
-        if(oneChar == "{")
-        {
-            bracket++;
-        }
-        if(oneChar == "}")
-        {
-            bracket--;
-        }
-    }
+    //Process received data
+    processIncomingData(packet);
 
-    if(ifTrueProcess)
-    {
-        if(data.contains("\"mainObj\": {"))
-        {
-            //New packet
-            if(!buffer.isEmpty())
-            {
-                buffer.append(data);
-
-                QTextStream stream1(&buffer);
-                QString buff1;
-
-                bracket = 0;
-
-                while(!stream1.atEnd())
-                {
-                    if(bracket == 0 && !buff1.isEmpty())
-                    {
-                        if(buff1.contains("\"mainObj\": {"))
-                        {
-                            QByteArray array(buff1.toLocal8Bit());
-                            processIncomingData(array);
-                        }
-                        buff1.clear();
-                    }
-
-                    QString oneChar = stream1.read(1);
-                    buff1 += oneChar;
-                    if(oneChar == "{")
-                    {
-                        bracket++;
-                    }
-                    if(oneChar == "}")
-                    {
-                        bracket--;
-                    }
-                }
-                buffer.clear();
-
-                if(!buff1.isEmpty())
-                {
-                    buffer += buff1.toLocal8Bit();
-                }
-            }
-            else
-            {
-                buffer.append(data);
-            }
-        }
-        else
-        {
-            if(buffer.isEmpty())
-            {
-                //That's meen it's a bad packet, report to log
-                qDebug() << "Unable to deserialize received packet :" << Qt::endl << *data << Qt::endl << "Request Aborted" << Qt::endl;
-                return;
-            }
-            else
-            {
-                buffer.append(data);
-
-                QTextStream stream1(&buffer);
-                QString buff1;
-
-                bracket = 0;
-                bool processed = false;
-
-                while(!stream1.atEnd())
-                {
-                    if(bracket == 0 && !buff1.isEmpty())
-                    {
-                        if(buff1.contains("\"mainObj\": {"))
-                        {
-                            processed = true;
-                            QByteArray array(buff1.toLocal8Bit());
-                            processIncomingData(array);
-                        }
-                        else
-                        {
-                            qDebug() << "Trying to process incomplet packet :" << Qt::endl << buff1 << Qt::endl;
-                        }
-                        buff1.clear();
-                    }
-
-                    QString oneChar = stream1.read(1);
-                    buff1 += oneChar;
-                    if(oneChar == "{")
-                    {
-                        bracket++;
-                    }
-                    if(oneChar == "}")
-                    {
-                        bracket--;
-                    }
-                }
-                if(processed)
-                {
-                    buffer.clear();
-                    if(!buff1.isEmpty() && buff1.size() > 2)
-                    {
-                        buffer += buff1.toLocal8Bit();
-                    }
-                }
-            }
-        }
-    }
-
-    else
-    {
-        if(bracket != 0)
-        {
-            if(!buff.isEmpty() && buff.contains("\"mainObj\": {"))
-            {
-                if(!buffer.isEmpty())
-                {
-                    buffer += buff.toLocal8Bit();
-
-                    QTextStream stream1(&buffer);
-                    QString buff1;
-
-                    bracket = 0;
-
-                    while(!stream1.atEnd())
-                    {
-                        if(bracket == 0 && !buff1.isEmpty())
-                        {
-                            if(buff1.contains("\"mainObj\": {"))
-                            {
-                                QByteArray array(buff1.toLocal8Bit());
-                                processIncomingData(array);
-                            }
-                            else
-                            {
-                                qDebug() << "Trying to process incomplet packet :" << Qt::endl << buff1 << Qt::endl;
-                            }
-                            buff1.clear();
-                        }
-
-                        QString oneChar = stream1.read(1);
-                        buff1 += oneChar;
-                        if(oneChar == "{")
-                        {
-                            bracket++;
-                        }
-                        if(oneChar == "}")
-                        {
-                            bracket--;
-                        }
-                    }
-                    buffer.clear();
-
-                    if(!buff1.isEmpty())
-                    {
-                        buffer += buff1.toLocal8Bit();
-                    }
-                }
-                else
-                {
-                    buffer += buff.toLocal8Bit();
-                }
-            }
-        }
-    }
-
+    //Loading screen - TO MODIFY
     if(!m_finishLoad && m_self)
     {
         checkCompenents();
@@ -450,6 +269,10 @@ void CServer::onReceiveData()
         emit changeState("Home");
         m_currentUIState = "Home";
     }
+
+
+    //Free
+    free(p);
 }
 
 void CServer::loadAllCompenent(){
@@ -470,6 +293,14 @@ void CServer::loadAllCompenent(){
             }
         }
     }
+
+    foreach(CClient * c, getClientsList()->get_clients())
+     {
+        qDebug()<< "Requesting Profile picture for clients : " << c->get_uuid();
+       CPacket ppRequest("1","4");
+       ppRequest.Serialize_ppRequest(c->get_uuid().toString());
+       m_socket->write(ppRequest.GetByteArray());
+     }
 }
 
 void CServer::checkCompenents(){
@@ -529,23 +360,20 @@ void CServer::checkFinishLoad()
         m_finishLoad = true;
 }
 
-void CServer::processIncomingData(QByteArray data){
+void CServer::processIncomingData(CPacket * packet){
 
-    CPacket * packet = new CPacket(data,NULL);
-    //qDebug() << "m_type" << packet->GetType() << "m_action" << packet->GetAction() << Qt::endl;
-
+    //Incorrect packet
     if(packet->GetAction() == NULL || packet->GetType() == NULL){
         return;
     }
 
-
-
+    //Load Serveur Informations
     if(packet->GetAction().toInt() == -1 && packet->GetType().toInt() == -1)
     {
        if(!m_self){
            return;
        }
-       Deserialize(data);
+       Deserialize(packet->GetData());
 
        foreach(CClient * c, getClientsList()->get_clients())
        {
@@ -1254,10 +1082,9 @@ QByteArray CServer::Serialize(){
 
 }
 
-void CServer::Deserialize(QByteArray in){
+void CServer::Deserialize(QJsonDocument doc){
 
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(in);
-    QJsonObject obj = jsonDoc.object();
+    QJsonObject obj = doc.object();
 
     QJsonArray sArray = obj["clients"].toArray();
     QJsonArray cArray = obj["channels"].toArray();

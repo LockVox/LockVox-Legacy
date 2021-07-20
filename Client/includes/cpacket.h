@@ -27,6 +27,7 @@ class CPacket
 public:
     CPacket();
     CPacket(QByteArray data, CClient * client);
+    CPacket(const char *p, CClient * client);
     CPacket(QString type, QString action);
 
     //Getters
@@ -34,29 +35,16 @@ public:
     QString GetAction();
     CClient GetSender();
 
-    QJsonDocument GetData(){
-        return m_data;
-    }
+    QJsonDocument GetData();
 
     //Convert m_obj to a byte array
-    QByteArray GetByteArray(){
-        QJsonDocument doc(m_obj);
-        //qDebug() << doc;
-        m_ba = doc.toJson();
-        return m_ba;
-    }
+    QByteArray GetByteArray();
 
-    QUuid get_IdClient(){
-        return id_client;
-    }
+    QUuid get_IdClient();
 
-    int get_IdChannel(){
-        return id_channel;
-    }
+    int get_IdChannel();
 
-    struct register_info get_RegisterInfo(){
-        return m_register;
-    }
+    struct register_info get_RegisterInfo();
 
     //Setters
     void SetType(QString p_type);

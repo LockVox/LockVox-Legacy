@@ -41,6 +41,7 @@ class CPacket
     public:
         CPacket();
         CPacket(QByteArray data, CClient * client);
+        CPacket(const char *p, CClient * client);
         CPacket(QString type, QString action);
 
         //Getters
@@ -53,13 +54,7 @@ class CPacket
         }
 
         //Convert m_obj to a byte array
-        QByteArray GetByteArray()
-        {
-            QJsonDocument doc(m_obj);
-            //qDebug() << doc;
-            m_ba = doc.toJson();
-            return m_ba;
-        }
+        QByteArray GetByteArray();
 
         QUuid get_IdClient()
         {

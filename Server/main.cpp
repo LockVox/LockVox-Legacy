@@ -1,16 +1,16 @@
-#pragma comment(lib,"advapi32.lib")
+/*#pragma comment(lib,"advapi32.lib")
 #pragma comment(lib,"emiplib.lib")
 #pragma comment(lib,"jrtplib.lib")
 #pragma comment(lib,"jthread.lib")
 #pragma comment(lib,"portaudio_x64.lib")
-
+*/
 #include <QApplication>
 #include <QThread>
 #include <QString>
 
 #include "Server/config.h"
 #include "Server/includes/cserver.h"
-
+/*
 #include "mipconfig.h"
 #include "mipcomponent.h"
 #include "mipaveragetimer.h"
@@ -26,19 +26,19 @@
 
 #include "winsock.h"
 #pragma comment(lib,"ws2_32.lib")
-
+*/
 
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    #ifdef WIN32
+   /* #ifdef WIN32
         WSADATA dat;
         WSAStartup(MAKEWORD(2,2),&dat);
     #endif // WIN32
     MIPAudioSession *s = new MIPAudioSession();
-
+*/
     CServer * server = new CServer();
     server->start();
 

@@ -21,6 +21,7 @@
 
 class CClient;
 class CChannel;
+class CPacket;
 
 class CServer : public AbstractServer
 {
@@ -61,7 +62,7 @@ class CServer : public AbstractServer
         void setIp(const QString &ip);
 
         //Process
-        void processIncomingData(QByteArray data);         //Process incoming data
+        void processIncomingData(CPacket * packet);         //Process incoming data
 
         //Request Server -
         void loadAllCompenent();
@@ -78,7 +79,7 @@ class CServer : public AbstractServer
 
         //Serialization | Deserialization
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
-        void Deserialize(QByteArray in);
+        void Deserialize(QJsonDocument doc);
 
         QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
         QByteArray SerializeClients();                                      //Serialize clients into json document then byte array
@@ -145,7 +146,6 @@ signals:
         bool m_finishLoad;
         QString m_currentUIState;
         QString m_ip;
-
 
 
         //Logging

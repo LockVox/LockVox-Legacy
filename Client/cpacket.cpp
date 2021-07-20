@@ -12,6 +12,33 @@ m_type(type),m_action(action)
     Serialize();
 }
 
+CPacket::CPacket(const char *p, CClient *client)
+{
+    m_client = client;
+
+    qDebug() << "STRING:\n" << p;
+    QByteArray ba(p);
+
+    QJsonParseError jsonError;
+         m_data = QJsonDocument::fromJson(p,&jsonError);
+    if (jsonError.error != QJsonParseError::NoError){
+        qDebug() << jsonError.errorString();
+    }
+
+    m_obj = m_data.object();
+
+#ifdef LOCKVOX_DEBUG
+    qDebug() << "QJSONDOC : " << m_data;
+    qDebug() << "QJSONOOBJ : " << m_obj;
+#endif
+    Deserialize();
+
+#ifdef LOCKVOX_DEBUG
+    qDebug() << "m_type: " << m_type;
+    qDebug() << "m_action: " << m_action;
+#endif
+}
+
 CPacket::CPacket(QByteArray data, CClient * client)
 {
     m_client = client;                                  //Client
@@ -24,7 +51,6 @@ CPacket::CPacket(QByteArray data, CClient * client)
 }
 
 //Getters
-
 QString CPacket::GetType()
 {
     return m_type;
@@ -35,8 +61,40 @@ QString CPacket::GetAction()
     return m_action;
 }
 
-//Setters
+QJsonDocument CPacket::GetData(){
+    return m_data;
+}
 
+QByteArray CPacket::GetByteArray(){
+    QJsonDocument doc(m_obj);
+    //qDebug() << doc;
+
+    QDataStream ds(&m_ba, QIODevice::ReadWrite);
+    QByteArray tmp = doc.toJson();
+    ds << (qint32)tmp.size();
+    ds << tmp;
+
+    //m_ba = doc.toJson();
+    //qDebug() << "BEFORE INSERT SIZE:" << m_ba;
+    //m_ba.insert(0,m_ba.size());
+    //qDebug() << "AFTER INSERT SIZE:" << m_ba;
+
+    return m_ba;
+}
+
+QUuid CPacket::get_IdClient(){
+    return id_client;
+}
+
+int CPacket::get_IdChannel(){
+    return id_channel;
+}
+
+register_info CPacket::get_RegisterInfo(){
+    return m_register;
+}
+
+//Setters
 void CPacket::SetType(QString p_type)
 {
     m_type = p_type;
@@ -58,8 +116,8 @@ void CPacket::Serialize()
 }
 
 QByteArray CPacket::Serialize(CServer* c){
-      m_ba = c->Serialize();
-      return m_ba;
+    m_ba = c->Serialize();
+    return m_ba;
 }
 
 //Answer to a client request

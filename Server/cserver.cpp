@@ -76,8 +76,8 @@ void CServer::start()
     }
 
     set_channels(m_db->parseChannel());
-
     set_clients(m_db->parseClient());
+
     foreach(CClient * client, get_clientList())
     {
         connectClient(client);
@@ -357,6 +357,7 @@ void CServer::writeToLog(QString error, int level)
 
 void CServer::connectClient(CClient *client)
 {
+
     connect(client, SIGNAL(writeToLog(QString,int)), this, SLOT(ext_writeToLog(QString,int)));
     connect(client, SIGNAL(sendYou(QTcpSocket*)), this, SLOT(sendMe(QTcpSocket*)));
 

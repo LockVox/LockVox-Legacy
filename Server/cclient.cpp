@@ -20,6 +20,8 @@ CClient::CClient()
     m_idChannel = 0;
     m_isOnline = false;
     m_buffer = new QByteArray;
+    m_mail ="";
+    m_uuid = NULL;
 }
 
 /**
@@ -372,98 +374,37 @@ void CClient::sendToClient(QByteArray out)
  */
 void CClient::onReceiveData()
 {
-  //Get data
-  QByteArray *data = new QByteArray();
-  data->append(m_soc->readAll());
+    QByteArray data;
+    data.append(m_soc->readAll());
 
-  //Process data
-  CPacket tmp(*data, this); //Check if valid packet, if not, may be a splitted packet or multiple packet
-  bool ifTrueProccess = true;
+    QDataStream ds(&data,QIODevice::ReadOnly);
+    quint32 size;
 
-  if(tmp.GetType() == NULL | tmp.GetAction() == NULL)
-  {
-      int bracket = 0;
-      QTextStream stream(data);
-      QString buffer;
+    //Get packet size
+    ds >> size;
 
-      while(!stream.atEnd())
-      {
-          if(bracket == 0 && !buffer.isEmpty())
-          {
-              ifTrueProccess = false;
-              QByteArray array(buffer.toLocal8Bit());
-              if(array !="\n")
-              {
-                  processData(array);
-              }
-              buffer.clear();
-          }
+#ifdef LOCKVOX_DEBUG
+    qDebug() << "DATA RECEIVED:" << *data;
+    qDebug() << "SIZE OF RECEIVE PACKET:" << size;
+#endif
 
-          QString oneChar = stream.read(1);
-          buffer += oneChar;
-          if(oneChar == "{")
-          {
-              bracket++;
-          }
-          if(oneChar == "}")
-          {
-              bracket--;
-          }
-      }
+    char *p;
+    ds.readBytes(p, size);
 
-      if(ifTrueProccess)
-      {
-          if(data->contains("\"mainObj\": {"))
-          {
-              //New packet
-              if(!m_buffer->isEmpty())
-              {
-                  emit writeToLog("[" + m_uuid.toString() + "(" + m_pseudo +
-                             ")] New request held by multiple packet arrived while user buffer isn't empty, clearing it",SERVER_WARN);
-                  emit writeToLog("A packet and therefore a request must have been lost nor a bad packet was received before",SERVER_WARN);
-                  m_buffer->clear();
-              }
-              m_buffer->append(*data);
-          }
-          else
-          {
-              if(m_buffer->isEmpty())
-              {
-                  //That's meen it's a bad packet, report to log
-                  emit writeToLog("Unable to deserialize received packet :\n" + *data + "\nRequest Aborted", SERVER_WARN);
-              }
-              else
-              {
-                  m_buffer->append(*data);
-                  CPacket tmp1(*m_buffer, this);
+    //Create and parse packet
+    CPacket *packet = new CPacket(p, new CClient());
 
-                  //We check if the packet is complete, otherwise we wait for the buffer to fill up
-                  if(tmp1.GetType() != NULL & tmp1.GetAction() != NULL)
-                  {
-                      processData(*m_buffer);
-                      m_buffer->clear();
-                  }
-              }
-          }
-      }
-  }
-  else
-  {
-      if(ifTrueProccess & *data != "\n")
-      {
-          processData(*data);
-      }
-  }
+    //Process received data
+    processData(packet);
+
 }
 
 /**
  * @brief This function is called by onReceiveData to process received data in order to manage cases defined by the application protocol
  * @param[in] data  The QByteArray object received from the TCP socket
  */
-void CClient::processData(QByteArray data) //Process received data
+void CClient::processData(CPacket * packet) //Process received data
 {
-
-      CPacket* packet = new CPacket(data, this);
 
       if(packet->GetAction() == NULL || packet->GetType() == NULL)//Bad packet
       {
