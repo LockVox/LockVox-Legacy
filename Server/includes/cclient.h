@@ -35,6 +35,12 @@ class CPacket;
 
 using namespace std;
 
+enum ClientParams{
+    USERNAME,
+    DESCRIPTION,
+    MAIL
+};
+
 class CClient : public QThread
 {
     /**
@@ -100,7 +106,7 @@ class CClient : public QThread
         void writeToLog(QString error, int level);
         void sendYou(QTcpSocket * socket);
 
-        void updateMe(int update_type, CClient * client);
+        void updateClient(ClientParams param, CClient * client, QString newString);
         void updateChan(int update_type, CChannel * channel);
 
         void authMe(QList<QString> info, CClient * client);

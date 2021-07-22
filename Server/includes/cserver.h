@@ -59,7 +59,7 @@ class CServer : public AbstractServer
 
         //Start server
         void start();
-        void readConfig();
+        int readConfig();
         void printConfig();
 
         //Server action
@@ -95,7 +95,7 @@ class CServer : public AbstractServer
         void ext_sendToAll(QByteArray out);
 
         void sendMe(QTcpSocket * socket);
-        void updateClient(int update_type, CClient * client);
+        void updateClient(ClientParams param,CClient * client, QString newString);
         void updateChannel(int update_type, CChannel * channel);
 
         //Authentication / Register

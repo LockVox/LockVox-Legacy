@@ -293,13 +293,13 @@ void CServer::loadAllCompenent(){
         }
     }
 
-    foreach(CClient * c, getClientsList()->get_clients())
+    /*foreach(CClient * c, getClientsList()->get_clients())
      {
         qDebug()<< "Requesting Profile picture for clients : " << c->get_uuid();
        CPacket ppRequest("1","4");
        ppRequest.Serialize_ppRequest(c->get_uuid().toString());
        m_socket->write(ppRequest.GetByteArray());
-     }
+     }*/
 }
 
 void CServer::checkCompenents(){

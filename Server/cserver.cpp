@@ -43,11 +43,13 @@ CServer::CServer()
  */
 void CServer::start()
 {
+
     // Gestion du serveur TCP
     writeToLog("Starting server...", SERVER);
 
     //Read config file
-    //readConfig();
+    readConfig();
+    printConfig();
 
     //Databse
     m_db = new CDatabase();
@@ -59,7 +61,6 @@ void CServer::start()
     }
 
     m_db->start();
-
 
     serveur = new QTcpServer(this);
     if (!serveur->listen(QHostAddress::Any, 50885)) //Statuate on server starting listening for every adresse on port given
@@ -115,10 +116,11 @@ void CServer::start()
     }
 }
 
-
 //Read and parse config file, assign values
-void CServer::readConfig()
+int CServer::readConfig()
 {
+    qDebug() << "Reading config files..." << CONFIG_FILE_PATH;
+
     QFile f(CONFIG_FILE_PATH);
 
     if(f.exists() == true){
@@ -129,10 +131,10 @@ void CServer::readConfig()
         //Read lines
         while(!in.atEnd()){
             QString line = in.readLine();
-            qDebug() << line;
+
             if(line.contains("=")){
                QStringList strList = line.split("=");
-
+               //qDebug() << strList[0] << " " << strList[1];
                //Assign values
 
                //Informations
@@ -153,8 +155,10 @@ void CServer::readConfig()
                    m_passwordDb = strList[1];
 
                //Server parameter
-               if(strList[0] == "default_portt")
+               if(strList[0] == "default_port")
                    m_serverPort = strList[1].toInt();
+               if(strList[0] == "audio_default_port")
+                   m_audioBasePort = strList[1].toInt();
                if(strList[0] == "maxUsers")
                    m_maxUsers = strList[1].toInt();
                if(strList[0] == "maxChannels")
@@ -168,7 +172,10 @@ void CServer::readConfig()
 
             }
         }
-
+        return 1;
+    } else {
+        qDebug() << "Can't find config file " << CONFIG_FILE_PATH;
+        return 0;
     }
     //manage errors reading or parsing config file.
 }
@@ -176,27 +183,28 @@ void CServer::readConfig()
 //Print parsed config file values
 void CServer::printConfig()
 {
-    qDebug() << "Printing server informations and server\n";
+    qDebug() << "Printing server informations and server";
     qDebug() << "\n";
-    qDebug() << "INFORMATIONS :\n";
-    qDebug() << "Server name : " << m_serverName + "\n";
-    qDebug() << "\n";
-    qDebug() << "PARAMETERS : \n";
-    qDebug() << "Serveur port base       : " << m_serverPort << "\n";
-    qDebug() << "Serveur Audio port base : " << m_audioBasePort << "\n";
-    qDebug() << "Max simultaneous users  : " << m_maxUsers << "\n";
-    qDebug() << "Max channels            : " << m_maxChannels << "\n";
-    qDebug() << "Max audio sessions      : " << m_maxAudioSessions << "\n";
-    qDebug() << "\n";
-    qDebug() << "DATABASE : \n";
-    qDebug() << "Database hostname       : " << m_hostnameDb << "\n";
-    qDebug() << "Database name           : " << m_nameDb << "\n";
-    qDebug() << "Username                : " << m_UserDb << "\n";
-    qDebug() << "Database port           : " << m_portDb << "\n";
-    qDebug() << "\n";
-    qDebug() << "LOG : \n";
-    qDebug() << "Log file path           : " << m_logFilePath << "\n";
-
+    qDebug() << "[INFORMATIONS]";
+    qDebug() << "Server name             : " << m_serverName;
+    qDebug() << "";
+    qDebug() << "[PARAMETERS]";
+    qDebug() << "Serveur port base       : " << m_serverPort;
+    qDebug() << "Serveur Audio port base : " << m_audioBasePort;
+    qDebug() << "Max simultaneous users  : " << m_maxUsers;
+    qDebug() << "Max channels            : " << m_maxChannels;
+    qDebug() << "Max audio sessions      : " << m_maxAudioSessions;
+    qDebug() << "";
+    qDebug() << "[DATABASE]";
+    qDebug() << "Database hostname       : " << m_hostnameDb ;
+    qDebug() << "Database name           : " << m_nameDb;
+    qDebug() << "Username                : " << m_UserDb;
+    qDebug() << "Database port           : " << m_portDb;
+    qDebug() << "";
+    qDebug() << "[LOG]";
+    qDebug() << "Log file path           : " << m_logFilePath;
+    qDebug() << "";
+    qDebug() << "";
 }
 
 //Getters
@@ -361,7 +369,7 @@ void CServer::connectClient(CClient *client)
     connect(client, SIGNAL(writeToLog(QString,int)), this, SLOT(ext_writeToLog(QString,int)));
     connect(client, SIGNAL(sendYou(QTcpSocket*)), this, SLOT(sendMe(QTcpSocket*)));
 
-    connect(client, SIGNAL(updateMe(int,CClient*)), this, SLOT(updateClient(int,CClient*)));
+    connect(client, SIGNAL(updateClient(ClientParams,CClient*,QString)), this, SLOT(updateClient(ClientParams,CClient*,QString)));
     connect(client, SIGNAL(updateChan(int,CChannel*)), this, SLOT(updateChannel(int,CChannel*)));
 
     connect(client, SIGNAL(authMe(QList<QString>,CClient*)), this, SLOT(auth(QList<QString>,CClient*)));
@@ -399,17 +407,22 @@ void CServer::sendMe(QTcpSocket * socket)
 //#define USERNAME 0
 //#define DESCRIPTION 1
 //et appeller updateClient(USERNAME, client);
-void CServer::updateClient(int update_level, CClient * client)
+
+void CServer::updateClient(ClientParams param,CClient * client, QString newString)
 {
-    switch (update_level)
+    switch (param)
     {
         //Pseudo
-        case 0:
+        case USERNAME:
         {
-            QString res = m_db->updateUsername(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), client->get_pseudo().toStdString());
-
+            //UPDATE USERNAME
+            QString res = m_db->updateUsername(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), newString.toStdString());
             if(res=="success")
             {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Update username for " << client->get_pseudo() << " to " << newString;
+#endif
+                client->set_pseudo(newString);
                 //Send update
                 CPacket ans("0","2");
                 ans.Serialize_newClient(client,false);
@@ -417,15 +430,16 @@ void CServer::updateClient(int update_level, CClient * client)
             }
             else
             {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Failed to update username for " << client->get_pseudo() << " to " << newString << " - " << res;
+#endif
                 writeToLog(res, DB_ERR);
             }
-
-            free(client);
             break;
         }
 
         //Description
-        case 1:
+        case DESCRIPTION:
         {
             QString res = m_db->updateDescription(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), client->get_description().toStdString());
 
@@ -444,7 +458,9 @@ void CServer::updateClient(int update_level, CClient * client)
             free(client);
             break;
         }
-
+        case MAIL:
+        {
+        }
     }
 }
 
@@ -508,7 +524,7 @@ void CServer::updateChannel(int update_type, CChannel * channel)
 
 void CServer::auth(QList<QString> info, CClient * client)
 {
-    CPacket* ans = new CPacket("0", "7");
+    CPacket ans("0", "7");
     CPacket newUser("0","0");
 
     //Password hash
@@ -526,10 +542,15 @@ void CServer::auth(QList<QString> info, CClient * client)
             {
                 if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //For the moment if yes just don't allow second connection
                 {
-                    writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
-                    ans->Serialize_auth(NULL, 2);
 
-                    client->get_socket()->write(ans->GetByteArray());
+#ifdef SERVER_DEBUG
+                    qDebug() << "[SERVER] Authentication failed - " << c->get_pseudo();
+#endif
+
+                    writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
+                    ans.Serialize_auth(NULL, 2);
+
+                    client->get_socket()->write(ans.GetByteArray());
                     client->get_socket()->waitForBytesWritten();
 
                     client->get_socket()->abort();
@@ -541,12 +562,15 @@ void CServer::auth(QList<QString> info, CClient * client)
                 {
                     writeToLog("User [" + c->get_uuid().toString()  + "(" + c->get_pseudo() + ")] connected from [" + client->get_socket()->peerAddress().toString() + "]",SERVER);
 
+#ifdef SERVER_DEBUG
+                      qDebug() << "[SERVER] Authentication success - " << c->get_pseudo();
+#endif
                     c->set_isOnline(true);
                     c->set_isAuthenticate(true);
                     c->set_socket(client->get_socket());
 
                     //Sending client info
-                    ans->Serialize_auth(c, 0);
+                    ans.Serialize_auth(c, 0);
                     newUser.Serialize_newClient(c,false);
                     valid = true;
                 }
@@ -559,35 +583,39 @@ void CServer::auth(QList<QString> info, CClient * client)
             {
                 writeToLog("Error with database when fetching password hash",SERVER_ERR);
                 writeToLog(*err, DB_ERR);
-                ans->Serialize_auth(NULL, 1);
+                ans.Serialize_auth(NULL, 1);
                 delete(err);
             }
             else //Bad password
             {
                 writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", SERVER_WARN);
-                ans->Serialize_auth(NULL, 3);
+                ans.Serialize_auth(NULL, 3);
                 delete(err);
             }
         }
     }
     else
     {
+#ifdef SERVER_DEBUG
+                      qDebug() << "[SERVER] Authentication failed" << info[0];
+#endif
+
         if(*err == "no_client")
         {
             writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Trying to connect to a non-existing account", SERVER_WARN);
-            ans->Serialize_auth(NULL, 1);
+            ans.Serialize_auth(NULL, 1);
             delete(err);
         }
         else
         {
             writeToLog("Error with database when fetching client",SERVER_ERR);
             writeToLog(*err,DB_ERR);
-            ans->Serialize_auth(NULL, 1);
+            ans.Serialize_auth(NULL, 1);
             delete(err);
         }
     }
 
-    client->get_socket()->write(ans->GetByteArray());
+    client->get_socket()->write(ans.GetByteArray());
     client->get_socket()->waitForBytesWritten();
 
     //If authentification suceed - Send Server Object to the client

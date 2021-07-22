@@ -15,6 +15,7 @@ QString CDatabase::init(QString username, QString password, int port, QString ho
     MY_USERNAME = "lockvox";
     MY_PASSWORD = "4E96up6E3jxsX6QR";
 #else
+    //This doesn't work
     MY_HOSTNAME=hostname.toStdString().c_str();
     MY_DATABASE=database.toStdString().c_str();
     MY_USERNAME=username.toStdString().c_str();
@@ -182,7 +183,7 @@ QString CDatabase::init(QString username, QString password, int port, QString ho
     }
     catch (char *e)
     {
-        return QString::fromLocal8Bit(e);
+        qDebug() << QString::fromLocal8Bit(e);
     }
 }
 

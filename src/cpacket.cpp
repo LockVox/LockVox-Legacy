@@ -17,29 +17,28 @@ CPacket::CPacket(const char *p, CClient *client)
 {
     m_client = client;
 
-    qDebug() << "STRING:\n" << p;
     QByteArray ba(p);
 
     QJsonParseError jsonError;
-         m_data = QJsonDocument::fromJson(p,&jsonError);
+    m_data = QJsonDocument::fromJson(p,&jsonError);
+
     if (jsonError.error != QJsonParseError::NoError){
-        qDebug() << jsonError.errorString();
+#ifdef PACKET_DEBUG
+        qDebug() << "[PACKET] JSON PARSE ERROR" << jsonError.errorString();
+#endif
     }
 
     m_obj = m_data.object();
 
-#ifdef LOCKVOX_DEBUG
-    qDebug() << "QJSONDOC : " << m_data;
-    qDebug() << "QJSONOOBJ : " << m_obj;
-#endif
+    //Deserialize request Type & Action
     Deserialize();
 
-#ifdef LOCKVOX_DEBUG
-    qDebug() << "m_type: " << m_type;
-    qDebug() << "m_action: " << m_action;
+#ifdef PACKET_DEBUG
+    qDebug() << "[PACKET] RECEIVE - " << m_type << " " << m_action;
 #endif
 }
 
+//Not used anymore
 CPacket::CPacket(QByteArray data, CClient * client){
     m_client = client;                                  //Client
 
@@ -52,8 +51,6 @@ CPacket::CPacket(QByteArray data, CClient * client){
 
 void CPacket::Deserialize(){
 
-    //qDebug() << m_obj;
-
     if(m_obj.contains("mainObj"))
     {
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
@@ -61,9 +58,6 @@ void CPacket::Deserialize(){
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
-
-            //qDebug() << "m_type = " << m_type;
-            //qDebug() << "m_action = " << m_action;
     }
 }
 
@@ -79,24 +73,39 @@ QString CPacket::GetAction()
     return m_action;
 }
 
+QJsonDocument CPacket::GetData()
+{
+    return m_data;
+}
+
 QByteArray CPacket::GetByteArray()
 {
     QJsonDocument doc(m_obj);
-    //qDebug() << doc;
 
     QDataStream ds(&m_ba, QIODevice::ReadWrite);
     QByteArray tmp = doc.toJson();
     ds << (qint32)tmp.size();
     ds << tmp;
 
-    //m_ba = doc.toJson();
-    //qDebug() << "BEFORE INSERT SIZE:" << m_ba;
-    //m_ba.insert(0,m_ba.size());
-    //qDebug() << "AFTER INSERT SIZE:" << m_ba;
-
+#ifdef PACKET_DEBUG
+    qDebug() << "[PACKET] OUTGOING - " << m_type << " " << m_action;
+#endif
     return m_ba;
 }
 
+QUuid CPacket::get_IdClient()
+{
+    return id_client;
+}
+
+int CPacket::get_IdChannel()
+{
+    return id_channel;
+}
+
+/**
+ * @brief This function serialize mainObj (type & action)
+ */
 void CPacket::Serialize()
 {
     QJsonObject mainObj;
@@ -107,25 +116,27 @@ void CPacket::Serialize()
     m_obj["mainObj"] = mainObj;
 }
 
+/**
+ * @brief This function serialize CServer object informations
+ */
 void CPacket::Serialize(CServer* c)
 {
-
       QJsonObject obj;
-
       QJsonArray cArray, sArray;
-
       QJsonObject mainObj;
 
-      mainObj.insert("type", "-1");
-      mainObj.insert("action", "-1");
+      //Serialize request type and action
+      m_type="-1";
+      m_action="-1";
+      Serialize();
 
-      m_obj["mainObj"] = mainObj;
-
+      //Serialize channels
       foreach(CChannel * c, c->get_channelList())
       {
           cArray.append(c->serializeToObj());
       }
 
+      //Serialize clients
       foreach(CClient * c, c->get_clientList())
       {
          sArray.append(c->serializeToObj());

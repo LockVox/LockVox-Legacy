@@ -8,6 +8,8 @@
 
 //Includes
 #include "cclient.h"
+#include "config.h"
+
 
 /**
  * @brief Default constructor of the class CClient.
@@ -68,7 +70,7 @@ CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool 
     m_buffer = new QByteArray;
 
 #ifdef _DEBUG
-     qDebug() << "[CREATE USER] " << m_pseudo << " - " << m_uuid;
+     qDebug() << "[CREATE CLIENT] " << m_pseudo << " - " << m_uuid;
 #endif
 }
 
@@ -97,15 +99,14 @@ CClient::~CClient()
 {
 
 #ifdef _DEBUG
-    qDebug() << "Delete client " << m_pseudo;
+    qDebug() << "[DEL CLIENT] " << m_pseudo << " - " << m_uuid;
 #endif
-
 
     if(m_soc != NULL)
     {
-        m_soc->disconnectFromHost();
-        m_soc->~QTcpSocket();
-        m_soc = NULL;
+        //m_soc->disconnectFromHost();
+        //m_soc->~QTcpSocket();
+        //m_soc = NULL;
     }
 
     m_pseudo.clear();
@@ -384,6 +385,10 @@ void CClient::sendToClient(QByteArray out)
  */
 void CClient::onReceiveData()
 {
+
+#ifdef NETWORK_DEBUG
+          qDebug() << "[NETWORK] - Data received from " << m_pseudo << " " << m_uuid;
+#endif
     QByteArray data;
     data.append(m_soc->readAll());
 
@@ -393,9 +398,9 @@ void CClient::onReceiveData()
     //Get packet size
     ds >> size;
 
-#ifdef LOCKVOX_DEBUG
-    qDebug() << "DATA RECEIVED:" << *data;
+#ifdef NETWORK_DEBUG
     qDebug() << "SIZE OF RECEIVE PACKET:" << size;
+    qDebug() << "DATA RECEIVED:" << *data;
 #endif
 
     char *p;
@@ -417,12 +422,18 @@ void CClient::processData(CPacket packet) //Process received data
 
       if(packet.GetAction() == NULL || packet.GetType() == NULL)//Bad packet
       {
+#ifdef _DEBUG
+          qDebug() << "[PROCESSING] - Unable to deserialize packet";
+#endif
           emit writeToLog("Unable to deserialize received packet :\n" + packet.GetByteArray() + "\nRequest Aborted", SERVER_WARN);
           return;
       }
 
       if(packet.GetAction().toInt() == -1 && packet.GetType().toInt() == -1) //Request server object
       {
+#ifdef _DEBUG
+          qDebug() << "[CLIENT] " << this->get_pseudo() << " - Server informations request ";
+#endif
           emit sendYou(m_soc);
           return;
       }
@@ -478,14 +489,16 @@ void CClient::processData(CPacket packet) //Process received data
 
                   case 2:
                   {
-                      //PSEUDO UPDATE
-                      CClient * client = packet.Deserialize_myClient();
-
+                      //UPDATE USERNAME
+#ifdef CLIENT_DEBUG
+                      qDebug() << "[CLIENT] " << this->get_pseudo() << " - Update username ";
+#endif
+                      CClient* client = packet.Deserialize_myClient();
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", USER);
                       //Apply changement
-                      m_pseudo = client->get_pseudo();
+                      //m_pseudo = client->get_pseudo();
 
-                      emit updateMe(0,client);
+                      emit updateClient(USERNAME,this, client->get_pseudo());
 
                       break;
                   }
@@ -494,12 +507,11 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //BIO UPDATE
                       CClient * client = packet.Deserialize_myClient();
-
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", USER);
                       //Apply changement
                       m_description = client->get_description();
 
-                      emit updateMe(1,client);
+                      //emit updateMe(1,client);
 
                       break;
                   }
@@ -544,8 +556,11 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Auth request
                       QList<QString> info = packet.Deserialize_auth();
-                      emit authMe(info, this);
 
+#ifdef CLIENT_DEBUG
+                      qDebug() << "[CLIENT] Authentication request " << info[0];
+#endif
+                      emit authMe(info, this);
                       break;
                   }
 
