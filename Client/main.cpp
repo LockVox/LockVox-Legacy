@@ -12,13 +12,13 @@
 
 int main(int argc, char *argv[])
 {
-    /*uint8_t* addr = (uint8_t*)malloc(16*sizeof(uint8_t));
+    uint8_t* addr = (uint8_t*)malloc(16*sizeof(uint8_t));
     inet_pton(AF_INET6, IP_ADDRESS, addr);
     CAudio var(addr,0);
     printf("Bien init");
     getc(stdin);
-    var.StopChain();*/
-
+   // var.StopChain();
+/*
 
     #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     //app.setWindowIcon(QIcon("Client/qml/lock_vox_logo_miniature1.png"));
     UIWorker * ui  = new UIWorker(&app);
 
-    app.exec();
+    app.exec();*/
 }
 
 

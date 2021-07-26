@@ -50,7 +50,14 @@ HEADERS += \
 INCLUDEPATH += \
         src/includes \
         Client/includes \
-        Client/qml
+        Client/qml \
+        libs/include \
+        libs/include/emiplib \
+        libs/include/jrtplib3 \
+        libs/include/jthread \
+        libs/include/portaudio \
+        libs/include/opus
+
 
 DEPENDPATH += \
         src/includes \

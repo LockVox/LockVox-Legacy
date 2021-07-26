@@ -1,6 +1,9 @@
-/*#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include "config.h"
 #include "caudio.h"
+#ifdef WIN32
+    #include "windows.h"
+    #pragma comment(lib,"WS2_32")
+    #pragma comment(lib, "advapi32.lib")
+#endif
 // We'll be using an RTPSession instance from the JRTPLIB library. The following
 // function checks the JRTPLIB error code.
 
@@ -14,8 +17,8 @@ CAudio::CAudio() : m_chain("MainAudio")
     std::string err;
     MIPTime interval(0.05); // We'll use 20 millisecond intervals.
     MIPAverageTimer timer(interval);
-    MIPPAInputOutput sndFileInput;
-    sndFileInput.initializePortAudio(err);
+    MIPPAInputOutput sndIO;
+    sndIO.initializePortAudio(err);
     MIPSamplingRateConverter sampConv, sampConv2;
     MIPSampleEncoder floatEnc, sampEnc, sampEnc2, sampEnc3;
     MIPULawEncoder uLawEnc;
@@ -24,17 +27,13 @@ CAudio::CAudio() : m_chain("MainAudio")
     MIPRTPULawDecoder rtpULawDec;
     MIPULawDecoder uLawDec;
     MIPAudioMixer mixer;
-#ifndef WIN32
-    MIPOSSInputOutput sndCardOutput;
-#else
-    MIPWinMMOutput sndCardOutput;
-#endif
+    MIPRTPComponent m_rtp;
     floatEnc.init(MIPRAWAUDIOMESSAGE_TYPE_FLOAT);
     jrtplib::RTPSession rtpSession;
     bool returnValue;
     // We'll open the sndCardIn.
-    returnValue = sndFileInput.open(8000,1,interval, MIPPAInputOutput::ReadOnly);
-    checkError(returnValue, sndFileInput);
+    returnValue = sndIO.open(8000,1,interval, MIPPAInputOutput::ReadWrite);
+    checkError(returnValue, sndIO);
     // We'll convert to a sampling rate of 8000Hz and mono sound.
     int samplingRate = 8000;
     int numChannels = 1;
@@ -88,8 +87,8 @@ CAudio::CAudio() : m_chain("MainAudio")
     returnValue = mixer.init(samplingRate, numChannels, interval);
     checkError(returnValue, mixer);
     // Initialize the soundcard output.
-    returnValue = sndCardOutput.open(samplingRate, numChannels, interval);
-    checkError(returnValue, sndCardOutput);
+    returnValue = sndIO.open(samplingRate, numChannels, interval);
+    checkError(returnValue, sndIO);
     //Init des filtres
     MIPAudioFilter filtre;
     filtre.init(samplingRate,1,interval);
@@ -100,7 +99,7 @@ CAudio::CAudio() : m_chain("MainAudio")
     // The OSS component can use several encodings. We'll check
     // what encoding type is being used and inform the sample encoder
     // of this.
-    uint32_t audioSubtype = sndCardOutput.getRawAudioSubtype();
+    uint32_t audioSubtype = sndIO.getRawAudioSubtype();
     returnValue = sampEnc3.init(audioSubtype);
 #else
     // The WinMM soundcard output component uses 16 bit signed little
@@ -109,9 +108,9 @@ CAudio::CAudio() : m_chain("MainAudio")
 #endif
     checkError(returnValue, sampEnc3);
     // Next, we'll create the chain
-    returnValue = m_chain.setChainStart(&sndFileInput);
+    returnValue = m_chain.setChainStart(&sndIO);
     checkError(returnValue, m_chain);
-    returnValue = m_chain.addConnection(&sndFileInput, &floatEnc);
+    returnValue = m_chain.addConnection(&sndIO, &floatEnc);
     checkError(returnValue, m_chain);
     returnValue = m_chain.addConnection(&floatEnc, &filtre);
     checkError(returnValue, m_chain);
@@ -141,7 +140,7 @@ CAudio::CAudio() : m_chain("MainAudio")
     checkError(returnValue, m_chain);
     returnValue = m_chain.addConnection(&mixer, &sampEnc3);
     checkError(returnValue, m_chain);
-    returnValue = m_chain.addConnection(&sampEnc3, &sndCardOutput);
+    returnValue = m_chain.addConnection(&sampEnc3, &sndIO);
     checkError(returnValue, m_chain);
     // Start the chain
     returnValue = m_chain.start();
@@ -162,8 +161,8 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     std::string err;
     MIPTime interval(0.05); // We'll use 20 millisecond intervals.
     MIPAverageTimer timer(interval);
-    MIPPAInputOutput sndFileInput;
-    sndFileInput.initializePortAudio(err);
+    MIPPAInputOutput sndIO;
+    sndIO.initializePortAudio(err);
     MIPSamplingRateConverter sampConv, sampConv2;
     MIPSampleEncoder floatEnc, sampEnc, sampEnc2, sampEnc3;
     MIPULawEncoder uLawEnc;
@@ -172,17 +171,12 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     MIPRTPULawDecoder rtpULawDec;
     MIPULawDecoder uLawDec;
     MIPAudioMixer mixer;
-#ifndef WIN32
-    MIPOSSInputOutput sndCardOutput;
-#else
-    MIPWinMMOutput sndCardOutput;
-#endif
     floatEnc.init(MIPRAWAUDIOMESSAGE_TYPE_FLOAT);
     jrtplib::RTPSession rtpSession;
     bool returnValue;
     // We'll open the sndCardIn.
-    returnValue = sndFileInput.open(8000,1,interval, MIPPAInputOutput::ReadOnly);
-    checkError(returnValue, sndFileInput);
+    returnValue = sndIO.open(8000,1,interval, MIPPAInputOutput::ReadOnly);
+    checkError(returnValue, sndIO);
     // We'll convert to a sampling rate of 8000Hz and mono sound.
     int samplingRate = 8000;
     int numChannels = 1;
@@ -236,8 +230,8 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     returnValue = mixer.init(samplingRate, numChannels, interval);
     checkError(returnValue, mixer);
     // Initialize the soundcard output.
-    returnValue = sndCardOutput.open(samplingRate, numChannels, interval);
-    checkError(returnValue, sndCardOutput);
+    returnValue = sndIO.open(samplingRate, numChannels, interval);
+    checkError(returnValue, sndIO);
     //Init des filtres
     MIPAudioFilter filtre;
     filtre.init(samplingRate,1,interval);
@@ -248,7 +242,7 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     // The OSS component can use several encodings. We'll check
     // what encoding type is being used and inform the sample encoder
     // of this.
-    uint32_t audioSubtype = sndCardOutput.getRawAudioSubtype();
+    uint32_t audioSubtype = sndIO.getRawAudioSubtype();
     returnValue = sampEnc3.init(audioSubtype);
 #else
     // The WinMM soundcard output component uses 16 bit signed little
@@ -257,9 +251,9 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
 #endif
     checkError(returnValue, sampEnc3);
     // Next, we'll create the chain
-    returnValue = m_chain.setChainStart(&sndFileInput);
+    returnValue = m_chain.setChainStart(&sndIO);
     checkError(returnValue, m_chain);
-    returnValue = m_chain.addConnection(&sndFileInput, &floatEnc);
+    returnValue = m_chain.addConnection(&sndIO, &floatEnc);
     checkError(returnValue, m_chain);
     returnValue = m_chain.addConnection(&floatEnc, &filtre);
     checkError(returnValue, m_chain);
@@ -292,7 +286,7 @@ CAudio::CAudio(uint8_t* ipaddr, int port) : m_chain("MainAudio")
     checkError(returnValue, m_chain);
     returnValue = m_chain.addConnection(&mixer, &sampEnc3);
     checkError(returnValue, m_chain);
-    returnValue = m_chain.addConnection(&sampEnc3, &sndCardOutput);
+    returnValue = m_chain.addConnection(&sampEnc3, &sndIO);
     checkError(returnValue, m_chain);
     // Start the chain
     returnValue = m_chain.start();
@@ -346,5 +340,3 @@ void CAudio::onThreadExit(bool error, const std::string &errorComponent, const s
     std::cerr << "    Component: " << errorComponent << std::endl;
     std::cerr << "    Error description: " << errorDescription << std::endl;
 }
-
-*/
