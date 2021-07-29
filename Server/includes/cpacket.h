@@ -22,6 +22,19 @@
 class CServer;
 class CChannel;
 
+
+enum Type{
+    SERVEUR,
+    CHANNELS,
+    USERS
+};
+
+enum Action{
+
+};
+
+
+
 class CPacket
 {
     /**
@@ -91,7 +104,10 @@ class CPacket
         void Serialize_Register(struct register_info reg);           //Serialize Register
         struct register_info Deserialize_Register();                 //Deserialize Register
 
-    private:
+        QString getCookie() const;
+        void setCookie(const QString &cookie);
+
+private:
         void Deserialize();
         //Type & Action corresponding to the request
         QString m_type;
@@ -99,6 +115,8 @@ class CPacket
 
         //Client who send the request
         CClient * m_client;
+        QString m_cookie;
+
 
         //If ID object exist - on call Deserialize_ID();
         QUuid id_client;

@@ -10,7 +10,7 @@ CONFIG += c++11 console
 
 SOURCES += \
     Server/caudio.cpp \
-    Server/cookiesmanager.cpp \
+    #Server/cookiesmanager.cpp \
     src/AbstractServer.cpp \
     src/abstractaudio.cpp \
     src/cchannel.cpp \
@@ -29,7 +29,7 @@ SOURCES += \
 HEADERS += \
     src/includes/AbstractServer.h \
     Server/includes/caudio.h \
-    Server/includes/cookiesmanager.h \
+    #Server/includes/cookiesmanager.h \
     Server/includes/sha256.h \
     Server/includes/cserver.h \
     Server/config.h \

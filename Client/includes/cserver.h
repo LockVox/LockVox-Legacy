@@ -81,6 +81,10 @@ class CServer : public AbstractServer
         QByteArray Serialize();                                             //Serialize client and channels on the same json document
         void Deserialize(QJsonDocument doc);
 
+
+
+
+
         QByteArray SerializeChannels();                                     //Serialize channels into json document then byte array
         QByteArray SerializeClients();                                      //Serialize clients into json document then byte array
 
@@ -121,6 +125,8 @@ signals:
         void onDisconnected();
         void onReceiveData();
         void sendToServer(QByteArray ba);
+        void sendToServer(CPacket packet);
+
 
     private:
         //Client mode

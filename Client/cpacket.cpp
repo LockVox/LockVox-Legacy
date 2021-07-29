@@ -5,10 +5,13 @@ CPacket::CPacket()
 
 }
 
-CPacket::CPacket(QString type, QString action) :
+CPacket::CPacket(CClient * c,QString type, QString action) :
 m_type(type),m_action(action)
 {
-    m_client = NULL;
+    //m_client = NULL;
+    if(c!=NULL)
+        m_cookie = c->getCookie();
+
     Serialize();
 }
 
@@ -108,17 +111,15 @@ void CPacket::SetAction(QString p_action)
 void CPacket::Serialize()
 {
     QJsonObject mainObj;
+    QJsonValue cookie = m_cookie;
 
     mainObj.insert("type", m_type);
     mainObj.insert("action", m_action);
 
     m_obj["mainObj"] = mainObj;
+    m_obj.insert("cookie", cookie);
 }
 
-QByteArray CPacket::Serialize(CServer* c){
-    m_ba = c->Serialize();
-    return m_ba;
-}
 
 //Answer to a client request
 QByteArray CPacket::Serialize(bool isActionValid){
@@ -342,6 +343,7 @@ QList<QString> CPacket::Deserialize_auth()
             QJsonObject newAuth = m_obj.value("newAuth").toObject();
             info.push_back(newAuth.value("email").toString());
             info.push_back(newAuth.value("pass").toString());
+            info.push_back(newAuth.value("cookie").toString());
             return info;
         }
         return null;
@@ -372,6 +374,7 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
             if(code ==0)
             {
                   CClient* tmp = new CClient(QUuid::fromString(newAuth.value("uuid").toString()), newAuth.value("pseudo").toString(), NULL, -1,newAuth.value("isOnline").toBool(), newAuth.value("description").toString());
+                  tmp->setCookie(newAuth.value("cookie").toString());
                   return tmp;         //On renvoie les infos client
 
             }
@@ -384,6 +387,16 @@ CClient* CPacket::Deserialize_authAns()     //Retourne NULL ou un client vide av
         return nullptr;
     }
     return nullptr;
+}
+
+QString CPacket::getCookie() const
+{
+    return m_cookie;
+}
+
+void CPacket::setCookie(const QString &cookie)
+{
+    m_cookie = cookie;
 }
 
 void CPacket::Serialize_regReq(QString username, QString mail, QString password,QString password_confirm)

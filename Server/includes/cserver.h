@@ -84,6 +84,7 @@ class CServer : public AbstractServer
 
     signals:
         void sendToAll(QByteArray out);
+        void ans_WriteClient(CPacket packet);
 
     private slots:
         //TCP Server slots
@@ -94,13 +95,15 @@ class CServer : public AbstractServer
         void ext_writeToLog(QString error, int level);
         void ext_sendToAll(QByteArray out);
 
-        void sendMe(QTcpSocket * socket);
-        void updateClient(ClientParams param,CClient * client, QString newString);
-        void updateChannel(int update_type, CChannel * channel);
+
+        //
+        void proc_serverInfos();                                          //Send serialized server info to client
+        void proc_updateClient(ClientParams param,CClient * client, QString newString);  //Update client param
+        void proc_updateChannel(int update_type, CChannel * channel);                    //Update channel param
 
         //Authentication / Register
-        void auth(QList<QString> info, CClient * client);
-        void reg(QList<QString> info, CClient * client);
+        void proc_auth(QList<QString> info, CClient * client);
+        void proc_reg(QList<QString> info, CClient * client);
 
         CChannel * thisChan(int id);
 

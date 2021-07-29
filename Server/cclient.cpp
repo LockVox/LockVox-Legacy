@@ -17,6 +17,7 @@
  */
 CClient::CClient()
 {
+    m_sessionCookie = new CSessionCookie();
     m_pseudo = "";
     m_soc = NULL;
     m_idChannel = 0;
@@ -36,6 +37,7 @@ CClient::CClient(const CClient & copy)
 { 
     Q_UNUSED(copy);
     /*
+    m_sessionCookie = new CSessionCookie();
     m_pseudo = copy.m_pseudo;
     m_idChannel = copy.m_idChannel;
     m_soc = copy.m_soc;
@@ -56,6 +58,7 @@ CClient::CClient(const CClient & copy)
  */
 CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
+    m_sessionCookie = new CSessionCookie();
     m_uuid = id;
     m_pseudo = pseudo;
     m_soc = soc;
@@ -371,13 +374,38 @@ void CClient::deserialize(QJsonObject json_obj){
  * @brief This is a slot you call with a signal from another class to send data to the client using its TCP socket
  * @param[in] out  The QbyteArray object to send to the client.
  */
-void CClient::sendToClient(QByteArray out)
+void CClient::sendToClient(CPacket packet)
 {
     if(m_soc != NULL && m_soc->isOpen())
     {
-        m_soc->write(out);
+        m_soc->write(packet.GetByteArray());
         m_soc->waitForBytesWritten();
     }
+}
+
+void CClient::sendToClient(QByteArray ba)
+{
+    if(m_soc != NULL && m_soc->isOpen())
+    {
+        m_soc->write(ba);
+        m_soc->waitForBytesWritten();
+    }
+}
+
+CSessionCookie * CClient::getSessionCookie()
+{
+    return m_sessionCookie;
+}
+
+void CClient::setSessionCookie(CSessionCookie* sessionCookie)
+{
+    m_sessionCookie = sessionCookie;
+}
+
+void CClient::ans_Write(CPacket packet)
+{
+    m_soc->write(packet.GetByteArray());
+    m_soc->waitForBytesWritten();
 }
 
 /**
@@ -420,6 +448,13 @@ void CClient::onReceiveData()
 void CClient::processData(CPacket packet) //Process received data
 {
 
+        if(get_isAuthenticate() == true){
+          if(getSessionCookie()->getCookie() != packet.getCookie()){
+              qDebug() << "[ERROR] Bad cookie for " << m_pseudo;
+              return;
+          }
+        }
+
       if(packet.GetAction() == NULL || packet.GetType() == NULL)//Bad packet
       {
 #ifdef _DEBUG
@@ -434,7 +469,7 @@ void CClient::processData(CPacket packet) //Process received data
 #ifdef _DEBUG
           qDebug() << "[CLIENT] " << this->get_pseudo() << " - Server informations request ";
 #endif
-          emit sendYou(m_soc);
+          emit req_serverInfos();
           return;
       }
 
@@ -447,22 +482,7 @@ void CClient::processData(CPacket packet) //Process received data
               {
                   /*case 0: //Did we use that ?
                   {
-                      //SERV CONNECT
-                      //Check Auth -
-                      //If Auth is Ok
-                      CClient * client = packet.Deserialize_newClient();
-                      //addClient(client);
 
-                      if(m_isOnline == false)
-                      {
-                          m_isOnline = true;
-                      }
-
-                      //Update info -
-                      CPacket ans("0","0");
-                      ans.Serialize_newClient(client,false);
-                      //sendToAll(ans.GetByteArray());
-                      break;
                   }*/
 
                   case 1:
@@ -490,28 +510,26 @@ void CClient::processData(CPacket packet) //Process received data
                   case 2:
                   {
                       //UPDATE USERNAME
+                      CClient* client = packet.Deserialize_myClient();
 #ifdef CLIENT_DEBUG
                       qDebug() << "[CLIENT] " << this->get_pseudo() << " - Update username ";
 #endif
-                      CClient* client = packet.Deserialize_myClient();
+
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", USER);
-                      //Apply changement
-                      //m_pseudo = client->get_pseudo();
-
-                      emit updateClient(USERNAME,this, client->get_pseudo());
-
+                      emit req_updateClient(USERNAME,this, client->get_pseudo());
                       break;
                   }
 
                   case 3:
                   {
+
+#ifdef CLIENT_DEBUG
+                      qDebug() << "[CLIENT] " << this->get_pseudo() << " - Update description ";
+#endif
                       //BIO UPDATE
                       CClient * client = packet.Deserialize_myClient();
                       emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", USER);
-                      //Apply changement
-                      m_description = client->get_description();
-
-                      //emit updateMe(1,client);
+                      emit req_updateClient(DESCRIPTION,this, client->get_description());
 
                       break;
                   }
@@ -556,20 +574,22 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Auth request
                       QList<QString> info = packet.Deserialize_auth();
-
 #ifdef CLIENT_DEBUG
                       qDebug() << "[CLIENT] Authentication request " << info[0];
 #endif
-                      emit authMe(info, this);
+                      emit req_auth(info, this);
+
                       break;
                   }
 
                   case 8 :
                   {
-                      //Get Information from request
-                      //REGISTER
+                      //Register request
                       QList<QString> info = packet.Deserialize_regReq();
-                      emit regMe(info, this);
+#ifdef CLIENT_DEBUG
+                      qDebug() << "[CLIENT] Register request " << info[0];
+#endif
+                      emit req_reg(info, this);
 
                       break;
                   }
@@ -832,7 +852,6 @@ void CClient::processData(CPacket packet) //Process received data
                           break;
                       }
 
-
                       CPacket reqAns("1","2");
 
                       reqAns.Serialize_MessageListInfo(info.at(1).toInt());
@@ -905,7 +924,7 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Create audio chan
                       CChannel * c = packet.Deserialize_newChannel();
-                      emit updateChan(0,c);
+                      emit req_updateChan(0,c);
 
                       break;
                   }
@@ -914,7 +933,7 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Delete audio chan
                       CChannel * c = packet.Deserialize_newChannel();
-                      emit updateChan(1,c);
+                      emit req_updateChan(1,c);
 
                       break;
                   }
@@ -923,7 +942,7 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Rename audio chan
                       CChannel * c = packet.Deserialize_newChannel();
-                      emit updateChan(2,c);
+                      emit req_updateChan(2,c);
 
                       break;
                   }
@@ -932,7 +951,7 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //Modif max user (voc)
                       CChannel * c = packet.Deserialize_newChannel();
-                      emit updateChan(3,c);
+                      emit req_updateChan(3,c);
 
                       break;
                   }
