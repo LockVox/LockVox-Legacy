@@ -59,7 +59,6 @@ void CServer::start()
         writeToLog(err,DB_ERR);
         abort();
     }
-
     m_db->start();
 
     serveur = new QTcpServer(this);
@@ -78,11 +77,11 @@ void CServer::start()
 
     set_channels(m_db->parseChannel());
     set_clients(m_db->parseClient());
-
     foreach(CClient * client, get_clientList())
     {
         connectClient(client);
     }
+
 
     foreach(CClient *c, m_clients)
     {
@@ -257,10 +256,12 @@ void CServer::onDisconnectClient()
 
     writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] disconnected", SERVER);
 
+
     //Say to everyone
     CPacket request("0","1");
     request.Serialize_newClient(client,false);
     emit sendToAll(request.GetByteArray());
+
     return;
 }
 
@@ -290,90 +291,18 @@ void CServer::AddChannel(CChannel *channel)
     //m_audio->AddSession(*channel);
 }
 
-void CServer::AddBannedUser(CClient * client)
-{
-    m_banned_users.push_back(client);
-    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has been banned", SERVER);
-}
 
-void CServer::RemoveBannedUser(CClient* client)
-{
-    if(!m_banned_users.removeOne(client))
-    {
-        writeToLog("Trying to unban user [" + client->get_uuid().toString() + "] who is not banned", SERVER_WARN);
-        return;
-    }
-    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is not banned anymore", SERVER);
-}
-
-QList<CClient*> CServer::GetBannedUserList()
-{
-    return m_banned_users;
-}
-
-// ///////////////////////////////////////////////////////// //
-//       Write the given error into the server log file      //
-//            error should be the given error                //
-//                  level should be :                        //
-//                    0 : Standard                           //
-//                  1 : Server Warning                       //
-//                   2 : Server Error                        //
-//                  3 : Database Error                       //
-// ///////////////////////////////////////////////////////// //
-void CServer::writeToLog(QString error, int level)
-{
-    if(level >= log_level)
-    {
-        QString prefix;
-        current = QDateTime::currentDateTime();
-        switch (level)
-        {
-            case 0:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][User]";
-                break;
-            }
-            case 1:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server]";
-                break;
-            }
-            case 2:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Warning]";
-                break;
-            }
-            case 3:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Error]";
-                break;
-            }
-            case 4:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Database Error]";
-                break;
-            }
-            default:
-            {
-                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Unknown Error]";
-                break;
-            }
-        }
-        log << prefix << error << Qt::endl;
-    }
-}
 
 void CServer::connectClient(CClient *client)
 {
-
     connect(client, SIGNAL(writeToLog(QString,int)), this, SLOT(ext_writeToLog(QString,int)));
-    connect(client, SIGNAL(sendYou(QTcpSocket*)), this, SLOT(sendMe(QTcpSocket*)));
+    connect(client, SIGNAL(req_serverInfos()), this, SLOT(proc_serverInfos()));
 
-    connect(client, SIGNAL(updateClient(ClientParams,CClient*,QString)), this, SLOT(updateClient(ClientParams,CClient*,QString)));
-    connect(client, SIGNAL(updateChan(int,CChannel*)), this, SLOT(updateChannel(int,CChannel*)));
+    connect(client, SIGNAL(req_updateClient(ClientParams,CClient*,QString)), this, SLOT(proc_updateClient(ClientParams,CClient*,QString)));
+    connect(client, SIGNAL(req_updateChan(int,CChannel*)), this, SLOT(proc_updateChannel(int,CChannel*)));
 
-    connect(client, SIGNAL(authMe(QList<QString>,CClient*)), this, SLOT(auth(QList<QString>,CClient*)));
-    connect(client, SIGNAL(regMe(QList<QString>,CClient*)), this, SLOT(reg(QList<QString>,CClient*)));
+    connect(client, SIGNAL(req_auth(QList<QString>,CClient*)), this, SLOT(proc_auth(QList<QString>,CClient*)));
+    connect(client, SIGNAL(req_reg(QList<QString>,CClient*)), this, SLOT(proc_reg(QList<QString>,CClient*)));
 
     connect(client, SIGNAL(whichChan(int)), this, SLOT(thisChan(int)));
 
@@ -381,148 +310,13 @@ void CServer::connectClient(CClient *client)
     connect(client, SIGNAL(sendToAll(QByteArray)), this, SLOT(ext_sendToAll(QByteArray)));
 }
 
-void CServer::ext_writeToLog(QString error, int level)
-{
-    writeToLog(error, level);
-
-    return;
-}
-
 CChannel * CServer::thisChan(int id)
 {
     return get_channelById(id);
 }
 
-void CServer::sendMe(QTcpSocket * socket)
-{
-    CPacket * objServer = new CPacket("-1","-1");
-    objServer->Serialize(this);
-    socket->write(objServer->GetByteArray());
-    socket->waitForBytesWritten();
 
-    return;
-}
-
-//Pour faire plus propre  modifier update_level par des define
-//#define USERNAME 0
-//#define DESCRIPTION 1
-//et appeller updateClient(USERNAME, client);
-
-void CServer::updateClient(ClientParams param,CClient * client, QString newString)
-{
-    switch (param)
-    {
-        //Pseudo
-        case USERNAME:
-        {
-            //UPDATE USERNAME
-            QString res = m_db->updateUsername(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), newString.toStdString());
-            if(res=="success")
-            {
-#ifdef SERVER_DEBUG
-                qDebug() << "[SERVER] Update username for " << client->get_pseudo() << " to " << newString;
-#endif
-                client->set_pseudo(newString);
-                //Send update
-                CPacket ans("0","2");
-                ans.Serialize_newClient(client,false);
-                emit sendToAll(ans.GetByteArray());
-            }
-            else
-            {
-#ifdef SERVER_DEBUG
-                qDebug() << "[SERVER] Failed to update username for " << client->get_pseudo() << " to " << newString << " - " << res;
-#endif
-                writeToLog(res, DB_ERR);
-            }
-            break;
-        }
-
-        //Description
-        case DESCRIPTION:
-        {
-            QString res = m_db->updateDescription(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), client->get_description().toStdString());
-
-            if(res=="success")
-            {
-                //Send update
-                CPacket ans("0","3");
-                ans.Serialize_newClient(client, false);
-                emit sendToAll(ans.GetByteArray());
-            }
-            else
-            {
-                writeToLog(res, DB_ERR);
-            }
-
-            free(client);
-            break;
-        }
-        case MAIL:
-        {
-        }
-    }
-}
-
-void CServer::updateChannel(int update_type, CChannel * channel)
-{
-    switch (update_type)
-    {
-        case 0: //Create audio chan
-        {
-            addChannel(channel);
-
-            CPacket ans("1","5");
-            ans.Serialize_newChannel(channel);
-            emit sendToAll(ans.GetByteArray());
-
-            break;
-        }
-
-        case 1: //Delete audio chan
-        {
-            CChannel * toDelChannel = get_channelById(channel->get_id());
-            DelChannel(toDelChannel);
-
-            CPacket ans("1","6");
-            ans.Serialize_newChannel(channel);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
-            break;
-        }
-
-        case 2: //Rename audio chan
-        {
-            CChannel * chan = get_channelById(channel->get_id());
-
-            chan->set_name(channel->get_name());
-            m_db->updateChannel(std::to_string(chan->get_id()), chan->get_name().toStdString(), std::to_string(chan->get_maxUsers()));
-
-            CPacket ans("1","7");
-            ans.Serialize_newChannel(chan);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
-            break;
-        }
-
-        case 3: //Change max user audio chan
-        {
-            CChannel * chan = get_channelById(channel->get_id());
-            chan->set_maxUsers(channel->get_maxUsers());
-
-            CPacket ans("1","8");
-            ans.Serialize_newChannel(chan);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
-            break;
-        }
-    }
-}
-
-void CServer::auth(QList<QString> info, CClient * client)
+void CServer::proc_auth(QList<QString> info, CClient * client)
 {
     CPacket ans("0", "7");
     CPacket newUser("0","0");
@@ -568,6 +362,7 @@ void CServer::auth(QList<QString> info, CClient * client)
                     c->set_isOnline(true);
                     c->set_isAuthenticate(true);
                     c->set_socket(client->get_socket());
+                    c->getSessionCookie()->generateCookie();
 
                     //Sending client info
                     ans.Serialize_auth(c, 0);
@@ -623,6 +418,9 @@ void CServer::auth(QList<QString> info, CClient * client)
     {
         sendToAllExecptClient(newUser.GetByteArray(), tmp_client);
 
+        //Assign session cookie
+
+
         //Get ride of temporary CClient, now we use in list client
         client->set_socket(NULL);
         client->quit();
@@ -631,7 +429,7 @@ void CServer::auth(QList<QString> info, CClient * client)
     return;
 }
 
-void CServer::reg(QList<QString> info, CClient * client)
+void CServer::proc_reg(QList<QString> info, CClient * client)
 {
     //Check informations
     if(info[0] == "null")
@@ -719,7 +517,222 @@ void CServer::reg(QList<QString> info, CClient * client)
     return;
 }
 
+
+void CServer::proc_updateClient(ClientParams param,CClient * client, QString newString)
+{
+    switch (param)
+    {
+        //Pseudo
+        case USERNAME:
+        {
+            //UPDATE USERNAME
+            QString res = m_db->updateUsername(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), newString.toStdString());
+            if(res=="success")
+            {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Update username for " << client->get_pseudo() << " to " << newString;
+#endif
+                client->set_pseudo(newString);
+                //Send update
+                CPacket ans("0","2");
+                ans.Serialize_newClient(client,false);
+                emit sendToAll(ans.GetByteArray());
+            }
+            else
+            {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Failed to update username for " << client->get_pseudo() << " to " << newString << " - " << res;
+#endif
+                writeToLog(res, DB_ERR);
+            }
+            break;
+        }
+
+        //Description
+        case DESCRIPTION:
+        {
+            QString res = m_db->updateDescription(client->get_uuid().toString(QUuid::WithoutBraces).toStdString(), client->get_description().toStdString());
+
+            if(res=="success")
+            {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Update description for " << client->get_pseudo() << " from " << client->get_description() << " to " <<newString;
+#endif
+                client->set_description(newString);
+                //Send update
+                CPacket ans("0","3");
+                ans.Serialize_newClient(client, false);
+                emit sendToAll(ans.GetByteArray());
+            }
+            else
+            {
+#ifdef SERVER_DEBUG
+                qDebug() << "[SERVER] Failed to update description for " << client->get_pseudo() << " : " << res;
+#endif
+                writeToLog(res, DB_ERR);
+            }
+
+            free(client);
+            break;
+        }
+
+        //Mail
+        case MAIL:
+        {
+        }
+    }
+}
+
+void CServer::proc_updateChannel(int update_type, CChannel * channel)
+{
+    switch (update_type)
+    {
+        case 0: //Create audio chan
+        {
+            addChannel(channel);
+
+            CPacket ans("1","5");
+            ans.Serialize_newChannel(channel);
+            emit sendToAll(ans.GetByteArray());
+
+            break;
+        }
+
+        case 1: //Delete audio chan
+        {
+            CChannel * toDelChannel = get_channelById(channel->get_id());
+            DelChannel(toDelChannel);
+
+            CPacket ans("1","6");
+            ans.Serialize_newChannel(channel);
+            emit sendToAll(ans.GetByteArray());
+
+            free(channel);
+            break;
+        }
+
+        case 2: //Rename audio chan
+        {
+            CChannel * chan = get_channelById(channel->get_id());
+
+            chan->set_name(channel->get_name());
+            m_db->updateChannel(std::to_string(chan->get_id()), chan->get_name().toStdString(), std::to_string(chan->get_maxUsers()));
+
+            CPacket ans("1","7");
+            ans.Serialize_newChannel(chan);
+            emit sendToAll(ans.GetByteArray());
+
+            free(channel);
+            break;
+        }
+
+        case 3: //Change max user audio chan
+        {
+            CChannel * chan = get_channelById(channel->get_id());
+            chan->set_maxUsers(channel->get_maxUsers());
+
+            CPacket ans("1","8");
+            ans.Serialize_newChannel(chan);
+            emit sendToAll(ans.GetByteArray());
+
+            free(channel);
+            break;
+        }
+    }
+}
+
+void CServer::proc_serverInfos()
+{
+    CPacket packet("-1","-1");
+    packet.Serialize(this);
+
+    CClient * client = qobject_cast< CClient* >( sender() );
+    if ( client != nullptr )
+    {
+        client->ans_Write(packet);
+    }
+    return;
+}
+
 void CServer::ext_sendToAll(QByteArray out)
 {
     emit sendToAll(out);
+}
+
+/**
+ * @brief Write the given error into the server log file
+ * @return      none
+ * @param[in]   error string
+ * @param[in]   error level : 0 - Standard | 1 - Warning | 2 - Error | 3 - Database
+ */
+void CServer::writeToLog(QString error, int level)
+{
+    if(level >= log_level)
+    {
+        QString prefix;
+        current = QDateTime::currentDateTime();
+        switch (level)
+        {
+            case 0:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][User]";
+                break;
+            }
+            case 1:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server]";
+                break;
+            }
+            case 2:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Warning]";
+                break;
+            }
+            case 3:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Server Error]";
+                break;
+            }
+            case 4:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Database Error]";
+                break;
+            }
+            default:
+            {
+                prefix = "[" + current.toString("dd/MM/yy hh:mm:ss") + "][Unknown Error]";
+                break;
+            }
+        }
+        log << prefix << error << Qt::endl;
+    }
+}
+
+void CServer::ext_writeToLog(QString error, int level)
+{
+    writeToLog(error, level);
+
+    return;
+}
+
+
+void CServer::AddBannedUser(CClient * client)
+{
+    m_banned_users.push_back(client);
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has been banned", SERVER);
+}
+
+void CServer::RemoveBannedUser(CClient* client)
+{
+    if(!m_banned_users.removeOne(client))
+    {
+        writeToLog("Trying to unban user [" + client->get_uuid().toString() + "] who is not banned", SERVER_WARN);
+        return;
+    }
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is not banned anymore", SERVER);
+}
+
+QList<CClient*> CServer::GetBannedUserList()
+{
+    return m_banned_users;
 }

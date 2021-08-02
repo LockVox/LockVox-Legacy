@@ -12,9 +12,11 @@
 #define CSESSIONCOOKIE_H
 
 //QT Includes
-
+#include <QString>
 //Includes
-#include "cclient.h"
+//#include "cclient.h"
+
+
 
 class CSessionCookie
 {
@@ -34,19 +36,16 @@ class CSessionCookie
 
     public:
         CSessionCookie();
-        CSessionCookie(CClient * c);
+        //CSessionCookie(CClient * c);
 
         //~CSessionCookie();
 
         //Getters
         QString getCookie() const;
-
         //Setters
-        void setCookie(const QString &cookie);
-
-        QString HighRandomStringGenerator();
-
+        void setCookie(QString &cookie);
         void clearCookie();
+        void generateCookie();
 
     private:
         QString m_cookie;

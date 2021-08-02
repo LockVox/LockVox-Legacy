@@ -37,7 +37,7 @@ HEADERS += \
     src/includes/crole.h \
 #Server
     Server/includes/caudio.h \
-    Server/includes/cookiesmanager.h \
+    #Server/includes/cookiesmanager.h \
     Server/includes/sha256.h \
     Server/includes/cserver.h \
     Server/includes/config.h \

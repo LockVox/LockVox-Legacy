@@ -20,12 +20,15 @@
 #include <QUuid>
 #include <QImage>
 
+//Includes
+#include "csessioncookie.h"
 #include "cpacket.h"
 #include "sha256.h"
 
 class CMessage;
 class CChannel;
 class CPacket;
+class CSessionCookie;
 
 #define USER 0
 #define SERVER 1
@@ -39,6 +42,10 @@ enum ClientParams{
     USERNAME,
     DESCRIPTION,
     MAIL
+};
+
+enum State{
+    Disconnected, Connected
 };
 
 class CClient : public QThread
@@ -76,7 +83,7 @@ class CClient : public QThread
         bool get_isAuthenticate();
         QUuid get_uuid();
         QImage get_profilePic();
-
+        CSessionCookie *getSessionCookie() ;
         //Setters
         void set_pseudo(QString pseudo);
         void set_mail(QString mail);
@@ -88,12 +95,14 @@ class CClient : public QThread
         void set_description(QString d);
         void set_uuid(QUuid uuid);
         void set_profilePic(QImage img);
+        void setSessionCookie( CSessionCookie *sessionCookie);
 
-        //Serialize | Deserialize
+
+        //Serialize & Deserialize
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
 
-        //Process
+        //Process incoming data from socket
         void processData(CPacket packet);
 
         //Messages
@@ -102,24 +111,32 @@ class CClient : public QThread
         bool insertChannelIndex(QString path_to_index, QList<QString> filename_list);  //Update index.json when inserting new message to it
         QList<CMessage> createMessageList(QString id, bool isPrivate,int nb_msg_to_sync, QUuid sender, int start_index); //Creates a QList of CMessage stored localy using index.json
 
-    signals:
+        //Write packet to socket
+        void ans_Write(CPacket packet);
+
+
+signals:
+        //Log
         void writeToLog(QString error, int level);
-        void sendYou(QTcpSocket * socket);
 
-        void updateClient(ClientParams param, CClient * client, QString newString);
-        void updateChan(int update_type, CChannel * channel);
+        //Request server for actions, those signals are generally emit on demand.
+        void req_serverInfos();
+        void req_updateClient(ClientParams param, CClient * client, QString newString);
+        void req_updateChan(int update_type, CChannel * channel);
+        void req_auth(QList<QString> info, CClient * client);
+        void req_reg(QList<QString> info, CClient * Client);
 
-        void authMe(QList<QString> info, CClient * client);
-        void regMe(QList<QString> info, CClient * Client);
 
-        CChannel * whichChan(int id);
+        CChannel * whichChan(int id);       //!< Find out which channel
 
-        void sendToAll(QByteArray out);
+        void sendToAll(QByteArray out);     //!< Send to every other client
+
+
 
     private slots:
-        void onReceiveData();
-        void sendToClient(QByteArray out);
-
+        void onReceiveData();               //!< Socket receive data
+        void sendToClient(CPacket packet);  //!< Send packet to client
+        void sendToClient(QByteArray ba);
 
     private:
 
@@ -127,7 +144,9 @@ class CClient : public QThread
         QString m_mail;                     //!< m_mail is the email of the user
         QString m_description;              //!< m_description is the description of the user
 
+
         QTcpSocket * m_soc;                 //!< m_socket is the TCP Socket of the user
+        CSessionCookie * m_sessionCookie;
 
         QUuid m_uuid;                       //!< m_uuid is the UUID of the user
         int m_idChannel;                    //!< m_idChannel is the ID of the current channel of the user
@@ -135,10 +154,10 @@ class CClient : public QThread
         bool m_isOnline;                    //!< m_isOnline represent if the user is online or not
         bool m_isAuthenticate;              //!< m_isAuthenticate represent if the user has pass the authentification
 
+
         QImage profilePic;                  //!< profilePic is the profile picture of the user
 
         QByteArray * m_buffer;
-
 };
 
 #endif // CCLIENT_H

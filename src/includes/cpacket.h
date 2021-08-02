@@ -45,12 +45,12 @@ enum Server{
     //NOTIFY
     SHUTDOWN,
     //INFO
-    PARAMS              =0100, 
+    PARAMS              =0100,
     OPTIONS             =0101,
     SERVER_PP           =0103,
 
     //ACTIONS
-    AUTH                =0201,                //!< params : Auth Info   
+    AUTH                =0201,                //!< params : Auth Info
     REG                 =0202                 //!< params : reg info
 
 };
@@ -58,9 +58,9 @@ enum Server{
 //Channel
 enum Channel{
     //NOTIFY
-    JOIN_CONF           =1000,                        
+    JOIN_CONF           =1000,
     QUIT_CONF           =1001,
-    
+
     //INFO
     CHAN                =1100,
 
@@ -72,7 +72,7 @@ enum Channel{
 
 //User
 enum User{
-    //NOTIFY 
+    //NOTIFY
     REGISTER            =2000,
     CONNECT             =2001,                    //!< User connected
     DISCONNECT          =2002,                    //!< User disconnected
@@ -143,7 +143,7 @@ class CPacket
         QByteArray GetByteArray();
 
         //Setters
-        void SetId(int id); 
+        void SetId(int id);
         void SetType(QString p_type);
         void SetAction(QString p_action);
 
@@ -195,14 +195,15 @@ class CPacket
         QUuid get_IdClient();
         int get_IdChannel();
 
+        QString getCookie() const;
+        void setCookie(const QString &cookie);
 
 
-
-private:
-
-        int m_id;
         //Type & Action corresponding to the request
+          void Deserialize();
+        private:
 
+                int m_id;
         PacketClass m_class;                                       //!Notify  - Info - Action
         Request m_req;                                         //
 
@@ -222,7 +223,7 @@ private:
         //int id_channel;
 
         //Use for serialization / Deserialization
-        QJsonObject m_obj;                                   //!< JSON Object 
+        QJsonObject m_obj;                                   //!< JSON Object
         QJsonDocument m_data;                                //!< JSON Document
         QByteArray m_ba;                                     //!< Byte Array
 };

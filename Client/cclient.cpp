@@ -21,6 +21,7 @@ CClient::CClient()
     m_soc = NULL;
     m_idChannel = 0;
     m_isOnline = false;
+    m_cookie="invalid";
 }
 
 /**
@@ -61,6 +62,7 @@ CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool 
     m_isOnline = online;
     m_description = description;
     m_isAuthenticate = false;
+    m_cookie="invalid";
 }
 
 /**
@@ -339,6 +341,16 @@ void CClient::deserialize(QJsonObject json_obj){
     this->set_pseudo(json_obj["pseudo"].toString());
     this->set_isOnline(json_obj["isOnline"].toBool());
     this->set_description(json_obj["description"].toString());
+}
+
+QString CClient::getCookie()
+{
+    return m_cookie;
+}
+
+void CClient::setCookie(QString cookie)
+{
+    m_cookie = cookie;
 }
 
 
