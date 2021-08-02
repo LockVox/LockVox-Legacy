@@ -1,4 +1,4 @@
-#include "Server/includes/cpacket.h"
+#include "src/includes/cpacket.h"
 #include "cserver.h"
 
 CPacket::CPacket()
@@ -51,14 +51,29 @@ CPacket::CPacket(QByteArray data, CClient * client){
 
 void CPacket::Deserialize(){
 
-    if(m_obj.contains("mainObj"))
-    {
+    //Get Type and Action
+    if(m_obj.contains("mainObj")){
             QJsonObject mainObj = m_obj.value("mainObj").toObject();
             QJsonValue type = mainObj.value("type");
             QJsonValue action = mainObj.value("action");
             m_type = type.toString();
             m_action = action.toString();
     }
+
+    //Get session cookie
+    if(m_obj.contains("cookie")){
+        m_cookie = m_obj.value("cookie").toString();
+    }
+}
+
+QString CPacket::getCookie() const
+{
+    return m_cookie;
+}
+
+void CPacket::setCookie(const QString &cookie)
+{
+    m_cookie = cookie;
 }
 
 //Getters
@@ -110,10 +125,12 @@ void CPacket::Serialize()
 {
     QJsonObject mainObj;
 
+
     mainObj.insert("type", m_type);
     mainObj.insert("action", m_action);
 
     m_obj["mainObj"] = mainObj;
+
 }
 
 /**
@@ -317,21 +334,25 @@ void CPacket::Serialize_auth(CClient* info, int code)
         authObj.insert("pseudo", info->get_pseudo());
         authObj.insert("isOnline", info->get_isOnline());
         authObj.insert("description", info->get_description());
+        authObj.insert("cookie", info->getSessionCookie()->getCookie());
         break;
         }
     case 1:{
+        //user does not exist
         authObj.insert("code", code);
-        authObj.insert("reason", "user does not exist");
+        authObj.insert("reason", "");
         break;
         }
     case 2:{
+        //User already connected
         authObj.insert("code", code);
-        authObj.insert("reason", "user already connected");
+        authObj.insert("reason", "");
         break;
         }
     case 3:{
+        //bad password
         authObj.insert("code", code);
-        authObj.insert("reason", "bad password");
+        authObj.insert("reason", "");
         break;
         }
     }

@@ -1,5 +1,5 @@
 #include "cdatabase.h"
-#include "Server/config.h"
+#include "Server/includes/config.h"
 
 CDatabase::CDatabase()
 {
@@ -16,11 +16,17 @@ QString CDatabase::init(QString username, QString password, int port, QString ho
     MY_PASSWORD = "4E96up6E3jxsX6QR";
 #else
     //This doesn't work
-    MY_HOSTNAME=hostname.toStdString().c_str();
-    MY_DATABASE=database.toStdString().c_str();
-    MY_USERNAME=username.toStdString().c_str();
-    MY_PASSWORD=password.toStdString().c_str();
-/*
+    QList<QByteArray> params;
+    params.append(hostname.toUtf8().toBase64());
+    params.append(database.toUtf8().toBase64());
+    params.append(username.toUtf8().toBase64());
+    params.append(password.toUtf8().toBase64());
+
+    MY_HOSTNAME=params[0];
+    MY_DATABASE=params[1];
+    MY_USERNAME=params[2];
+    MY_PASSWORD=params[3];
+    /*
     QDir test;
     if(!test.exists("storage/conf"))
     {
