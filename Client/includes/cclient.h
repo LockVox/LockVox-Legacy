@@ -78,23 +78,19 @@ class CClient
         QJsonObject serializeToObj();
         void deserialize(QJsonObject json_obj);
 
-        QString getCookie();
-        void setCookie(QString cookie);
-
-signals:
+    signals:
 
 
-private slots:
+    private slots:
 
 
-private:
+    private:
 
         QString m_pseudo;                   //!< m_pseudo is the username of the user
         QString m_mail;                     //!< m_mail is the email of the user
         QString m_description;              //!< m_description is the description of the user
-        QString m_cookie;
-        QTcpSocket * m_soc;                 //!< m_socket is the TCP Socket of the user
 
+        QTcpSocket * m_soc;                 //!< m_socket is the TCP Socket of the user
 
         QUuid m_uuid;                       //!< m_uuid is the UUID of the user
         int m_idChannel;                    //!< m_idChannel is the ID of the current channel of the user

@@ -139,21 +139,11 @@ void CServer::set_self(CClient *c){
     emit selfChanged(m_self);
 }
 
-//Envoie un packet au server grâce à un QByteArray
+//Envoie de l'audio au server grâce à un QByteArray
 void CServer::sendToServer(QByteArray ba)
 {
     //qDebug() << "Data has been send to Server ";
     m_socket->write(ba);
-    m_socket->waitForBytesWritten();
-}
-
-//Envoie un packet au server grâce à un QByteArray
-void CServer::sendToServer(CPacket packet)
-{
-    //qDebug() << "Data has been send to Server ";
-    packet.setCookie(m_self->getCookie());
-    packet.Serialize();
-    m_socket->write(packet.GetByteArray());
     m_socket->waitForBytesWritten();
 }
 
@@ -287,17 +277,18 @@ void CServer::onReceiveData()
 void CServer::loadAllCompenent(){
 
     if(!m_hasChannelsLoaded || !m_hasClientsLoaded){
-        CPacket p(m_self,"-1","-1");
-        sendToServer(p);
+        CPacket p("-1","-1");
+        sendToServer(p.GetByteArray());
     }
 
     if((!m_hasMessagesLoaded & m_hasChannelsLoaded & m_hasClientsLoaded))
     {
         foreach(CChannel * c, m_channelsList->get_channels()){
             if(c->getMessagesLists()->getHasBeenLoad() == false){
-                CPacket request(m_self,"1","3");
+                CPacket request("1","3");
                 request.Serialize_messageRequest(c->get_id(),20,0);
-                sendToServer(request);
+                qDebug() << request.GetByteArray();
+                sendToServer(request.GetByteArray());
             }
         }
     }
@@ -385,7 +376,7 @@ void CServer::processIncomingData(CPacket * packet){
 
        foreach(CClient * c, getClientsList()->get_clients())
        {
-           CPacket ppRequest(m_self,"1","4");
+           CPacket ppRequest("1","4");
            ppRequest.Serialize_ppRequest(c->get_uuid().toString());
            m_socket->write(ppRequest.GetByteArray());
        }
@@ -803,7 +794,7 @@ bool CServer::Register(QString username, QString mail, QString password,QString 
         return false;
     }
 
-    CPacket reg_pkt(NULL,"0", "8");
+    CPacket reg_pkt("0", "8");
 
     reg_pkt.Serialize_regReq(username, mail, password, password_confirm);
 
@@ -823,7 +814,7 @@ bool CServer::Login(QString mail, QString passwd)
         return false;
     }
 
-    CPacket auth_pkt(NULL,"0", "7");
+    CPacket auth_pkt("0", "7");
     auth_pkt.Serialize_authReq(mail, passwd);
     if(m_socket->write(auth_pkt.GetByteArray()) == -1)
     {
@@ -840,9 +831,13 @@ bool CServer::sendMessage(QString msg)
     int id = getCurrentChannelIndex();
 
     CMessage message(m_self->get_uuid().toString(QUuid::WithoutBraces),QString::number(id),msg,false);
-    CPacket sendMessage(m_self, "1","2");
-    sendMessage.Serialize_Message(message);
+    CPacket sendMessage;
 
+    sendMessage.SetType("1");
+    sendMessage.SetAction("2");
+    sendMessage.Serialize();
+
+    sendMessage.Serialize_Message(message);
     if(m_socket->write(sendMessage.GetByteArray()) == -1)
     {
         qDebug() << "Error in Login, can't write to socket" << Qt::endl;
@@ -873,7 +868,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
 
     QString t = QString::number(type);
     QString a = QString::number(action);
-    CPacket request(m_self,t,a);
+    CPacket request(t,a);
 
     //Récupération du type
     switch (type) {
@@ -884,7 +879,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             {
                 //New User is now online
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
 
                 break;
             }
@@ -892,28 +887,28 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             {
                 //User is now offline
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 2:
             {
                 //PSEUDO UPDATE
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 3:
             {
                 //Bio update
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
                 break;
             }
             case 4:
             {
                 //BAN USER
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
 
                 break;
             }
@@ -925,7 +920,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
             case 6: {
                 //Kick user
                 request.Serialize_newClient(client);
-                sendToServer(request);
+                sendToServer(request.GetByteArray());
                 break;
                 }
 
@@ -937,7 +932,7 @@ void CServer::RequestServer(int type, int action, CClient * client, CChannel * c
         case 0: {
             //CONNECT CHAN
             request.Serialize_ID(chan->get_id(),m_self->get_uuid());
-            sendToServer(request);
+            sendToServer(request.GetByteArray());
             break;
         }
         case 1: {
@@ -1027,9 +1022,9 @@ bool CServer::changeUserName(QString pseudo)
         CClient * tmp = m_self;
         tmp->set_pseudo(pseudo);
         emit selfChanged(m_self);
-        CPacket packet(m_self,"0", "2");
+        CPacket packet("0", "2");
         packet.Serialize_myClient(m_self);
-        sendToServer(packet);
+        sendToServer(packet.GetByteArray());
         return true;
 }
 
@@ -1055,10 +1050,12 @@ bool CServer::changeDescription(QString description)
     CClient * tmp = m_self;
     tmp->set_description(description);
     emit selfChanged(m_self);
-    CPacket packet(m_self,"0", "3");
+    CPacket packet("0", "3");
     packet.Serialize_myClient(m_self);
-    sendToServer(packet);
+    sendToServer(packet.GetByteArray());
     return true;
+
+
 }
 
 QByteArray CServer::Serialize(){

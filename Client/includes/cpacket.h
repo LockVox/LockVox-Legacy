@@ -28,7 +28,7 @@ public:
     CPacket();
     CPacket(QByteArray data, CClient * client);
     CPacket(const char *p, CClient * client);
-    CPacket(CClient * c, QString type, QString action);
+    CPacket(QString type, QString action);
 
     //Getters
     QString GetType();
@@ -98,9 +98,6 @@ public:
 
     //Authentification
     CClient* Deserialize_authAns();
-    QString getCookie() const;
-    void setCookie(const QString &cookie);
-
 private:
     //Type & Action corresponding to the request
     QString m_type;
@@ -108,7 +105,7 @@ private:
 
     //Client who send the request
     CClient * m_client;
-    QString m_cookie;
+
 
     //If ID object exist - on call Deserialize_ID();
     QUuid id_client;
