@@ -9,7 +9,7 @@
 #include "messagelist.h"
 #include "messagemodel.h"
 
-#include "Client/includes/config.h"
+//#include "Client/includes/config.h"
 
 UIWorker::UIWorker(QGuiApplication *app)
 {
