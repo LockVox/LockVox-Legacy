@@ -15,103 +15,12 @@
 #include "cclient.h"
 #include "cchannel.h"
 
+
 #include <QString>
 #include <QList>
 
 class CServer;
 class CChannel;
-
-enum PacketClass {
-    NOTIFY=0,                                    //!< Use when data is send without being query from other side
-    INFO=1,                                      //!< Use to request Data to other side
-    ACTION=2,                                    //!< Request action on other side
-    CHANGE=3
-};
-
-enum Request{
-    REQ,ANS
-};
-
-enum Type{
-    //SERVER=1,
-    //CHANNELS=1,
-    //USERS=2,
-    //MESSAGES=3,
-    //CONF=4,
-};
-
-//Server
-enum Server{
-    //NOTIFY
-    SHUTDOWN,
-    //INFO
-    PARAMS              =0100, 
-    OPTIONS             =0101,
-    SERVER_PP           =0103,
-
-    //ACTIONS
-    AUTH                =0201,                //!< params : Auth Info   
-    REG                 =0202                 //!< params : reg info
-
-};
-
-//Channel
-enum Channel{
-    //NOTIFY
-    JOIN_CONF           =1000,                        
-    QUIT_CONF           =1001,
-    
-    //INFO
-    CHAN                =1100,
-
-    //ACTION
-    JOIN                =1200,
-    QUIT                =1201,
-
-};
-
-//User
-enum User{
-    //NOTIFY 
-    REGISTER            =2000,
-    CONNECT             =2001,                    //!< User connected
-    DISCONNECT          =2002,                    //!< User disconnected
-    CHANGE_USERNAME     =2003,
-    CHANGE_DESCRIPTION  =2004,
-    CHANGE_PP           =2005,
-    //INFO
-    INFO_USER                =2100,
-    //ACTION
-    UPDATE_USERNAME     =2201,
-    UPDATE_DESCRIPTION  =2202,
-    UPDATE_MAIL         =2203,
-    UPDATE_PASSWORD     =2204,
-};
-
-enum Message{
-
-
-};
-
-enum Conf{
-    //NOTIFY
-    CREATE,
-    DELETE,
-    //INFO
-  /*CONF
-    //ACTION
-    CREATE,
-    DELETE,
-    JOIN,
-    QUIT,
-    KICK_USER,*/
-};
-
-enum reqState{
-    ERROR=0,
-    SUCCESS=1
-};
-
 
 class CPacket
 {
@@ -136,14 +45,14 @@ class CPacket
         CPacket(QString type, QString action);
 
         //Getters
-        int GetId();
         QString GetType();
         QString GetAction();
         QJsonDocument GetData();
         QByteArray GetByteArray();
+        QUuid get_IdClient();
+        int get_IdChannel();
 
         //Setters
-        void SetId(int id); 
         void SetType(QString p_type);
         void SetAction(QString p_action);
 
@@ -166,16 +75,6 @@ class CPacket
         void Serialize_MessageError(int code);
         void Serialize_ppAnswer(QImage pp,QUuid uuid);
 
-
-        QString getCookie() const;
-        void setCookie(const QString &cookie);
-
-        PacketClass getClass();
-        void setClass(PacketClass c);
-
-        void Deserialize();
-
-
         //Deserialize specific object
         CClient * Deserialize_myClient();
         CClient * Deserialize_newClient();
@@ -191,40 +90,26 @@ class CPacket
 
         void Serialize_Register(struct register_info reg);           //Serialize Register
         struct register_info Deserialize_Register();                 //Deserialize Register
-        //To remove
-        QUuid get_IdClient();
-        int get_IdChannel();
 
-
-
-
-private:
-
-        int m_id;
+    private:
+        void Deserialize();
         //Type & Action corresponding to the request
-
-        PacketClass m_class;                                       //!Notify  - Info - Action
-        Request m_req;                                         //
-
         QString m_type;
         QString m_action;
 
         //Client who send the request
         CClient * m_client;
-        QString m_cookie;
-
-        //Destinataire
-        CClient * m_receiver;                               //!< Who the packet is address to
-
 
         //If ID object exist - on call Deserialize_ID();
-        //QUuid id_client;
-        //int id_channel;
+        QUuid id_client;
+        int id_channel;
 
         //Use for serialization / Deserialization
-        QJsonObject m_obj;                                   //!< JSON Object 
-        QJsonDocument m_data;                                //!< JSON Document
-        QByteArray m_ba;                                     //!< Byte Array
+        QJsonObject m_obj;                                           //regroup all of the object that has been serialize
+
+        //From Object to Byte Array
+        QJsonDocument m_data;
+        QByteArray m_ba;
 };
 
 #endif // CPACKET_H

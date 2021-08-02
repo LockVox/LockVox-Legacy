@@ -1,5 +1,5 @@
 #include "crole.h"
-/*
+
 crole::crole()
 {
     m_father = NULL;
@@ -18,11 +18,11 @@ crole::crole(crole* p_father)
     m_see = p_father->m_see;
     m_mute = p_father->m_mute;
 }
-*/
+
 /*********************************************************************
 ****************************FATHER+CHILD******************************
 **********************************************************************/
-/*
+
 void crole::AddFather(crole *p_father)
 {
     if(p_father!=NULL)
@@ -63,11 +63,11 @@ void crole::DelChild(int p_id)
         i++;
     }
 }
-*/
+
 /*********************************************************************
 ****************************GETTER+SETTER******************************
 **********************************************************************/
-/*
+
 void crole::SetWrite(bool v)
 {
     m_write =v;
@@ -97,9 +97,9 @@ void crole::SetMute(bool v)
 {
     m_mute = v;
 }
-*/
+
 /******************************************/
-/*
+
 bool crole::GetWrite()
 {
     return m_write;
@@ -128,4 +128,4 @@ bool crole::GetSee()
 bool crole::GetMute()
 {
     return m_mute;
-}*/
+}

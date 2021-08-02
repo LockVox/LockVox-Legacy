@@ -27,7 +27,6 @@ SOURCES += \
 
 
 HEADERS += \
-    Client/includes/config.h \
         Client/includes/cpacket.h \
         Client/includes/channellist.h \
         Client/includes/channelmodel.h \
