@@ -14,8 +14,10 @@ SOURCES += \
     src/cchannel.cpp \
     src/cmessage.cpp \
     src/cpacket.cpp \
+    src/cpacketmanager.cpp \
     src/csessioncookie.cpp \
     src/crole.cpp \
+    src/LVObject.cpp \
 #Server
     Server/main.cpp \
     Server/cserver.cpp \
@@ -33,8 +35,10 @@ HEADERS += \
     src/includes/cchannel.h \
     src/includes/cmessage.h \
     src/includes/cpacket.h \
+    src/includes/cpacketmanager.h \
     src/includes/csessioncookie.h \
     src/includes/crole.h \
+    src/includes/LVObject.h \
 #Server
     Server/includes/caudio.h \
     Server/includes/cookiesmanager.h \

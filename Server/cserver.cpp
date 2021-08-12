@@ -207,6 +207,86 @@ void CServer::printConfig()
     qDebug() << "";
 }
 
+void CServer::fromJSON(QJsonObject obj)
+{
+    QJsonObject serverParams;
+    QJsonArray clientsArray, channelsArray;
+    CServer server;
+    CChannel channel;
+
+    if(obj.contains("serverParams")){
+        serverParams  = obj.value("serverParams").toObject();
+        server.setServerName(serverParams["name"].toString());
+        //To continue;
+    }
+
+    if(obj.contains("clients")){
+        clientsArray = obj.value("clients").toArray();
+
+        foreach(QJsonValue c, clientsArray){
+            QJsonObject tmp = c.toObject();
+            CClient client;
+            client.fromJSON(tmp);
+            server.addClient(&client);
+        }
+    }
+
+    if(obj.contains("channels")){
+        clientsArray = obj.value("channels").toArray();
+
+        foreach(QJsonValue c, clientsArray){
+            QJsonObject tmp = c.toObject();
+            CChannel channel;
+            channel.fromJSON(tmp);
+            server.addChannel(&channel);
+        }
+    }
+}
+
+QJsonObject CServer::toJSON()
+{
+    QJsonObject json_obj;
+    QJsonObject json_serverParams;
+    QJsonArray clientsArray, channelsArray;
+
+    json_serverParams["name"] = m_serverName;
+
+    foreach(CClient * c, m_clients){
+        clientsArray.append(c->toJSON());
+    }
+
+    foreach(CChannel * c, m_channels){
+        channelsArray.append(c->toJSON());
+    }
+
+    json_obj["channels"] = channelsArray;
+    json_obj["clients"] = clientsArray;
+    json_obj["serverParams"] = json_serverParams;
+
+    return json_obj;
+
+}
+
+CChannel *CServer::findChannel(CChannel * channel)
+{
+    foreach(CChannel * c, m_channels){
+        if(c == channel){
+            return c;
+        }
+    }
+    return NULL;
+}
+
+CClient *CServer::findUsers(CClient * client)
+{
+    foreach(CClient * c, m_clients){
+        if(c == client){
+            return c;
+        }
+    }
+    return NULL;
+}
+
 //Getters
 CDatabase * CServer::get_database()
 {
@@ -219,17 +299,20 @@ void CServer::set_database(CDatabase * db)
     m_db = db;
 }
 
+/*
+ * Look in the list of users to check if the socket exists.
+ */
 CClient * CServer::whichClient(QTcpSocket * s)
 {
-    //Looking for the client with the socket 's'
+
     foreach(CClient * client, get_clientList())
     {
-        if(client->get_socket() == s)
+        if(*client == s)
         {
             return client;
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 void CServer::onNewConnection()
@@ -282,33 +365,6 @@ void CServer::sendToAllExecptClient(QByteArray out, CClient *client)
             }
         }
     }
-}
-
-void CServer::AddChannel(CChannel *channel)
-{
-    m_channels.push_back(channel);
-    //m_audio->AddSession(*channel);
-}
-
-void CServer::AddBannedUser(CClient * client)
-{
-    m_banned_users.push_back(client);
-    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has been banned", SERVER);
-}
-
-void CServer::RemoveBannedUser(CClient* client)
-{
-    if(!m_banned_users.removeOne(client))
-    {
-        writeToLog("Trying to unban user [" + client->get_uuid().toString() + "] who is not banned", SERVER_WARN);
-        return;
-    }
-    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is not banned anymore", SERVER);
-}
-
-QList<CClient*> CServer::GetBannedUserList()
-{
-    return m_banned_users;
 }
 
 // ///////////////////////////////////////////////////////// //
@@ -403,11 +459,6 @@ void CServer::sendMe(QTcpSocket * socket)
     return;
 }
 
-//Pour faire plus propre  modifier update_level par des define
-//#define USERNAME 0
-//#define DESCRIPTION 1
-//et appeller updateClient(USERNAME, client);
-
 void CServer::updateClient(ClientParams param,CClient * client, QString newString)
 {
     switch (param)
@@ -437,7 +488,6 @@ void CServer::updateClient(ClientParams param,CClient * client, QString newStrin
             }
             break;
         }
-
         //Description
         case DESCRIPTION:
         {
@@ -460,101 +510,74 @@ void CServer::updateClient(ClientParams param,CClient * client, QString newStrin
         }
         case MAIL:
         {
+
         }
     }
 }
 
-void CServer::updateChannel(int update_type, CChannel * channel)
+void CServer::updateChannel(ChannelParams param, CChannel * target, QString newString)
 {
-    switch (update_type)
+    CChannel * channel = findChannel(target);
+    if(channel == NULL) { return ; }
+
+    switch (param)
     {
-        case 0: //Create audio chan
+        case NAME:
         {
-            addChannel(channel);
-
-            CPacket ans("1","5");
-            ans.Serialize_newChannel(channel);
-            emit sendToAll(ans.GetByteArray());
+            //m_db->updateChannel()
 
             break;
         }
 
-        case 1: //Delete audio chan
+        case NB_USERS:
         {
-            CChannel * toDelChannel = get_channelById(channel->get_id());
-            DelChannel(toDelChannel);
 
-            CPacket ans("1","6");
-            ans.Serialize_newChannel(channel);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
             break;
         }
 
-        case 2: //Rename audio chan
+        case MAX_USERS:
         {
-            CChannel * chan = get_channelById(channel->get_id());
 
-            chan->set_name(channel->get_name());
-            m_db->updateChannel(std::to_string(chan->get_id()), chan->get_name().toStdString(), std::to_string(chan->get_maxUsers()));
-
-            CPacket ans("1","7");
-            ans.Serialize_newChannel(chan);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
             break;
-        }
-
-        case 3: //Change max user audio chan
-        {
-            CChannel * chan = get_channelById(channel->get_id());
-            chan->set_maxUsers(channel->get_maxUsers());
-
-            CPacket ans("1","8");
-            ans.Serialize_newChannel(chan);
-            emit sendToAll(ans.GetByteArray());
-
-            free(channel);
-            break;
-        }
+        } 
     }
 }
 
-void CServer::auth(QList<QString> info, CClient * client)
+QString CServer::getServerName() const
 {
-    CPacket ans("0", "7");
-    CPacket newUser("0","0");
+    return m_serverName;
+}
+
+void CServer::setServerName(const QString &serverName)
+{
+    m_serverName = serverName;
+}
+
+void CServer::auth(sAuthentication info)
+{
+    CClient * client = qobject_cast<CClient*>(sender());
+    if(client == NULL) { return; }
 
     //Password hash
-    std::string hashed = sha256(info[1].toStdString());
+    std::string hashed = sha256(info.password.toStdString());
     bool valid = false;
 
     QString * err = new QString;
-    CClient * tmp_client = m_db->parseClient(info[0].toStdString(), err);
+    CClient * tmp_client = m_db->parseClient(info.mail.toStdString(), err);
 
     if(*err == "success")
     {
-        if(hashed == m_db->getHash(info[0].toStdString(), err))  //If password is correct
+        if(hashed == m_db->getHash(info.mail.toStdString(), err))  //If password is correct
         {
             foreach(CClient *c, m_clients) //Check if user already connected
             {
-                if(tmp_client->get_uuid() == c->get_uuid() && c->get_isAuthenticate()) //For the moment if yes just don't allow second connection
+                if(tmp_client == c && c->get_isAuthenticate()) //For the moment if yes just don't allow second connection
                 {
 
 #ifdef SERVER_DEBUG
                     qDebug() << "[SERVER] Authentication failed - " << c->get_pseudo();
 #endif
-
                     writeToLog("User [" + c->get_uuid().toString() + "(" + c->get_pseudo() + ")] Already connected", SERVER_WARN);
-                    ans.Serialize_auth(NULL, 2);
-
-                    client->get_socket()->write(ans.GetByteArray());
-                    client->get_socket()->waitForBytesWritten();
-
-                    client->get_socket()->abort();
-                    client->deleteLater();
                     return;
                 }
 
@@ -569,9 +592,7 @@ void CServer::auth(QList<QString> info, CClient * client)
                     c->set_isAuthenticate(true);
                     c->set_socket(client->get_socket());
 
-                    //Sending client info
-                    ans.Serialize_auth(c, 0);
-                    newUser.Serialize_newClient(c,false);
+                    //Sending client info 
                     valid = true;
                 }
             }
@@ -583,13 +604,11 @@ void CServer::auth(QList<QString> info, CClient * client)
             {
                 writeToLog("Error with database when fetching password hash",SERVER_ERR);
                 writeToLog(*err, DB_ERR);
-                ans.Serialize_auth(NULL, 1);
                 delete(err);
             }
             else //Bad password
             {
-                writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", SERVER_WARN);
-                ans.Serialize_auth(NULL, 3);
+                writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Bad password for [" + tmp_client->get_uuid().toString()  + "(" + tmp_client->get_pseudo() + ")]", SERVER_WARN); 
                 delete(err);
             }
         }
@@ -597,31 +616,41 @@ void CServer::auth(QList<QString> info, CClient * client)
     else
     {
 #ifdef SERVER_DEBUG
-                      qDebug() << "[SERVER] Authentication failed" << info[0];
+                      qDebug() << "[SERVER] Authentication failed" << info.mail;
 #endif
 
         if(*err == "no_client")
         {
             writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Trying to connect to a non-existing account", SERVER_WARN);
-            ans.Serialize_auth(NULL, 1);
+
             delete(err);
         }
         else
         {
             writeToLog("Error with database when fetching client",SERVER_ERR);
             writeToLog(*err,DB_ERR);
-            ans.Serialize_auth(NULL, 1);
+
             delete(err);
         }
     }
 
-    client->get_socket()->write(ans.GetByteArray());
-    client->get_socket()->waitForBytesWritten();
 
-    //If authentification suceed - Send Server Object to the client
     if(valid)
     {
-        sendToAllExecptClient(newUser.GetByteArray(), tmp_client);
+        //Send Authentication answer
+        CPacket packet_auth(NOTIFY, ANS, SUCCESS, _SERVER, AUTH);
+        client->writePacket(packet_auth);
+
+
+        CPacket packet_sync(INFO, REQ, NO_STATE,  _SERVER, SYNC_INFO);
+        packet_sync.serialize(this);
+        client->writePacket(packet_sync);
+
+
+        CPacket packet_inf(INFO, REQ, SUCCESS, _USERS, UserAction::CONNECT);
+        //sendToAllExecptClient()
+
+
 
         //Get ride of temporary CClient, now we use in list client
         client->set_socket(NULL);
@@ -631,10 +660,13 @@ void CServer::auth(QList<QString> info, CClient * client)
     return;
 }
 
-void CServer::reg(QList<QString> info, CClient * client)
+void CServer::reg(sRegister info)
 {
+    CClient * client = qobject_cast<CClient*>(sender());
+    if(client == NULL) { return; }
+
     //Check informations
-    if(info[0] == "null")
+    if(info.mail == "" || info.password == "" || info.username == "")
     {
         writeToLog("Received incomplete register information from [" + client->get_socket()->peerAddress().toString() + "]", SERVER_WARN);
         //Send error to client
@@ -643,8 +675,7 @@ void CServer::reg(QList<QString> info, CClient * client)
     }
 
     QUuid uuid = QUuid::createUuid();
-
-    QString error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), info[0].toStdString(), info[1].toStdString(),info[2].toStdString());
+    QString error = m_db->newUser(uuid.toString(QUuid::WithoutBraces).toStdString(), info.username.toStdString(), info.mail.toStdString(),info.password.toStdString());
 
     if(error == "mailerror")
     {
@@ -658,20 +689,17 @@ void CServer::reg(QList<QString> info, CClient * client)
         client->get_socket()->waitForBytesWritten();
         return;
     }
-    else
-    {
-        if(error != "success")
-        {
+    else if(error != "success") {
             writeToLog("Error in creating new user", SERVER_ERR);
             writeToLog(error,DB_ERR);
             //Send error to client
             //TODO
             return;
-        }
-        else
-        {
+    }
+    else
+    {
             writeToLog("[" + client->get_socket()->peerAddress().toString() + "] Created new account [" + uuid.toString() + "(" + info[0] + ")] Successfully", SERVER);
-            CClient * c = new CClient(uuid, info[0], client->get_socket(), -1, true, "");
+            CClient * c = new CClient(uuid, info.username, client->get_socket(), -1, true, "");
             addClient(c);
 
             int random = QRandomGenerator::global()->bounded(0,18);
@@ -693,28 +721,13 @@ void CServer::reg(QList<QString> info, CClient * client)
             }
 
             //Send answer to the client
-            CPacket ans("0", "8");
-            ans.Serialize_regAns(1);
-
-            //Serialize here the client with the corresponding information
-            ans.Serialize_myClient(c);
-
-            //Send register answer
-            c->get_socket()->write(ans.GetByteArray());
-            c->get_socket()->waitForBytesWritten();
-
-            //sender->get_socket()->write(Serialize());
-            //sender->get_socket()->waitForBytesWritten();
-
-            CPacket newUser("0","0");
-            newUser.Serialize_newClient(c,true);
-            sendToAllExecptClient(newUser.GetByteArray(),c);
+            CPacket packet(ACTION, ANS, SUCCESS, _SERVER, REG);
+            c->writePacket(packet);
 
             //Get ride of temporary CClient now it's in da list
             client->set_socket(NULL);
             client->quit();
             client->deleteLater();
-        }
     }
     return;
 }
@@ -723,3 +736,33 @@ void CServer::ext_sendToAll(QByteArray out)
 {
     emit sendToAll(out);
 }
+
+
+/*
+void CServer::AddChannel(CChannel *channel)
+{
+    m_channels.push_back(channel);
+    //m_audio->AddSession(*channel);
+}
+
+void CServer::AddBannedUser(CClient * client)
+{
+    m_banned_users.push_back(client);
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] has been banned", SERVER);
+}
+
+void CServer::RemoveBannedUser(CClient* client)
+{
+    if(!m_banned_users.removeOne(client))
+    {
+        writeToLog("Trying to unban user [" + client->get_uuid().toString() + "] who is not banned", SERVER_WARN);
+        return;
+    }
+    writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] is not banned anymore", SERVER);
+}
+
+QList<CClient*> CServer::GetBannedUserList()
+{
+    return m_banned_users;
+}
+*/

@@ -72,6 +72,13 @@ class CServer : public AbstractServer
         void checkFinishLoad();
 
 
+
+
+
+
+
+
+
         //Server action - To develop
         void changeChannel(int id);
         void quitChannel(int id);
@@ -106,6 +113,8 @@ signals:
 
     public slots:
         void RequestServer(int type, int action, CClient * client, CChannel * chan);
+
+
         bool Login(QString mail, QString passwd);               //Requests the server to authenticate
         bool Register(QString username, QString mail, QString password,QString password_confirm);
         bool sendMessage(QString msg); //For channel message

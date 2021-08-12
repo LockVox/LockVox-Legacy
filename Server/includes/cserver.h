@@ -56,11 +56,23 @@ class CServer : public AbstractServer
         //Setters
         void set_database(CDatabase * db);
 
-
         //Start server
         void start();
         int readConfig();
         void printConfig();
+
+        //Virtual
+        void fromJSON(QJsonObject obj);
+        QJsonObject toJSON();
+
+        //operators
+
+        //Utils
+        CChannel *findChannel(CChannel*);
+        CClient *findUsers(CClient*);
+
+
+
 
         //Server action
         void connectClient(CClient * client);
@@ -68,8 +80,6 @@ class CServer : public AbstractServer
         void AddBannedUser(CClient * client);
         void RemoveBannedUser(CClient* client);
         QList<CClient*> GetBannedUserList();
-
-
 
         //Not used anymore
         CClient * whichClient(QTcpSocket * soc);                                  //Find ID client from socket
@@ -82,10 +92,13 @@ class CServer : public AbstractServer
         //Log lol
         void writeToLog(QString error, int level); //Write to server log, level : 0 normal | 1 warning | 2 error
 
-    signals:
+        QString getServerName() const;
+        void setServerName(const QString &serverName);
+
+signals:
         void sendToAll(QByteArray out);
 
-    private slots:
+private slots:
         //TCP Server slots
         void onNewConnection();                                           //Add client to the server - default no channel           //get data
         void onDisconnectClient();                                        //Disconnecting client - del client from channel list - del client
@@ -95,14 +108,20 @@ class CServer : public AbstractServer
         void ext_sendToAll(QByteArray out);
 
         void sendMe(QTcpSocket * socket);
-        void updateClient(ClientParams param,CClient * client, QString newString);
-        void updateChannel(int update_type, CChannel * channel);
+        CChannel * thisChan(int id);
+
+
+
 
         //Authentication / Register
-        void auth(QList<QString> info, CClient * client);
-        void reg(QList<QString> info, CClient * client);
+        void auth(sAuthentication info);
+        void reg(sRegister info);
+        //Changes
+        void updateClient(ClientParams param, CClient * target, QString newString);
+        void updateChannel(ChannelParams param, CChannel * target, QString newString);
 
-        CChannel * thisChan(int id);
+
+
 
     private:
         //Server mode

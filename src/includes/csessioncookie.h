@@ -15,6 +15,7 @@
 
 //Includes
 #include "cclient.h"
+class CClient;
 
 class CSessionCookie
 {
@@ -35,17 +36,15 @@ class CSessionCookie
     public:
         CSessionCookie();
         CSessionCookie(CClient * c);
-
         //~CSessionCookie();
 
         //Getters
-        QString getCookie() const;
-
+        QString getCookie() ;
         //Setters
-        void setCookie(const QString &cookie);
+        void setCookie(QString cookie);
 
-        QString HighRandomStringGenerator();
 
+        void generateCookie();
         void clearCookie();
 
     private:

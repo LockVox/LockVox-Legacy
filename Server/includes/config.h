@@ -8,7 +8,7 @@
 #define SERVER_DEBUG
 #define CLIENT_DEBUG
 #define DB_DEBUG
-//#define DEV_DB
+#define DEV_DB
 
 #define AUTOCONFIG
 #ifdef AUTOCONFIG

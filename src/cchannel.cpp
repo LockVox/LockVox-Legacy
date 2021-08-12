@@ -8,6 +8,7 @@
  */
 CChannel::CChannel()
 {
+    setObjType(CHANNEL);
     m_name = "";
     m_id = 0;
     m_maxUsers = 5;
@@ -24,6 +25,7 @@ CChannel::CChannel()
  */
 CChannel::CChannel(const CChannel & copy)
 {
+    setObjType(CHANNEL);
     m_name = copy.m_name;
     m_nbClients = copy.m_nbClients;
     m_maxUsers = copy.m_maxUsers;
@@ -41,6 +43,7 @@ CChannel::CChannel(const CChannel & copy)
  */
 CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name)  , m_maxUsers(maxUsers), m_id(id)
 {
+    setObjType(CHANNEL);
     m_nbClients = 0;
     m_messagesLists = new MessageList();
 }
@@ -54,6 +57,7 @@ CChannel::CChannel(QString name, int id, int maxUsers) : m_name(name)  , m_maxUs
  */
 CChannel::CChannel(QString name, int id)
 {
+    setObjType(CHANNEL);
     m_name = name;
     m_id = id;
     m_nbClients = 0;
@@ -70,6 +74,7 @@ CChannel::CChannel(QString name, int id)
  */
 CChannel::CChannel(QList<CClient*> clients, QString name, int id)
 {
+    setObjType(CHANNEL);
     m_clients = clients;
     m_name = name;
     m_id = id;
@@ -77,6 +82,33 @@ CChannel::CChannel(QList<CClient*> clients, QString name, int id)
     m_messagesLists = new MessageList();
 }
 
+QJsonObject CChannel::toJSON()
+{
+    QJsonObject json_obj;
+
+    json_obj.insert("id", m_id);
+    json_obj.insert("name", m_name);
+    json_obj.insert("maxUsers", m_maxUsers);
+    json_obj.insert("nbUsers", m_nbClients);
+
+    return json_obj;
+}
+
+void CChannel::fromJSON(QJsonObject obj)
+{
+    m_id = obj.value("id").toInt();
+    m_name = obj.value("name").toString();
+    m_maxUsers = obj.value("maxUsers").toInt();
+    m_nbClients = obj.value("nbUsers").toInt();
+}
+
+bool CChannel::operator==(const CChannel &channel) const
+{
+    if(this->m_id == channel.m_id){
+        return true;
+    }
+    return false;
+}
 
 /**
  * @brief Getter of attribute m_clients

@@ -9,13 +9,41 @@ CPacket::CPacket()
 CPacket::CPacket(QString type, QString action) :
 m_type(type),m_action(action)
 {
-    m_client = NULL;
+    m_sender = NULL;
     Serialize();
 }
 
+CPacket::CPacket(PacketClass c, Request req, ReqState state, Type type, UserAction action)
+{
+    m_class = c;
+    m_req = req;
+    m_reqState = state;
+    m_type = type;
+    m_action = action;
+}
+
+CPacket::CPacket(PacketClass c, Request req, ReqState state, Type type, ChannelAction action)
+{
+    m_class = c;
+    m_req = req;
+    m_reqState = state;
+    m_type = type;
+    m_action = action;
+}
+
+CPacket::CPacket(PacketClass c, Request req, ReqState state, Type type, ServerAction action)
+{
+    m_class = c;
+    m_req = req;
+    m_reqState = state;
+    m_type = type;
+    m_action = action;
+}
+
+
 CPacket::CPacket(const char *p, CClient *client)
 {
-    m_client = client;
+    m_sender = client;
 
     QByteArray ba(p);
 
@@ -38,32 +66,14 @@ CPacket::CPacket(const char *p, CClient *client)
 #endif
 }
 
-//Not used anymore
 CPacket::CPacket(QByteArray data, CClient * client){
-    m_client = client;                                  //Client
+    m_sender = client;                                  //Client
 
     m_data = QJsonDocument::fromJson(data);             //JSON Doc
     m_obj = m_data.object();
 
     //Set type & action from m_data
     Deserialize();
-}
-
-void CPacket::Deserialize(){
-
-    //Get Type and Action
-    if(m_obj.contains("mainObj")){
-            QJsonObject mainObj = m_obj.value("mainObj").toObject();
-            QJsonValue type = mainObj.value("type");
-            QJsonValue action = mainObj.value("action");
-            m_type = type.toString();
-            m_action = action.toString();
-    }
-
-    //Get session cookie
-    if(m_obj.contains("cookie")){
-        m_cookie = m_obj.value("cookie").toString();
-    }
 }
 
 QString CPacket::getCookie() const
@@ -74,6 +84,21 @@ QString CPacket::getCookie() const
 void CPacket::setCookie(const QString &cookie)
 {
     m_cookie = cookie;
+}
+
+CClient *CPacket::getReceiver()
+{
+    return m_receiver;
+}
+
+CClient *CPacket::getSender()
+{
+    return m_sender;
+}
+
+void CPacket::setSender(CClient *client)
+{
+    m_sender = client;
 }
 
 //Getters
@@ -108,16 +133,6 @@ QByteArray CPacket::GetByteArray()
     return m_ba;
 }
 
-QUuid CPacket::get_IdClient()
-{
-    return id_client;
-}
-
-int CPacket::get_IdChannel()
-{
-    return id_channel;
-}
-
 /**
  * @brief This function serialize mainObj (type & action)
  */
@@ -125,13 +140,156 @@ void CPacket::Serialize()
 {
     QJsonObject mainObj;
 
+    m_obj.insert("pCookie", m_cookie);
+    m_obj.insert("pClass", m_class);
 
     mainObj.insert("type", m_type);
     mainObj.insert("action", m_action);
-
     m_obj["mainObj"] = mainObj;
 
 }
+
+void CPacket::serialize_param(QString str)
+{
+   QJsonObject params;
+   params.insert("val", str);
+}
+
+void CPacket::serialize(CObject *lv_object)
+{
+    QJsonObject json_obj;
+    json_obj = lv_object->toJSON();
+    m_obj["object"] = json_obj;
+}
+
+void CPacket::serialize(QList<CObject *> list_objects)
+{
+    QJsonObject json_obj;
+    foreach(CObject * obj, list_objects){
+        json_obj.insert("object",obj->toJSON());
+    }
+    m_obj["list_objects"] = json_obj;
+}
+
+void CPacket::serialize_auth(sAuthentication info)
+{
+    QJsonObject auth_obj;
+
+    auth_obj.insert("mail", info.mail);
+    auth_obj.insert("password", info.password);
+
+    m_obj["authentication"] = auth_obj;
+}
+
+void CPacket::serialize_reg(sRegister info)
+{
+    QJsonObject reg_obj;
+    reg_obj.insert("username", info.username);
+    reg_obj.insert("mail", info.mail);
+    reg_obj.insert("password", info.password);
+
+    m_obj["register"] = reg_obj;
+}
+
+QList<CClient> CPacket::getClientsFromList()
+{
+      QList<CClient> list;
+      CClient tmp;
+      QJsonArray cArray = m_obj["list_objects"].toArray();
+      foreach(QJsonObject json_obj, cArray{
+            if(json_obj["type"] == ObjectType::CLIENT){
+                tmp.fromJSON(json_obj);
+                list.push_back(tmp);
+            }
+      }
+      return list;
+}
+
+QList<CChannel> CPacket::getChannelsFromList()
+{
+    QList<CChannel> list;
+    CChannel tmp;
+    foreach(QJsonObject json_obj, m_obj["list_objects"]){
+          if(json_obj["type"] == CObject::CHANNEL){
+              tmp.fromJSON(json_obj);
+              list.push_back(tmp);
+          }
+    }
+    return list;
+}
+
+QList<CMessage> CPacket::getMessagesFromList()
+{
+
+}
+
+CObject* CPacket::deserialize(CObject::ObjectType type)
+{
+
+}
+
+QList<CObject *> CPacket::deserializeList(CObject::ObjectType type)
+{
+
+}
+
+sAuthentication CPacket::deserialize_auth()
+{
+    sAuthentication info;
+    if(m_obj.contains("authentication")){
+        QJsonObject auth_obj = m_obj.value("authentication").toObject();
+        info.mail = auth_obj.value("mail").toString();
+        info.password = auth_obj.value("password").toString();
+    }
+    return info;
+}
+
+sRegister CPacket::deserialize_reg()
+{
+    sRegister info;
+    if(m_obj.contains("register")){
+        QJsonObject auth_obj = m_obj.value("register").toObject();
+        info.mail = auth_obj.value("mail").toString();
+        info.username = auth_obj.value("username").toString();
+        info.password = auth_obj.value("password").toString();
+    }
+    return info;
+}
+
+
+
+void CPacket::Deserialize(){
+
+    //Get Type and Action
+    if(m_obj.contains("mainObj")){
+            QJsonObject mainObj = m_obj.value("mainObj").toObject();
+            QJsonValue type = mainObj.value("type");
+            QJsonValue action = mainObj.value("action");
+            m_type = type.toString();
+            m_action = action.toString();
+    }
+
+    //Get session cookie
+    if(m_obj.contains("pClass")){
+        m_cookie = m_obj.value("cookie").toString();
+    }
+
+    //Get session cookie
+    if(m_obj.contains("pCookie")){
+        m_cookie = m_obj.value("cookie").toString();
+    }
+
+    if(m_obj.contains("object")){
+        //deserializeList();
+    }
+
+    if(m_obj.contains("list_objects")){
+        //deserializeList();
+    }
+}
+
+
+
 
 /**
  * @brief This function serialize CServer object informations
@@ -163,94 +321,7 @@ void CPacket::Serialize(CServer* c)
       m_obj["clients"] = sArray;
 }
 
-//When a new client connected
-void CPacket::Serialize_newClient(CClient* client,bool sendPP)
-{
 
-   QJsonObject clientObj;
-   clientObj.insert("uuid", client->get_uuid().toString());
-   clientObj.insert("pseudo", client->get_pseudo());
-   clientObj.insert("isOnline", client->get_isOnline());
-   clientObj.insert("description", client->get_description());
-
-   if(!client->get_profilePic().isNull() && sendPP)
-   {
-        QByteArray array;
-        QBuffer buffer(&array);
-        client->get_profilePic().save(&buffer, "PNG");
-
-        clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
-   }
-
-   m_obj["newClient"] = clientObj;
-}
-
-//When a new channel is created
-void CPacket::Serialize_newChannel(CChannel* channel){
-
-    QJsonObject channelObj;
-    channelObj.insert("id", channel->get_id());
-    channelObj.insert("name", channel->get_name());
-    channelObj.insert("maxUsers", channel->get_maxUsers());
-
-    m_obj["newChannel"] = channelObj;
-}
-
-void CPacket::Serialize_myClient(CClient * client)
-{
-    QJsonObject clientObj;
-    clientObj.insert("uuid", client->get_uuid().toString());
-    clientObj.insert("pseudo", client->get_pseudo());
-    clientObj.insert("isOnline", client->get_isOnline());
-    clientObj.insert("description", client->get_description());
-
-    if(!client->get_profilePic().isNull())
-    {
-         QByteArray array;
-         QBuffer buffer(&array);
-         client->get_profilePic().save(&buffer, "PNG");
-
-         clientObj.insert("pp",QString::fromLatin1(array.toBase64()));
-    }
-
-    m_obj["myClient"] = clientObj;
-}
-
-CClient * CPacket::Deserialize_newClient()
-{
-    try{
-        if(m_obj.contains("newClient"))
-        {
-            QString name;
-            QUuid id;
-            bool isOnline;
-            QString description;
-
-            QJsonObject newClient = m_obj.value("newClient").toObject();
-            id = QUuid::fromString(newClient.value("uuid").toString());
-            name = newClient.value("pseudo").toString();
-            isOnline = newClient.value("isOnline").toBool();
-            description = newClient.value("description").toString();
-
-            CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-
-            if(newClient.contains("pp"))
-            {
-                QByteArray array = QByteArray::fromBase64(newClient.value("pp").toString().toLatin1());
-                QImage tmp;
-                tmp.loadFromData(array);
-                client->set_profilePic(tmp);
-            }
-            return client;
-        }
-      }
-    catch(char* e)
-    {
-        qDebug() << "Error in deserialize newClient : " << e << Qt::endl;
-    }
-
-    return NULL;
-}
 
 CChannel * CPacket::Deserialize_newChannel(){
     try{
@@ -276,139 +347,9 @@ CChannel * CPacket::Deserialize_newChannel(){
     return NULL;
 }
 
-CClient * CPacket::Deserialize_myClient(){
-    try{
-        if(m_obj.contains("myClient"))
-        {
-            QString name,description;
-            QUuid id;
-            bool isOnline;
 
-            QJsonObject myClient = m_obj.value("myClient").toObject();
-            id = QUuid::fromString(myClient.value("uuid").toString());
-            name = myClient.value("pseudo").toString();
-            isOnline = myClient.value("isOnline").toBool();
-            description = myClient.value("description").toString();
 
-            CClient * client = new CClient(id,name,NULL, -1,isOnline, description);
-            return client;
-        }
-      }
-    catch(char* e)
-    {
-        qDebug() << "Error in deserialize newClient : " << e << Qt::endl;
-    }
-    return NULL;
-}
 
-void CPacket::Serialize_ID(int chan, QUuid client){
-
-    QJsonObject channelObj;
-    channelObj.insert("id_channel", chan);
-    channelObj.insert("id_client", client.toString());
-
-    m_obj["id"] = channelObj;
-
-}
-
-void CPacket::Deserialize_ID(){
-    try{
-        QJsonObject id = m_obj.value("id").toObject();
-        id_channel = id.value("id_channel").toInt();
-        id_client = QUuid::fromString(id.value("id_client").toString());
-    }
-    catch(char* e)
-    {
-        qDebug() << "Error in deserializeID : " << e << Qt::endl;
-    }
-}
-
-void CPacket::Serialize_auth(CClient* info, int code)
-{
-    QJsonObject authObj;
-    switch(code)
-    {
-    case 0:{
-        authObj.insert("code", code);
-        authObj.insert("uuid", info->get_uuid().toString());
-        authObj.insert("pseudo", info->get_pseudo());
-        authObj.insert("isOnline", info->get_isOnline());
-        authObj.insert("description", info->get_description());
-        authObj.insert("cookie", info->getSessionCookie()->getCookie());
-        break;
-        }
-    case 1:{
-        //user does not exist
-        authObj.insert("code", code);
-        authObj.insert("reason", "");
-        break;
-        }
-    case 2:{
-        //User already connected
-        authObj.insert("code", code);
-        authObj.insert("reason", "");
-        break;
-        }
-    case 3:{
-        //bad password
-        authObj.insert("code", code);
-        authObj.insert("reason", "");
-        break;
-        }
-    }
-    m_obj["newAuth"] = authObj;
-}
-
-QList<QString> CPacket::Deserialize_auth()
-{
-    QList<QString> null; //null Qlist in case of error
-    null.append("null");
-    try {
-        QList<QString> info;
-        if(m_obj.contains("newAuth"))
-        {
-            QJsonObject newAuth = m_obj.value("newAuth").toObject();
-            info.push_back(newAuth.value("email").toString());
-            info.push_back(newAuth.value("pass").toString());
-            return info;
-        }
-        return null;
-    }
-    catch(char* e)
-    {
-        qDebug() << "Error in Deserialize_auth :" << e << Qt::endl;
-    }
-    return null;
-}
-
-QList<QString> CPacket::Deserialize_regReq()
-{
-    QList<QString> null;
-    null.push_back("null");
-    try {
-        if(m_obj.contains("newReg"))
-        {
-            QList<QString> res;
-            QJsonObject newReg = m_obj.value("newReg").toObject();
-            res.push_back(newReg.value("username").toString());
-            res.push_back(newReg.value("mail").toString());
-            res.push_back(newReg.value("password").toString());
-            res.push_back(newReg.value("password_confirm").toString());
-        }
-
-    }  catch (char* e) {
-        qDebug() << "Error in Deserialize_regReq :" << e << Qt::endl;
-        return null;
-    }
-    return null;
-}
-
-void CPacket::Serialize_regAns(int code)
-{
-    QJsonObject regAnsObj;
-    regAnsObj.insert("code",code);
-    m_obj["ansReg"] = regAnsObj;
-}
 
 void CPacket::Serialize_Message(CMessage msg)
 {
@@ -558,6 +499,46 @@ QString CPacket::deserialize_ppRequest()
         err.append(e);
         return err;
     }
+}
+
+Type CPacket::getType() const
+{
+    return m_Type;
+}
+
+void CPacket::setType(const Type &Type)
+{
+    m_Type = Type;
+}
+
+int CPacket::getAction() const
+{
+    return m_Action;
+}
+
+void CPacket::setAction(int Action)
+{
+    m_Action = Action;
+}
+
+Request CPacket::getReq() const
+{
+    return m_req;
+}
+
+void CPacket::setReq(const Request &req)
+{
+    m_req = req;
+}
+
+ReqState CPacket::getReqState() const
+{
+    return m_reqState;
+}
+
+void CPacket::setReqState(const ReqState &reqState)
+{
+    m_reqState = reqState;
 }
 
 //UI

@@ -17,6 +17,8 @@
  */
 CClient::CClient()
 {
+    setObjType(ObjectType::CLIENT);
+
     m_pseudo = "";
     m_soc = NULL;
     m_idChannel = 0;
@@ -24,6 +26,7 @@ CClient::CClient()
     m_buffer = new QByteArray;
     m_mail ="";
     m_uuid = NULL;
+    m_packetManager = new CPacketManager();
 }
 
 /**
@@ -34,6 +37,7 @@ CClient::CClient()
  */
 CClient::CClient(const CClient & copy)
 { 
+    setObjType(ObjectType::CLIENT);
     Q_UNUSED(copy);
     /*
     m_pseudo = copy.m_pseudo;
@@ -56,6 +60,8 @@ CClient::CClient(const CClient & copy)
  */
 CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool online, QString description)
 {
+    setObjType(ObjectType::CLIENT);
+
     m_uuid = id;
     m_pseudo = pseudo;
     m_soc = soc;
@@ -68,6 +74,7 @@ CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool 
     m_description = description;
     m_isAuthenticate = false;
     m_buffer = new QByteArray;
+    m_packetManager = new CPacketManager();
 
 #ifdef _DEBUG
      qDebug() << "[CREATE CLIENT] " << m_pseudo << " - " << m_uuid;
@@ -82,12 +89,14 @@ CClient::CClient(QUuid id,QString pseudo, QTcpSocket * soc, int idChannel, bool 
  */
 CClient::CClient( QTcpSocket * soc)
 {
+    setObjType(ObjectType::CLIENT);
     m_soc = soc;
     if(m_soc != NULL)
     {
         connect(m_soc, SIGNAL(readyRead()), this, SLOT(onReceiveData()));
     }
     m_buffer = new QByteArray;
+    m_packetManager = new CPacketManager();
 }
 
 /**
@@ -120,6 +129,32 @@ CClient::~CClient()
 
     profilePic.~QImage();
     delete(m_buffer);
+}
+
+void CClient::fromJSON(QJsonObject obj)
+{
+    try{
+            m_uuid = QUuid::fromString(obj.value("uuid").toString());
+            m_pseudo = obj.value("pseudo").toString();
+            m_isOnline = obj.value("isOnline").toBool();
+            m_description = obj.value("description").toString();
+    }
+    catch(char* e)
+    {
+        qDebug() << "Error while deserializing :" << e << Qt::endl;
+    }
+}
+
+QJsonObject CClient::toJSON()
+{
+    QJsonObject obj;
+
+    obj.insert("uuid", m_uuid.toString());
+    obj.insert("pseudo", m_pseudo);
+    obj.insert("isOnline", m_isOnline);
+    obj.insert("description", m_description);
+
+    return obj;
 }
 
 /**
@@ -343,29 +378,12 @@ void CClient::set_all(CClient *c){
  * @brief Serialize attributes of an user into a JSON object.
  * @return      obj  the JSON object which contains the attribute of the user.
  */
-QJsonObject CClient::serializeToObj(){
-    QJsonObject obj;
-    obj["uuid"] = this->get_uuid().toString();
-    obj["idChannel"]= this->get_idChannel();
-    obj["pseudo"]= this->get_pseudo();
-    obj["isOnline"] = this->get_isOnline();
-    obj["description"] = this->get_description();
 
-    return obj;
-}
 
 /**
  * @brief Deserialize a JSON object into the current instance of CClient.
  * @param[in]       json_obj  the JSON object to deserialize into this CClient instance.
  */
-void CClient::deserialize(QJsonObject json_obj){
-    QUuid tmp = QUuid::fromString(json_obj["uuid"].toString());
-    this->set_uuid(tmp);
-    this->set_idChannel(json_obj["idChannel"].toInt());
-    this->set_pseudo(json_obj["pseudo"].toString());
-    this->set_isOnline(json_obj["isOnline"].toBool());
-    this->set_description(json_obj["description"].toString());
-}
 
 /**
  * @brief This is a slot you call with a signal from another class to send data to the client using its TCP socket
@@ -378,6 +396,31 @@ void CClient::sendToClient(QByteArray out)
         m_soc->write(out);
         m_soc->waitForBytesWritten();
     }
+}
+
+CPacketManager *CClient::getPacketManager() const
+{
+    return m_packetManager;
+}
+
+void CClient::setPacketManager(CPacketManager *packetManager)
+{
+    m_packetManager = packetManager;
+}
+
+void CClient::writePacket(CPacket packet)
+{
+    m_packetManager->sendPacket(packet, this, this);
+}
+
+CSessionCookie *CClient::getSessionCookie()
+{
+    return m_sessionCookie;
+}
+
+void CClient::setSessionCookie(CSessionCookie *sessionCookie)
+{
+    m_sessionCookie = sessionCookie;
 }
 
 /**
@@ -410,7 +453,8 @@ void CClient::onReceiveData()
     CPacket packet(p, new CClient());
 
     //Process received data
-    processData(packet);
+    m_packetManager->receivePacket(packet);
+    //processData(packet);
 }
 
 /**
@@ -441,147 +485,6 @@ void CClient::processData(CPacket packet) //Process received data
       //Get type
       switch (packet.GetType().toInt())
       {
-          case 0: //SERV
-          {
-              switch (packet.GetAction().toInt())
-              {
-                  /*case 0: //Did we use that ?
-                  {
-                      //SERV CONNECT
-                      //Check Auth -
-                      //If Auth is Ok
-                      CClient * client = packet.Deserialize_newClient();
-                      //addClient(client);
-
-                      if(m_isOnline == false)
-                      {
-                          m_isOnline = true;
-                      }
-
-                      //Update info -
-                      CPacket ans("0","0");
-                      ans.Serialize_newClient(client,false);
-                      //sendToAll(ans.GetByteArray());
-                      break;
-                  }*/
-
-                  case 1:
-                  {
-                      //SERV DISCONNECT
-                      //Update online users
-                      CClient * client = packet.Deserialize_newClient();
-                      if(m_uuid != NULL)
-                      {
-                          m_isOnline = false;
-                      }
-
-                      //User is not online anymore
-                      CPacket ans("0","1");
-                      ans.Serialize_newClient(client,false);
-
-                      //Send Update
-                      emit sendToAll(packet.GetByteArray());
-
-                      free(client);
-
-                      break;
-                  }
-
-                  case 2:
-                  {
-                      //UPDATE USERNAME
-#ifdef CLIENT_DEBUG
-                      qDebug() << "[CLIENT] " << this->get_pseudo() << " - Update username ";
-#endif
-                      CClient* client = packet.Deserialize_myClient();
-                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change username to [" + client->get_pseudo() + "]", USER);
-                      //Apply changement
-                      //m_pseudo = client->get_pseudo();
-
-                      emit updateClient(USERNAME,this, client->get_pseudo());
-
-                      break;
-                  }
-
-                  case 3:
-                  {
-                      //BIO UPDATE
-                      CClient * client = packet.Deserialize_myClient();
-                      emit writeToLog("User [" + m_uuid.toString() + "(" + m_pseudo + ")] change description to [" + m_description + "]", USER);
-                      //Apply changement
-                      m_description = client->get_description();
-
-                      //emit updateMe(1,client);
-
-                      break;
-                  }
-
-                  case 4:
-                  {
-                      //BAN USER
-                      //Check if user have right to before...
-                      //TODO
-
-                      break;
-                  }
-
-                  case 5:
-                  {
-                      //BAN IP
-                      //Maybe add time ?
-                      //TODO
-                      break;
-                  }
-
-                  case 6:
-                  {
-                      //Kick user
-                      //CClient * client = packet.Deserialize_newClient();
-
-                      /*if(get_clientById(client->get_uuid()) != NULL)
-                      {
-                          * We should not use .removeOne but implemente AbstractServer::delClient()
-                          * Right must be implemeted and we must verify user have right to kick before implement kick
-                          writeToLog("User [" + client->get_uuid().toString() + "(" + client->get_pseudo() + ")] Has been kicked from server" ,SERVER);
-                          sendToAll(packet.GetByteArray());
-                          m_clients.removeOne(get_clientById(client->get_uuid()));
-                          client->get_socket()->close();
-
-                      }*/
-
-                      break;
-                  }
-
-                  case 7:
-                  {
-                      //Auth request
-                      QList<QString> info = packet.Deserialize_auth();
-
-#ifdef CLIENT_DEBUG
-                      qDebug() << "[CLIENT] Authentication request " << info[0];
-#endif
-                      emit authMe(info, this);
-                      break;
-                  }
-
-                  case 8 :
-                  {
-                      //Get Information from request
-                      //REGISTER
-                      QList<QString> info = packet.Deserialize_regReq();
-                      emit regMe(info, this);
-
-                      break;
-                  }
-
-                  default:
-                  {
-                      emit writeToLog("Received invalid server action :\n" + packet.GetByteArray() +"\nIgnored", SERVER_WARN);
-                      break;
-                  }
-              }
-              break;
-          }
 
           case 1: //CHAN
           {
@@ -591,8 +494,8 @@ void CClient::processData(CPacket packet) //Process received data
                   {
                       //JOIN CHANNEL
                       packet.Deserialize_ID();
-
-                      CChannel * channel = emit whichChan(packet.get_IdChannel());
+/*
+                     CChannel * channel = emit whichChan(packet.get_IdChannel());
 
                       if(channel)
                       {
@@ -618,6 +521,7 @@ void CClient::processData(CPacket packet) //Process received data
                           }
                       }
                       break;
+                      */
                   }
 
                   case 1:
@@ -625,8 +529,8 @@ void CClient::processData(CPacket packet) //Process received data
                       //QUIT CHAN
                       packet.Deserialize_ID();
 
-                      CChannel * channel = emit whichChan(packet.get_IdChannel());
-
+                      //CChannel * channel = emit whichChan(packet.get_IdChannel());
+/*
                       if(channel)
                       {
                           m_idChannel = -1;
@@ -650,6 +554,7 @@ void CClient::processData(CPacket packet) //Process received data
                           }
                       }
                       break;
+                      */
                   }
 
                   case 2:
@@ -1302,4 +1207,20 @@ QList<CMessage> CClient::createMessageList(QString id, bool isPrivate, int nb_ms
        }
        return message_list;
    }
+}
+
+
+
+bool CClient::operator==(const CClient &client) const{
+    if(this->m_uuid == client.m_uuid){
+        return true;
+    }
+    return false;
+}
+
+bool CClient::operator==(const QTcpSocket *socket) const{
+    if(this->m_soc == socket){
+        return true;
+    }
+    return false;
 }

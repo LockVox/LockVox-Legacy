@@ -16,6 +16,7 @@
 #include <QUuid>
 
 //Includes
+#include "LVObject.h"
 #include "cclient.h"
 #include "Client/includes/messagelist.h"
 
@@ -24,8 +25,13 @@ class CMessage;
 class CClient;
 class MessageList;
 
+enum ChannelParams{
+    NAME,
+    NB_USERS,
+    MAX_USERS
+};
 
-class CChannel
+class CChannel : public CObject
 {
     /**
      * @class       CChannel cchannel.h "cchannel.h"
@@ -50,6 +56,15 @@ class CChannel
         CChannel(QList<CClient*> clients, QString name, int id);
         CChannel(const CChannel & copy);
         ~CChannel() {};
+
+
+        //Virtual
+        void fromJSON(QJsonObject obj);
+        QJsonObject toJSON();
+
+        //operator
+        bool operator==(const CChannel &client) const;
+
 
         //Getters
         QList<CClient *> get_clients();
