@@ -59,13 +59,8 @@ The project actually have :
 
 ## Authors
 
--  Valentin MONNOT
+-  Valentin MONNOT <monnot@et.esiea.fr>
 -  Hugues MATTEI
 -  Hugo LAVEAU
 -  Louis BOURGEAIS
 -  François LELIEVRE
-
-## Contact
-
--  Dev Team (dev@lockvox.fr)
--  Admin (admin@lockvox.fr)
